@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumina — Learning OS for Teams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="topnav" id="nav">
+  <div class="logo" onclick="location.hash='#/home'"><span class="logo-mark"></span>Lumina</div>
+  <div class="nav-links">
+    <a href="#/home" class="active">Home</a>
+    <a href="#/library">Library</a>
+    <a href="#/paths">Paths</a>
+    <a href="#/live">Live</a>
+    <a href="#/analytics">Analytics</a>
+    <a href="#/admin">Admin</a>
+  </div>
+  <div class="nav-right">
+    <div class="search" id="navSearch">⌕&nbsp; Search courses, skills… <kbd>⌘K</kbd></div>
+    <div class="org-chip" id="orgChip"><span class="org-dot"></span>Acme Co · Workspace</div>
+    <div class="avatar" id="avatarBtn">JA</div>
+    <div class="avatar-menu" id="avatarMenu">
+      <button data-m="profile">📊 My analytics</button>
+      <button data-m="onboard">✦ Redo onboarding</button>
+      <button data-m="switch">🏢 Switch workspace</button>
+      <button data-m="reset">↺ Reset demo data</button>
+      <button data-m="signout" class="danger">👋 Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<div id="app"></div>
+
+<!-- PLAYER -->
+<div class="player-overlay" id="player">
+  <div class="player-top">
+    <button class="back" id="playerBack">←</button>
+    <div>
+      <div class="pt" id="playerTitle"></div>
+      <div class="ps" id="playerSub"></div>
+    </div>
+    <span class="spacer"></span>
+    <button class="btn btn-glass btn-sm" data-action="ai-open">✦ Ask the tutor</button>
+  </div>
+  <div class="player-stage">
+    <video id="playerVideo" controls playsinline muted></video>
+    <div class="sim-stage" id="simStage">
+      <div class="sim-icon" id="simIcon"></div>
+      <div class="sim-title" id="simTitle"></div>
+      <div class="sim-sub">Demo lesson · streams real video outside the sandbox</div>
+      <button class="btn btn-glass btn-sm" id="simPlayBtn">▶ Play lesson</button>
+      <div class="sim-track"><div class="fill" id="simFill"></div></div>
+    </div>
+  </div>
+  <div class="player-bottom">
+    <div class="mod-pills" id="playerPills"></div>
+    <button class="btn btn-glass btn-sm" id="notesToggle">📝 Notes &amp; transcript</button>
+    <button class="btn btn-primary btn-sm" id="playerComplete">✓ Mark module complete</button>
+  </div>
+  <aside class="notes-drawer" id="notesDrawer">
+    <div class="nd-head">
+      <strong>Notes &amp; transcript</strong>
+      <button class="back" id="notesClose" style="width:32px;height:32px;font-size:13px;">✕</button>
+    </div>
+    <div class="nd-section-title">✦ AI transcript</div>
+    <div class="nd-transcript" id="ndTranscript"></div>
+    <div class="nd-section-title">Your notes <span class="nd-saved" id="ndSaved"></span></div>
+    <textarea class="nd-notes" id="ndNotes" placeholder="Type a note — saved automatically, pinned to this module…"></textarea>
+  </aside>
+</div>
+
+<!-- QUIZ MODAL -->
+<div class="modal-backdrop" id="quizModal">
+  <div class="modal" id="quizBody"></div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div class="palette-backdrop" id="palette">
+  <div class="palette">
+    <div class="palette-input-row">⌕ <input id="palInput" placeholder="Search courses, or type a command…"></div>
+    <div class="palette-results" id="palResults"></div>
+  </div>
+</div>
+
+<!-- AI TUTOR -->
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-panel-head">
+    <span class="ai-spark" style="width:30px;height:30px;border-radius:10px;font-size:14px;">✦</span>
+    <div style="flex:1;">
+      <div class="title">Lumina Tutor</div>
+      <div class="status" id="tutorStatus">● Demo mode · scripted replies</div>
+    </div>
+    <button class="quick" id="tutorSettingsBtn" title="Tutor settings">⚙</button>
+  </div>
+  <div class="tutor-settings" id="tutorSettings">
+    <div class="ts-title">✦ Connect real AI</div>
+    <p class="ts-note">Paste an Anthropic API key to power the tutor with Claude. The key is stored only in this browser's localStorage and sent only to api.anthropic.com.</p>
+    <input class="ai-input" id="apiKeyInput" type="password" placeholder="sk-ant-…" style="width:100%;">
+    <select class="ai-input" id="aiModelSelect" style="width:100%;margin-top:10px;">
+      <option value="claude-opus-4-8">Claude Opus 4.8 · smartest</option>
+      <option value="claude-sonnet-4-6">Claude Sonnet 4.6 · balanced</option>
+      <option value="claude-haiku-4-5">Claude Haiku 4.5 · fastest</option>
+    </select>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn btn-primary btn-sm" id="apiKeySave">Save</button>
+      <button class="btn btn-glass btn-sm" id="apiKeyClear">Use demo mode</button>
+    </div>
+  </div>
+  <div class="ai-msgs" id="aiMsgs"></div>
+  <div class="quick-row">
+    <button class="quick" data-intent="summarize">Summarize this course</button>
+    <button class="quick" data-intent="quiz">Quiz me now</button>
+    <button class="quick" data-intent="due">What's due?</button>
+    <button class="quick" data-intent="path">Build me a path</button>
+  </div>
+  <div class="ai-input-row">
+    <input class="ai-input" id="aiInput" placeholder="Ask anything about your courses…">
+    <button class="ai-send" id="aiSend">↑</button>
+  </div>
+</div>
+<button class="ai-fab" id="aiFab" title="Lumina Tutor"><span class="inner">✦</span></button>
+
+<!-- ONBOARDING -->
+<div class="onboard-overlay" id="onboard">
+  <div class="onboard-card">
+    <div class="onboard-progress"><div class="fill" id="obFill"></div></div>
+    <div id="obBody"></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
