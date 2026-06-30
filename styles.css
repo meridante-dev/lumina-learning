@@ -48,19 +48,24 @@ nav.topnav.scrolled {
   border-bottom: 1px solid var(--line);
 }
 .logo {
-  font-family: var(--font-display);
-  font-size: 25px; font-weight: 600; letter-spacing: .14em;
-  text-transform: uppercase;
   display: flex; align-items: center; gap: 11px; cursor: pointer;
 }
 .logo-mark {
-  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
-  display: grid; place-items: center;
-  color: var(--accent-2);
-  border: 1.5px solid rgba(166,195,165,.4);
-  background: rgba(166,195,165,.07);
+  flex-shrink: 0; display: block;
+  border: none; background: none; border-radius: 0;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1);
 }
-.logo-mark svg { width: 19px; height: 19px; }
+.logo:hover .logo-mark { transform: translateY(-1px) scale(1.04); }
+.er-mark { height: 38px; width: 30px; display: block; }
+.logo-word { display: flex; flex-direction: column; line-height: 1; }
+.logo-word .er-name {
+  font-family: var(--font-display); font-weight: 600; font-size: 23px;
+  letter-spacing: .22em; color: var(--ivory); padding-left: .22em;
+}
+.logo-word .er-sub {
+  font-size: 7.5px; font-weight: 600; letter-spacing: .36em; text-transform: uppercase;
+  color: var(--clay); margin-top: 4px; padding-left: .26em;
+}
 .nav-links { display: flex; gap: 4px; flex: 1; }
 .nav-links a {
   color: var(--text-dim); text-decoration: none;
@@ -1062,9 +1067,10 @@ footer {
   display: flex; align-items: center; gap: 20px;
   font-size: 12.5px; color: var(--text-faint);
 }
-footer .logo { font-size: 15px; }
-footer .logo-mark { width: 18px; height: 18px; border-radius: 5px; box-shadow: none; }
-footer .logo-mark::after { inset: 5px; border-radius: 2px; }
+footer .logo-mark { height: 27px; }
+footer .er-mark { height: 27px; width: 21px; }
+footer .logo-word .er-name { font-size: 15px; letter-spacing: .2em; }
+footer .logo-word .er-sub { font-size: 6px; letter-spacing: .32em; margin-top: 3px; }
 footer .links { margin-left: auto; display: flex; gap: 22px; }
 footer .links button { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 12.5px; transition: color .2s; }
 footer .links button:hover { color: var(--text); }
