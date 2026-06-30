@@ -1,4 +1,4 @@
-/* ============ Lumina demo catalog & seed data ============ */
+/* ============ EdenRise Academy — catalog & seed data ============ */
 
 const VIDS = [
   'BigBuckBunny', 'ElephantsDream', 'ForBiggerBlazes', 'ForBiggerEscapes',
@@ -6,188 +6,204 @@ const VIDS = [
   'SubaruOutbackOnStreetAndDirt', 'TearsOfSteel'
 ].map(n => `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/${n}.mp4`);
 
+/* The six EdenRise pillars — shown as a band under the hero */
+const PILLARS = [
+  { icon: 'leaf', label: 'Regenerative' },
+  { icon: 'tree', label: 'Rooted' },
+  { icon: 'sun', label: 'Restorative' },
+  { icon: 'people', label: 'Connected' },
+  { icon: 'waves', label: 'Elemental' },
+  { icon: 'heart', label: 'Meaningful' }
+];
+
 const CATALOG = [
   {
-    id: 'data-foundations', title: 'Data Foundations', cat: 'Analytics', grad: 5, icon: '🧮',
-    level: 'Beginner', rating: 4.8, learners: 412, ai: true,
-    desc: 'The shared language of data at work: types, distributions, sampling, and the classic traps that make smart people draw wrong conclusions.',
-    modules: ['Why data literacy matters', 'Types of data', 'Averages lie: distributions', 'Sampling & bias', 'Correlation vs causation', 'Reading charts critically']
+    id: 'land-literacy', title: 'Reading the Land', cat: 'Nature Connection', grad: 6, icon: 'compass',
+    level: 'Beginner', rating: 4.9, learners: 412, ai: true,
+    desc: 'Before you change a landscape, learn to read it. Slope, water, soil, sun and succession — the literacy that every act of stewardship begins with.',
+    modules: ['Standing still: how to observe', 'Reading slope & water', 'Soil by feel & sight', 'Sun, shade & aspect', 'Succession & what land wants', 'Mapping your patch']
   },
   {
-    id: 'sql-dm', title: 'SQL for Decision Makers', cat: 'Analytics', grad: 2, icon: '🗄️',
-    level: 'Beginner', rating: 4.7, learners: 298, ai: true,
-    desc: 'Enough SQL to answer your own questions: SELECT, JOIN, GROUP BY, and how to sanity-check a query before you trust it.',
-    modules: ['Your first SELECT', 'Filtering with WHERE', 'JOINs without fear', 'Aggregations & GROUP BY', 'Window functions, gently', 'Sanity-checking results']
+    id: 'living-soil', title: 'Living Soil', cat: 'Land & Soil', grad: 7, icon: 'sprout',
+    level: 'Beginner', rating: 4.8, learners: 356, ai: true,
+    desc: 'Soil is not dirt — it is a living community. Meet the microbiome beneath your feet and the practices that feed it instead of mining it.',
+    modules: ['The soil food web', 'Why we stopped tilling', 'Compost as inoculant', 'Cover crops & living roots', 'Mulch & bare-soil rules', 'Reading a soil test']
   },
   {
-    id: 'leading-data', title: 'Leading with Data', cat: 'Analytics', grad: 1, icon: '📊',
-    level: 'Intermediate', rating: 4.9, learners: 312, ai: true, featured: true,
-    desc: 'Master the analytics mindset your role demands. This program adapts to your pace — Lumina\'s AI rebuilds your module order after every assessment, skipping what you already know.',
-    modules: ['The analytics mindset', 'Asking decision-first questions', 'Metrics vs KPIs', 'North-star thinking', 'Choosing the right metric', 'Vanity vs actionable metrics', 'Building a metric tree', 'Dashboards people actually read', 'Running a metrics review', 'Data-informed vs data-driven', 'Influencing with evidence', 'Final assessment']
+    id: 'water-cycles', title: 'Water & the Living Landscape', cat: 'Water & Climate', grad: 5, icon: 'drop',
+    level: 'Intermediate', rating: 4.9, learners: 298, ai: true, featured: true,
+    desc: 'Master the small water cycle your land depends on. This program adapts to your terrain — EdenRise\'s AI re-sequences each module around what your last assessment showed you already know.',
+    modules: ['The small water cycle', 'Where your water goes', 'Slowing, spreading, sinking', 'Swales & on-contour design', 'Ponds & keypoint dams', 'Rehydrating dry land', 'Greywater, gently', 'Drought-proofing a garden', 'Reading a catchment', 'Springs & soaks', 'Measuring infiltration', 'Final assessment']
   },
   {
-    id: 'storytelling', title: 'Storytelling with Dashboards', cat: 'Analytics', grad: 5, icon: '📈',
+    id: 'agroforestry', title: 'Agroforestry & the Edible Forest', cat: 'Food & Forest', grad: 1, icon: 'tree',
     level: 'Intermediate', rating: 4.9, learners: 187, ai: true,
-    desc: 'Turn charts into narratives. Visual hierarchy, the one-message-per-view rule, and dashboards that drive meetings instead of decorating them.',
-    modules: ['One message per view', 'Visual hierarchy', 'Color with intent', 'Annotating insight', 'The executive summary view', 'Live critique: real dashboards']
+    desc: 'Stack a forest that feeds you. Seven layers, nitrogen fixers, and the patient art of designing a system that grows more abundant every year.',
+    modules: ['The seven layers', 'Choosing your canopy', 'Nitrogen fixers & support species', 'Guilds that work together', 'Planting for succession', 'Tending the young forest']
   },
   {
-    id: 'ab-testing', title: 'Experimentation & A/B Testing', cat: 'Analytics', grad: 1, icon: '🧪',
+    id: 'regen-design', title: 'Designing with Nature', cat: 'Stewardship', grad: 6, icon: 'leaf',
     level: 'Advanced', rating: 4.8, learners: 143,
-    desc: 'Design experiments that survive scrutiny: hypotheses, power, peeking problems, and what to do when results are "almost significant".',
-    modules: ['Hypothesis design', 'Sample size & power', 'The peeking problem', 'Segmenting safely', 'Shipping decisions from tests']
+    desc: 'Permaculture design from observation to plan: zones, sectors, and how to place every element so the land does the work, not you.',
+    modules: ['Observation before action', 'Zones & sectors', 'Placing elements by relationship', 'Patterns to details', 'The whole-site plan']
   },
   {
-    id: 'capstone', title: 'Capstone: Board Briefing', cat: 'Analytics', grad: 6, icon: '🏆',
+    id: 'capstone-land', title: 'Capstone: Your Land Plan', cat: 'Stewardship', grad: 8, icon: 'mountain',
     level: 'Advanced', rating: 4.9, learners: 96, ai: true,
-    desc: 'The graded finale: build and present a 5-minute data briefing for a simulated board. Lumina AI scores structure, evidence, and clarity.',
-    modules: ['Brief structure', 'Building your evidence base', 'Dry-run with AI feedback', 'Record your briefing', 'AI-graded review']
+    desc: 'The graded finale: produce and present a one-year regeneration plan for a real piece of land. EdenRise AI reviews it for water, soil, and sequence.',
+    modules: ['Briefing your site', 'Water-first design', 'Sequencing the first year', 'Dry-run with AI feedback', 'AI-graded review']
   },
   {
-    id: 'prompt-eng', title: 'Prompt Engineering at Work', cat: 'AI Skills', grad: 6, icon: '🧠',
+    id: 'composting', title: 'The Art of Compost', cat: 'Land & Soil', grad: 7, icon: 'sprout',
+    level: 'Beginner', rating: 4.7, learners: 224, trending: 3,
+    desc: 'Turn waste into black gold. Hot piles, cold piles, worms and the simple ratios that make compost reliably, without the smell.',
+    modules: ['Greens & browns', 'Building a hot pile', 'Worms & vermicompost', 'Compost tea & extracts', 'Troubleshooting smells', 'Using finished compost']
+  },
+  {
+    id: 'seed-saving', title: 'Seed Saving & Heritage Varieties', cat: 'Food & Forest', grad: 4, icon: 'seed',
+    level: 'Intermediate', rating: 4.8, learners: 132, ai: true,
+    desc: 'Keep the lineage alive. Save, dry and store seed from your own garden — and the open-pollinated varieties worth protecting in the Alentejo.',
+    modules: ['Why open-pollinated matters', 'Isolation & purity', 'Wet & dry seed processing', 'Drying & storage', 'A community seed library']
+  },
+  {
+    id: 'foraging', title: 'Foraging the Alentejo', cat: 'Food & Forest', grad: 2, icon: 'basket',
     level: 'Beginner', rating: 4.9, learners: 284, trending: 1,
-    desc: 'Get reliably great output from AI tools: role prompting, context windows, iteration loops, and building your personal prompt library.',
-    modules: ['How models “think”', 'Role & context prompting', 'Iterating to quality', 'Structured outputs', 'Your prompt library', 'AI in your daily workflow', 'Team patterns', 'Evaluating output', 'Common failure modes', 'Capstone: automate one task']
+    desc: 'Walk out and come back fed. Wild greens, mushrooms, herbs and the golden rule of foraging — identify with certainty, harvest with care.',
+    modules: ['The forager\'s mindset', 'Identify with certainty', 'Wild greens of the meadow', 'Mushrooms: respect & caution', 'Wild herbs & teas', 'Harvest ethics', 'Seasonal calendar', 'Preserving the wild harvest', 'Look-alikes to never confuse', 'A first foraging walk']
   },
   {
-    id: 'ai-agents', title: 'Automating with AI Agents', cat: 'AI Skills', grad: 4, icon: '⚡',
-    level: 'Intermediate', rating: 4.9, learners: 176, trending: 3,
-    desc: 'From chat to automation: when agents beat scripts, how to scope them safely, and three build-along automations for real office work.',
-    modules: ['What agents actually are', 'Scoping safe automations', 'Build-along: inbox triage', 'Build-along: report drafting', 'Guardrails & review', 'Measuring time saved']
+    id: 'native-flora', title: 'Native Flora & Pollinators', cat: 'Nature Connection', grad: 3, icon: 'flower',
+    level: 'Beginner', rating: 4.7, learners: 167,
+    desc: 'Bring the buzz back. Native plants, hedgerows and the small changes that turn a quiet garden into a pollinator corridor.',
+    modules: ['Who are your pollinators', 'Native plants first', 'Hedgerows & corridors', 'Year-round flowering', 'A pollinator patch']
   },
   {
-    id: 'negotiation', title: 'Negotiation Mastery', cat: 'Leadership', grad: 3, icon: '🎯',
-    level: 'Intermediate', rating: 4.8, learners: 167,
-    desc: 'Prepare, anchor, and trade concessions like a pro. Includes recorded role-plays with AI feedback on your tone and framing.',
-    modules: ['Preparation beats talent', 'Anchoring & framing', 'Trading, not conceding', 'Difficult counterparts', 'Role-play: salary talk', 'Role-play: vendor deal', 'Closing & follow-through', 'Final role-play, AI-scored']
+    id: 'rainwater', title: 'Rainwater Harvesting & Swales', cat: 'Water & Climate', grad: 5, icon: 'drop',
+    level: 'Intermediate', rating: 4.8, learners: 119,
+    desc: 'Catch every drop. Roofs, tanks, swales and earthworks that store the winter rains in the ground for the long Alentejo summer.',
+    modules: ['Sizing your catchment', 'Tanks & first-flush', 'Digging on contour', 'Overflow & safety', 'Storing water in soil']
   },
   {
-    id: 'difficult-conv', title: 'Difficult Conversations', cat: 'Leadership', grad: 2, icon: '💬',
-    level: 'Intermediate', rating: 4.8, learners: 201, trending: 2,
-    desc: 'Scripts and frameworks for the talks you postpone: feedback, conflict, and bad news — delivered with care and spine.',
-    modules: ['Why we avoid them', 'The SBI framework', 'Listening under pressure', 'Delivering hard feedback', 'Repairing after conflict']
+    id: 'rewilding', title: 'Rewilding & Habitat', cat: 'Stewardship', grad: 7, icon: 'bird',
+    level: 'Intermediate', rating: 4.7, learners: 108, isNew: true,
+    desc: 'Step back and let life return. Where to intervene, where to wait, and how to measure a landscape coming back to life.',
+    modules: ['Reading what\'s missing', 'Keystone species', 'When to do nothing', 'Ponds, logs & edges', 'Measuring return']
   },
   {
-    id: 'security', title: 'Security Awareness 2026', cat: 'Compliance', grad: 5, icon: '🔐',
-    level: 'All levels', rating: 4.5, learners: 540, required: true, due: 'Due in 3 days',
-    desc: 'This year\'s threat landscape in plain language: AI-assisted phishing, deepfake fraud, password hygiene, and how to report incidents fast.',
-    modules: ['The 2026 threat landscape', 'AI-assisted phishing', 'Deepfake & voice fraud', 'Passwords & passkeys', 'Safe data handling', 'Devices & travel', 'Social engineering drills', 'Reporting incidents', 'Certification check']
+    id: 'cork-oak', title: 'The Montado & Cork Oak', cat: 'Food & Forest', grad: 1, icon: 'tree',
+    level: 'Intermediate', rating: 4.9, learners: 201, trending: 2,
+    desc: 'The Alentejo\'s living masterpiece. How the cork-oak savannah feeds people, livestock and wildlife together — and how to tend it for centuries.',
+    modules: ['What is a montado', 'The cork harvest cycle', 'Grazing under the trees', 'Acorns, pigs & people', 'Regenerating old oaks']
   },
   {
-    id: 'gdpr', title: 'GDPR Essentials', cat: 'Compliance', grad: 8, icon: '⚖️',
-    level: 'All levels', rating: 4.4, learners: 489, required: true,
-    desc: 'What GDPR means for your day-to-day: lawful bases, data subject rights, and what to do (fast) when something goes wrong.',
-    modules: ['GDPR in 10 minutes', 'Lawful bases', 'Data subject rights', 'Breach response', 'Certification check']
+    id: 'natural-building', title: 'Natural Building with Earth', cat: 'Craft & Hands', grad: 3, icon: 'hands',
+    level: 'Intermediate', rating: 4.8, learners: 176,
+    desc: 'Build with what the land gives. Cob, lime, earth plaster and the warm, breathing walls that have sheltered the Alentejo for generations.',
+    modules: ['Earth as a material', 'Testing your soil mix', 'Cob & adobe basics', 'Lime & earth plasters', 'Finishes that last']
   },
   {
-    id: 'coaching', title: 'Coaching Your First Team', cat: 'Management', grad: 7, icon: '🌱',
+    id: 'herbal', title: 'The Herbal Apothecary', cat: 'Wellbeing', grad: 6, icon: 'flower',
+    level: 'Beginner', rating: 4.8, learners: 226,
+    desc: 'Grow your medicine. A garden of healing herbs and the simple preparations — teas, tinctures, salves — that turn a harvest into a home apothecary.',
+    modules: ['A healing garden', 'Harvesting at the right time', 'Drying & storing herbs', 'Teas, tinctures & infusions', 'Salves & balms', 'Your home apothecary']
+  },
+  {
+    id: 'fire-safety', title: 'Fire Safety on the Land', cat: 'Stewardship', grad: 4, icon: 'fire',
+    level: 'All levels', rating: 4.6, learners: 540, required: true, due: 'Due in 3 days',
+    desc: 'The Alentejo summer asks for respect. Defensible space, safe burning windows, equipment and what to do in the first sixty seconds of a wildfire.',
+    modules: ['The 2026 fire season', 'Defensible space around buildings', 'Safe burning windows', 'Tools & water on hand', 'Reading wind & terrain', 'The first 60 seconds', 'Reporting & evacuation', 'Land-clearing the right way', 'Certification check']
+  },
+  {
+    id: 'ethics', title: 'Stewardship Ethics & Land Rights', cat: 'Community', grad: 8, icon: 'compass',
+    level: 'All levels', rating: 4.5, learners: 489, required: true,
+    desc: 'Stewardship is a relationship of duty. Land rights, water rights, neighbours and the quiet ethics of leaving a place better than you found it.',
+    modules: ['Land as relationship, not asset', 'Water rights & sharing', 'Working with neighbours', 'Leaving it better', 'Certification check']
+  },
+  {
+    id: 'seasonal-rhythm', title: 'Living by the Seasons', cat: 'Wellbeing', grad: 6, icon: 'moon',
+    level: 'All levels', rating: 4.8, learners: 178, teamGoal: true, due: 'Due June 30',
+    desc: 'Re-tune your life to the land\'s calendar. A six-part series on working with the seasons of the Alentejo instead of against them.',
+    modules: ['The wheel of the year', 'Spring: planting & energy', 'Summer: tending & rest', 'Autumn: harvest & storing', 'Winter: stillness & planning']
+  },
+  {
+    id: 'nature-connection', title: 'The Art of Noticing', cat: 'Nature Connection', grad: 2, icon: 'leaf',
+    level: 'Beginner', rating: 4.7, learners: 154, ai: true,
+    desc: 'A practice of attention. Slow walks, sit-spots and the daily habit of noticing that turns a place you live into a place you belong to.',
+    modules: ['Your sit-spot', 'Widening the senses', 'A daily nature journal', 'Tracking change over weeks', 'Belonging to a place', 'Sharing what you see']
+  },
+  {
+    id: 'community-land', title: 'Community & the Commons', cat: 'Community', grad: 5, icon: 'people',
     level: 'Beginner', rating: 4.7, learners: 132, ai: true,
-    desc: 'The shift from doing to enabling: 1:1s that matter, delegation without dumping, and growing people who outgrow you.',
-    modules: ['The player-to-coach shift', '1:1s that matter', 'Delegation without dumping', 'Feedback as a habit', 'Growing your people', 'Your 90-day coaching plan']
-  },
-  {
-    id: 'new-manager', title: 'New Manager Track', cat: 'Management', grad: 2, icon: '🧭',
-    level: 'Beginner', rating: 4.8, learners: 154, ai: true,
-    desc: 'A 5-course adaptive track for first-time managers, sequenced by Lumina AI around your strengths assessment.',
-    modules: ['Orientation & assessment', 'Managing yourself first', 'Hiring & onboarding', 'Performance conversations', 'Leading through change']
-  },
-  {
-    id: 'empathy', title: 'Customer Empathy Sprint', cat: 'CX', grad: 4, icon: '🤝',
-    level: 'All levels', rating: 4.6, learners: 178, due: 'Due June 30', teamGoal: true,
-    desc: 'A one-week team sprint: shadow real support tickets, map friction, and present one fix worth shipping.',
-    modules: ['Sprint kickoff', 'Ticket shadowing', 'Friction mapping', 'Pitch your fix']
-  },
-  {
-    id: 'forecasting', title: 'Forecasting for PMs', cat: 'Analytics', grad: 6, icon: '🔮',
-    level: 'Intermediate', rating: 4.7, learners: 119,
-    desc: 'Honest forecasts under uncertainty: baselines, ranges instead of points, and how to communicate confidence without theater.',
-    modules: ['Baselines first', 'Ranges, not points', 'Seasonality & shocks', 'Communicating confidence']
-  },
-  {
-    id: 'metrics', title: 'Metrics that Matter', cat: 'Strategy', grad: 2, icon: '🗺️',
-    level: 'Intermediate', rating: 4.6, learners: 108,
-    desc: 'Choose the handful of numbers that actually steer the business — and retire the dashboard zombies that don\'t.',
-    modules: ['The metric audit', 'Leading vs lagging', 'Counter-metrics', 'The one-page scorecard']
-  },
-  {
-    id: 'systems', title: 'Systems Thinking Primer', cat: 'Strategy', grad: 1, icon: '📐',
-    level: 'Intermediate', rating: 4.7, learners: 89, isNew: true,
-    desc: 'See loops, not lines: feedback, delays, and leverage points — the mental toolkit for problems that keep coming back.',
-    modules: ['Events vs structures', 'Feedback loops', 'Delays & oscillation', 'Finding leverage points']
-  },
-  {
-    id: 'wellbeing', title: 'Wellbeing for High Performers', cat: 'Culture', grad: 7, icon: '🪴',
-    level: 'All levels', rating: 4.8, learners: 226,
-    desc: 'A 6-episode series on sustainable ambition: energy management, recovery, focus rituals, and saying no with grace.',
-    modules: ['Energy, not time', 'Recovery is training', 'Focus rituals', 'Boundaries & no', 'Sleep for performers', 'Your sustainability plan']
+    desc: 'Land heals faster together. Shared tools, work parties, and the old-and-new structures that let a community steward a place as one.',
+    modules: ['Why the commons works', 'Sharing tools & labour', 'Running a work party', 'Decisions without burnout', 'A 90-day community plan']
   }
 ];
 
 const LIVE_SESSIONS = [
-  { id: 'live-now', title: 'Office Hours: Dashboards Live Critique', host: 'Maya Chen · Head of Analytics', when: 'LIVE NOW', live: true, viewers: 47, grad: 1, icon: '📈', desc: 'Bring your dashboard, leave with a sharper one. Maya reworks viewer submissions in real time.' },
-  { id: 'exec-ama', title: 'Exec AMA: Scaling Teams', host: 'Sofia Reis · COO', when: 'Fri 14:00 WET', grad: 3, icon: '🎤', desc: 'Unfiltered Q&A on growing from 50 to 200 without losing the culture.' },
-  { id: 'ai-workshop', title: 'Workshop: Build Your First AI Agent', host: 'Dev Patel · Staff Engineer', when: 'Tue 17 · 16:00 WET', grad: 4, icon: '⚡', desc: 'Hands-on, 90 minutes, no code required. Leave with a working inbox-triage agent.' },
-  { id: 'storytime', title: 'Data Storytime: Q2 Numbers Decoded', host: 'Maya Chen · Head of Analytics', when: 'Thu 19 · 11:00 WET', grad: 5, icon: '📊', desc: 'The quarterly numbers, narrated like a story — what moved, why, and what we do next.' }
+  { id: 'live-now', title: 'Field Hours: Live Soil Clinic', host: 'Marta Oliveira · Head of Regeneration', when: 'LIVE NOW', live: true, viewers: 47, grad: 7, icon: 'sprout', desc: 'Bring a photo or sample of your soil — Marta reads it live and prescribes the first three things to do.' },
+  { id: 'exec-ama', title: 'Founder AMA: Why Regeneration', host: 'João Amaral · Founder', when: 'Fri 14:00 WET', grad: 1, icon: 'tree', desc: 'Unfiltered Q&A on building EdenRise and stewarding land in the Baixo Alentejo.' },
+  { id: 'water-workshop', title: 'Workshop: Map Your Water', host: 'Dev Santos · Water Lead', when: 'Tue 17 · 16:00 WET', grad: 5, icon: 'drop', desc: 'Hands-on, 90 minutes. Bring a map of your land and leave with a water plan sketched on contour.' },
+  { id: 'season-circle', title: 'Seasonal Circle: Midsummer', host: 'Marta Oliveira · Head of Regeneration', when: 'Thu 19 · 19:00 WET', grad: 6, icon: 'sun', desc: 'A gathering to mark midsummer — what to tend, what to harvest, what to let rest.' }
 ];
 
 const QUIZ_BANK = {
-  'Analytics': [
-    { q: 'What separates an actionable metric from a vanity metric?', opts: ['It is bigger', 'It changes a decision when it moves', 'It is reported weekly', 'Executives ask for it'], a: 1 },
-    { q: 'Every metric on a healthy scorecard needs…', opts: ['A trend arrow', 'An owner, a threshold, and an action', 'A benchmark from competitors', 'A monthly review meeting'], a: 1 },
-    { q: 'Your conversion rate doubled after a tiny sample. First move?', opts: ['Ship it everywhere', 'Check sample size & significance', 'Report it to leadership', 'Run a press release'], a: 1 }
+  'Land & Soil': [
+    { q: 'What is the single best indicator of healthy, living soil?', opts: ['Dark colour alone', 'Abundant life — worms, fungi, structure & smell', 'A high price per kilo', 'Being completely weed-free'], a: 1 },
+    { q: 'Why do regenerative growers avoid tilling where they can?', opts: ['It looks untidy', 'Tillage destroys soil structure and the fungal network', 'It is illegal', 'Tractors are expensive'], a: 1 },
+    { q: 'Bare soil between plants is mainly a problem because…', opts: ['It is ugly', 'It loses water, carbon and life to sun and rain', 'Neighbours complain', 'It attracts birds'], a: 1 }
   ],
-  'AI Skills': [
-    { q: 'The single highest-leverage way to improve AI output is…', opts: ['Longer prompts', 'Giving clear role + context + examples', 'Asking it to “be smart”', 'Using more exclamation marks'], a: 1 },
-    { q: 'When should an AI agent require human review?', opts: ['Never, that defeats the point', 'When actions are irreversible or external', 'Only in regulated industries', 'Every single step'], a: 1 },
-    { q: 'A model keeps inventing facts. Best fix?', opts: ['Threaten it', 'Ground it with source documents and ask for citations', 'Lower the temperature to 0 and trust it', 'Switch to a bigger model only'], a: 1 }
+  'Water & Climate': [
+    { q: 'The core principle of slowing runoff on a landscape is…', opts: ['Drain it away fast', 'Slow it, spread it, sink it', 'Pump it uphill', 'Cover everything in concrete'], a: 1 },
+    { q: 'A swale dug on contour primarily…', opts: ['Looks decorative', 'Catches water and lets it soak into the ground', 'Drains the land', 'Marks a boundary'], a: 1 },
+    { q: 'The biggest reservoir you can build on most land is…', opts: ['A plastic tank', 'The soil itself, full of organic matter', 'A swimming pool', 'A water tower'], a: 1 }
   ],
-  'Leadership': [
-    { q: 'In the SBI feedback framework, “B” stands for…', opts: ['Belief', 'Behavior', 'Benchmark', 'Boundary'], a: 1 },
-    { q: 'The strongest predictor of negotiation outcomes is…', opts: ['Charisma', 'Preparation', 'Aggression', 'Seniority'], a: 1 },
-    { q: 'Best opening for a difficult conversation?', opts: ['Soften with 10 minutes of small talk', 'State intent and the issue directly, with care', 'Email first, then talk', 'Start with everything they did right'], a: 1 }
+  'Food & Forest': [
+    { q: 'In a food forest, nitrogen-fixing plants are there to…', opts: ['Look pretty', 'Feed the system by fixing nitrogen for their neighbours', 'Keep people out', 'Be harvested first'], a: 1 },
+    { q: 'The golden rule of foraging is…', opts: ['Take as much as you can', 'Identify with absolute certainty before you eat anything', 'Forage only at night', 'Avoid all mushrooms forever'], a: 1 },
+    { q: 'A montado (cork-oak savannah) is special because it…', opts: ['Grows the fastest', 'Produces food, cork and habitat from one living system', 'Needs no care', 'Is purely ornamental'], a: 1 }
   ],
-  'Compliance': [
-    { q: 'You receive a too-good invoice from a known supplier with a new IBAN. You…', opts: ['Pay it, you know them', 'Verify via a known channel before paying', 'Forward to a colleague', 'Ignore it'], a: 1 },
-    { q: 'Under GDPR, a personal data breach must be reported to the authority within…', opts: ['24 hours', '72 hours', '7 days', '30 days'], a: 1 },
-    { q: 'A caller who sounds exactly like your CEO asks for an urgent transfer. You…', opts: ['Comply, it is the CEO', 'Verify through an independent channel — voice can be cloned', 'Ask them a personal question', 'Transfer half as a compromise'], a: 1 }
+  'Stewardship': [
+    { q: 'In permaculture design, what comes before any intervention?', opts: ['Buying machinery', 'Long, patient observation of the site', 'Pouring a foundation', 'Planting everything at once'], a: 1 },
+    { q: 'Defensible space around a building in fire season means…', opts: ['A tall fence', 'Cleared, managed vegetation that slows an approaching fire', 'A bigger house', 'Nothing — fire is unpredictable'], a: 1 },
+    { q: 'Good stewardship measures success over…', opts: ['A single season', 'Years and decades — leaving the land better', 'One harvest', 'A weekend'], a: 1 }
   ],
   '_default': [
-    { q: 'What is the most reliable way to make learning stick?', opts: ['Re-watching videos', 'Active recall and spaced practice', 'Highlighting notes', 'Longer sessions'], a: 1 },
-    { q: 'You disagree with a module\'s advice. Best move?', opts: ['Skip the course', 'Test it in a low-stakes situation and compare results', 'Assume the course is wrong', 'Assume you are wrong'], a: 1 },
-    { q: 'The point of a capstone project is to…', opts: ['Fill time', 'Prove transfer: apply skills to a realistic problem', 'Earn a badge', 'Review every module'], a: 1 }
+    { q: 'What makes a practice truly "regenerative" rather than just sustainable?', opts: ['It costs more', 'It actively rebuilds soil, water and life over time', 'It uses new technology', 'It is certified organic'], a: 1 },
+    { q: 'You disagree with a technique taught in a module. Best move?', opts: ['Ignore the course', 'Trial it on a small patch and observe the results yourself', 'Assume the course is wrong', 'Give up'], a: 1 },
+    { q: 'The point of the capstone land plan is to…', opts: ['Fill time', 'Apply everything to a real piece of land you can act on', 'Earn a badge', 'Re-watch the videos'], a: 1 }
   ]
 };
 
 const PATH_RATIONALES = [
-  'You aced joins & aggregations, so the AI skipped two SQL modules and moved Storytelling earlier — your assessment showed visualization is your biggest gap.',
-  'Fresh reshuffle: Experimentation now precedes Storytelling — your last quiz showed strong visual instincts but shaky stats vocabulary.',
-  'The AI pulled Forecasting into your path: three of your recent tutor questions were about projections, and it pairs well with your current module.',
-  'Capstone moved one step closer — your average score (94%) suggests you can compress the remaining theory modules.'
+  'You read soil confidently in your last assessment, so the AI skipped two soil modules and moved Water earlier — your terrain quiz showed water is your real bottleneck.',
+  'Fresh re-sequence: Agroforestry now follows Water — your answers showed strong plant instincts but shaky earthworks vocabulary.',
+  'The AI pulled Rainwater Harvesting into your path: three of your recent tutor questions were about summer drought, and it pairs with your current module.',
+  'Capstone moved one step closer — your average score (94%) suggests you can compress the remaining design theory and start planning your own land.'
 ];
 
 const TEAM = [
-  { name: 'João Amaral', initials: 'JA', role: 'Analytics Lead (you)', grad: 3, pct: 72, done: 3, last: 'Now', risk: false },
-  { name: 'Maya Chen', initials: 'MC', role: 'Head of Analytics', grad: 1, pct: 91, done: 7, last: '2h ago', risk: false },
-  { name: 'Dev Patel', initials: 'DP', role: 'Staff Engineer', grad: 2, pct: 84, done: 6, last: 'Today', risk: false },
-  { name: 'Sofia Reis', initials: 'SR', role: 'COO', grad: 6, pct: 58, done: 4, last: 'Yesterday', risk: false },
-  { name: 'Liam Walsh', initials: 'LW', role: 'Account Executive', grad: 4, pct: 31, done: 1, last: '6d ago', risk: true },
-  { name: 'Ana Duarte', initials: 'AD', role: 'Support Lead', grad: 7, pct: 66, done: 5, last: 'Today', risk: false },
-  { name: 'Tom Becker', initials: 'TB', role: 'Product Manager', grad: 5, pct: 22, done: 1, last: '12d ago', risk: true },
-  { name: 'Inês Costa', initials: 'IC', role: 'Designer', grad: 3, pct: 77, done: 5, last: '1h ago', risk: false }
+  { name: 'João Amaral', initials: 'JA', role: 'Founder & Steward (you)', grad: 1, pct: 72, done: 3, last: 'Now', risk: false },
+  { name: 'Marta Oliveira', initials: 'MO', role: 'Head of Regeneration', grad: 7, pct: 91, done: 7, last: '2h ago', risk: false },
+  { name: 'Dev Santos', initials: 'DS', role: 'Water Lead', grad: 5, pct: 84, done: 6, last: 'Today', risk: false },
+  { name: 'Sofia Reis', initials: 'SR', role: 'Land Manager', grad: 6, pct: 58, done: 4, last: 'Yesterday', risk: false },
+  { name: 'Liam Walsh', initials: 'LW', role: 'Volunteer Coordinator', grad: 2, pct: 31, done: 1, last: '6d ago', risk: true },
+  { name: 'Ana Duarte', initials: 'AD', role: 'Hospitality & Visitors', grad: 3, pct: 66, done: 5, last: 'Today', risk: false },
+  { name: 'Tom Becker', initials: 'TB', role: 'Forest Crew', grad: 4, pct: 22, done: 1, last: '12d ago', risk: true },
+  { name: 'Inês Costa', initials: 'IC', role: 'Seed & Nursery', grad: 8, pct: 77, done: 5, last: '1h ago', risk: false }
 ];
 
 const GOAL_PRESETS = {
-  'Analytics Lead': ['data-foundations', 'sql-dm', 'leading-data', 'storytelling', 'ab-testing', 'capstone'],
-  'People Manager': ['coaching', 'difficult-conv', 'negotiation', 'new-manager', 'wellbeing'],
-  'AI Power User': ['prompt-eng', 'ai-agents', 'systems', 'metrics'],
-  'CX Champion': ['empathy', 'difficult-conv', 'metrics', 'storytelling']
+  'Regenerative Steward': ['land-literacy', 'living-soil', 'water-cycles', 'agroforestry', 'regen-design', 'capstone-land'],
+  'Food Forester': ['living-soil', 'seed-saving', 'agroforestry', 'cork-oak', 'foraging'],
+  'Land Restorer': ['land-literacy', 'water-cycles', 'rewilding', 'rainwater', 'regen-design'],
+  'Rooted Living': ['nature-connection', 'seasonal-rhythm', 'herbal', 'community-land']
 };
 
 const ROLE_OPTIONS = [
-  { key: 'analytics', label: 'Analytics & Data', icon: '📊', goals: ['Analytics Lead', 'AI Power User'] },
-  { key: 'management', label: 'Management', icon: '🧭', goals: ['People Manager', 'Analytics Lead'] },
-  { key: 'ai', label: 'AI & Automation', icon: '⚡', goals: ['AI Power User', 'Analytics Lead'] },
-  { key: 'cx', label: 'Customer Experience', icon: '🤝', goals: ['CX Champion', 'People Manager'] }
+  { key: 'land', label: 'Land & Farming', icon: 'sprout', goals: ['Regenerative Steward', 'Food Forester'] },
+  { key: 'nature', label: 'Nature & Wellbeing', icon: 'leaf', goals: ['Rooted Living', 'Land Restorer'] },
+  { key: 'water', label: 'Water & Climate', icon: 'drop', goals: ['Land Restorer', 'Regenerative Steward'] },
+  { key: 'community', label: 'Community & Place', icon: 'people', goals: ['Rooted Living', 'Food Forester'] }
 ];
 
 const DEFAULT_STATE = {
@@ -197,21 +213,21 @@ const DEFAULT_STATE = {
   notes: {},
   apiKey: '',
   aiModel: 'claude-opus-4-8',
-  goal: 'Analytics Lead',
-  path: ['data-foundations', 'sql-dm', 'leading-data', 'storytelling', 'ab-testing', 'capstone'],
+  goal: 'Regenerative Steward',
+  path: ['land-literacy', 'living-soil', 'water-cycles', 'agroforestry', 'regen-design', 'capstone-land'],
   progress: {
-    'data-foundations': { done: true, score: 92 },
-    'sql-dm': { done: true, score: 92, note: '2 modules skipped by AI' },
-    'gdpr': { done: true, score: 88, cert: true },
-    'leading-data': { mod: 4, pct: 64 },
-    'security': { mod: 6, pct: 78 },
-    'prompt-eng': { mod: 3, pct: 42 },
-    'negotiation': { mod: 1, pct: 23 },
-    'coaching': { mod: 0, pct: 6 }
+    'land-literacy': { done: true, score: 92 },
+    'living-soil': { done: true, score: 92, note: '2 modules skipped by AI' },
+    'ethics': { done: true, score: 88, cert: true },
+    'water-cycles': { mod: 4, pct: 64 },
+    'fire-safety': { mod: 6, pct: 78 },
+    'foraging': { mod: 3, pct: 42 },
+    'agroforestry': { mod: 1, pct: 23 },
+    'nature-connection': { mod: 0, pct: 6 }
   },
   review: {},
   reminders: [],
   rationaleIdx: 0,
   quizzesPassed: 0,
-  week: [38, 52, 24, 65, 41, 0, 32] /* minutes Mon..Sun */
+  week: [38, 52, 24, 65, 41, 0, 32]
 };

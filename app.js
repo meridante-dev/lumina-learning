@@ -1,10 +1,10 @@
-/* ============ Lumina app — router, state, player, tutor ============ */
+/* ============ EdenRise app — router, state, player, tutor ============ */
 
 /* ---------- state ---------- */
 let S;
-try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem('lumina-state') || '{}')); }
+try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem('edenrise-state') || '{}')); }
 catch { S = structuredClone(DEFAULT_STATE); }
-const save = () => localStorage.setItem('lumina-state', JSON.stringify(S));
+const save = () => localStorage.setItem('edenrise-state', JSON.stringify(S));
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -25,6 +25,31 @@ function toast(msg, icon = '✨') {
   t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
   $('#toasts').appendChild(t);
   setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 2600);
+}
+
+/* ---------- EdenRise line-icon set (hand-drawn, single stroke) ---------- */
+const ICONS = {
+  leaf: '<path d="M5 19c0-8 6-14 14-14 0 8-6 14-14 14z"/><path d="M5 19C9 15 13 11 17 9"/>',
+  sprout: '<path d="M12 21v-7"/><path d="M12 14c-4 0-6-2.5-6-6 4 0 6 2.5 6 6z"/><path d="M12 12c0-3 2-5 5-5 0 3-2 5-5 5z"/>',
+  tree: '<circle cx="12" cy="8.5" r="5.4"/><path d="M12 13.9V21"/><path d="M12 21c-1.4 0-2.5-.6-3-1.6M12 21c1.4 0 2.5-.6 3-1.6"/>',
+  sun: '<circle cx="12" cy="12" r="4.1"/><path d="M12 2.4v2.6M12 19v2.6M2.4 12H5M19 12h2.6M5 5l1.8 1.8M17.2 17.2L19 19M19 5l-1.8 1.8M6.8 17.2L5 19"/>',
+  drop: '<path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z"/><path d="M9.5 14.5a2.6 2.6 0 0 0 2.5 2.4"/>',
+  waves: '<path d="M2 8c2 0 2 1.8 4 1.8S8 8 10 8s2 1.8 4 1.8S16 8 18 8s2 1.8 4 1.8"/><path d="M2 13c2 0 2 1.8 4 1.8S8 13 10 13s2 1.8 4 1.8 2-1.8 4-1.8 2 1.8 4 1.8"/><path d="M2 18c2 0 2 1.8 4 1.8S8 18 10 18s2 1.8 4 1.8 2-1.8 4-1.8 2 1.8 4 1.8"/>',
+  mountain: '<path d="M3 19l6-10 4 6 2-3.2 6 7.2z"/><circle cx="16.5" cy="6.5" r="1.6"/>',
+  seed: '<path d="M12 4c3.4 2.4 5 6 5 9a5 5 0 0 1-10 0c0-3 1.6-6.6 5-9z"/><path d="M9.6 13.4c1 1.5 3.8 1.5 4.8 0"/>',
+  hands: '<path d="M4 13c0-2 2-3 4-3M20 13c0-2-2-3-4-3"/><path d="M4 13c0 4.5 3.5 7 8 7s8-2.5 8-7"/><path d="M12 11V5M10 7l2-2 2 2"/>',
+  heart: '<path d="M12 20s-7-4.4-9-8.6C1.6 7.6 4 4.6 7 5.1c2 .3 3.5 2 5 3.6 1.5-1.6 3-3.3 5-3.6 3-.5 5.4 2.5 4 6.3-2 4.2-9 8.6-9 8.6z"/>',
+  people: '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.3"/><path d="M3 20c0-3.4 2.7-6 6-6s6 2.6 6 6"/><path d="M15.5 14.2c3 0 5.5 2.2 5.5 5.8"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/>',
+  flower: '<circle cx="12" cy="6.6" r="2.4"/><circle cx="17" cy="10.2" r="2.4"/><circle cx="15.1" cy="16" r="2.4"/><circle cx="8.9" cy="16" r="2.4"/><circle cx="7" cy="10.2" r="2.4"/><circle cx="12" cy="11.6" r="2.1"/>',
+  bird: '<path d="M21 7c-3 0-5 2.2-8 2.2S9 7 6.3 7C4.5 7 3 8 3 9.8c4 0 5 4.4 9 4.4s6.5-3.2 6.5-7.4"/><circle cx="18" cy="6.4" r=".5"/>',
+  fire: '<path d="M12 3s5 3.6 5 9a5 5 0 0 1-10 0c0-2.6 1.6-4.1 2.6-5 .2 1.5 1.4 2 1.4 2C11 7 11 4.6 12 3z"/>',
+  moon: '<path d="M20 13.6A8 8 0 1 1 10.4 4 6.2 6.2 0 0 0 20 13.6z"/>',
+  basket: '<path d="M4 9h16l-1.5 9.4a2 2 0 0 1-2 1.6H7.5a2 2 0 0 1-2-1.6z"/><path d="M8.2 9 11 4M15.8 9 13 4"/>'
+};
+function svgIcon(name, cls) {
+  const body = ICONS[name] || ICONS.leaf;
+  return `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
 }
 
 /* ---------- card builder ---------- */
@@ -48,7 +73,7 @@ function cardHTML(c, opts = {}) {
       <button class="icon-btn" data-action="play" data-id="${c.id}" title="Play">▶</button>
       <button class="icon-btn ${inPath(c.id) ? 'in-path' : ''}" data-action="toggle-path" data-id="${c.id}" title="${inPath(c.id) ? 'In your path' : 'Add to path'}">${inPath(c.id) ? '✓' : '＋'}</button>
     </div>
-    <div class="thumb t-grad-${c.grad}"><span class="big-icon">${c.icon}</span><div class="chip-row">${chips.join('')}</div></div>
+    <div class="thumb t-grad-${c.grad}"><span class="big-icon">${svgIcon(c.icon)}</span><div class="chip-row">${chips.join('')}</div></div>
     <div class="card-body">
       <h3>${c.title}</h3>
       <div class="meta"><span>${c.cat}</span><span class="dot"></span><span>${fmtMins(courseMins(c))}</span><span class="dot"></span><span>★ ${c.rating}</span></div>
@@ -83,7 +108,7 @@ function pathStepperHTML() {
   return `<div class="stepper">${S.path.map(id => {
     const c = courseById(id); if (!c) return '';
     const st = pathStatus(id); const p = prog(id);
-    const node = st === 'done' ? '✓' : st === 'current' ? '▶' : c.icon;
+    const node = st === 'done' ? '✓' : st === 'current' ? '▶' : svgIcon(c.icon);
     const sub = st === 'done' ? `Completed${p && p.score ? ' · ' + p.score + '%' : ''}` : st === 'current' ? `In progress · ${coursePct(id)}%` : (S.path.indexOf(id) === S.path.findIndex(x => !isDone(x)) + 1 ? 'Next up' : 'Locked');
     return `<div class="seg ${st}" data-action="open-course" data-id="${id}"><div class="snode">${node}</div><div class="sl">${c.title}</div><div class="sd">${sub}</div></div>`;
   }).join('')}</div>`;
@@ -142,13 +167,14 @@ function renderHome() {
       ${heroSide}
     </aside>
   </header>
-  ${railHTML('Continue learning', 'Synced across devices', continuing.map(c => cardHTML(c)))}
-  ${railHTML('Assigned to you', 'From Acme Co · L&amp;D', assigned.map(c => cardHTML(c)))}
+  <section class="pillars">${PILLARS.map(p => `<div class="pillar">${svgIcon(p.icon)}<span>${p.label}</span></div>`).join('')}</section>
+  ${railHTML('Continue learning', 'Synced across your devices', continuing.map(c => cardHTML(c)))}
+  ${railHTML('Assigned to you', 'From EdenRise · Stewardship', assigned.map(c => cardHTML(c)))}
   <section class="path-banner">
     <div class="shimmer"></div>
     <div class="path-banner-head">
       <div class="left">
-        <span class="ai-tag">✦ Generated by Lumina AI · updated 2h ago</span>
+        <span class="ai-tag">✦ Generated by EdenRise AI · updated 2h ago</span>
         <h2>Your path to ${S.goal}</h2>
         <p class="sub">Built from your role, your last 6 assessments, and the skills gap analysis your manager shared. It reshapes itself every time you learn.</p>
       </div>
@@ -163,10 +189,10 @@ function renderHome() {
     <div class="stat"><div class="num">12d</div><div class="lbl">Learning streak</div><div class="delta">▲ Personal best</div></div>
     <div class="stat"><div class="num">${fmtMins(S.week.reduce((a, b) => a + b, 0))}</div><div class="lbl">This week</div><div class="delta">▲ 38% vs last week</div></div>
     <div class="stat"><div class="num">${Object.values(S.progress).filter(p => p.done).length + S.quizzesPassed}</div><div class="lbl">Skills verified</div><div class="delta">▲ ${S.quizzesPassed} from quizzes</div></div>
-    <div class="stat"><div class="num">94%</div><div class="lbl">Avg. assessment score</div><div class="delta warn">— Top 5% in Acme Co</div></div>
+    <div class="stat"><div class="num">94%</div><div class="lbl">Avg. assessment score</div><div class="delta warn">— Top 5% in EdenRise</div></div>
   </section>
-  ${railHTML('Trending at Acme Co', 'What your colleagues are learning', trending.map((c, i) => cardHTML(c, { rank: c.trending })))}
-  ${railHTML('Because you completed “SQL for Decision Makers”', 'AI recommendations', recs.map(c => cardHTML(c)))}
+  ${railHTML('Trending at EdenRise', 'What the EdenRise community is learning', trending.map((c, i) => cardHTML(c, { rank: c.trending })))}
+  ${railHTML('Because you completed “Living Soil”', 'AI recommendations', recs.map(c => cardHTML(c)))}
   ${footerHTML()}</div>`;
 }
 
@@ -177,7 +203,7 @@ function renderLibrary() {
     (!libQuery || (c.title + ' ' + c.cat + ' ' + c.desc).toLowerCase().includes(libQuery.toLowerCase())));
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">Library</h1>
-    <p class="page-sub">${CATALOG.length} courses · curated by Acme Co L&amp;D, sequenced by Lumina AI.</p>
+    <p class="page-sub">${CATALOG.length} courses · tended by the EdenRise team, sequenced by EdenRise AI.</p>
     <div class="lib-search">⌕ <input id="libSearch" placeholder="Filter the library…" value="${esc(libQuery)}"></div>
     <div class="filter-row">${cats.map(c => `<button class="filter-chip ${c === libFilter ? 'active' : ''}" data-action="lib-filter" data-cat="${c}">${c}</button>`).join('')}</div>
     <div class="grid">${list.map(c => cardHTML(c)).join('')}</div>
@@ -214,7 +240,7 @@ function renderLive() {
     <p class="page-sub">Sessions with real humans — office hours, AMAs and workshops. Replays land in the Library within a day.</p>
     ${LIVE_SESSIONS.map(s => `
       <div class="live-card">
-        <div class="live-thumb t-grad-${s.grad}">${s.icon}${s.live ? '<span class="live-badge">● LIVE</span>' : ''}</div>
+        <div class="live-thumb t-grad-${s.grad}">${svgIcon(s.icon)}${s.live ? '<span class="live-badge">● LIVE</span>' : ''}</div>
         <div class="live-info">
           <h3>${s.title}</h3><div class="host">${s.host}</div><div class="d">${s.desc}</div>
         </div>
@@ -259,7 +285,7 @@ function renderAnalytics() {
       </div>
       <div class="chart-card">
         <h3>Certificates</h3>
-        ${certs.map(c => `<div class="cert-row"><span class="ci">${c.icon}</span><span class="ct">${c.title}</span><span class="cd">★ verified</span></div>`).join('') || '<p class="empty-note">Complete a course to earn your first certificate.</p>'}
+        ${certs.map(c => `<div class="cert-row"><span class="ci">${svgIcon(c.icon)}</span><span class="ct">${c.title}</span><span class="cd">★ verified</span></div>`).join('') || '<p class="empty-note">Complete a course to earn your first certificate.</p>'}
       </div>
     </div>
     <div class="chart-card">
@@ -289,7 +315,7 @@ function renderCourse(id) {
     <div class="course-hero">
       <div class="bg t-grad-${c.grad}"></div>
       <div class="course-hero-inner">
-        <div class="course-poster t-grad-${c.grad}">${c.icon}</div>
+        <div class="course-poster t-grad-${c.grad}">${svgIcon(c.icon)}</div>
         <div class="course-info">
           <div class="hero-meta">
             <span class="match">${c.ai ? '✦ In AI rotation' : c.cat}</span><span class="sep"></span>
@@ -318,7 +344,7 @@ function renderCourse(id) {
 
 const footerHTML = () => `
 <footer>
-  <div class="logo"><span class="logo-mark"></span>Lumina</div>
+  <div class="logo"><span class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="5.4"/><path d="M12 14.4V21"/><path d="M12 21c-1.5 0-2.6-.6-3.1-1.6M12 21c1.5 0 2.6-.6 3.1-1.6"/></svg></span>EdenRise</div>
   <span>· Learning OS for modern teams</span>
   <div class="links">
     <button data-action="toast-msg" data-msg="Admin console ships in the full product — team roll-ups, content upload, SSO.">Admin console</button>
@@ -344,7 +370,7 @@ function renderAdmin() {
     </tr>`).join('');
   const content = [...uploadedDrafts, ...CATALOG.slice(0, 6)].map(c => `
     <div class="content-row">
-      <span class="ci t-grad-${c.grad}">${c.icon}</span>
+      <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
       <div class="ct"><b>${c.title}</b><span>${c.cat} · ${c.modules.length} modules · ${c.learners || 0} learners</span></div>
       <span class="pub-chip ${c.draft ? 'draft' : 'live'}">${c.draft ? 'DRAFT · AI-built' : 'PUBLISHED'}</span>
       <button class="btn btn-glass btn-sm" data-action="toast-msg" data-msg="Course editor ships in the full product — module reorder, quiz authoring, captions.">Edit</button>
@@ -355,7 +381,7 @@ function renderAdmin() {
   }).join('');
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">Admin console</h1>
-    <p class="page-sub">Acme Co workspace · 247 seats · you're seeing the L&amp;D owner view.</p>
+    <p class="page-sub">EdenRise workspace · 247 seats · you.re seeing the steward.s view.</p>
     <section class="stats" style="margin:28px 0 0;">
       <div class="stat"><div class="num">247</div><div class="lbl">Active learners</div><div class="delta">▲ 12 this month</div></div>
       <div class="stat"><div class="num">81%</div><div class="lbl">Avg. completion</div><div class="delta">▲ 6% vs last quarter</div></div>
@@ -374,7 +400,7 @@ function renderAdmin() {
 
     <div class="admin-section">
       <h2>Content manager</h2>
-      <p class="sect-sub">Drop a video — Lumina AI transcribes it, splits it into modules, and drafts a quiz.</p>
+      <p class="sect-sub">Drop a video — EdenRise AI transcribes it, splits it into modules, and drafts a quiz.</p>
       <div class="dropzone" data-action="upload" id="dropzone">
         <div class="dz-icon">📤</div>
         <div class="dz-t">Drop video, slides or SCORM — or click to simulate an upload</div>
@@ -388,7 +414,7 @@ function renderAdmin() {
       <p class="sect-sub">Assignments appear on each learner's home with the due date.</p>
       <div class="composer">
         <div class="field"><label>Course</label>
-          <select id="asgCourse">${CATALOG.map(c => `<option value="${c.id}">${c.icon} ${c.title}</option>`).join('')}</select></div>
+          <select id="asgCourse">${CATALOG.map(c => `<option value="${c.id}">${c.title}</option>`).join('')}</select></div>
         <div class="field"><label>Team</label>
           <select id="asgTeam"><option>Everyone</option><option>Engineering</option><option>Sales</option><option>Support</option><option>Leadership</option></select></div>
         <div class="field"><label>Due date</label><input id="asgDue" type="date" value="2026-06-30"></div>
@@ -418,8 +444,49 @@ function render() {
       if (newGrid && oldGrid) oldGrid.innerHTML = newGrid.innerHTML;
     };
   }
+  initMotion();
 }
 addEventListener('hashchange', render);
+
+/* ---------- GSAP motion (graceful + never leaves content hidden) ---------- */
+const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const BLOCK_SEL = '.hero-content > *, .hero-side, .pillar, .rail-section, .path-banner, .stats, .module-list, .admin-section, .chart-card, .live-card, .two-col';
+function forceVisible() {
+  document.querySelectorAll(BLOCK_SEL).forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+}
+function initMotion() {
+  const G = window.gsap;
+  if (!G || reduceMotion) { forceVisible(); return; }
+  const ST = window.ScrollTrigger;
+  if (ST) { G.registerPlugin(ST); ST.getAll().forEach(t => t.kill()); }
+
+  /* hero entrance — headline, meta, actions, side panel */
+  const hero = $('.hero-content');
+  if (hero) {
+    const tl = G.timeline({ defaults: { ease: 'power3.out' } });
+    tl.from('.hero-eyebrow', { y: 18, opacity: 0, duration: .6 })
+      .from('.hero h1', { y: 28, opacity: 0, duration: .9 }, '-=.35')
+      .from('.hero-meta > *', { y: 14, opacity: 0, stagger: .05, duration: .5 }, '-=.5')
+      .from('.hero p.desc', { y: 18, opacity: 0, duration: .6 }, '-=.4')
+      .from('.hero-actions .btn', { y: 16, opacity: 0, stagger: .07, duration: .5 }, '-=.4')
+      .from('.hero-progress', { opacity: 0, duration: .6 }, '-=.3')
+      .from('.hero-side', { x: 26, opacity: 0, duration: .8 }, '-=.9');
+    /* safety: if frames are throttled (background tab), jump to the end */
+    setTimeout(() => { try { if (tl.progress() < 1) tl.progress(1); } catch (e) {} }, 2200);
+  }
+
+  if (ST) {
+    G.from('.pillar', { y: 14, opacity: 0, stagger: .06, duration: .6, ease: 'power2.out',
+      scrollTrigger: { trigger: '.pillars', start: 'top 95%', once: true } });
+    G.utils.toArray('.rail-section, .path-banner, .stats, .module-list, .admin-section, .chart-card, .live-card, .two-col').forEach(el => {
+      G.from(el, { y: 26, opacity: 0, duration: .7, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
+    });
+    setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 250);
+  }
+  /* hard guarantee: nothing stays invisible, even if rAF is frozen */
+  setTimeout(forceVisible, 2600);
+}
 
 /* ---------- player ---------- */
 const playerEl = $('#player'), videoEl = $('#playerVideo');
@@ -432,7 +499,7 @@ let sim = { timer: null, t: 0, dur: 20, running: false };
 function startSim(c, mod) {
   videoEl.style.display = 'none';
   simStage.classList.add('on');
-  $('#simIcon').textContent = c.icon;
+  $('#simIcon').innerHTML = svgIcon(c.icon);
   $('#simTitle').textContent = c.modules[mod];
   stopSim();
   $('#simPlayBtn').textContent = '⏸ Pause';
@@ -501,7 +568,7 @@ function closePlayer() {
 function makeTranscript(c, mod) {
   const t = c.modules[mod];
   return [
-    ['0:00', `Welcome back. This module is “${t}” — by the end you'll be able to apply it in your own work at Acme Co.`],
+    ['0:00', `Welcome back. This module is “${t}” — by the end you'll be able to apply it in your own work at EdenRise.`],
     ['0:48', `First, the common misconception: most teams treat ${t.toLowerCase()} as a one-off task. It's a habit, not an event.`],
     ['2:15', `Here's the framework — three parts, and the middle one is where ${c.cat.toLowerCase()} teams usually slip.`],
     ['4:40', `Quick example from a real ${c.cat.toLowerCase()} case. Notice what changes the moment the owner is named.`],
@@ -651,7 +718,7 @@ function drawPalette(q) {
   palIdx = 0;
   let html = '';
   if (courses.length) html += `<div class="palette-group">Courses</div>` + courses.map(c =>
-    `<div class="palette-item" data-pal="course:${c.id}"><span class="pi-icon t-grad-${c.grad}">${c.icon}</span><div><div>${c.title}</div><div class="pi-meta">${c.cat} · ${fmtMins(courseMins(c))} · ★ ${c.rating}</div></div></div>`).join('');
+    `<div class="palette-item" data-pal="course:${c.id}"><span class="pi-icon t-grad-${c.grad}">${svgIcon(c.icon)}</span><div><div>${c.title}</div><div class="pi-meta">${c.cat} · ${fmtMins(courseMins(c))} · ★ ${c.rating}</div></div></div>`).join('');
   if (acts.length) html += `<div class="palette-group">Actions</div>` + acts.map((a, i) =>
     `<div class="palette-item" data-pal="act:${PALETTE_ACTIONS.indexOf(a)}"><span class="pi-icon" style="background:var(--surface-2)">${a.icon}</span><div>${a.t}</div></div>`).join('');
   $('#palResults').innerHTML = html || `<div class="palette-empty">No matches for “${esc(q)}” — try the AI tutor.</div>`;
@@ -714,15 +781,15 @@ function buildTutorSystem() {
     const cc = courseById(x); if (!cc) return '';
     return `- ${cc.title}: ${isDone(x) ? 'completed' : pathStatus(x) === 'current' ? coursePct(x) + '% in progress' : 'locked'}`;
   }).join('\n');
-  return `You are Lumina Tutor, the in-app AI learning coach inside Lumina, a Netflix-style corporate learning platform used by Acme Co.
-You are talking to João, whose goal is "${S.goal}".
+  return `You are the EdenRise Tutor, the in-app AI learning companion inside EdenRise Academy — the learning platform of EdenRise, a regenerative-living farm and school in the Baixo Alentejo, Portugal. Its ethos: where nature leads, the land heals, and stewardship shapes everything. The courses teach regenerative living — soil, water, food forests, native flora, foraging, natural building, fire stewardship and nature connection.
+You are talking to João, the founder, whose learning goal is "${S.goal}".
 
 His AI learning path right now:
 ${pathLines}
 
 ${c ? `He currently has "${c.title}" open${p && !p.done ? ` — module ${(p.mod || 0) + 1} of ${c.modules.length}, "${c.modules[p.mod || 0]}", ${coursePct(c.id)}% complete` : ''}. Course description: ${c.desc}` : 'No course is currently open.'}
 
-Deadlines: "Security Awareness 2026" is due in 3 days (compliance, required); the team "Customer Empathy Sprint" is due June 30.
+Deadlines: "Fire Safety on the Land" is required and due in 3 days (it's fire season in the Alentejo); the team series "Living by the Seasons" is due June 30.
 
 Style: warm, encouraging, concise (2-4 sentences unless asked for depth). Refer to his actual progress and path when relevant. You can offer to quiz him — if he agrees, tell him to press the "Quiz me now" button. Never invent courses that aren't in his path or the descriptions above.`;
 }
@@ -783,7 +850,7 @@ function scriptedRespond(text) {
   if (t.includes('summar') || t.includes('recap')) { botSay(c ? `<b>${c.title}</b> in one breath: ${c.desc} The modules build toward “${c.modules[c.modules.length - 1]}” — and based on your quiz history, pay extra attention to module ${Math.min(3, c.modules.length)}: “${c.modules[Math.min(2, c.modules.length - 1)]}”.` : `Open a course and I'll summarize it with your gaps in mind.`); return; }
   if (t.includes('path')) { botSay(`On it — I rebalanced your path toward <b>${S.goal}</b>. Check the Paths tab; I moved your weakest verified skill earlier and trimmed what you've already proven.`); setTimeout(regenPath, 800); return; }
   if (t.includes('explain') || t.includes('new')) { botSay(c ? `Sure — imagine <b>${c.title.toLowerCase()}</b> as learning to drive: the early modules are mirrors-and-seatbelt basics, the middle ones are real traffic, and the capstone is your driving test. You're ${coursePct(c.id) || 0}% in — solidly “real traffic”. 🚗` : `Happy to — open any course and I'll explain it from zero.`); return; }
-  if (t.includes('due') || t.includes('deadline') || t.includes('assigned')) { botSay(`You have <b>Security Awareness 2026</b> due in 3 days (8 minutes left in your current module — easy win), and the team's <b>Customer Empathy Sprint</b> is due June 30.`); return; }
+  if (t.includes('due') || t.includes('deadline') || t.includes('assigned')) { botSay(`You have <b>Fire Safety on the Land</b> due in 3 days (8 minutes left in your current module — easy win), and the team's <b>Living by the Seasons</b> is due June 30.`); return; }
   botSay(c ? `Good question. In the context of <b>${c.title}</b>: ${c.desc.split('.')[0]}. Want me to turn that into flashcards, or queue the related module?` : `I can summarize courses, quiz you, track deadlines, or rebuild your path — try “what's due?” or “quiz me”.`);
 }
 
@@ -800,7 +867,7 @@ function regenPath() {
     S.path = [...done, ...rest];
     S.rationaleIdx = (S.rationaleIdx + 1) % PATH_RATIONALES.length;
     save(); render();
-    toast('Path re-planned by Lumina AI', '✦');
+    toast('Path re-planned by EdenRise AI', '✦');
   }, 1400);
 }
 
@@ -850,7 +917,7 @@ document.addEventListener('click', e => {
     case 'ai-overview': {
       const c = courseById(id);
       setTutorOpen(true);
-      botSay(`<b>${c.title}</b> — AI overview: ${c.desc} You'd be joining ${c.learners} colleagues (★ ${c.rating}). Given your goal (<b>${S.goal}</b>), I'd slot it ${inPath(id) ? 'right where it already is in your path' : 'after your current course'}. Want me to add it?`);
+      botSay(`<b>${c.title}</b> — AI overview: ${c.desc} You'd be joining ${c.learners} fellow stewards (★ ${c.rating}). Given your goal (<b>${S.goal}</b>), I'd slot it ${inPath(id) ? 'right where it already is in your path' : 'after your current course'}. Want me to add it?`);
       break;
     }
     case 'ai-open': setTutorOpen(true); break;
@@ -881,7 +948,7 @@ document.addEventListener('click', e => {
       }, 800);
       break;
     }
-    case 'reset-demo': localStorage.removeItem('lumina-state'); location.hash = '#/home'; location.reload(); break;
+    case 'reset-demo': localStorage.removeItem('edenrise-state'); location.hash = '#/home'; location.reload(); break;
   }
 });
 
@@ -961,12 +1028,12 @@ function drawOnboard() {
   $('#obFill').style.width = [33, 66, 100][ob.step] + '%';
   if (ob.step === 0) {
     body.innerHTML = `
-      <div class="ob-eyebrow">Step 1 of 3 · Welcome to Lumina</div>
+      <div class="ob-eyebrow">Step 1 of 3 · Welcome to EdenRise</div>
       <div class="ob-title">What do you do, João?</div>
       <p class="ob-sub">The AI uses your role to seed your first learning path. You can change everything later.</p>
       <div class="ob-grid">${ROLE_OPTIONS.map(r => `
         <div class="ob-option ${ob.role === r.key ? 'sel' : ''}" data-role="${r.key}">
-          <span class="oi">${r.icon}</span><div>${r.label}<div class="od">${r.goals[0]} track &amp; more</div></div>
+          <span class="oi">${svgIcon(r.icon)}</span><div>${r.label}<div class="od">${r.goals[0]} track &amp; more</div></div>
         </div>`).join('')}
       </div>
       <div class="ob-foot">
@@ -984,7 +1051,7 @@ function drawOnboard() {
       <p class="ob-sub">The AI sequences courses toward this goal and re-plans as you prove skills.</p>
       <div class="ob-grid">${goals.map(g => `
         <div class="ob-option ${ob.goal === g ? 'sel' : ''}" data-goal="${g}">
-          <span class="oi">${courseById(GOAL_PRESETS[g][0]).icon}</span><div>${g}<div class="od">${GOAL_PRESETS[g].length} courses · adaptive</div></div>
+          <span class="oi">${svgIcon(courseById(GOAL_PRESETS[g][0]).icon)}</span><div>${g}<div class="od">${GOAL_PRESETS[g].length} courses · adaptive</div></div>
         </div>`).join('')}
       </div>
       <div class="ob-foot">
@@ -1001,7 +1068,7 @@ function drawOnboard() {
         <div class="ob-title" style="font-size:24px;">Building your path to ${ob.goal}</div>
         <div class="gen-line" id="genLine">Reading your role profile…</div>
       </div>`;
-    const lines = ['Reading your role profile…', 'Scanning the Acme Co library…', 'Checking skills you can skip…', 'Sequencing 4–6 courses…', 'Done ✓'];
+    const lines = ['Reading your role profile…', 'Scanning the EdenRise library…', 'Checking skills you can skip…', 'Sequencing 4–6 courses…', 'Done ✓'];
     let i = 0;
     const iv = setInterval(() => {
       i++;
@@ -1035,7 +1102,7 @@ $('#avatarMenu').addEventListener('click', e => {
   if (b.dataset.m === 'profile') location.hash = '#/analytics';
   if (b.dataset.m === 'onboard') startOnboarding();
   if (b.dataset.m === 'switch') toast('Workspace switching ships in the full product', '🏢');
-  if (b.dataset.m === 'reset') { localStorage.removeItem('lumina-state'); location.hash = '#/home'; location.reload(); }
+  if (b.dataset.m === 'reset') { localStorage.removeItem('edenrise-state'); location.hash = '#/home'; location.reload(); }
   if (b.dataset.m === 'signout') toast('SSO sign-out ships in the full product', '👋');
 });
 
