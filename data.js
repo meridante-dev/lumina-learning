@@ -30,13 +30,13 @@ const PILLARS = [
 const CATALOG = [
   {
     id: 'land-literacy', title: 'Reading the Land', cat: 'Nature Connection', grad: 6, icon: 'compass',
-    level: 'Beginner', rating: 4.9, learners: 412, ai: true,
+    level: 'Beginner', rating: 4.9, learners: 412, ai: true, video: mediaUrl('v3.mp4'),
     desc: 'Before you change a landscape, learn to read it. Slope, water, soil, sun and succession — the literacy that every act of stewardship begins with.',
     modules: ['Standing still: how to observe', 'Reading slope & water', 'Soil by feel & sight', 'Sun, shade & aspect', 'Succession & what land wants', 'Mapping your patch']
   },
   {
     id: 'living-soil', title: 'Living Soil', cat: 'Land & Soil', grad: 7, icon: 'sprout',
-    level: 'Beginner', rating: 4.8, learners: 356, ai: true,
+    level: 'Beginner', rating: 4.8, learners: 356, ai: true, video: mediaUrl('v3.mp4'),
     desc: 'Soil is not dirt — it is a living community. Meet the microbiome beneath your feet and the practices that feed it instead of mining it.',
     modules: ['The soil food web', 'Why we stopped tilling', 'Compost as inoculant', 'Cover crops & living roots', 'Mulch & bare-soil rules', 'Reading a soil test']
   },
@@ -48,19 +48,19 @@ const CATALOG = [
   },
   {
     id: 'agroforestry', title: 'Agroforestry & the Edible Forest', cat: 'Food & Forest', grad: 1, icon: 'tree',
-    level: 'Intermediate', rating: 4.9, learners: 187, ai: true,
+    level: 'Intermediate', rating: 4.9, learners: 187, ai: true, video: mediaUrl('v3.mp4'),
     desc: 'Stack a forest that feeds you. Seven layers, nitrogen fixers, and the patient art of designing a system that grows more abundant every year.',
     modules: ['The seven layers', 'Choosing your canopy', 'Nitrogen fixers & support species', 'Guilds that work together', 'Planting for succession', 'Tending the young forest']
   },
   {
     id: 'regen-design', title: 'Designing with Nature', cat: 'Stewardship', grad: 6, icon: 'leaf',
-    level: 'Advanced', rating: 4.8, learners: 143,
+    level: 'Advanced', rating: 4.8, learners: 143, video: mediaUrl('v3.mp4'),
     desc: 'Permaculture design from observation to plan: zones, sectors, and how to place every element so the land does the work, not you.',
     modules: ['Observation before action', 'Zones & sectors', 'Placing elements by relationship', 'Patterns to details', 'The whole-site plan']
   },
   {
     id: 'capstone-land', title: 'Capstone: Your Land Plan', cat: 'Stewardship', grad: 8, icon: 'mountain',
-    level: 'Advanced', rating: 4.9, learners: 96, ai: true,
+    level: 'Advanced', rating: 4.9, learners: 96, ai: true, video: mediaUrl('v3.mp4'),
     desc: 'The graded finale: produce and present a one-year regeneration plan for a real piece of land. EdenRise AI reviews it for water, soil, and sequence.',
     modules: ['Briefing your site', 'Water-first design', 'Sequencing the first year', 'Dry-run with AI feedback', 'AI-graded review']
   },
