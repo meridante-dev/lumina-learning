@@ -579,6 +579,78 @@ function renderProgress() {
   </div>${footerHTML()}</div>`;
 }
 
+/* ================= Nudges & notifications ================= */
+function nextLesson() {
+  const id = S.path.find(x => !isDone(x)); if (!id) return null;
+  const c = courseById(id); if (!c) return null;
+  const p = prog(id); const mi = p && !p.done ? (p.mod || 0) : 0;
+  return { course: ctitle(c), mod: (cmods(c)[mi] || ''), route: '#/course/' + id };
+}
+function computeNudges() {
+  const out = [];
+  const lv = levelFor(S.xp);
+  const rank = myRank();
+  const nl = nextLesson();
+  if (rank.ahead) out.push({ id: 'board', icon: '🌿', title: t('nudge_board_t'), body: t('nudge_board_b').replace('{name}', rank.ahead.name.split(' ')[0]).replace('{xp}', rank.ahead.xp - S.xp), route: '#/progress' });
+  else out.push({ id: 'top', icon: '🌟', title: t('nudge_top_t'), body: t('nudge_top_b'), route: '#/progress' });
+  if (lv.next != null && lv.toNext <= 140) out.push({ id: 'level', icon: '🌱', title: t('nudge_level_t'), body: t('nudge_level_b').replace('{xp}', lv.toNext).replace('{lvl}', tlevel(lv.idx + 1)), route: '#/library' });
+  if (S.streak > 0) out.push({ id: 'streak', icon: '🔥', title: t('nudge_streak_t').replace('{n}', S.streak), body: t('nudge_streak_b'), route: nl ? nl.route : '#/library' });
+  if (nl) out.push({ id: 'lesson', icon: '▶', title: t('nudge_lesson_t'), body: t('nudge_lesson_b').replace('{mod}', nl.mod).replace('{course}', nl.course), route: nl.route });
+  const done = CATALOG.filter(c => isDone(c.id)).length;
+  if (done === 2 && !(S.badges || []).includes('grove')) out.push({ id: 'badge', icon: '🏅', title: t('nudge_badge_t'), body: t('nudge_badge_b'), route: '#/library' });
+  return out.slice(0, 5);
+}
+function notifPrefs() { return (S.profile && S.profile.notify) || {}; }
+function updateBell() {
+  const dot = $('#bellDot'); if (!dot) return;
+  const seen = sessionStorage.getItem('nudges-seen');
+  dot.style.display = (computeNudges().length && !seen) ? 'block' : 'none';
+}
+function nudgePanelHTML() {
+  const ns = computeNudges();
+  if (!ns.length) return `<div class="nudge-empty">${t('nudge_empty')}</div>`;
+  return ns.map(n => `<button class="nudge" data-action="goto" data-route="${n.route}">
+    <span class="nudge-ic">${n.icon}</span>
+    <div class="nudge-txt"><div class="nudge-t">${n.title}</div><div class="nudge-b">${n.body}</div></div>
+  </button>`).join('');
+}
+function openBell() {
+  const panel = $('#bellPanel'); if (!panel) return;
+  panel.innerHTML = nudgePanelHTML();
+  makeFocusable(panel);
+  const open = panel.classList.toggle('open');
+  if (open) { sessionStorage.setItem('nudges-seen', '1'); updateBell(); }
+}
+/* browser notifications — a real, no-backend nudge channel */
+function fireBrowserNudge() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return false;
+  const ns = computeNudges(); if (!ns.length) return false;
+  const n = ns[0];
+  try { new Notification('EdenRise · ' + n.title, { body: n.body, icon: 'favicon.svg', tag: 'edenrise-nudge' }); return true; } catch (e) { return false; }
+}
+function welcomeNudge() {
+  if (sessionStorage.getItem('welcomed')) return;
+  sessionStorage.setItem('welcomed', '1');
+  const ns = computeNudges(); if (!ns.length) return;
+  if (notifPrefs().push && !fireBrowserNudge()) { /* permission lost */ }
+  const top = ns[0];
+  setTimeout(() => toast(`${top.icon} ${top.body}`, '🌱'), 1400);
+}
+async function toggleNotif(ch) {
+  const prof = S.profile = S.profile || {};
+  const notify = prof.notify = prof.notify || {};
+  if (ch === 'push' && !notify.push) {
+    if (!('Notification' in window)) { toast(t('notif_blocked'), '⚠️'); return; }
+    let perm = Notification.permission;
+    if (perm === 'default') perm = await Notification.requestPermission();
+    if (perm !== 'granted') { toast(t('notif_blocked'), '⚠️'); return; }
+    notify.push = true; save(); render(); toast(t('notif_on'), '🔔'); fireBrowserNudge();
+    return;
+  }
+  notify[ch] = !notify[ch];
+  save(); render();
+}
+
 /* ================= Community forum ================= */
 let commChannel = 'general', commThread = null, commPosts = [], commReplies = [];
 let commUnsub = null, commThreadUnsub = null;
@@ -732,6 +804,7 @@ function submitReply() {
 function renderProfile() {
   const p = S.profile || {};
   const isGuest = !p.uid;
+  const notify = notifPrefs();
   const lv = levelFor(S.xp);
   const doneCount = CATALOG.filter(c => isDone(c.id)).length;
   const providerLabel = p.provider === 'google.com' ? 'Google' : p.provider === 'password' ? 'Email' : (p.provider || '');
@@ -766,6 +839,14 @@ function renderProfile() {
       </div>
       <button class="btn btn-primary" data-action="save-profile" style="margin-top:16px;">${t('prof_save')}</button>
     </div>
+    <div class="admin-section">
+      <h2>${t('notif_title')}</h2>
+      <p class="sect-sub">${t('notif_sub')}</p>
+      <div class="notif-row"><div class="notif-info"><b>${t('notif_browser')}</b><span>${t('notif_browser_d')}</span></div><div class="toggle ${notify.push ? 'on' : ''}" data-action="notif-toggle" data-ch="push" role="switch" aria-checked="${notify.push ? 'true' : 'false'}" tabindex="0"></div></div>
+      <div class="notif-row"><div class="notif-info"><b>${t('notif_email')}</b><span>${t('notif_email_d')} · <em>${t('notif_soon')}</em></span></div><div class="toggle ${notify.email ? 'on' : ''}" data-action="notif-toggle" data-ch="email" role="switch" aria-checked="${notify.email ? 'true' : 'false'}" tabindex="0"></div></div>
+      <div class="notif-row"><div class="notif-info"><b>${t('notif_whatsapp')}</b><span>${t('notif_whatsapp_d')} · <em>${t('notif_soon')}</em></span></div><div class="toggle ${notify.whatsapp ? 'on' : ''}" data-action="notif-toggle" data-ch="whatsapp" role="switch" aria-checked="${notify.whatsapp ? 'true' : 'false'}" tabindex="0"></div></div>
+      ${notify.whatsapp ? `<input class="auth-input" id="pfPhone" placeholder="${t('notif_phone_ph')}" value="${esc(p.phone || '')}" style="margin-top:12px;max-width:300px;">` : ''}
+    </div>
     ${isGuest ? '' : `<button class="btn btn-glass" data-action="signout" style="margin-top:20px;">${t('prof_signout')}</button>`}
   </div>${footerHTML()}</div>`;
 }
@@ -774,7 +855,8 @@ function saveProfile() {
   const user = slugHandle($('#pfUser').value);
   const role = $('#pfRole').value;
   const goal = $('#pfGoal').value;
-  S.profile = Object.assign({}, S.profile, { name: name || displayName(), username: user, role });
+  const phone = $('#pfPhone') ? $('#pfPhone').value.trim() : ((S.profile && S.profile.phone) || '');
+  S.profile = Object.assign({}, S.profile, { name: name || displayName(), username: user, role, phone });
   if (role) S.role = role;
   if (goal && goal !== S.goal) { S.goal = goal; S.path = [...GOAL_PRESETS[goal]]; }
   save();
@@ -840,6 +922,7 @@ function syncChrome() {
   const pc = $('#playerComplete'); if (pc) pc.textContent = t('mark_complete');
   $$('.lang-btn').forEach(b => { const on = b.dataset.lang === _lang(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   document.documentElement.classList.toggle('is-admin', isAdmin());
+  updateBell();
   document.documentElement.lang = _lang();
 }
 function setLang(l) {
@@ -1323,6 +1406,7 @@ document.addEventListener('click', e => {
   const el = e.target.closest('[data-action]');
   /* close avatar menu on outside click */
   if (!e.target.closest('.avatar') && !e.target.closest('.avatar-menu')) $('#avatarMenu').classList.remove('open');
+  if (!e.target.closest('.bell') && !e.target.closest('.nudge-panel')) { const bp = $('#bellPanel'); if (bp) bp.classList.remove('open'); }
   if (!el) return;
   e.stopPropagation();
   const { action, id, mod, dir, route, cat, msg } = el.dataset;
@@ -1369,6 +1453,7 @@ document.addEventListener('click', e => {
     }
     case 'ai-open': setTutorOpen(true); break;
     case 'save-profile': saveProfile(); break;
+    case 'notif-toggle': toggleNotif(el.dataset.ch); break;
     case 'comm-channel': commChannel = el.dataset.ch; commThread = null; render(); break;
     case 'comm-open': commThread = id; render(); break;
     case 'comm-back': commThread = null; render(); break;
@@ -1423,6 +1508,7 @@ document.addEventListener('click', e => {
 addEventListener('scroll', () => $('#nav').classList.toggle('scrolled', scrollY > 30), { passive: true });
 $('#navSearch').addEventListener('click', openPalette);
 $('#avatarBtn').addEventListener('click', e => { e.stopPropagation(); const open = $('#avatarMenu').classList.toggle('open'); $('#avatarBtn').setAttribute('aria-expanded', open ? 'true' : 'false'); });
+$('#bellBtn').addEventListener('click', e => { e.stopPropagation(); $('#avatarMenu').classList.remove('open'); openBell(); });
 
 /* mobile drawer */
 const mDrawer = $('#mobileDrawer'), mBurger = $('#navBurger');
@@ -1610,6 +1696,7 @@ window.EdenApp = {
     checkBadges(true);
     updateXpChip(); render();
     this.maybeOnboard();
+    if (S.onboarded) welcomeNudge();
   },
   maybeOnboard() { if (!S.onboarded) startOnboarding(); },
   applyProfile(p) {
@@ -1628,6 +1715,8 @@ checkBadges(true);
 save();
 render();
 updateXpChip();
+/* gentle "welcome back" nudge once per session (only when past the gate) */
+if (S.onboarded && document.documentElement.getAttribute('data-gate') !== 'on') welcomeNudge();
 /* onboarding is triggered AFTER the user gets past the auth gate (see auth.js /
    EdenApp.maybeOnboard) — never before sign-in. Fallback: if no auth module is
    present at all (Firebase blocked), still onboard so the demo isn't stuck. */

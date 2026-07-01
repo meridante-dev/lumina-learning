@@ -1616,3 +1616,36 @@ html[data-gate="on"] #authGate { display: flex; }
 /* ================= Admin-only gating ================= */
 html:not(.is-admin) [data-admin] { display: none !important; }
 .admin-badge { display: inline-block; vertical-align: middle; font-family: var(--font-body); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0e140f; background: var(--accent); padding: 3px 8px; border-radius: 6px; margin-left: 8px; position: relative; top: -3px; }
+
+/* ================= Nudges: bell + panel + preferences ================= */
+.bell { position: relative; width: 38px; height: 38px; border-radius: 11px; background: var(--surface-2); border: 1px solid var(--line); color: var(--text-dim); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color .15s, background .15s; }
+.bell:hover { color: var(--text); background: var(--surface); }
+.bell svg { width: 19px; height: 19px; }
+.bell-dot { position: absolute; top: 8px; right: 9px; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); display: none; }
+.nudge-panel { position: absolute; top: 60px; right: 20px; width: 340px; max-width: calc(100vw - 24px); background: #141c16; border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 30px 80px rgba(0,0,0,.65); padding: 8px; z-index: 200; display: none; flex-direction: column; gap: 4px; }
+.nudge-panel.open { display: flex; animation: authIn .18s ease; }
+.nudge { display: flex; gap: 12px; align-items: flex-start; text-align: left; background: none; border: none; cursor: pointer; padding: 12px; border-radius: 11px; transition: background .14s; width: 100%; }
+.nudge:hover { background: var(--surface-2); }
+.nudge-ic { font-size: 20px; line-height: 1.2; flex-shrink: 0; }
+.nudge-txt { min-width: 0; }
+.nudge-t { font-weight: 700; font-size: 13.5px; color: var(--text); }
+.nudge-b { font-size: 12.5px; color: var(--text-dim); line-height: 1.45; margin-top: 2px; }
+.nudge-empty { padding: 22px 16px; text-align: center; font-size: 13px; color: var(--text-faint); }
+.notif-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.notif-row:last-of-type { border-bottom: none; }
+.notif-info b { font-size: 14px; }
+.notif-info span { display: block; font-size: 12.5px; color: var(--text-faint); margin-top: 3px; }
+.notif-info em { color: var(--accent); font-style: normal; opacity: .85; }
+@media (max-width: 1024px) { .nudge-panel { top: calc(52px + env(safe-area-inset-top)); right: 12px; } }
+
+/* Mid-width desktops (1025–1480): keep the essential right-side controls
+   (bell + avatar) on screen by shedding the decorative chips + shrinking search */
+@media (min-width: 1025px) and (max-width: 1480px) {
+  .nav-right .org-chip, .nav-right .xp-chip { display: none; }
+  .search { width: 168px; }
+  nav.topnav { gap: 12px; }
+  .nav-right { gap: 10px; }
+}
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .search { display: none; }
+}
