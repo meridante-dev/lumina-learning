@@ -81,6 +81,10 @@ window.EdenCloud = {
     try { await signOut(auth); } catch (e) {}
     localStorage.removeItem(KEY);   // clear this device; cloud copy is safe
     location.reload();
+  },
+  async updateName(name) {
+    const u = auth.currentUser; if (!u || !name) return;
+    try { await updateProfile(u, { displayName: name }); } catch (e) {}
   }
 };
 
@@ -99,7 +103,7 @@ onAuthStateChanged(auth, async user => {
     showErr('');
     hideGate();
   } else {
-    if (localStorage.getItem(MODE) === 'guest') hideGate();
+    if (localStorage.getItem(MODE) === 'guest') { hideGate(); if (window.EdenApp) window.EdenApp.maybeOnboard(); }
     else showGate();
   }
 });
@@ -180,7 +184,7 @@ function wire() {
   });
 
   $('#authToggle').addEventListener('click', () => { signupMode = !signupMode; refreshMode(); });
-  $('#authGuest').addEventListener('click', () => { localStorage.setItem(MODE, 'guest'); hideGate(); });
+  $('#authGuest').addEventListener('click', () => { localStorage.setItem(MODE, 'guest'); hideGate(); if (window.EdenApp) window.EdenApp.maybeOnboard(); });
 
   // language buttons anywhere (incl. the gate) re-translate the gate
   document.addEventListener('click', ev => { if (ev.target.closest('.lang-btn')) setTimeout(translateGate, 0); });

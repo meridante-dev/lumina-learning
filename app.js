@@ -18,6 +18,13 @@ const courseMins = c => c.modules.length * 12;
 const fmtMins = m => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60 ? (m % 60) + 'm' : ''}`.trim() : `${m}m`;
 const vidFor = (id, mod) => VIDS[(id.length * 7 + mod * 3) % VIDS.length];
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+/* identity — real profile name once signed in, else the demo founder */
+const displayName = () => (S.profile && S.profile.name) || 'João';
+const firstName = () => displayName().trim().split(/\s+/)[0] || 'João';
+const userHandle = () => (S.profile && S.profile.username) || '';
+const userInitials = () => displayName().trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'JA';
+const slugHandle = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '').slice(0, 20);
+const suggestHandle = () => { const p = S.profile || {}; return slugHandle(p.username) || slugHandle(p.name) || slugHandle((p.email || '').split('@')[0]) || 'learner'; };
 
 function toast(msg, icon = '✨') {
   const t = document.createElement('div');
@@ -569,8 +576,63 @@ function renderProgress() {
   </div>${footerHTML()}</div>`;
 }
 
+function renderProfile() {
+  const p = S.profile || {};
+  const isGuest = !p.uid;
+  const lv = levelFor(S.xp);
+  const doneCount = CATALOG.filter(c => isDone(c.id)).length;
+  const providerLabel = p.provider === 'google.com' ? 'Google' : p.provider === 'password' ? 'Email' : (p.provider || '');
+  const roleOpts = ROLE_OPTIONS.map(r => `<option value="${r.key}" ${S.role === r.key ? 'selected' : ''}>${trole(r)}</option>`).join('');
+  const goalOpts = Object.keys(GOAL_PRESETS).map(g => `<option value="${g}" ${S.goal === g ? 'selected' : ''}>${tgoal(g)}</option>`).join('');
+  return `<div class="page"><div class="page-pad">
+    <h1 class="page-title">${t('prof_title')}</h1>
+    <p class="page-sub">${t('prof_sub')}</p>
+    ${isGuest ? `<div class="prof-guest">🌱 <span>${t('prof_guest')}</span><button class="btn btn-primary btn-sm" data-action="show-login">${t('prof_signin')}</button></div>` : ''}
+    <div class="prof-card">
+      <div class="prof-avatar ${p.photo ? 'has-photo' : ''}"${p.photo ? ` style="background-image:url('${esc(p.photo)}')"` : ''}>${p.photo ? '' : userInitials()}</div>
+      <div class="prof-id">
+        <div class="prof-name">${esc(displayName())}</div>
+        <div class="prof-handle">${userHandle() ? '@' + esc(userHandle()) : '—'}</div>
+        <div class="prof-meta">${isGuest ? (_lang() === 'pt' ? 'Conta de convidado' : 'Guest account') : esc(p.email || '')}${providerLabel ? ` · ${t('prof_via')} ${providerLabel}` : ''}</div>
+      </div>
+      <div class="prof-lvl"><div class="lv-num">${t('level_ab')} ${lv.idx + 1}</div><div class="lv-name">${tlevel(lv.idx)}</div><div class="prof-xp">${S.xp.toLocaleString()} XP</div></div>
+    </div>
+    <div class="prof-stats">
+      <div class="stat"><div class="num">${doneCount}</div><div class="lbl">${t('courses_finished')}</div></div>
+      <div class="stat"><div class="num">${S.badges.length}</div><div class="lbl">${t('badges_earned')}</div></div>
+      <div class="stat"><div class="num">${S.streak}d</div><div class="lbl">${t('learning_streak')}</div></div>
+      <div class="stat"><div class="num">${S.quizzesPassed}</div><div class="lbl">${t('skills_verified')}</div></div>
+    </div>
+    <div class="admin-section">
+      <h2>${t('prof_edit')}</h2>
+      <div class="prof-form">
+        <label>${t('prof_name')}<input class="auth-input" id="pfName" value="${esc(displayName())}"></label>
+        <label>${t('prof_username')}<div class="ob-handle"><span>@</span><input class="ob-input" id="pfUser" maxlength="20" value="${esc(userHandle())}" placeholder="${suggestHandle()}"></div></label>
+        <label>${t('prof_role')}<select class="auth-input" id="pfRole"><option value="">—</option>${roleOpts}</select></label>
+        <label>${t('prof_goal')}<select class="auth-input" id="pfGoal">${goalOpts}</select></label>
+      </div>
+      <button class="btn btn-primary" data-action="save-profile" style="margin-top:16px;">${t('prof_save')}</button>
+    </div>
+    ${isGuest ? '' : `<button class="btn btn-glass" data-action="signout" style="margin-top:20px;">${t('prof_signout')}</button>`}
+  </div>${footerHTML()}</div>`;
+}
+function saveProfile() {
+  const name = ($('#pfName').value || '').trim();
+  const user = slugHandle($('#pfUser').value);
+  const role = $('#pfRole').value;
+  const goal = $('#pfGoal').value;
+  S.profile = Object.assign({}, S.profile, { name: name || displayName(), username: user, role });
+  if (role) S.role = role;
+  if (goal && goal !== S.goal) { S.goal = goal; S.path = [...GOAL_PRESETS[goal]]; }
+  save();
+  if (window.EdenCloud && window.EdenCloud.updateName) window.EdenCloud.updateName(name);
+  EdenApp.applyProfile(S.profile);
+  updateXpChip(); render();
+  toast(t('prof_saved'), '✓');
+}
+
 /* ---------- router ---------- */
-const routes = { home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin };
+const routes = { home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin, profile: renderProfile };
 /* a11y: make clickable non-native elements keyboard-operable */
 function makeFocusable(root) {
   (root || document).querySelectorAll('[data-action]').forEach(el => {
@@ -989,11 +1051,11 @@ function tutorGreet() {
   const p = c && prog(c.id);
   const pt = _lang() === 'pt';
   if (c && p && !p.done) botSay(pt
-    ? `Olá João 👋 Está ${coursePct(c.id)}% em <b>${ctitle(c)}</b> — de momento em “${cmods(c)[p.mod || 0]}”. Quer um resumo de 30 segundos, ou faço-lhe um teste?`
-    : `Hey João 👋 You're ${coursePct(c.id)}% through <b>${ctitle(c)}</b> — currently on “${cmods(c)[p.mod || 0]}”. Want a 30-second recap, or shall I quiz you?`);
+    ? `Olá ${firstName()} 👋 Está ${coursePct(c.id)}% em <b>${ctitle(c)}</b> — de momento em “${cmods(c)[p.mod || 0]}”. Quer um resumo de 30 segundos, ou faço-lhe um teste?`
+    : `Hey ${firstName()} 👋 You're ${coursePct(c.id)}% through <b>${ctitle(c)}</b> — currently on “${cmods(c)[p.mod || 0]}”. Want a 30-second recap, or shall I quiz you?`);
   else botSay(pt
-    ? `Olá João 👋 Posso resumir qualquer curso, testá-lo, ou reconstruir o seu percurso. Vejo o seu progresso e o seu objetivo (<b>${tgoal(S.goal)}</b>) — pergunte-me o que quiser.`
-    : `Hey João 👋 I can summarize any course, quiz you, or rebuild your learning path. I can see your progress and your goal (<b>${tgoal(S.goal)}</b>) — ask me anything.`);
+    ? `Olá ${firstName()} 👋 Posso resumir qualquer curso, testá-lo, ou reconstruir o seu percurso. Vejo o seu progresso e o seu objetivo (<b>${tgoal(S.goal)}</b>) — pergunte-me o que quiser.`
+    : `Hey ${firstName()} 👋 I can summarize any course, quiz you, or rebuild your learning path. I can see your progress and your goal (<b>${tgoal(S.goal)}</b>) — ask me anything.`);
 }
 function openTutorWith(html, quicks) {
   setTutorOpen(true);
@@ -1009,7 +1071,7 @@ function buildTutorSystem() {
     return `- ${cc.title}: ${isDone(x) ? 'completed' : pathStatus(x) === 'current' ? coursePct(x) + '% in progress' : 'locked'}`;
   }).join('\n');
   return `You are the EdenRise Tutor, the in-app AI learning companion inside EdenRise Academy — the learning platform of EdenRise, a regenerative-living farm and school in the Baixo Alentejo, Portugal. Its ethos: where nature leads, the land heals, and stewardship shapes everything. The courses teach regenerative living — soil, water, food forests, native flora, foraging, natural building, fire stewardship and nature connection.
-You are talking to João, the founder, whose learning goal is "${S.goal}".
+You are talking to ${displayName()}${S.role ? ' (' + S.role + ')' : ''}, whose learning goal is "${S.goal}".
 
 His AI learning path right now:
 ${pathLines}
@@ -1149,6 +1211,9 @@ document.addEventListener('click', e => {
       break;
     }
     case 'ai-open': setTutorOpen(true); break;
+    case 'save-profile': saveProfile(); break;
+    case 'show-login': document.documentElement.setAttribute('data-gate', 'on'); break;
+    case 'signout': if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); break;
     case 'toast-msg': toast(msg, 'ℹ️'); break;
     case 'nudge': toast(`Reminder sent to ${el.dataset.name} with their next module`, '👋'); break;
     case 'assign': {
@@ -1266,9 +1331,9 @@ $('#apiKeyClear').addEventListener('click', () => {
 syncTutorStatus();
 
 /* ---------- onboarding ---------- */
-let ob = { step: 0, role: null, goal: null };
+let ob = { step: 0, role: null, goal: null, username: '' };
 function startOnboarding() {
-  ob = { step: 0, role: null, goal: null };
+  ob = { step: 0, role: (S.profile && S.profile.role) || null, goal: null, username: (S.profile && S.profile.username) || '' };
   $('#onboard').classList.add('open');
   drawOnboard();
 }
@@ -1278,8 +1343,10 @@ function drawOnboard() {
   if (ob.step === 0) {
     body.innerHTML = `
       <div class="ob-eyebrow">${t('ob_step')} 1 ${t('of')} 3 · ${t('ob_welcome')}</div>
-      <div class="ob-title">${t('ob_q1')}</div>
-      <p class="ob-sub">${t('ob_q1_sub')}</p>
+      <div class="ob-title">${t('ob_hi')} ${firstName()} 🌱</div>
+      <p class="ob-sub">${t('ob_pick_handle')}</p>
+      <div class="ob-handle"><span>@</span><input id="obUsername" class="ob-input" maxlength="20" autocomplete="off" placeholder="${suggestHandle()}" value="${esc((ob.username || '').replace(/^@/, ''))}"></div>
+      <p class="ob-sub" style="margin-top:16px;">${t('ob_role_q')}</p>
       <div class="ob-grid">${ROLE_OPTIONS.map(r => `
         <div class="ob-option ${ob.role === r.key ? 'sel' : ''}" data-role="${r.key}">
           <span class="oi">${svgIcon(r.icon)}</span><div>${trole(r)}<div class="od">${tgoal(r.goals[0])} ${t('track_more')}</div></div>
@@ -1290,7 +1357,8 @@ function drawOnboard() {
         <span style="flex:1"></span>
         <button class="btn btn-primary" id="obNext" ${ob.role ? '' : 'disabled style="opacity:.5"'}>${t('ob_continue')}</button>
       </div>`;
-    body.querySelectorAll('.ob-option').forEach(o => o.addEventListener('click', () => { ob.role = o.dataset.role; drawOnboard(); }));
+    const grabHandle = () => { const u = $('#obUsername'); if (u) ob.username = u.value.trim(); };
+    body.querySelectorAll('.ob-option').forEach(o => o.addEventListener('click', () => { grabHandle(); ob.role = o.dataset.role; drawOnboard(); }));
   } else if (ob.step === 1) {
     const role = ROLE_OPTIONS.find(r => r.key === ob.role) || ROLE_OPTIONS[0];
     const goals = [...new Set([...role.goals, ...Object.keys(GOAL_PRESETS)])].slice(0, 4);
@@ -1328,17 +1396,19 @@ function drawOnboard() {
       S.goal = ob.goal;
       S.path = [...GOAL_PRESETS[ob.goal]];
       S.role = ob.role;
+      const handle = slugHandle(ob.username) || suggestHandle();
+      S.profile = Object.assign({}, S.profile, { username: handle, role: ob.role });
       S.onboarded = true;
-      save();
+      save();   /* → syncs the profile (name, @username, role) + path to the account in Firestore */
       $('#onboard').classList.remove('open');
       render();
-      toast(`Your AI path to ${ob.goal} is ready`, '✦');
+      toast(`${_lang() === 'pt' ? 'O seu percurso para' : 'Your AI path to'} ${tgoal(ob.goal)} ${_lang() === 'pt' ? 'está pronto' : 'is ready'}`, '✦');
       setTimeout(() => { setTutorOpen(true); }, 900);
     }, 750);
   }
   const next = $('#obNext');
   if (next) next.addEventListener('click', () => {
-    if (ob.step === 0 && !ob.role) return;
+    if (ob.step === 0) { const u = $('#obUsername'); if (u) ob.username = u.value.trim(); if (!ob.role) return; }
     if (ob.step === 1 && !ob.goal) return;
     ob.step++; drawOnboard();
   });
@@ -1350,7 +1420,7 @@ function drawOnboard() {
 $('#avatarMenu').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   $('#avatarMenu').classList.remove('open');
-  if (b.dataset.m === 'profile') location.hash = '#/analytics';
+  if (b.dataset.m === 'profile') location.hash = '#/profile';
   if (b.dataset.m === 'onboard') startOnboarding();
   if (b.dataset.m === 'switch') toast('Workspace switching ships in the full product', '🏢');
   if (b.dataset.m === 'reset') { localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); }
@@ -1365,13 +1435,13 @@ window.EdenApp = {
     if (!S.badges) S.badges = [];
     checkBadges(true);
     updateXpChip(); render();
-    if (!S.onboarded) startOnboarding();
+    this.maybeOnboard();
   },
+  maybeOnboard() { if (!S.onboarded) startOnboarding(); },
   applyProfile(p) {
     if (!p) return;
-    S.profile = p; save();
-    const initials = (p.name || 'JA').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'JA';
-    const av = $('#avatarBtn'); if (av) { av.textContent = initials; av.title = p.name || p.email || ''; }
+    S.profile = Object.assign({}, S.profile, p); save();   /* merge — keep username/bio set during onboarding */
+    const av = $('#avatarBtn'); if (av) { av.textContent = userInitials(); av.title = displayName(); }
   },
   currentState() { return S; }
 };
@@ -1384,4 +1454,10 @@ checkBadges(true);
 save();
 render();
 updateXpChip();
-if (!S.onboarded) startOnboarding();
+/* onboarding is triggered AFTER the user gets past the auth gate (see auth.js /
+   EdenApp.maybeOnboard) — never before sign-in. Fallback: if no auth module is
+   present at all (Firebase blocked), still onboard so the demo isn't stuck. */
+if (!window.EdenCloud && !localStorage.getItem('eden-auth-mode') && !S.onboarded) {
+  /* no auth layer available — legacy/demo behaviour */
+  setTimeout(() => { if (!window.EdenCloud && !S.onboarded) startOnboarding(); }, 4500);
+}
