@@ -106,9 +106,9 @@ function myRank() {
   return { rank: i + 1, total: b.length, ahead: i > 0 ? b[i - 1] : null };
 }
 function updateXpChip() {
-  const chip = $('#xpChip'); if (!chip) return;
   const lv = levelFor(S.xp);
-  chip.innerHTML = `${svgIcon('sprout')}<span>${lv.name} · ${S.xp} XP</span>`;
+  const html = `${svgIcon('sprout')}<span>${lv.name} · ${S.xp} XP</span>`;
+  [$('#xpChip'), $('#xpChipMobile')].forEach(c => { if (c) c.innerHTML = html; });
 }
 
 /* ---------- card builder ---------- */
@@ -129,8 +129,8 @@ function cardHTML(c, opts = {}) {
   return `
   <article class="card" data-action="open-course" data-id="${c.id}">
     <div class="card-actions">
-      <button class="icon-btn" data-action="play" data-id="${c.id}" title="Play">▶</button>
-      <button class="icon-btn ${inPath(c.id) ? 'in-path' : ''}" data-action="toggle-path" data-id="${c.id}" title="${inPath(c.id) ? 'In your path' : 'Add to path'}">${inPath(c.id) ? '✓' : '＋'}</button>
+      <button class="icon-btn" data-action="play" data-id="${c.id}" aria-label="Play ${c.title}" title="Play">▶</button>
+      <button class="icon-btn ${inPath(c.id) ? 'in-path' : ''}" data-action="toggle-path" data-id="${c.id}" aria-label="${inPath(c.id) ? 'Remove from your path' : 'Add to your path'}" title="${inPath(c.id) ? 'In your path' : 'Add to path'}">${inPath(c.id) ? '✓' : '＋'}</button>
     </div>
     <div class="thumb t-grad-${c.grad}"><span class="big-icon">${svgIcon(c.icon)}</span><div class="chip-row">${chips.join('')}</div></div>
     <div class="card-body">
@@ -150,9 +150,9 @@ function railHTML(title, hint, cards, seeAllRoute) {
       <button class="see-all" data-action="goto" data-route="${seeAllRoute || '#/library'}">See all →</button>
     </div>
     <div class="rail-wrap">
-      <button class="rail-arrow prev" data-action="rail" data-dir="-1">‹</button>
+      <button class="rail-arrow prev" data-action="rail" data-dir="-1" aria-label="Scroll left">‹</button>
       <div class="rail">${cards.join('')}</div>
-      <button class="rail-arrow next" data-action="rail" data-dir="1">›</button>
+      <button class="rail-arrow next" data-action="rail" data-dir="1" aria-label="Scroll right">›</button>
     </div>
   </section>`;
 }
@@ -561,11 +561,20 @@ function renderProgress() {
 
 /* ---------- router ---------- */
 const routes = { home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin };
+/* a11y: make clickable non-native elements keyboard-operable */
+function makeFocusable(root) {
+  (root || document).querySelectorAll('[data-action]').forEach(el => {
+    if (/^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
+    if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+    if (!el.hasAttribute('role')) el.setAttribute('role', 'button');
+  });
+}
 function render() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
-  $$('.nav-links a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
+  $$('.nav-links a, .mobile-drawer a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
   $('#app').innerHTML = route === 'course' ? renderCourse(param) : (routes[route] || renderHome)();
+  makeFocusable($('#app'));
   window.scrollTo({ top: 0, behavior: 'instant' });
   const libInput = $('#libSearch');
   if (libInput) {
@@ -1093,7 +1102,27 @@ document.addEventListener('click', e => {
 /* nav & chrome events */
 addEventListener('scroll', () => $('#nav').classList.toggle('scrolled', scrollY > 30), { passive: true });
 $('#navSearch').addEventListener('click', openPalette);
-$('#avatarBtn').addEventListener('click', e => { e.stopPropagation(); $('#avatarMenu').classList.toggle('open'); });
+$('#avatarBtn').addEventListener('click', e => { e.stopPropagation(); const open = $('#avatarMenu').classList.toggle('open'); $('#avatarBtn').setAttribute('aria-expanded', open ? 'true' : 'false'); });
+
+/* mobile drawer */
+const mDrawer = $('#mobileDrawer'), mBurger = $('#navBurger');
+function setDrawer(open) {
+  mDrawer.classList.toggle('open', open);
+  mBurger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+mBurger.addEventListener('click', () => setDrawer(true));
+$('#drawerClose').addEventListener('click', () => setDrawer(false));
+mDrawer.addEventListener('click', e => { if (e.target === mDrawer || e.target.closest('.mobile-drawer a')) setDrawer(false); });
+addEventListener('hashchange', () => setDrawer(false));
+
+/* a11y: Enter/Space activates focused clickable (non-native) elements */
+addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const el = document.activeElement;
+  if (!el || /^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
+  if (el.matches('[data-action], [role="button"]')) { e.preventDefault(); el.click(); }
+});
 $('#orgChip').addEventListener('click', () => toast('Workspace switching ships in the full product', '🏢'));
 $('#playerBack').addEventListener('click', closePlayer);
 $('#playerComplete').addEventListener('click', () => { if (playing) completeModule(playing.courseId, playing.mod); else closePlayer(); });
@@ -1121,7 +1150,8 @@ $('#quizModal').addEventListener('click', e => { if (e.target === $('#quizModal'
 addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
   if (e.key === 'Escape') {
-    if ($('#palette').classList.contains('open')) closePalette();
+    if (mDrawer.classList.contains('open')) setDrawer(false);
+    else if ($('#palette').classList.contains('open')) closePalette();
     else if ($('#quizModal').classList.contains('open')) { $('#quizModal').classList.remove('open'); render(); }
     else if (playerEl.classList.contains('open')) closePlayer();
     else setTutorOpen(false);
