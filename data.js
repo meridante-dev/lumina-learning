@@ -7,11 +7,15 @@ const VIDS = [
 ].map(n => `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/${n}.mp4`);
 
 /* ---- Video hosting ----
-   Leave R2_BASE empty to serve lesson videos from the local /media folder.
-   Set it to your Cloudflare R2 public URL (e.g. 'https://pub-xxxx.r2.dev/')
-   to serve every lesson from R2 (free storage + free egress). One switch. */
-const R2_BASE = '';
-const mediaUrl = name => (R2_BASE ? R2_BASE.replace(/\/?$/, '/') : 'media/') + name;
+   Lesson videos live in the repo /media folder and are served through the free
+   jsDelivr global CDN (no account, no card, correct video/mp4 MIME, HTTP range
+   for seeking). To move to another host later, just change MEDIA_BASE:
+     - Cloudflare R2:  'https://pub-xxxx.r2.dev/'            (free 10GB, needs a card to enable)
+     - Cloudinary:     'https://res.cloudinary.com/.../'     (free tier, email signup, no card)
+     - local/Pages:    ''                                    (empty → serve from /media)
+   One switch flips every lesson. */
+const MEDIA_BASE = 'https://cdn.jsdelivr.net/gh/meridante-dev/lumina-learning@main/media/';
+const mediaUrl = name => (MEDIA_BASE ? MEDIA_BASE.replace(/\/?$/, '/') : 'media/') + name;
 
 /* The six EdenRise pillars — shown as a band under the hero */
 const PILLARS = [
