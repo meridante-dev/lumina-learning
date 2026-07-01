@@ -217,8 +217,33 @@ const ROLE_OPTIONS = [
   { key: 'community', label: 'Community & Place', icon: 'people', goals: ['Rooted Living', 'Food Forester'] }
 ];
 
+/* Gamification — growth-themed levels (nature) + subtle badges. Tuned to lift completion. */
+const LEVELS = [
+  { xp: 0, name: 'Seed' },
+  { xp: 150, name: 'Seedling' },
+  { xp: 400, name: 'Sprout' },
+  { xp: 800, name: 'Sapling' },
+  { xp: 1400, name: 'Young Tree' },
+  { xp: 2200, name: 'Grove Keeper' },
+  { xp: 3200, name: 'Elder Oak' }
+];
+const XP = { module: 20, quiz: 50, course: 100, cert: 50 };
+const BADGES = [
+  { id: 'first-steps', icon: 'sprout', title: 'First Steps', desc: 'Complete your first module' },
+  { id: 'rooted', icon: 'tree', title: 'Rooted', desc: 'Finish your first course' },
+  { id: 'quiz-ace', icon: 'compass', title: 'Quiz Ace', desc: 'Pass a checkpoint quiz' },
+  { id: 'grove', icon: 'leaf', title: 'Grove Keeper', desc: 'Finish three courses' },
+  { id: 'streak-7', icon: 'sun', title: 'Seven Suns', desc: 'Keep a 7-day streak' },
+  { id: 'pathfinder', icon: 'mountain', title: 'Pathfinder', desc: 'Complete a full learning path' },
+  { id: 'curious', icon: 'bird', title: 'Curious Mind', desc: 'Learn across three departments' },
+  { id: 'certified', icon: 'flower', title: 'Certified', desc: 'Earn a course certificate' }
+];
+
 const DEFAULT_STATE = {
   onboarded: false,
+  xp: null,          /* seeded from progress on first boot */
+  badges: [],
+  streak: 12,
   role: null,
   assignments: [],
   notes: {},

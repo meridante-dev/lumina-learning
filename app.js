@@ -52,6 +52,65 @@ function svgIcon(name, cls) {
   return `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
 }
 
+/* ---------- gamification engine ---------- */
+function levelFor(xp) {
+  let idx = 0;
+  LEVELS.forEach((l, i) => { if (xp >= l.xp) idx = i; });
+  const cur = LEVELS[idx], next = LEVELS[idx + 1];
+  return { idx, name: cur.name, base: cur.xp, next: next ? next.xp : null,
+    toNext: next ? next.xp - xp : 0,
+    pct: next ? Math.round((xp - cur.xp) / (next.xp - cur.xp) * 100) : 100 };
+}
+function seedXp() {
+  let xp = 0;
+  CATALOG.forEach(c => { const p = prog(c.id); if (!p) return; if (p.done) xp += XP.course + (p.cert ? XP.cert : 0); else xp += (p.mod || 0) * XP.module; });
+  xp += (S.quizzesPassed || 0) * XP.quiz;
+  return xp;
+}
+function awardXp(n, reason) {
+  const before = levelFor(S.xp).idx;
+  S.xp += n;
+  const after = levelFor(S.xp).idx;
+  save(); updateXpChip();
+  toast(`+${n} XP${reason ? ' · ' + reason : ''}`, '✦');
+  if (after > before) setTimeout(() => toast(`Level up — you're a ${LEVELS[after].name} now 🌿`, '🌿'), 800);
+}
+function badgeEarned(id) {
+  const done = CATALOG.filter(c => isDone(c.id));
+  const cats = new Set(CATALOG.filter(c => coursePct(c.id) > 0).map(c => c.cat));
+  switch (id) {
+    case 'first-steps': return Object.values(S.progress).some(p => p.done || (p.mod || 0) > 0);
+    case 'rooted': return done.length >= 1;
+    case 'quiz-ace': return (S.quizzesPassed || 0) >= 1;
+    case 'grove': return done.length >= 3;
+    case 'streak-7': return (S.streak || 0) >= 7;
+    case 'pathfinder': return S.path.length > 0 && S.path.every(isDone);
+    case 'curious': return cats.size >= 3;
+    case 'certified': return done.some(c => prog(c.id).cert);
+  }
+  return false;
+}
+function checkBadges(silent) {
+  let earned = [];
+  BADGES.forEach(b => { if (!S.badges.includes(b.id) && badgeEarned(b.id)) { S.badges.push(b.id); earned.push(b); } });
+  if (earned.length) { save(); if (!silent) earned.forEach((b, i) => setTimeout(() => toast(`Badge earned — ${b.title} 🏅`, '🏅'), 500 + i * 900)); }
+}
+function leaderboard() {
+  const rows = TEAM.map(t => ({ name: t.name, initials: t.initials, grad: t.grad,
+    xp: t.name.includes('João') ? S.xp : t.done * 100 + Math.round(t.pct * 2.6), me: t.name.includes('João') }));
+  return rows.sort((a, b) => b.xp - a.xp);
+}
+function myRank() {
+  const b = leaderboard();
+  const i = b.findIndex(r => r.me);
+  return { rank: i + 1, total: b.length, ahead: i > 0 ? b[i - 1] : null };
+}
+function updateXpChip() {
+  const chip = $('#xpChip'); if (!chip) return;
+  const lv = levelFor(S.xp);
+  chip.innerHTML = `${svgIcon('sprout')}<span>${lv.name} · ${S.xp} XP</span>`;
+}
+
 /* ---------- card builder ---------- */
 function cardHTML(c, opts = {}) {
   const pct = coursePct(c.id);
@@ -425,8 +484,83 @@ function renderAdmin() {
   </div>${footerHTML()}</div>`;
 }
 
+/* ---------- My Progress ---------- */
+function renderProgress() {
+  const lv = levelFor(S.xp);
+  const board = leaderboard();
+  const rank = myRank();
+  const maxXp = Math.max(...board.map(r => r.xp), 1);
+  const doneCount = CATALOG.filter(c => isDone(c.id)).length;
+  const nudge = rank.ahead
+    ? `<div class="nudge-line">${svgIcon('bird')}<span><b>${rank.ahead.name.split(' ')[0]}</b> is just <b>${rank.ahead.xp - S.xp} XP</b> ahead of you — finish one module to catch up 🌿</span></div>`
+    : `<div class="nudge-line">${svgIcon('sun')}<span>You're <b>top of the board</b> this week. Keep the grove growing.</span></div>`;
+
+  return `<div class="page"><div class="page-pad">
+    <h1 class="page-title">My Progress</h1>
+    <p class="page-sub">Your growth at EdenRise. The more you learn, the more the grove grows — points, streaks and badges are here to keep you finishing what you start.</p>
+
+    <div class="prog-top">
+      <div class="level-card">
+        <div class="level-ring" style="background:conic-gradient(var(--accent) ${lv.pct * 3.6}deg, rgba(231,237,227,.1) 0)">
+          <div class="level-ring-in">
+            <div class="lv-num">Lv ${lv.idx + 1}</div>
+            <div class="lv-name">${lv.name}</div>
+          </div>
+        </div>
+        <div class="level-meta">
+          <div class="lv-xp">${S.xp.toLocaleString()} <span>XP</span></div>
+          ${lv.next != null
+            ? `<div class="lv-next"><div class="track"><div class="fill" style="width:${lv.pct}%"></div></div><span>${lv.toNext} XP to <b>${LEVELS[lv.idx + 1].name}</b></span></div>`
+            : `<div class="lv-next"><span>Highest level — Elder Oak 🌳</span></div>`}
+        </div>
+      </div>
+      <div class="prog-mini">
+        <div class="stat"><div class="num">${S.streak}d</div><div class="lbl">Learning streak</div><div class="delta">▲ Keep it alive</div></div>
+        <div class="stat"><div class="num">#${rank.rank}</div><div class="lbl">Leader's board rank</div><div class="delta">of ${rank.total} this week</div></div>
+        <div class="stat"><div class="num">${S.badges.length}<span style="font-size:18px;color:var(--text-faint)">/${BADGES.length}</span></div><div class="lbl">Badges earned</div><div class="delta">${S.badges.length ? '▲ Nice work' : 'Earn your first'}</div></div>
+        <div class="stat"><div class="num">${doneCount}</div><div class="lbl">Courses finished</div><div class="delta">${S.quizzesPassed} skills verified</div></div>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Badges</h2>
+      <p class="sect-sub">Small marks of growth — earned for finishing, not just starting.</p>
+      <div class="badge-grid">
+        ${BADGES.map(b => { const got = S.badges.includes(b.id); return `
+          <div class="badge ${got ? 'got' : 'locked'}">
+            <div class="badge-ic">${got ? svgIcon(b.icon) : svgIcon('seed')}</div>
+            <div class="badge-t">${b.title}</div>
+            <div class="badge-d">${got ? b.desc : 'Locked · ' + b.desc}</div>
+          </div>`; }).join('')}
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Leader's board · this week</h2>
+      <p class="sect-sub">Friendly, resets every Monday. A little competition keeps everyone finishing.</p>
+      ${nudge}
+      <div class="board">
+        ${board.map((r, i) => `
+          <div class="board-row ${r.me ? 'me' : ''}">
+            <span class="board-rank">${i + 1}</span>
+            <span class="mi t-grad-${r.grad}">${r.initials}</span>
+            <span class="board-name">${r.name}${r.me ? ' <span class="you-tag">you</span>' : ''}</span>
+            <span class="board-bar"><span class="fill" style="width:${Math.round(r.xp / maxXp * 100)}%"></span></span>
+            <span class="board-xp">${r.xp.toLocaleString()} XP</span>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h2>Your path to ${S.goal}</h2>
+      <p class="sect-sub">Every step completed is points on the board.</p>
+      ${pathStepperHTML()}
+    </div>
+  </div>${footerHTML()}</div>`;
+}
+
 /* ---------- router ---------- */
-const routes = { home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, analytics: renderAnalytics, admin: renderAdmin };
+const routes = { home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin };
 function render() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
@@ -619,12 +753,16 @@ function completeModule(courseId, mod) {
     p.done = true; p.pct = 100; delete p.mod;
     save(); closePlayer();
     toast(`Course complete: ${c.title} 🎉`, '🏆');
+    awardXp(XP.module + XP.course, 'course complete');
+    checkBadges();
     setTimeout(() => { openTutorWith(`You finished <b>${c.title}</b> — that unlocks the next step on your path. Want the certification quiz now? It's 3 questions.`, ['Quiz me now', 'Build me a path']); }, 700);
   } else {
     p.mod = mod + 1;
     p.pct = Math.round((p.mod / c.modules.length) * 100);
     save();
     toast(`Module ${mod + 1} complete`, '✓');
+    awardXp(XP.module, 'module');
+    checkBadges();
     openPlayer(courseId, mod + 1);
   }
 }
@@ -644,7 +782,7 @@ function drawQuiz() {
   if (quiz.idx >= quiz.qs.length) {
     const pctScore = Math.round(quiz.score / quiz.qs.length * 100);
     const pass = pctScore >= 70;
-    if (pass) { S.quizzesPassed++; }
+    if (pass) { S.quizzesPassed++; save(); awardXp(XP.quiz, 'quiz passed'); checkBadges(); }
     else {
       const p = prog(quiz.courseId);
       S.review[quiz.courseId] = p && p.mod != null ? p.mod : 0;
@@ -1107,5 +1245,10 @@ $('#avatarMenu').addEventListener('click', e => {
 });
 
 /* boot */
+if (S.xp == null) S.xp = seedXp();
+if (!S.badges) S.badges = [];
+checkBadges(true);
+save();
 render();
+updateXpChip();
 if (!S.onboarded) startOnboarding();
