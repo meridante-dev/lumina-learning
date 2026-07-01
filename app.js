@@ -748,7 +748,7 @@ function openPlayer(courseId, mod) {
   } else if (media && media.type === 'vimeo') {
     videoEl.style.display = 'none';
     vimeoWrap.classList.add('on');
-    vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?h=${media.h}&title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${cmods(c)[mod]}"></iframe>`;
+    vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?${media.h ? 'h=' + media.h + '&' : ''}title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&player_id=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${cmods(c)[mod]}"></iframe>`;
   } else {
     videoEl.src = c.video || vidFor(courseId, mod);
     videoEl.play().catch(() => {});

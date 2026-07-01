@@ -34,8 +34,8 @@ const CATALOG = [
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
     modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Coming soon', 'Coming soon'],
     moduleMedia: [
-      { type: 'vimeo', id: '1206132511', h: '4577224751' },
-      { type: 'vimeo', id: '1206132221', h: '89d2840577' },
+      { type: 'vimeo', id: '1206132511' },
+      { type: 'vimeo', id: '1206132221' },
       { type: 'soon' },
       { type: 'soon' }
     ]
