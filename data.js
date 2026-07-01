@@ -30,7 +30,7 @@ const PILLARS = [
 const CATALOG = [
   {
     id: 'land-team-journey', title: 'Land Team Journey', cat: 'Leadership', grad: 4, icon: 'compass',
-    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line.jpg',
+    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line-cover.jpg',
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
     modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Coming soon', 'Coming soon'],
     moduleMedia: [
