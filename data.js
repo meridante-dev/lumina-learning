@@ -6,6 +6,13 @@ const VIDS = [
   'SubaruOutbackOnStreetAndDirt', 'TearsOfSteel'
 ].map(n => `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/${n}.mp4`);
 
+/* ---- Video hosting ----
+   Leave R2_BASE empty to serve lesson videos from the local /media folder.
+   Set it to your Cloudflare R2 public URL (e.g. 'https://pub-xxxx.r2.dev/')
+   to serve every lesson from R2 (free storage + free egress). One switch. */
+const R2_BASE = '';
+const mediaUrl = name => (R2_BASE ? R2_BASE.replace(/\/?$/, '/') : 'media/') + name;
+
 /* The six EdenRise pillars — shown as a band under the hero */
 const PILLARS = [
   { icon: 'leaf', label: 'Regenerative' },
@@ -31,7 +38,7 @@ const CATALOG = [
   },
   {
     id: 'water-cycles', title: 'Water & the Living Landscape', cat: 'Water & Climate', grad: 5, icon: 'drop',
-    level: 'Intermediate', rating: 4.9, learners: 298, ai: true, featured: true, video: 'media/v3.mp4',
+    level: 'Intermediate', rating: 4.9, learners: 298, ai: true, featured: true, video: mediaUrl('v3.mp4'),
     desc: 'Master the small water cycle your land depends on. This program adapts to your terrain — EdenRise\'s AI re-sequences each module around what your last assessment showed you already know.',
     modules: ['The small water cycle', 'Where your water goes', 'Slowing, spreading, sinking', 'Swales & on-contour design', 'Ponds & keypoint dams', 'Rehydrating dry land', 'Greywater, gently', 'Drought-proofing a garden', 'Reading a catchment', 'Springs & soaks', 'Measuring infiltration', 'Final assessment']
   },
