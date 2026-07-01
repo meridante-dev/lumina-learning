@@ -31,7 +31,7 @@ const CATALOG = [
   },
   {
     id: 'water-cycles', title: 'Water & the Living Landscape', cat: 'Water & Climate', grad: 5, icon: 'drop',
-    level: 'Intermediate', rating: 4.9, learners: 298, ai: true, featured: true,
+    level: 'Intermediate', rating: 4.9, learners: 298, ai: true, featured: true, video: 'media/v3.mp4',
     desc: 'Master the small water cycle your land depends on. This program adapts to your terrain — EdenRise\'s AI re-sequences each module around what your last assessment showed you already know.',
     modules: ['The small water cycle', 'Where your water goes', 'Slowing, spreading, sinking', 'Swales & on-contour design', 'Ponds & keypoint dams', 'Rehydrating dry land', 'Greywater, gently', 'Drought-proofing a garden', 'Reading a catchment', 'Springs & soaks', 'Measuring infiltration', 'Final assessment']
   },

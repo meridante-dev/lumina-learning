@@ -543,7 +543,7 @@ function openPlayer(courseId, mod) {
   playing = { courseId, mod };
   if (!prog(courseId)) S.progress[courseId] = { mod, pct: 0 };
   stopSim(); simStage.classList.remove('on'); videoEl.style.display = '';
-  videoEl.src = vidFor(courseId, mod);
+  videoEl.src = c.video || vidFor(courseId, mod);
   videoEl.play().catch(() => {});
   $('#playerTitle').textContent = c.title;
   $('#playerSub').textContent = `Module ${mod + 1} of ${c.modules.length} · ${c.modules[mod]}`;
