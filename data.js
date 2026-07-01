@@ -29,10 +29,16 @@ const PILLARS = [
 
 const CATALOG = [
   {
-    id: 'above-below-line', title: 'Above the Line, Below the Line', cat: 'Leadership', grad: 4, icon: 'compass',
-    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, video: mediaUrl('v3.mp4'), poster: 'media/above-below-line.jpg',
-    desc: 'One question changes how you show up: am I above the line, or below it? The mindset of ownership, accountability and responsibility that shapes how we lead, work and grow together at EdenRise.',
-    modules: ['Remember just one question', 'Above the line: ownership & accountability', 'Below the line: blame, excuses & denial', 'Catching yourself dropping below', 'Choosing to climb back above', 'Leading others above the line']
+    id: 'land-team-journey', title: 'Land Team Journey', cat: 'Leadership', grad: 4, icon: 'compass',
+    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line.jpg',
+    desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
+    modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Coming soon', 'Coming soon'],
+    moduleMedia: [
+      { type: 'vimeo', id: '1206132511', h: '4577224751' },
+      { type: 'vimeo', id: '1206132221', h: '89d2840577' },
+      { type: 'soon' },
+      { type: 'soon' }
+    ]
   },
   {
     id: 'land-literacy', title: 'Reading the Land', cat: 'Nature Connection', grad: 6, icon: 'compass',
@@ -210,7 +216,7 @@ const TEAM = [
 ];
 
 const GOAL_PRESETS = {
-  'Regenerative Steward': ['land-literacy', 'living-soil', 'above-below-line', 'agroforestry', 'regen-design', 'capstone-land'],
+  'Regenerative Steward': ['land-literacy', 'living-soil', 'land-team-journey', 'agroforestry', 'regen-design', 'capstone-land'],
   'Food Forester': ['living-soil', 'seed-saving', 'agroforestry', 'cork-oak', 'foraging'],
   'Land Restorer': ['land-literacy', 'water-cycles', 'rewilding', 'rainwater', 'regen-design'],
   'Rooted Living': ['nature-connection', 'seasonal-rhythm', 'herbal', 'community-land']
@@ -256,12 +262,12 @@ const DEFAULT_STATE = {
   apiKey: '',
   aiModel: 'claude-opus-4-8',
   goal: 'Regenerative Steward',
-  path: ['land-literacy', 'living-soil', 'above-below-line', 'agroforestry', 'regen-design', 'capstone-land'],
+  path: ['land-literacy', 'living-soil', 'land-team-journey', 'agroforestry', 'regen-design', 'capstone-land'],
   progress: {
     'land-literacy': { done: true, score: 92 },
     'living-soil': { done: true, score: 92, note: '2 modules skipped by AI' },
     'ethics': { done: true, score: 88, cert: true },
-    'above-below-line': { mod: 4, pct: 64 },
+    'land-team-journey': { mod: 0, pct: 20 },
     'fire-safety': { mod: 6, pct: 78 },
     'foraging': { mod: 3, pct: 42 },
     'agroforestry': { mod: 1, pct: 23 },

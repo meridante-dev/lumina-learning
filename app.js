@@ -361,9 +361,18 @@ function renderCourse(id) {
   const p = prog(id);
   const cur = p && !p.done ? (p.mod || 0) : -1;
   const modules = c.modules.map((m, i) => {
+    const mm = modMedia(c, i);
+    const soon = mm && mm.type === 'soon';
     const done = isDone(id) || (p && !p.done && i < (p.mod || 0));
-    const isCur = i === cur;
+    const isCur = i === cur && !soon;
     const review = S.review[id] === i;
+    if (soon) {
+      return `<div class="module-row soon">
+        <div class="m-num">🔒</div>
+        <div class="m-title">Coming soon</div>
+        <span class="m-dur">Soon</span>
+      </div>`;
+    }
     return `<div class="module-row ${done ? 'done' : ''} ${isCur ? 'current' : ''}" data-action="play" data-id="${id}" data-mod="${i}">
       <div class="m-num">${done ? '✓' : isCur ? '▶' : i + 1}</div>
       <div class="m-title">${m}${review ? ' &nbsp;<span class="review-flag">↺ AI re-queued for review</span>' : ''}</div>
@@ -635,6 +644,8 @@ function initMotion() {
 /* ---------- player ---------- */
 const playerEl = $('#player'), videoEl = $('#playerVideo');
 const simStage = $('#simStage'), simFill = $('#simFill');
+const vimeoWrap = $('#vimeoWrap'), soonStage = $('#soonStage');
+const modMedia = (c, i) => (c.moduleMedia && c.moduleMedia[i]) || null;
 let playing = null; /* {courseId, mod} */
 let saveTimer = 0;
 let sim = { timer: null, t: 0, dur: 20, running: false };
@@ -675,35 +686,60 @@ $('#simPlayBtn').addEventListener('click', () => {
 });
 videoEl.addEventListener('error', () => {
   if (!playerEl.classList.contains('open')) return;
-  if (playing) startSim(courseById(playing.courseId), playing.mod);
-  else startSim({ icon: '🔴', modules: [$('#playerTitle').textContent] }, 0);
+  if (playing) {
+    const media = modMedia(courseById(playing.courseId), playing.mod);
+    if (media && (media.type === 'vimeo' || media.type === 'soon')) return; /* not using the <video> element */
+    startSim(courseById(playing.courseId), playing.mod);
+  } else startSim({ icon: '🔴', modules: [$('#playerTitle').textContent] }, 0);
 });
 
+function resetStages() {
+  stopSim(); simStage.classList.remove('on');
+  vimeoWrap.classList.remove('on'); vimeoWrap.innerHTML = '';
+  soonStage.classList.remove('on');
+  videoEl.style.display = ''; videoEl.pause(); try { videoEl.removeAttribute('src'); videoEl.load(); } catch (e) {}
+}
 function openPlayer(courseId, mod) {
   const c = courseById(courseId);
   if (!c) return;
   if (mod == null) mod = (prog(courseId) && !isDone(courseId)) ? (prog(courseId).mod || 0) : 0;
   mod = Math.min(mod, c.modules.length - 1);
+  const media = modMedia(c, mod);
   playing = { courseId, mod };
   if (!prog(courseId)) S.progress[courseId] = { mod, pct: 0 };
-  stopSim(); simStage.classList.remove('on'); videoEl.style.display = '';
-  videoEl.src = c.video || vidFor(courseId, mod);
-  videoEl.play().catch(() => {});
+  resetStages();
+
+  if (media && media.type === 'soon') {
+    videoEl.style.display = 'none';
+    soonStage.classList.add('on');
+    $('#soonTitle').textContent = 'Coming soon';
+  } else if (media && media.type === 'vimeo') {
+    videoEl.style.display = 'none';
+    vimeoWrap.classList.add('on');
+    vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?h=${media.h}&title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${c.modules[mod]}"></iframe>`;
+  } else {
+    videoEl.src = c.video || vidFor(courseId, mod);
+    videoEl.play().catch(() => {});
+  }
+
   $('#playerTitle').textContent = c.title;
   $('#playerSub').textContent = `Module ${mod + 1} of ${c.modules.length} · ${c.modules[mod]}`;
   $('#playerPills').innerHTML = c.modules.map((m, i) => {
     const p = prog(courseId);
+    const mm = modMedia(c, i);
+    const soon = mm && mm.type === 'soon';
     const done = isDone(courseId) || (p && !p.done && i < (p.mod || 0));
-    return `<button class="mod-pill ${i === mod ? 'current' : done ? 'done' : ''}" data-action="play" data-id="${courseId}" data-mod="${i}">${done ? '✓ ' : ''}${i + 1}. ${m}</button>`;
+    return `<button class="mod-pill ${i === mod ? 'current' : done ? 'done' : ''} ${soon ? 'soon' : ''}" data-action="play" data-id="${courseId}" data-mod="${i}">${done ? '✓ ' : soon ? '🔒 ' : ''}${i + 1}. ${soon ? 'Coming soon' : m}</button>`;
   }).join('');
+  /* hide "mark complete" for coming-soon lessons */
+  $('#playerComplete').style.display = (media && media.type === 'soon') ? 'none' : '';
   playerEl.classList.add('open');
   if ($('#notesDrawer').classList.contains('open')) refreshNotesDrawer();
 }
 function closePlayer() {
   playerEl.classList.remove('open');
   $('#notesDrawer').classList.remove('open');
-  stopSim(); simStage.classList.remove('on'); videoEl.style.display = '';
-  videoEl.pause(); videoEl.removeAttribute('src'); videoEl.load();
+  resetStages();
   playing = null;
   render();
 }
@@ -767,13 +803,19 @@ function completeModule(courseId, mod) {
     checkBadges();
     setTimeout(() => { openTutorWith(`You finished <b>${c.title}</b> — that unlocks the next step on your path. Want the certification quiz now? It's 3 questions.`, ['Quiz me now', 'Build me a path']); }, 700);
   } else {
+    const nextMedia = modMedia(c, mod + 1);
     p.mod = mod + 1;
     p.pct = Math.round((p.mod / c.modules.length) * 100);
     save();
     toast(`Module ${mod + 1} complete`, '✓');
     awardXp(XP.module, 'module');
     checkBadges();
-    openPlayer(courseId, mod + 1);
+    if (nextMedia && nextMedia.type === 'soon') {
+      closePlayer();
+      setTimeout(() => toast('That’s every lesson available so far — the rest of the Land Team Journey is coming soon 🌱', '🌱'), 500);
+    } else {
+      openPlayer(courseId, mod + 1);
+    }
   }
 }
 

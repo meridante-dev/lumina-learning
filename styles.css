@@ -1415,3 +1415,29 @@ body {
   .tabbar svg { width: 24px; height: 24px; }
 }
 /* iPad landscape & up → full desktop top-nav (already handled ≥1025) */
+
+/* ---------- Vimeo player + coming-soon ---------- */
+.vimeo-wrap {
+  display: none; width: 100%; max-width: 1100px; aspect-ratio: 16/9; max-height: 100%;
+  border-radius: 18px; overflow: hidden; background: #000;
+  box-shadow: 0 40px 100px rgba(0,0,0,.7); outline: 1px solid rgba(231,237,227,.1);
+}
+.vimeo-wrap.on { display: block; }
+.vimeo-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+.soon-stage {
+  display: none; width: 100%; max-width: 1100px; aspect-ratio: 16/9; max-height: 100%;
+  border-radius: 18px; overflow: hidden; padding: 0 32px; text-align: center;
+  flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  background: radial-gradient(ellipse 80% 90% at 50% 18%, rgba(90,111,80,.28), transparent 60%), #0e140f;
+  outline: 1px solid rgba(231,237,227,.08);
+}
+.soon-stage.on { display: flex; }
+.soon-icon { font-size: 54px; filter: drop-shadow(0 8px 20px rgba(0,0,0,.4)); }
+.soon-title { font-family: var(--font-display); font-size: 28px; font-weight: 600; letter-spacing: -.01em; }
+.soon-sub { font-size: 13.5px; color: var(--text-dim); max-width: 460px; line-height: 1.6; }
+
+.module-row.soon { opacity: .5; cursor: default; }
+.module-row.soon .m-num { background: var(--surface-2); border-color: var(--line); color: var(--text-faint); }
+.module-row.soon .m-title { color: var(--text-faint); }
+.mod-pill.soon { opacity: .5; }
