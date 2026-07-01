@@ -573,7 +573,7 @@ function makeFocusable(root) {
 function render() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
-  $$('.nav-links a, .mobile-drawer a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
+  $$('.nav-links a, .mobile-drawer a, .tabbar a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
   $('#app').innerHTML = route === 'course' ? renderCourse(param) : (routes[route] || renderHome)();
   makeFocusable($('#app'));
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -1128,6 +1128,7 @@ $('#orgChip').addEventListener('click', () => toast('Workspace switching ships i
 $('#playerBack').addEventListener('click', closePlayer);
 $('#playerComplete').addEventListener('click', () => { if (playing) completeModule(playing.courseId, playing.mod); else closePlayer(); });
 $('#aiFab').addEventListener('click', () => setTutorOpen(!tutorPanel.classList.contains('open')));
+$('#tabTutor').addEventListener('click', () => setTutorOpen(!tutorPanel.classList.contains('open')));
 $('#aiSend').addEventListener('click', sendTutor);
 $('#aiInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendTutor(); });
 function sendTutor() {
