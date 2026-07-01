@@ -29,38 +29,44 @@ const PILLARS = [
 
 const CATALOG = [
   {
+    id: 'above-below-line', title: 'Above the Line, Below the Line', cat: 'Leadership', grad: 4, icon: 'compass',
+    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, video: mediaUrl('v3.mp4'),
+    desc: 'One question changes how you show up: am I above the line, or below it? The mindset of ownership, accountability and responsibility that shapes how we lead, work and grow together at EdenRise.',
+    modules: ['Remember just one question', 'Above the line: ownership & accountability', 'Below the line: blame, excuses & denial', 'Catching yourself dropping below', 'Choosing to climb back above', 'Leading others above the line']
+  },
+  {
     id: 'land-literacy', title: 'Reading the Land', cat: 'Nature Connection', grad: 6, icon: 'compass',
-    level: 'Beginner', rating: 4.9, learners: 412, ai: true, video: mediaUrl('v3.mp4'),
+    level: 'Beginner', rating: 4.9, learners: 412, ai: true,
     desc: 'Before you change a landscape, learn to read it. Slope, water, soil, sun and succession — the literacy that every act of stewardship begins with.',
     modules: ['Standing still: how to observe', 'Reading slope & water', 'Soil by feel & sight', 'Sun, shade & aspect', 'Succession & what land wants', 'Mapping your patch']
   },
   {
     id: 'living-soil', title: 'Living Soil', cat: 'Land & Soil', grad: 7, icon: 'sprout',
-    level: 'Beginner', rating: 4.8, learners: 356, ai: true, video: mediaUrl('v3.mp4'),
+    level: 'Beginner', rating: 4.8, learners: 356, ai: true,
     desc: 'Soil is not dirt — it is a living community. Meet the microbiome beneath your feet and the practices that feed it instead of mining it.',
     modules: ['The soil food web', 'Why we stopped tilling', 'Compost as inoculant', 'Cover crops & living roots', 'Mulch & bare-soil rules', 'Reading a soil test']
   },
   {
     id: 'water-cycles', title: 'Water & the Living Landscape', cat: 'Water & Climate', grad: 5, icon: 'drop',
-    level: 'Intermediate', rating: 4.9, learners: 298, ai: true, featured: true, video: mediaUrl('v3.mp4'),
+    level: 'Intermediate', rating: 4.9, learners: 298, ai: true,
     desc: 'Master the small water cycle your land depends on. This program adapts to your terrain — EdenRise\'s AI re-sequences each module around what your last assessment showed you already know.',
     modules: ['The small water cycle', 'Where your water goes', 'Slowing, spreading, sinking', 'Swales & on-contour design', 'Ponds & keypoint dams', 'Rehydrating dry land', 'Greywater, gently', 'Drought-proofing a garden', 'Reading a catchment', 'Springs & soaks', 'Measuring infiltration', 'Final assessment']
   },
   {
     id: 'agroforestry', title: 'Agroforestry & the Edible Forest', cat: 'Food & Forest', grad: 1, icon: 'tree',
-    level: 'Intermediate', rating: 4.9, learners: 187, ai: true, video: mediaUrl('v3.mp4'),
+    level: 'Intermediate', rating: 4.9, learners: 187, ai: true,
     desc: 'Stack a forest that feeds you. Seven layers, nitrogen fixers, and the patient art of designing a system that grows more abundant every year.',
     modules: ['The seven layers', 'Choosing your canopy', 'Nitrogen fixers & support species', 'Guilds that work together', 'Planting for succession', 'Tending the young forest']
   },
   {
     id: 'regen-design', title: 'Designing with Nature', cat: 'Stewardship', grad: 6, icon: 'leaf',
-    level: 'Advanced', rating: 4.8, learners: 143, video: mediaUrl('v3.mp4'),
+    level: 'Advanced', rating: 4.8, learners: 143,
     desc: 'Permaculture design from observation to plan: zones, sectors, and how to place every element so the land does the work, not you.',
     modules: ['Observation before action', 'Zones & sectors', 'Placing elements by relationship', 'Patterns to details', 'The whole-site plan']
   },
   {
     id: 'capstone-land', title: 'Capstone: Your Land Plan', cat: 'Stewardship', grad: 8, icon: 'mountain',
-    level: 'Advanced', rating: 4.9, learners: 96, ai: true, video: mediaUrl('v3.mp4'),
+    level: 'Advanced', rating: 4.9, learners: 96, ai: true,
     desc: 'The graded finale: produce and present a one-year regeneration plan for a real piece of land. EdenRise AI reviews it for water, soil, and sequence.',
     modules: ['Briefing your site', 'Water-first design', 'Sequencing the first year', 'Dry-run with AI feedback', 'AI-graded review']
   },
@@ -204,7 +210,7 @@ const TEAM = [
 ];
 
 const GOAL_PRESETS = {
-  'Regenerative Steward': ['land-literacy', 'living-soil', 'water-cycles', 'agroforestry', 'regen-design', 'capstone-land'],
+  'Regenerative Steward': ['land-literacy', 'living-soil', 'above-below-line', 'agroforestry', 'regen-design', 'capstone-land'],
   'Food Forester': ['living-soil', 'seed-saving', 'agroforestry', 'cork-oak', 'foraging'],
   'Land Restorer': ['land-literacy', 'water-cycles', 'rewilding', 'rainwater', 'regen-design'],
   'Rooted Living': ['nature-connection', 'seasonal-rhythm', 'herbal', 'community-land']
@@ -250,12 +256,12 @@ const DEFAULT_STATE = {
   apiKey: '',
   aiModel: 'claude-opus-4-8',
   goal: 'Regenerative Steward',
-  path: ['land-literacy', 'living-soil', 'water-cycles', 'agroforestry', 'regen-design', 'capstone-land'],
+  path: ['land-literacy', 'living-soil', 'above-below-line', 'agroforestry', 'regen-design', 'capstone-land'],
   progress: {
     'land-literacy': { done: true, score: 92 },
     'living-soil': { done: true, score: 92, note: '2 modules skipped by AI' },
     'ethics': { done: true, score: 88, cert: true },
-    'water-cycles': { mod: 4, pct: 64 },
+    'above-below-line': { mod: 4, pct: 64 },
     'fire-safety': { mod: 6, pct: 78 },
     'foraging': { mod: 3, pct: 42 },
     'agroforestry': { mod: 1, pct: 23 },

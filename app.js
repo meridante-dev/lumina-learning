@@ -2,9 +2,9 @@
 
 /* ---------- state ---------- */
 let S;
-try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem('edenrise-state') || '{}')); }
+try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem('edenrise-state-v2') || '{}')); }
 catch { S = structuredClone(DEFAULT_STATE); }
-const save = () => localStorage.setItem('edenrise-state', JSON.stringify(S));
+const save = () => localStorage.setItem('edenrise-state-v2', JSON.stringify(S));
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -1086,7 +1086,7 @@ document.addEventListener('click', e => {
       }, 800);
       break;
     }
-    case 'reset-demo': localStorage.removeItem('edenrise-state'); location.hash = '#/home'; location.reload(); break;
+    case 'reset-demo': localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); break;
   }
 });
 
@@ -1240,7 +1240,7 @@ $('#avatarMenu').addEventListener('click', e => {
   if (b.dataset.m === 'profile') location.hash = '#/analytics';
   if (b.dataset.m === 'onboard') startOnboarding();
   if (b.dataset.m === 'switch') toast('Workspace switching ships in the full product', '🏢');
-  if (b.dataset.m === 'reset') { localStorage.removeItem('edenrise-state'); location.hash = '#/home'; location.reload(); }
+  if (b.dataset.m === 'reset') { localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); }
   if (b.dataset.m === 'signout') toast('SSO sign-out ships in the full product', '👋');
 });
 
