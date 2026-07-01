@@ -1363,10 +1363,9 @@ body {
   .tabbar a.active, .tabbar button.active { color: var(--accent-2); }
   .tabbar a:active, .tabbar button:active { transform: scale(.94); }
 
-  /* tutor is a tab on mobile, so hide the floating fab */
-  .ai-fab { display: none; }
-  /* tutor & drawer panels sit above the tab bar */
-  .ai-panel { bottom: calc(72px + env(safe-area-inset-bottom)); }
+  /* floating AI help stays visible — lifted above the bottom tab bar */
+  .ai-fab { bottom: calc(78px + env(safe-area-inset-bottom) + 12px); right: 18px; }
+  .ai-panel { bottom: calc(150px + env(safe-area-inset-bottom)); }
 
   /* tighter, thumb-friendly touches */
   .rail { scroll-padding: 0 16px; }
@@ -1441,3 +1440,18 @@ body {
 .module-row.soon .m-num { background: var(--surface-2); border-color: var(--line); color: var(--text-faint); }
 .module-row.soon .m-title { color: var(--text-faint); }
 .mod-pill.soon { opacity: .5; }
+
+/* ---------- Language toggle (EN / PT) ---------- */
+.lang-toggle {
+  display: inline-flex; align-items: center; gap: 2px; padding: 3px;
+  border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line);
+}
+.lang-btn {
+  font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  color: var(--text-dim); background: none; border: none; cursor: pointer;
+  padding: 5px 9px; border-radius: 7px; transition: background .18s, color .18s;
+}
+.lang-btn.on { background: var(--accent); color: #0e140f; }
+.lang-btn:not(.on):hover { color: var(--text); }
+.drawer-lang { display: flex; width: 100%; margin-top: 20px; }
+.drawer-lang .lang-btn { flex: 1; padding: 12px 10px; font-size: 12.5px; border-radius: 10px; }

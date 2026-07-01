@@ -116,26 +116,26 @@ function cardHTML(c, opts = {}) {
   const pct = coursePct(c.id);
   const p = prog(c.id);
   const chips = [];
-  if (opts.rank) chips.push(`<span class="chip">#${opts.rank} THIS WEEK</span>`);
-  if (c.ai) chips.push(`<span class="chip ai">✦ AI PATH</span>`);
-  if (c.required) chips.push(`<span class="chip">REQUIRED</span>`);
-  if (c.teamGoal) chips.push(`<span class="chip">TEAM GOAL</span>`);
-  if (c.isNew) chips.push(`<span class="chip">NEW</span>`);
-  if (p && !p.done) chips.push(`<span class="chip">MODULE ${(p.mod || 0) + 1}/${c.modules.length}</span>`);
+  if (opts.rank) chips.push(`<span class="chip">#${opts.rank} ${t('this_week_rank')}</span>`);
+  if (c.ai) chips.push(`<span class="chip ai">${t('ai_path_chip')}</span>`);
+  if (c.required) chips.push(`<span class="chip">${t('required')}</span>`);
+  if (c.teamGoal) chips.push(`<span class="chip">${t('team_goal')}</span>`);
+  if (c.isNew) chips.push(`<span class="chip">${t('new')}</span>`);
+  if (p && !p.done) chips.push(`<span class="chip">${t('module')} ${(p.mod || 0) + 1}/${c.modules.length}</span>`);
   let foot = '';
   if (pct > 0 && pct < 100) foot = `<div class="card-progress"><div class="fill" style="width:${pct}%"></div></div>`;
-  if (isDone(c.id)) foot = `<span class="due ok">✓ Completed${p.cert ? ' · cert issued' : ` · ${p.score || 90}%`}</span>`;
+  if (isDone(c.id)) foot = `<span class="due ok">✓ ${t('completed')}${p.cert ? ' · ' + t('cert_issued') : ` · ${p.score || 90}%`}</span>`;
   else if (c.due) foot += `<span class="due">⏰ ${c.due}</span>`;
   return `
   <article class="card" data-action="open-course" data-id="${c.id}">
     <div class="card-actions">
-      <button class="icon-btn" data-action="play" data-id="${c.id}" aria-label="Play ${c.title}" title="Play">▶</button>
+      <button class="icon-btn" data-action="play" data-id="${c.id}" aria-label="Play ${ctitle(c)}" title="Play">▶</button>
       <button class="icon-btn ${inPath(c.id) ? 'in-path' : ''}" data-action="toggle-path" data-id="${c.id}" aria-label="${inPath(c.id) ? 'Remove from your path' : 'Add to your path'}" title="${inPath(c.id) ? 'In your path' : 'Add to path'}">${inPath(c.id) ? '✓' : '＋'}</button>
     </div>
     <div class="thumb t-grad-${c.grad} ${c.poster ? 'has-poster' : ''}"${c.poster ? ` style="background-image:url('${c.poster}')"` : ''}>${c.poster ? '' : `<span class="big-icon">${svgIcon(c.icon)}</span>`}<div class="chip-row">${chips.join('')}</div></div>
     <div class="card-body">
-      <h3>${c.title}</h3>
-      <div class="meta"><span>${c.cat}</span><span class="dot"></span><span>${fmtMins(courseMins(c))}</span><span class="dot"></span><span>★ ${c.rating}</span></div>
+      <h3>${ctitle(c)}</h3>
+      <div class="meta"><span>${tcat(c.cat)}</span><span class="dot"></span><span>${fmtMins(courseMins(c))}</span><span class="dot"></span><span>★ ${c.rating}</span></div>
       ${foot}
     </div>
   </article>`;
@@ -147,7 +147,7 @@ function railHTML(title, hint, cards, seeAllRoute) {
   <section class="rail-section">
     <div class="rail-head">
       <h2>${title}</h2><span class="hint">${hint}</span>
-      <button class="see-all" data-action="goto" data-route="${seeAllRoute || '#/library'}">See all →</button>
+      <button class="see-all" data-action="goto" data-route="${seeAllRoute || '#/library'}">${t('see_all')}</button>
     </div>
     <div class="rail-wrap">
       <button class="rail-arrow prev" data-action="rail" data-dir="-1" aria-label="Scroll left">‹</button>
@@ -168,8 +168,8 @@ function pathStepperHTML() {
     const c = courseById(id); if (!c) return '';
     const st = pathStatus(id); const p = prog(id);
     const node = st === 'done' ? '✓' : st === 'current' ? '▶' : svgIcon(c.icon);
-    const sub = st === 'done' ? `Completed${p && p.score ? ' · ' + p.score + '%' : ''}` : st === 'current' ? `In progress · ${coursePct(id)}%` : (S.path.indexOf(id) === S.path.findIndex(x => !isDone(x)) + 1 ? 'Next up' : 'Locked');
-    return `<div class="seg ${st}" data-action="open-course" data-id="${id}"><div class="snode">${node}</div><div class="sl">${c.title}</div><div class="sd">${sub}</div></div>`;
+    const sub = st === 'done' ? `${t('completed')}${p && p.score ? ' · ' + p.score + '%' : ''}` : st === 'current' ? `${t('in_progress')} · ${coursePct(id)}%` : (S.path.indexOf(id) === S.path.findIndex(x => !isDone(x)) + 1 ? t('next_up') : t('locked'));
+    return `<div class="seg ${st}" data-action="open-course" data-id="${id}"><div class="snode">${node}</div><div class="sl">${ctitle(c)}</div><div class="sd">${sub}</div></div>`;
   }).join('')}</div>`;
 }
 
@@ -188,12 +188,12 @@ function renderHome() {
     const c = courseById(id); const st = pathStatus(id); const p = prog(id);
     const nodeCls = st === 'done' ? 'node-done' : st === 'current' ? 'node-active' : 'node-locked';
     const node = st === 'done' ? '✓' : st === 'current' ? '▶' : S.path.indexOf(id) + 1;
-    const sub = st === 'done' ? `Completed${p && p.note ? ' · ' + p.note : p && p.score ? ' · scored ' + p.score + '%' : ''}` : st === 'current' ? 'In progress · adapted today' : 'Unlocks after assessment';
+    const sub = st === 'done' ? `${t('completed')}${p && p.note ? ' · ' + tnote(p.note) : p && p.score ? ' · ' + t('scored') + ' ' + p.score + '%' : ''}` : st === 'current' ? `${t('in_progress')} · ${t('adapted_today')}` : t('unlocks_after');
     return `<div class="path-step ${st === 'current' ? 'step-active' : ''}" data-action="open-course" data-id="${id}">
       <div class="step-node ${nodeCls}">${node}</div>
-      <div class="step-info"><div class="t">${c.title}</div><div class="s">${sub}</div></div></div>`;
+      <div class="step-info"><div class="t">${ctitle(c)}</div><div class="s">${sub}</div></div></div>`;
   }).join('');
-  const words = featured.title.split(' ');
+  const words = ctitle(featured).split(' ');
   const lastWord = words.pop();
 
   return `<div class="page">
@@ -202,57 +202,57 @@ function renderHome() {
     ${featured.poster ? `<div class="hero-art" style="background-image:url('${featured.poster}')"></div>` : ''}
     <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div>
     <div class="hero-content">
-      <span class="hero-eyebrow"><span class="pulse-dot"></span>Featured Program · Curated for you by AI</span>
+      <span class="hero-eyebrow"><span class="pulse-dot"></span>${t('featured_eyebrow')}</span>
       <h1>${words.join(' ')} <span class="grad-text">${lastWord}</span></h1>
       <div class="hero-meta">
-        <span class="match">97% match</span><span class="sep"></span>
-        <span>${featured.modules.length} modules</span><span class="sep"></span>
+        <span class="match">97% ${t('match')}</span><span class="sep"></span>
+        <span>${featured.modules.length} ${t('modules')}</span><span class="sep"></span>
         <span>${fmtMins(courseMins(featured))}</span><span class="sep"></span>
-        <span>${featured.level}</span>
-        <span class="badge-hd">CERTIFIED</span>
+        <span>${t(featured.level) || featured.level}</span>
+        <span class="badge-hd">${t('certified')}</span>
       </div>
-      <p class="desc">${featured.desc}</p>
+      <p class="desc">${cdesc(featured)}</p>
       <div class="hero-actions">
-        <button class="btn btn-primary" data-action="play" data-id="${featured.id}">▶&nbsp; ${fp && fp.mod != null ? `Resume Module ${fp.mod + 1}` : 'Start learning'}</button>
-        <button class="btn btn-glass" data-action="ai-overview" data-id="${featured.id}">✦&nbsp; AI Overview</button>
-        <button class="btn btn-glass" data-action="toggle-path" data-id="${featured.id}">${inPath(featured.id) ? '✓ In My Path' : '+ My Path'}</button>
+        <button class="btn btn-primary" data-action="play" data-id="${featured.id}">▶&nbsp; ${fp && fp.mod != null ? `${t('resume_module')} ${fp.mod + 1}` : t('start_learning')}</button>
+        <button class="btn btn-glass" data-action="ai-overview" data-id="${featured.id}">✦&nbsp; ${t('ai_overview')}</button>
+        <button class="btn btn-glass" data-action="toggle-path" data-id="${featured.id}">${inPath(featured.id) ? t('in_my_path') : t('my_path')}</button>
       </div>
       <div class="hero-progress">
         <div class="track"><div class="fill" style="width:${coursePct(featured.id)}%"></div></div>
-        <span>${coursePct(featured.id)}% complete · est. ${fmtMins(Math.round(courseMins(featured) * (100 - coursePct(featured.id)) / 100))} left</span>
+        <span>${coursePct(featured.id)}% ${t('complete')} · ${t('est')} ${fmtMins(Math.round(courseMins(featured) * (100 - coursePct(featured.id)) / 100))} ${t('left')}</span>
       </div>
     </div>
     <aside class="hero-side">
-      <h4><span class="ai-spark">✦</span> Your AI learning path</h4>
+      <h4><span class="ai-spark">✦</span> ${t('your_ai_path')}</h4>
       ${heroSide}
     </aside>
   </header>
-  <section class="pillars">${PILLARS.map(p => `<div class="pillar">${svgIcon(p.icon)}<span>${p.label}</span></div>`).join('')}</section>
-  ${railHTML('Continue learning', 'Synced across your devices', continuing.map(c => cardHTML(c)))}
-  ${railHTML('Assigned to you', 'From EdenRise · Stewardship', assigned.map(c => cardHTML(c)))}
+  <section class="pillars">${PILLARS.map(p => `<div class="pillar">${svgIcon(p.icon)}<span>${tpillar(p.label)}</span></div>`).join('')}</section>
+  ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
+  ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
   <section class="path-banner">
     <div class="shimmer"></div>
     <div class="path-banner-head">
       <div class="left">
-        <span class="ai-tag">✦ Generated by EdenRise AI · updated 2h ago</span>
-        <h2>Your path to ${S.goal}</h2>
-        <p class="sub">Built from your role, your last 6 assessments, and the skills gap analysis your manager shared. It reshapes itself every time you learn.</p>
+        <span class="ai-tag">${t('generated_by_ai')}</span>
+        <h2>${t('your_path_to')} ${tgoal(S.goal)}</h2>
+        <p class="sub">${t('path_intro')}</p>
       </div>
-      <button class="btn btn-glass" data-action="regen-path" id="regenBtn">Regenerate path ↺</button>
+      <button class="btn btn-glass" data-action="regen-path" id="regenBtn">${t('regenerate_path')}</button>
     </div>
     ${pathStepperHTML()}
     <div class="path-banner-foot">
-      <div class="why">💡 <span><b>Why this order?</b>&nbsp; ${PATH_RATIONALES[S.rationaleIdx % PATH_RATIONALES.length]}</span></div>
+      <div class="why">💡 <span><b>${t('why_order')}</b>&nbsp; ${PATH_RATIONALES[S.rationaleIdx % PATH_RATIONALES.length]}</span></div>
     </div>
   </section>
   <section class="stats">
-    <div class="stat"><div class="num">12d</div><div class="lbl">Learning streak</div><div class="delta">▲ Personal best</div></div>
-    <div class="stat"><div class="num">${fmtMins(S.week.reduce((a, b) => a + b, 0))}</div><div class="lbl">This week</div><div class="delta">▲ 38% vs last week</div></div>
-    <div class="stat"><div class="num">${Object.values(S.progress).filter(p => p.done).length + S.quizzesPassed}</div><div class="lbl">Skills verified</div><div class="delta">▲ ${S.quizzesPassed} from quizzes</div></div>
-    <div class="stat"><div class="num">94%</div><div class="lbl">Avg. assessment score</div><div class="delta warn">— Top 5% in EdenRise</div></div>
+    <div class="stat"><div class="num">12d</div><div class="lbl">${t('learning_streak')}</div><div class="delta">${t('personal_best')}</div></div>
+    <div class="stat"><div class="num">${fmtMins(S.week.reduce((a, b) => a + b, 0))}</div><div class="lbl">${t('this_week')}</div><div class="delta">${t('vs_last_week')}</div></div>
+    <div class="stat"><div class="num">${Object.values(S.progress).filter(p => p.done).length + S.quizzesPassed}</div><div class="lbl">${t('skills_verified')}</div><div class="delta">▲ ${S.quizzesPassed} ${t('from_quizzes')}</div></div>
+    <div class="stat"><div class="num">94%</div><div class="lbl">${t('avg_score')}</div><div class="delta warn">${t('top_5')}</div></div>
   </section>
-  ${railHTML('Trending at EdenRise', 'What the EdenRise community is learning', trending.map((c, i) => cardHTML(c, { rank: c.trending })))}
-  ${railHTML('Because you completed “Living Soil”', 'AI recommendations', recs.map(c => cardHTML(c)))}
+  ${railHTML(t('trending'), t('community_learning'), trending.map((c, i) => cardHTML(c, { rank: c.trending })))}
+  ${railHTML(`${t('because_completed')} “${_lang() === 'pt' ? 'Solo Vivo' : 'Living Soil'}”`, t('ai_recommendations'), recs.map(c => cardHTML(c)))}
   ${footerHTML()}</div>`;
 }
 
@@ -260,14 +260,14 @@ let libFilter = 'All', libQuery = '';
 function renderLibrary() {
   const cats = ['All', ...new Set(CATALOG.map(c => c.cat))];
   let list = CATALOG.filter(c => (libFilter === 'All' || c.cat === libFilter) &&
-    (!libQuery || (c.title + ' ' + c.cat + ' ' + c.desc).toLowerCase().includes(libQuery.toLowerCase())));
+    (!libQuery || (c.title + ' ' + c.cat + ' ' + c.desc + ' ' + ctitle(c) + ' ' + cdesc(c) + ' ' + tcat(c.cat)).toLowerCase().includes(libQuery.toLowerCase())));
   return `<div class="page"><div class="page-pad">
-    <h1 class="page-title">Library</h1>
-    <p class="page-sub">${CATALOG.length} courses · tended by the EdenRise team, sequenced by EdenRise AI.</p>
-    <div class="lib-search">⌕ <input id="libSearch" placeholder="Filter the library…" value="${esc(libQuery)}"></div>
-    <div class="filter-row">${cats.map(c => `<button class="filter-chip ${c === libFilter ? 'active' : ''}" data-action="lib-filter" data-cat="${c}">${c}</button>`).join('')}</div>
+    <h1 class="page-title">${t('library_title')}</h1>
+    <p class="page-sub">${CATALOG.length} ${t('courses_tended')}</p>
+    <div class="lib-search">⌕ <input id="libSearch" placeholder="${t('filter_library')}" value="${esc(libQuery)}"></div>
+    <div class="filter-row">${cats.map(c => `<button class="filter-chip ${c === libFilter ? 'active' : ''}" data-action="lib-filter" data-cat="${c}">${c === 'All' ? t('all') : tcat(c)}</button>`).join('')}</div>
     <div class="grid">${list.map(c => cardHTML(c)).join('')}</div>
-    ${list.length ? '' : '<p class="empty-note">Nothing matches — try another filter or ask the AI tutor to find it.</p>'}
+    ${list.length ? '' : `<p class="empty-note">${t('nothing_matches')}</p>`}
   </div>${footerHTML()}</div>`;
 }
 
@@ -296,8 +296,8 @@ function renderPaths() {
 
 function renderLive() {
   return `<div class="page"><div class="page-pad">
-    <h1 class="page-title">Live</h1>
-    <p class="page-sub">Sessions with real humans — office hours, AMAs and workshops. Replays land in the Library within a day.</p>
+    <h1 class="page-title">${t('live_title')}</h1>
+    <p class="page-sub">${t('live_sub')}</p>
     ${LIVE_SESSIONS.map(s => `
       <div class="live-card">
         <div class="live-thumb t-grad-${s.grad}">${svgIcon(s.icon)}${s.live ? '<span class="live-badge">● LIVE</span>' : ''}</div>
@@ -305,10 +305,10 @@ function renderLive() {
           <h3>${s.title}</h3><div class="host">${s.host}</div><div class="d">${s.desc}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px;">
-          <span class="live-when">${s.live ? `🔴 ${s.viewers} watching` : s.when}</span>
+          <span class="live-when">${s.live ? `🔴 ${s.viewers} ${t('watching')}` : s.when}</span>
           ${s.live
-            ? `<button class="btn btn-primary btn-sm" data-action="join-live" data-id="${s.id}">Join now</button>`
-            : `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12px;color:var(--text-faint);font-weight:600;">Remind me</span><div class="toggle ${S.reminders.includes(s.id) ? 'on' : ''}" data-action="remind" data-id="${s.id}"></div></div>`}
+            ? `<button class="btn btn-primary btn-sm" data-action="join-live" data-id="${s.id}">${t('join_now')}</button>`
+            : `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12px;color:var(--text-faint);font-weight:600;">${t('remind_me')}</span><div class="toggle ${S.reminders.includes(s.id) ? 'on' : ''}" data-action="remind" data-id="${s.id}"></div></div>`}
         </div>
       </div>`).join('')}
   </div>${footerHTML()}</div>`;
@@ -369,13 +369,13 @@ function renderCourse(id) {
     if (soon) {
       return `<div class="module-row soon">
         <div class="m-num">🔒</div>
-        <div class="m-title">Coming soon</div>
-        <span class="m-dur">Soon</span>
+        <div class="m-title">${t('coming_soon')}</div>
+        <span class="m-dur">${t('coming_soon')}</span>
       </div>`;
     }
     return `<div class="module-row ${done ? 'done' : ''} ${isCur ? 'current' : ''}" data-action="play" data-id="${id}" data-mod="${i}">
       <div class="m-num">${done ? '✓' : isCur ? '▶' : i + 1}</div>
-      <div class="m-title">${m}${review ? ' &nbsp;<span class="review-flag">↺ AI re-queued for review</span>' : ''}</div>
+      <div class="m-title">${cmods(c)[i] || m}${review ? ' &nbsp;<span class="review-flag">↺ AI re-queued for review</span>' : ''}</div>
       <span class="m-dur">12m</span>
       <button class="m-play">▶</button>
     </div>`;
@@ -387,34 +387,34 @@ function renderCourse(id) {
         ${c.poster ? `<div class="course-poster has-poster" style="background-image:url('${c.poster}')"></div>` : `<div class="course-poster t-grad-${c.grad}">${svgIcon(c.icon)}</div>`}
         <div class="course-info">
           <div class="hero-meta">
-            <span class="match">${c.ai ? '✦ In AI rotation' : c.cat}</span><span class="sep"></span>
-            <span>${c.modules.length} modules</span><span class="sep"></span>
-            <span>${fmtMins(courseMins(c))}</span><span class="sep"></span><span>${c.level}</span>
-            <span class="sep"></span><span>★ ${c.rating} · ${c.learners} learners</span>
+            <span class="match">${c.ai ? t('in_ai_rotation') : tcat(c.cat)}</span><span class="sep"></span>
+            <span>${c.modules.length} ${t('modules')}</span><span class="sep"></span>
+            <span>${fmtMins(courseMins(c))}</span><span class="sep"></span><span>${t(c.level) || c.level}</span>
+            <span class="sep"></span><span>★ ${c.rating} · ${c.learners} ${t('learners')}</span>
           </div>
-          <h1>${c.title}</h1>
-          <p class="desc">${c.desc}</p>
+          <h1>${ctitle(c)}</h1>
+          <p class="desc">${cdesc(c)}</p>
           <div class="hero-actions">
-            <button class="btn btn-primary" data-action="play" data-id="${id}">▶&nbsp; ${isDone(id) ? 'Rewatch' : p ? `Resume Module ${(p.mod || 0) + 1}` : 'Start course'}</button>
-            <button class="btn btn-glass" data-action="quiz" data-id="${id}">🎯&nbsp; Quiz me</button>
-            <button class="btn btn-glass" data-action="ai-overview" data-id="${id}">✦&nbsp; AI Overview</button>
-            <button class="btn btn-glass" data-action="toggle-path" data-id="${id}">${inPath(id) ? '✓ In My Path' : '+ My Path'}</button>
+            <button class="btn btn-primary" data-action="play" data-id="${id}">▶&nbsp; ${isDone(id) ? t('rewatch') : p ? `${t('resume_module')} ${(p.mod || 0) + 1}` : t('start_course')}</button>
+            <button class="btn btn-glass" data-action="quiz" data-id="${id}">🎯&nbsp; ${t('quiz_me')}</button>
+            <button class="btn btn-glass" data-action="ai-overview" data-id="${id}">✦&nbsp; ${t('ai_overview')}</button>
+            <button class="btn btn-glass" data-action="toggle-path" data-id="${id}">${inPath(id) ? t('in_my_path') : t('my_path')}</button>
           </div>
-          ${coursePct(id) > 0 && !isDone(id) ? `<div class="hero-progress"><div class="track"><div class="fill" style="width:${coursePct(id)}%"></div></div><span>${coursePct(id)}% complete</span></div>` : ''}
-          ${isDone(id) ? `<div class="hero-progress"><span class="due ok" style="margin:0;">✓ Completed${p.score ? ' · scored ' + p.score + '%' : ''}</span></div>` : ''}
+          ${coursePct(id) > 0 && !isDone(id) ? `<div class="hero-progress"><div class="track"><div class="fill" style="width:${coursePct(id)}%"></div></div><span>${coursePct(id)}% ${t('complete')}</span></div>` : ''}
+          ${isDone(id) ? `<div class="hero-progress"><span class="due ok" style="margin:0;">✓ ${t('completed')}${p.score ? ' · ' + t('scored') + ' ' + p.score + '%' : ''}</span></div>` : ''}
         </div>
       </div>
     </div>
-    <div class="rail-head" style="margin-top:14px;"><h2>Modules</h2><span class="hint">Tap any module to play</span></div>
+    <div class="rail-head" style="margin-top:14px;"><h2>${t('modules_h')}</h2><span class="hint">${t('tap_module')}</span></div>
     <div class="module-list">${modules}</div>
-    ${railHTML('More in ' + c.cat, 'Related courses', CATALOG.filter(x => x.cat === c.cat && x.id !== id).map(x => cardHTML(x)))}
+    ${railHTML(t('more_in') + ' ' + tcat(c.cat), t('related_courses'), CATALOG.filter(x => x.cat === c.cat && x.id !== id).map(x => cardHTML(x)))}
     ${footerHTML()}</div>`;
 }
 
 const footerHTML = () => `
 <footer>
   <div class="logo"><span class="logo-mark"><svg class="er-mark" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 37.5V15a11 11 0 0 1 22 0v22.5" stroke="rgba(166,195,165,.5)" stroke-width="1"/><g transform="translate(15 0)"><path d="M0 33V13" stroke="#b27a52" stroke-width="1.1" stroke-linecap="round"/><g fill="#b27a52"><path d="M0 0C-3.4-3-3.4-9 0-12 3.4-9 3.4-3 0 0Z" transform="translate(0 13)"/><path d="M0 0C-3.1-2.6-3.1-8 0-11 3.1-8 3.1-2.6 0 0Z" transform="translate(0 18) rotate(36)"/><path d="M0 0C-3.1-2.6-3.1-8 0-11 3.1-8 3.1-2.6 0 0Z" transform="translate(0 18) rotate(-36)"/><path d="M0 0C-2.9-2.4-2.9-7.4 0-10 2.9-7.4 2.9-2.4 0 0Z" transform="translate(0 23) rotate(60)"/><path d="M0 0C-2.9-2.4-2.9-7.4 0-10 2.9-7.4 2.9-2.4 0 0Z" transform="translate(0 23) rotate(-60)"/><path d="M0 0C-2.6-2.1-2.6-6.6 0-9 2.6-6.6 2.6-2.1 0 0Z" transform="translate(0 28) rotate(104)"/><path d="M0 0C-2.6-2.1-2.6-6.6 0-9 2.6-6.6 2.6-2.1 0 0Z" transform="translate(0 28) rotate(-104)"/></g></g></svg></span><span class="logo-word"><span class="er-name">EDENRISE</span><span class="er-sub">Wellness Resort</span></span></div>
-  <span>· The learning academy of EdenRise</span>
+  <span>${t('footer_tag')}</span>
   <div class="links">
     <button data-action="toast-msg" data-msg="Admin console ships in the full product — team roll-ups, content upload, SSO.">Admin console</button>
     <button data-action="ai-open">Help</button>
@@ -502,59 +502,59 @@ function renderProgress() {
   const maxXp = Math.max(...board.map(r => r.xp), 1);
   const doneCount = CATALOG.filter(c => isDone(c.id)).length;
   const nudge = rank.ahead
-    ? `<div class="nudge-line">${svgIcon('bird')}<span><b>${rank.ahead.name.split(' ')[0]}</b> is just <b>${rank.ahead.xp - S.xp} XP</b> ahead of you — finish one module to catch up 🌿</span></div>`
-    : `<div class="nudge-line">${svgIcon('sun')}<span>You're <b>top of the board</b> this week. Keep the grove growing.</span></div>`;
+    ? `<div class="nudge-line">${svgIcon('bird')}<span><b>${rank.ahead.name.split(' ')[0]}</b> ${t('xp_ahead_1')} <b>${rank.ahead.xp - S.xp} XP</b> ${t('xp_ahead_2')}</span></div>`
+    : `<div class="nudge-line">${svgIcon('sun')}<span>${t('top_board')}</span></div>`;
 
   return `<div class="page"><div class="page-pad">
-    <h1 class="page-title">My Progress</h1>
-    <p class="page-sub">Your growth at EdenRise. The more you learn, the more the grove grows — points, streaks and badges are here to keep you finishing what you start.</p>
+    <h1 class="page-title">${t('my_progress')}</h1>
+    <p class="page-sub">${t('progress_sub')}</p>
 
     <div class="prog-top">
       <div class="level-card">
         <div class="level-ring" style="background:conic-gradient(var(--accent) ${lv.pct * 3.6}deg, rgba(231,237,227,.1) 0)">
           <div class="level-ring-in">
-            <div class="lv-num">Lv ${lv.idx + 1}</div>
-            <div class="lv-name">${lv.name}</div>
+            <div class="lv-num">${t('level_ab')} ${lv.idx + 1}</div>
+            <div class="lv-name">${tlevel(lv.idx)}</div>
           </div>
         </div>
         <div class="level-meta">
-          <div class="lv-xp">${S.xp.toLocaleString()} <span>XP</span></div>
+          <div class="lv-xp">${S.xp.toLocaleString()} <span>${t('xp')}</span></div>
           ${lv.next != null
-            ? `<div class="lv-next"><div class="track"><div class="fill" style="width:${lv.pct}%"></div></div><span>${lv.toNext} XP to <b>${LEVELS[lv.idx + 1].name}</b></span></div>`
-            : `<div class="lv-next"><span>Highest level — Elder Oak 🌳</span></div>`}
+            ? `<div class="lv-next"><div class="track"><div class="fill" style="width:${lv.pct}%"></div></div><span>${lv.toNext} ${t('xp_to')} <b>${tlevel(lv.idx + 1)}</b></span></div>`
+            : `<div class="lv-next"><span>${t('highest_level')}</span></div>`}
         </div>
       </div>
       <div class="prog-mini">
-        <div class="stat"><div class="num">${S.streak}d</div><div class="lbl">Learning streak</div><div class="delta">▲ Keep it alive</div></div>
-        <div class="stat"><div class="num">#${rank.rank}</div><div class="lbl">Leader's board rank</div><div class="delta">of ${rank.total} this week</div></div>
-        <div class="stat"><div class="num">${S.badges.length}<span style="font-size:18px;color:var(--text-faint)">/${BADGES.length}</span></div><div class="lbl">Badges earned</div><div class="delta">${S.badges.length ? '▲ Nice work' : 'Earn your first'}</div></div>
-        <div class="stat"><div class="num">${doneCount}</div><div class="lbl">Courses finished</div><div class="delta">${S.quizzesPassed} skills verified</div></div>
+        <div class="stat"><div class="num">${S.streak}d</div><div class="lbl">${t('learning_streak')}</div><div class="delta">${t('keep_alive')}</div></div>
+        <div class="stat"><div class="num">#${rank.rank}</div><div class="lbl">${t('board_rank')}</div><div class="delta">${t('of')} ${rank.total} ${t('this_week').toLowerCase()}</div></div>
+        <div class="stat"><div class="num">${S.badges.length}<span style="font-size:18px;color:var(--text-faint)">/${BADGES.length}</span></div><div class="lbl">${t('badges_earned')}</div><div class="delta">${S.badges.length ? t('nice_work') : t('earn_first')}</div></div>
+        <div class="stat"><div class="num">${doneCount}</div><div class="lbl">${t('courses_finished')}</div><div class="delta">${S.quizzesPassed} ${t('skills_verified').toLowerCase()}</div></div>
       </div>
     </div>
 
     <div class="admin-section">
-      <h2>Badges</h2>
-      <p class="sect-sub">Small marks of growth — earned for finishing, not just starting.</p>
+      <h2>${t('badges_h')}</h2>
+      <p class="sect-sub">${t('badges_sub')}</p>
       <div class="badge-grid">
         ${BADGES.map(b => { const got = S.badges.includes(b.id); return `
           <div class="badge ${got ? 'got' : 'locked'}">
             <div class="badge-ic">${got ? svgIcon(b.icon) : svgIcon('seed')}</div>
-            <div class="badge-t">${b.title}</div>
-            <div class="badge-d">${got ? b.desc : 'Locked · ' + b.desc}</div>
+            <div class="badge-t">${tbadge(b, 'title')}</div>
+            <div class="badge-d">${got ? tbadge(b, 'desc') : t('locked_dot') + ' ' + tbadge(b, 'desc')}</div>
           </div>`; }).join('')}
       </div>
     </div>
 
     <div class="admin-section">
-      <h2>Leader's board · this week</h2>
-      <p class="sect-sub">Friendly, resets every Monday. A little competition keeps everyone finishing.</p>
+      <h2>${t('leaders_board')}</h2>
+      <p class="sect-sub">${t('board_sub')}</p>
       ${nudge}
       <div class="board">
         ${board.map((r, i) => `
           <div class="board-row ${r.me ? 'me' : ''}">
             <span class="board-rank">${i + 1}</span>
             <span class="mi t-grad-${r.grad}">${r.initials}</span>
-            <span class="board-name">${r.name}${r.me ? ' <span class="you-tag">you</span>' : ''}</span>
+            <span class="board-name">${r.name}${r.me ? ` <span class="you-tag">${t('you')}</span>` : ''}</span>
             <span class="board-bar"><span class="fill" style="width:${Math.round(r.xp / maxXp * 100)}%"></span></span>
             <span class="board-xp">${r.xp.toLocaleString()} XP</span>
           </div>`).join('')}
@@ -562,8 +562,8 @@ function renderProgress() {
     </div>
 
     <div class="admin-section">
-      <h2>Your path to ${S.goal}</h2>
-      <p class="sect-sub">Every step completed is points on the board.</p>
+      <h2>${t('your_path_to')} ${tgoal(S.goal)}</h2>
+      <p class="sect-sub">${t('path_points')}</p>
       ${pathStepperHTML()}
     </div>
   </div>${footerHTML()}</div>`;
@@ -583,6 +583,7 @@ function render() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
   $$('.nav-links a, .mobile-drawer a, .tabbar a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
+  syncChrome();
   $('#app').innerHTML = route === 'course' ? renderCourse(param) : (routes[route] || renderHome)();
   makeFocusable($('#app'));
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -600,6 +601,36 @@ function render() {
   initMotion();
 }
 addEventListener('hashchange', render);
+
+/* ---------- language (EN / PT) ---------- */
+const NAV_KEYS = { '#/home': 'nav_home', '#/library': 'nav_library', '#/paths': 'nav_paths', '#/live': 'nav_live', '#/progress': 'nav_progress', '#/analytics': 'nav_analytics', '#/admin': 'nav_admin' };
+function syncChrome() {
+  $$('.nav-links a, .mobile-drawer a').forEach(a => { const k = NAV_KEYS[a.getAttribute('href')]; if (k) a.textContent = t(k); });
+  $$('.tabbar a').forEach(a => { const k = NAV_KEYS[a.getAttribute('href')]; const s = a.querySelector('span'); if (k && s) s.textContent = t(k); });
+  const search = $('#navSearch'); if (search) search.innerHTML = `⌕&nbsp; ${t('search_ph')} <kbd>⌘K</kbd>`;
+  const org = $('#orgChip'); if (org) org.innerHTML = `<span class="org-dot"></span>${t('org')}`;
+  const tn = $('#aiTitle'); if (tn) tn.textContent = t('tutor_name');
+  $$('.quick-row .quick[data-tk]').forEach(b => { b.textContent = t(b.dataset.tk); });
+  const inp = $('#aiInput'); if (inp) inp.placeholder = t('ask_anything');
+  const stEl = $('#tutorStatus'); if (stEl && !S.apiKey) stEl.textContent = t('tutor_demo');
+  const tsTitle = $('#tutorSettings .ts-title'); if (tsTitle) tsTitle.textContent = t('connect_ai');
+  const tsNote = $('#tutorSettings .ts-note'); if (tsNote) tsNote.textContent = t('api_note');
+  const sv = $('#apiKeySave'); if (sv) sv.textContent = t('save');
+  const cl = $('#apiKeyClear'); if (cl) cl.textContent = t('use_demo');
+  const askBtn = document.querySelector('.player-top .btn[data-action="ai-open"]'); if (askBtn) askBtn.textContent = t('ask_tutor');
+  const nt = $('#notesToggle'); if (nt) nt.textContent = t('notes_transcript');
+  const pc = $('#playerComplete'); if (pc) pc.textContent = t('mark_complete');
+  $$('.lang-btn').forEach(b => { const on = b.dataset.lang === _lang(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  document.documentElement.lang = _lang();
+}
+function setLang(l) {
+  if (l === S.lang) return;
+  S.lang = l; save(); render();
+  const st = $('#tutorStatus'); if (st && st.textContent.includes('Demo') || st && st.textContent.includes('demo')) st.textContent = t('tutor_demo');
+  const ai = $('#aiPanel'); if (ai) { const inp = $('#aiInput'); if (inp) inp.placeholder = t('ask_anything'); }
+  if (tutorPanel && tutorPanel.classList.contains('open')) { const m = $('#aiMsgs'); if (m) m.innerHTML = ''; tutorHistory = []; tutorGreet(); }
+}
+document.addEventListener('click', e => { const lb = e.target.closest('.lang-btn'); if (lb) setLang(lb.dataset.lang); });
 
 /* ---------- GSAP motion (graceful + never leaves content hidden) ---------- */
 const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -712,24 +743,25 @@ function openPlayer(courseId, mod) {
   if (media && media.type === 'soon') {
     videoEl.style.display = 'none';
     soonStage.classList.add('on');
-    $('#soonTitle').textContent = 'Coming soon';
+    $('#soonTitle').textContent = t('coming_soon');
+    const ss = $('#soonStage .soon-sub'); if (ss) ss.textContent = t('soon_sub');
   } else if (media && media.type === 'vimeo') {
     videoEl.style.display = 'none';
     vimeoWrap.classList.add('on');
-    vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?h=${media.h}&title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${c.modules[mod]}"></iframe>`;
+    vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?h=${media.h}&title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${cmods(c)[mod]}"></iframe>`;
   } else {
     videoEl.src = c.video || vidFor(courseId, mod);
     videoEl.play().catch(() => {});
   }
 
-  $('#playerTitle').textContent = c.title;
-  $('#playerSub').textContent = `Module ${mod + 1} of ${c.modules.length} · ${c.modules[mod]}`;
+  $('#playerTitle').textContent = ctitle(c);
+  $('#playerSub').textContent = `${t('module')} ${mod + 1} ${t('of')} ${c.modules.length} · ${cmods(c)[mod]}`;
   $('#playerPills').innerHTML = c.modules.map((m, i) => {
     const p = prog(courseId);
     const mm = modMedia(c, i);
     const soon = mm && mm.type === 'soon';
     const done = isDone(courseId) || (p && !p.done && i < (p.mod || 0));
-    return `<button class="mod-pill ${i === mod ? 'current' : done ? 'done' : ''} ${soon ? 'soon' : ''}" data-action="play" data-id="${courseId}" data-mod="${i}">${done ? '✓ ' : soon ? '🔒 ' : ''}${i + 1}. ${soon ? 'Coming soon' : m}</button>`;
+    return `<button class="mod-pill ${i === mod ? 'current' : done ? 'done' : ''} ${soon ? 'soon' : ''}" data-action="play" data-id="${courseId}" data-mod="${i}">${done ? '✓ ' : soon ? '🔒 ' : ''}${i + 1}. ${soon ? t('coming_soon') : cmods(c)[i]}</button>`;
   }).join('');
   /* hide "mark complete" for coming-soon lessons */
   $('#playerComplete').style.display = (media && media.type === 'soon') ? 'none' : '';
@@ -955,8 +987,13 @@ function tutorGreet() {
   const id = currentCourseId();
   const c = id && courseById(id);
   const p = c && prog(c.id);
-  if (c && p && !p.done) botSay(`Hey João 👋 You're ${coursePct(c.id)}% through <b>${c.title}</b> — currently on “${c.modules[p.mod || 0]}”. Want a 30-second recap, or shall I quiz you?`);
-  else botSay(`Hey João 👋 I can summarize any course, quiz you, or rebuild your learning path. I can see your progress and your goal (<b>${S.goal}</b>) — ask me anything.`);
+  const pt = _lang() === 'pt';
+  if (c && p && !p.done) botSay(pt
+    ? `Olá João 👋 Está ${coursePct(c.id)}% em <b>${ctitle(c)}</b> — de momento em “${cmods(c)[p.mod || 0]}”. Quer um resumo de 30 segundos, ou faço-lhe um teste?`
+    : `Hey João 👋 You're ${coursePct(c.id)}% through <b>${ctitle(c)}</b> — currently on “${cmods(c)[p.mod || 0]}”. Want a 30-second recap, or shall I quiz you?`);
+  else botSay(pt
+    ? `Olá João 👋 Posso resumir qualquer curso, testá-lo, ou reconstruir o seu percurso. Vejo o seu progresso e o seu objetivo (<b>${tgoal(S.goal)}</b>) — pergunte-me o que quiser.`
+    : `Hey João 👋 I can summarize any course, quiz you, or rebuild your learning path. I can see your progress and your goal (<b>${tgoal(S.goal)}</b>) — ask me anything.`);
 }
 function openTutorWith(html, quicks) {
   setTutorOpen(true);
@@ -981,7 +1018,8 @@ ${c ? `He currently has "${c.title}" open${p && !p.done ? ` — module ${(p.mod 
 
 Deadlines: "Fire Safety on the Land" is required and due in 3 days (it's fire season in the Alentejo); the team series "Living by the Seasons" is due June 30.
 
-Style: warm, encouraging, concise (2-4 sentences unless asked for depth). Refer to his actual progress and path when relevant. You can offer to quiz him — if he agrees, tell him to press the "Quiz me now" button. Never invent courses that aren't in his path or the descriptions above.`;
+Style: warm, encouraging, concise (2-4 sentences unless asked for depth). Refer to his actual progress and path when relevant. You can offer to quiz him — if he agrees, tell him to press the "Quiz me now" button. Never invent courses that aren't in his path or the descriptions above.
+${_lang() === 'pt' ? 'IMPORTANT: Respond in European Portuguese (português de Portugal).' : ''}`;
 }
 async function askClaude(text) {
   tutorHistory.push({ role: 'user', content: text });
@@ -1170,7 +1208,6 @@ $('#orgChip').addEventListener('click', () => toast('Workspace switching ships i
 $('#playerBack').addEventListener('click', closePlayer);
 $('#playerComplete').addEventListener('click', () => { if (playing) completeModule(playing.courseId, playing.mod); else closePlayer(); });
 $('#aiFab').addEventListener('click', () => setTutorOpen(!tutorPanel.classList.contains('open')));
-$('#tabTutor').addEventListener('click', () => setTutorOpen(!tutorPanel.classList.contains('open')));
 $('#aiSend').addEventListener('click', sendTutor);
 $('#aiInput').addEventListener('keydown', e => { if (e.key === 'Enter') sendTutor(); });
 function sendTutor() {
@@ -1240,36 +1277,36 @@ function drawOnboard() {
   $('#obFill').style.width = [33, 66, 100][ob.step] + '%';
   if (ob.step === 0) {
     body.innerHTML = `
-      <div class="ob-eyebrow">Step 1 of 3 · Welcome to EdenRise</div>
-      <div class="ob-title">What do you do, João?</div>
-      <p class="ob-sub">The AI uses your role to seed your first learning path. You can change everything later.</p>
+      <div class="ob-eyebrow">${t('ob_step')} 1 ${t('of')} 3 · ${t('ob_welcome')}</div>
+      <div class="ob-title">${t('ob_q1')}</div>
+      <p class="ob-sub">${t('ob_q1_sub')}</p>
       <div class="ob-grid">${ROLE_OPTIONS.map(r => `
         <div class="ob-option ${ob.role === r.key ? 'sel' : ''}" data-role="${r.key}">
-          <span class="oi">${svgIcon(r.icon)}</span><div>${r.label}<div class="od">${r.goals[0]} track &amp; more</div></div>
+          <span class="oi">${svgIcon(r.icon)}</span><div>${trole(r)}<div class="od">${tgoal(r.goals[0])} ${t('track_more')}</div></div>
         </div>`).join('')}
       </div>
       <div class="ob-foot">
-        <button class="ob-skip" id="obSkip">Skip — explore on my own</button>
+        <button class="ob-skip" id="obSkip">${t('ob_skip')}</button>
         <span style="flex:1"></span>
-        <button class="btn btn-primary" id="obNext" ${ob.role ? '' : 'disabled style="opacity:.5"'}>Continue →</button>
+        <button class="btn btn-primary" id="obNext" ${ob.role ? '' : 'disabled style="opacity:.5"'}>${t('ob_continue')}</button>
       </div>`;
     body.querySelectorAll('.ob-option').forEach(o => o.addEventListener('click', () => { ob.role = o.dataset.role; drawOnboard(); }));
   } else if (ob.step === 1) {
     const role = ROLE_OPTIONS.find(r => r.key === ob.role) || ROLE_OPTIONS[0];
     const goals = [...new Set([...role.goals, ...Object.keys(GOAL_PRESETS)])].slice(0, 4);
     body.innerHTML = `
-      <div class="ob-eyebrow">Step 2 of 3 · Your destination</div>
-      <div class="ob-title">Pick a goal to work toward</div>
-      <p class="ob-sub">The AI sequences courses toward this goal and re-plans as you prove skills.</p>
+      <div class="ob-eyebrow">${t('ob_step')} 2 ${t('of')} 3 · ${t('ob_destination')}</div>
+      <div class="ob-title">${t('ob_q2')}</div>
+      <p class="ob-sub">${t('ob_q2_sub')}</p>
       <div class="ob-grid">${goals.map(g => `
         <div class="ob-option ${ob.goal === g ? 'sel' : ''}" data-goal="${g}">
-          <span class="oi">${svgIcon(courseById(GOAL_PRESETS[g][0]).icon)}</span><div>${g}<div class="od">${GOAL_PRESETS[g].length} courses · adaptive</div></div>
+          <span class="oi">${svgIcon(courseById(GOAL_PRESETS[g][0]).icon)}</span><div>${tgoal(g)}<div class="od">${GOAL_PRESETS[g].length} ${t('courses_adaptive')}</div></div>
         </div>`).join('')}
       </div>
       <div class="ob-foot">
-        <button class="ob-skip" id="obBack">← Back</button>
+        <button class="ob-skip" id="obBack">← ${_lang() === 'pt' ? 'Voltar' : 'Back'}</button>
         <span style="flex:1"></span>
-        <button class="btn btn-primary" id="obNext" ${ob.goal ? '' : 'disabled style="opacity:.5"'}>Build my path ✦</button>
+        <button class="btn btn-primary" id="obNext" ${ob.goal ? '' : 'disabled style="opacity:.5"'}>${t('ob_build')}</button>
       </div>`;
     body.querySelectorAll('.ob-option').forEach(o => o.addEventListener('click', () => { ob.goal = o.dataset.goal; drawOnboard(); }));
     $('#obBack').addEventListener('click', () => { ob.step = 0; drawOnboard(); });
@@ -1277,10 +1314,12 @@ function drawOnboard() {
     body.innerHTML = `
       <div class="ob-gen">
         <div class="orb-spin"></div>
-        <div class="ob-title" style="font-size:24px;">Building your path to ${ob.goal}</div>
-        <div class="gen-line" id="genLine">Reading your role profile…</div>
+        <div class="ob-title" style="font-size:24px;">${t('ob_building')} ${tgoal(ob.goal)}</div>
+        <div class="gen-line" id="genLine">${_lang() === 'pt' ? 'A ler o seu perfil…' : 'Reading your role profile…'}</div>
       </div>`;
-    const lines = ['Reading your role profile…', 'Scanning the EdenRise library…', 'Checking skills you can skip…', 'Sequencing 4–6 courses…', 'Done ✓'];
+    const lines = _lang() === 'pt'
+      ? ['A ler o seu perfil…', 'A percorrer a biblioteca EdenRise…', 'A ver competências que pode saltar…', 'A sequenciar 4–6 cursos…', 'Concluído ✓']
+      : ['Reading your role profile…', 'Scanning the EdenRise library…', 'Checking skills you can skip…', 'Sequencing 4–6 courses…', 'Done ✓'];
     let i = 0;
     const iv = setInterval(() => {
       i++;
