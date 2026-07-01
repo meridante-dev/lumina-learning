@@ -25,6 +25,9 @@ const userHandle = () => (S.profile && S.profile.username) || '';
 const userInitials = () => displayName().trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'JA';
 const slugHandle = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '').slice(0, 20);
 const suggestHandle = () => { const p = S.profile || {}; return slugHandle(p.username) || slugHandle(p.name) || slugHandle((p.email || '').split('@')[0]) || 'learner'; };
+/* admin access — only these accounts see Analytics + Admin */
+const ADMIN_EMAILS = ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'];
+const isAdmin = () => ADMIN_EMAILS.includes(((S.profile && S.profile.email) || '').trim().toLowerCase());
 
 function toast(msg, icon = '✨') {
   const t = document.createElement('div');
@@ -741,7 +744,7 @@ function renderProfile() {
     <div class="prof-card">
       <div class="prof-avatar ${p.photo ? 'has-photo' : ''}"${p.photo ? ` style="background-image:url('${esc(p.photo)}')"` : ''}>${p.photo ? '' : userInitials()}</div>
       <div class="prof-id">
-        <div class="prof-name">${esc(displayName())}</div>
+        <div class="prof-name">${esc(displayName())}${isAdmin() ? ' <span class="admin-badge">Admin</span>' : ''}</div>
         <div class="prof-handle">${userHandle() ? '@' + esc(userHandle()) : '—'}</div>
         <div class="prof-meta">${isGuest ? (_lang() === 'pt' ? 'Conta de convidado' : 'Guest account') : esc(p.email || '')}${providerLabel ? ` · ${t('prof_via')} ${providerLabel}` : ''}</div>
       </div>
@@ -794,6 +797,7 @@ function makeFocusable(root) {
 function render() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
+  if ((route === 'analytics' || route === 'admin') && !isAdmin()) { location.hash = '#/home'; return; }
   $$('.nav-links a, .mobile-drawer a, .tabbar a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
   syncChrome();
   if (route !== 'community') teardownCommunity();
@@ -835,6 +839,7 @@ function syncChrome() {
   const nt = $('#notesToggle'); if (nt) nt.textContent = t('notes_transcript');
   const pc = $('#playerComplete'); if (pc) pc.textContent = t('mark_complete');
   $$('.lang-btn').forEach(b => { const on = b.dataset.lang === _lang(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  document.documentElement.classList.toggle('is-admin', isAdmin());
   document.documentElement.lang = _lang();
 }
 function setLang(l) {

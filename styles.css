@@ -1612,3 +1612,7 @@ html[data-gate="on"] #authGate { display: flex; }
   .ch-item { flex-direction: row; white-space: nowrap; background: var(--surface); border: 1px solid var(--line); padding: 8px 13px; flex-shrink: 0; }
   .ch-item.active { border-color: var(--accent); }
 }
+
+/* ================= Admin-only gating ================= */
+html:not(.is-admin) [data-admin] { display: none !important; }
+.admin-badge { display: inline-block; vertical-align: middle; font-family: var(--font-body); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0e140f; background: var(--accent); padding: 3px 8px; border-radius: 6px; margin-left: 8px; position: relative; top: -3px; }
