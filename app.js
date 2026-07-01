@@ -433,20 +433,76 @@ const footerHTML = () => `
   </div>
 </footer>`;
 
+/* ---------- Leader's Cockpit (real member data) ---------- */
+let adminMembers = null;
+function memberSummary(m) {
+  const st = m.state || {}, pf = m.profile || {};
+  const name = pf.name || (pf.email ? pf.email.split('@')[0] : 'Learner');
+  const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER';
+  const path = st.path || [], prg = st.progress || {};
+  const doneInPath = path.filter(id => prg[id] && prg[id].done).length;
+  const pathPct = path.length ? Math.round(doneInPath / path.length * 100) : 0;
+  const coursesDone = Object.values(prg).filter(p => p && p.done).length;
+  const xp = st.xp || 0, lvl = levelFor(xp);
+  const days = m.updatedAt ? Math.floor((Date.now() - m.updatedAt) / 86400000) : null;
+  const atRisk = pathPct < 35 || (days != null && days > 10);
+  return { uid: m.uid, name, initials, email: pf.email || '', username: pf.username || '', role: st.role || pf.role || '', goal: st.goal || '', pathPct, coursesDone, xp, level: lvl.idx + 1, levelName: tlevel(lvl.idx), streak: st.streak || 0, days, atRisk };
+}
+function memberRow(s) {
+  return `<tr>
+    <td><div class="member"><span class="mi t-grad-3">${esc(s.initials)}</span><div>${esc(s.name)}${s.username ? ` <span class="post-handle">@${esc(s.username)}</span>` : ''}<div class="mr">${esc(s.email || '—')}</div></div></div></td>
+    <td style="min-width:150px;"><div class="track" style="width:100%;"><div class="fill" style="width:${s.pathPct}%"></div></div></td>
+    <td>${s.pathPct}%</td>
+    <td>Lv ${s.level}</td>
+    <td>${s.streak}d</td>
+    <td style="color:var(--text-faint);">${s.days == null ? '—' : s.days === 0 ? 'today' : s.days + 'd ago'}</td>
+    <td><span class="status-chip ${s.atRisk ? 'risk' : 'ok'}">${s.atRisk ? '⚠ At risk' : '● On track'}</span></td>
+    <td><button class="btn btn-glass btn-sm" data-action="nudge" data-name="${esc(s.name)}">Nudge</button></td>
+  </tr>`;
+}
+function paintCockpit() {
+  if (!adminMembers) return;
+  const sums = adminMembers.map(memberSummary).sort((a, b) => (a.atRisk === b.atRisk ? a.pathPct - b.pathPct : (a.atRisk ? -1 : 1)));
+  const n = sums.length;
+  const avg = n ? Math.round(sums.reduce((a, b) => a + b.pathPct, 0) / n) : 0;
+  const active = sums.filter(s => s.days != null && s.days <= 7).length;
+  const risk = sums.filter(s => s.atRisk).length;
+  const statsEl = $('#cockpitStats');
+  if (statsEl) statsEl.innerHTML = `
+    <div class="stat"><div class="num">${n}</div><div class="lbl">Members</div></div>
+    <div class="stat"><div class="num">${avg}%</div><div class="lbl">Avg. completion</div></div>
+    <div class="stat"><div class="num">${active}</div><div class="lbl">Active this week</div></div>
+    <div class="stat"><div class="num">${risk}</div><div class="lbl">At risk</div><div class="delta ${risk ? 'warn' : ''}">${risk ? '⚠ Needs a nudge' : '● All on track'}</div></div>`;
+  const roster = $('#cockpitRoster');
+  if (roster) roster.innerHTML = n ? sums.map(memberRow).join('') : `<tr><td colspan="8" class="empty-note">No members yet — as people sign in, they'll appear here.</td></tr>`;
+}
+function initAdmin(retries) {
+  if (!window.EdenCloud || !EdenCloud.listMembers) {
+    if ((retries || 0) < 24 && location.hash.indexOf('#/admin') === 0) { setTimeout(() => initAdmin((retries || 0) + 1), 250); return; }
+    const r = $('#cockpitRoster'); if (r) r.innerHTML = `<tr><td colspan="8" class="empty-note">The cockpit needs an internet connection.</td></tr>`;
+    return;
+  }
+  const r = $('#cockpitRoster'); if (r) r.innerHTML = `<tr><td colspan="8" class="empty-note">Loading members…</td></tr>`;
+  EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); }).catch(err => {
+    console.error('[cockpit]', err);
+    const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="8" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
+  });
+}
+function exportMembersCSV() {
+  if (!adminMembers || !adminMembers.length) { toast('No members to export yet', 'ℹ️'); return; }
+  const sums = adminMembers.map(memberSummary);
+  const head = ['Name', 'Username', 'Email', 'Role', 'Goal', 'Completion %', 'Courses done', 'Level', 'XP', 'Streak (days)', 'Last active (days ago)', 'At risk'];
+  const lines = sums.map(s => [s.name, s.username, s.email, s.role, s.goal, s.pathPct, s.coursesDone, s.level, s.xp, s.streak, s.days == null ? '' : s.days, s.atRisk ? 'yes' : 'no']);
+  const csv = [head, ...lines].map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  const a = document.createElement('a'); a.href = url; a.download = 'edenrise-members.csv'; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast('Member CSV exported', '⤓');
+}
+
 /* ---------- admin console ---------- */
 let uploadedDrafts = [];
 function renderAdmin() {
-  const atRisk = TEAM.filter(t => t.risk);
-  const rows = TEAM.map(t => `
-    <tr>
-      <td><div class="member"><span class="mi t-grad-${t.grad}">${t.initials}</span><div>${t.name}<div class="mr">${t.role}</div></div></div></td>
-      <td style="min-width:160px;"><div class="track" style="width:100%;"><div class="fill" style="width:${t.pct}%"></div></div></td>
-      <td>${t.pct}%</td>
-      <td>${t.done}</td>
-      <td style="color:var(--text-faint);">${t.last}</td>
-      <td><span class="status-chip ${t.risk ? 'risk' : 'ok'}">${t.risk ? '⚠ At risk' : '● On track'}</span></td>
-      <td><button class="btn btn-glass btn-sm" data-action="nudge" data-name="${t.name}">Nudge</button></td>
-    </tr>`).join('');
   const content = [...uploadedDrafts, ...CATALOG.slice(0, 6)].map(c => `
     <div class="content-row">
       <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
@@ -459,21 +515,23 @@ function renderAdmin() {
     return `<div class="assignment-row">📌 <b>${c ? c.title : a.courseId}</b> → ${a.team} · due ${a.due}<button class="ar-x" data-action="unassign" data-idx="${i}" title="Remove">✕</button></div>`;
   }).join('');
   return `<div class="page"><div class="page-pad">
-    <h1 class="page-title">Admin console</h1>
-    <p class="page-sub">EdenRise workspace · 247 seats · you.re seeing the steward.s view.</p>
-    <section class="stats" style="margin:28px 0 0;">
-      <div class="stat"><div class="num">247</div><div class="lbl">Active learners</div><div class="delta">▲ 12 this month</div></div>
-      <div class="stat"><div class="num">81%</div><div class="lbl">Avg. completion</div><div class="delta">▲ 6% vs last quarter</div></div>
-      <div class="stat"><div class="num">1,240h</div><div class="lbl">Learned this month</div><div class="delta">▲ 18% vs May</div></div>
-      <div class="stat"><div class="num">${atRisk.length}</div><div class="lbl">Compliance at risk</div><div class="delta warn">⚠ Due in &lt; 7 days</div></div>
+    <h1 class="page-title">Leader's Cockpit</h1>
+    <p class="page-sub">EdenRise workspace · live member data from every signed-in learner.</p>
+    <section class="stats" id="cockpitStats" style="margin:28px 0 0;">
+      <div class="stat"><div class="num">—</div><div class="lbl">Members</div></div>
+      <div class="stat"><div class="num">—</div><div class="lbl">Avg. completion</div></div>
+      <div class="stat"><div class="num">—</div><div class="lbl">Active this week</div></div>
+      <div class="stat"><div class="num">—</div><div class="lbl">At risk</div></div>
     </section>
 
     <div class="admin-section">
-      <h2>People</h2>
-      <p class="sect-sub">Sorted by risk. “Nudge” sends a friendly reminder with their next module.</p>
+      <div class="cockpit-head">
+        <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
+        <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button>
+      </div>
       <div class="team-table"><table>
-        <thead><tr><th>Member</th><th>Path progress</th><th></th><th>Done</th><th>Last active</th><th>Status</th><th></th></tr></thead>
-        <tbody>${rows}</tbody>
+        <thead><tr><th>Member</th><th>Path progress</th><th></th><th>Level</th><th>Streak</th><th>Last active</th><th>Status</th><th></th></tr></thead>
+        <tbody id="cockpitRoster"><tr><td colspan="8" class="empty-note">Loading members…</td></tr></tbody>
       </table></div>
     </div>
 
@@ -886,6 +944,7 @@ function render() {
   $('#app').innerHTML = route === 'course' ? renderCourse(param) : (routes[route] || renderHome)();
   makeFocusable($('#app'));
   if (route === 'community') initCommunity();
+  if (route === 'admin' && isAdmin()) initAdmin();
   window.scrollTo({ top: 0, behavior: 'instant' });
   const libInput = $('#libSearch');
   if (libInput) {
@@ -1474,7 +1533,8 @@ document.addEventListener('click', e => {
     case 'show-login': document.documentElement.setAttribute('data-gate', 'on'); break;
     case 'signout': if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); break;
     case 'toast-msg': toast(msg, 'ℹ️'); break;
-    case 'nudge': toast(`Reminder sent to ${el.dataset.name} with their next module`, '👋'); break;
+    case 'nudge': toast(`Nudge queued for ${el.dataset.name} — sends once email/WhatsApp delivery is connected`, '👋'); break;
+    case 'export-members': exportMembersCSV(); break;
     case 'assign': {
       const courseId = $('#asgCourse').value, team = $('#asgTeam').value, due = $('#asgDue').value || 'soon';
       S.assignments.push({ courseId, team, due });

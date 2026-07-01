@@ -9,7 +9,7 @@ import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {
-  getFirestore, doc, getDoc, setDoc, serverTimestamp,
+  getFirestore, doc, getDoc, getDocs, setDoc, serverTimestamp,
   collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, where,
   increment, arrayUnion, arrayRemove
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
@@ -87,6 +87,14 @@ window.EdenCloud = {
   async updateName(name) {
     const u = auth.currentUser; if (!u || !name) return;
     try { await updateProfile(u, { displayName: name }); } catch (e) {}
+  },
+  // admin-only (enforced by Firestore rules): read every member's profile + state
+  async listMembers() {
+    const snap = await getDocs(collection(db, 'users'));
+    return snap.docs.map(d => {
+      const x = d.data();
+      return { uid: d.id, profile: x.profile || {}, state: x.state || {}, updatedAt: (x.updatedAt && x.updatedAt.toMillis) ? x.updatedAt.toMillis() : 0, createdAt: (x.createdAt && x.createdAt.toMillis) ? x.createdAt.toMillis() : 0 };
+    });
   }
 };
 

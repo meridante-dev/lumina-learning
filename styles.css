@@ -1649,3 +1649,8 @@ html:not(.is-admin) [data-admin] { display: none !important; }
 @media (min-width: 1025px) and (max-width: 1200px) {
   .search { display: none; }
 }
+
+/* ================= Leader's Cockpit ================= */
+.cockpit-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+.cockpit-head h2 { margin: 0; }
+.team-table .empty-note { padding: 24px 12px; }
