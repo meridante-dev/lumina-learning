@@ -2,11 +2,38 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Each learner can read and write only their OWN profile + state document.
-    // Nobody can read anyone else's data. This is what makes the public
-    // firebaseConfig safe to ship in the browser.
+    // Each learner reads/writes only their OWN profile + state document.
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Community forum — everyone can READ (guests included); you must be signed
+    // in to post, and you can only edit/delete your own posts. Anyone signed in
+    // may react (like) or bump activity on others' posts, but nothing else.
+    match /forum_posts/{postId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.authorUid == request.auth.uid;
+      allow update: if request.auth != null && (
+                       resource.data.authorUid == request.auth.uid
+                       || request.resource.data.diff(resource.data).affectedKeys()
+                            .hasOnly(['likes', 'likedBy', 'replyCount', 'lastActivity'])
+                    );
+      allow delete: if request.auth != null
+                    && resource.data.authorUid == request.auth.uid;
+
+      match /replies/{replyId} {
+        allow read: if true;
+        allow create: if request.auth != null
+                      && request.resource.data.authorUid == request.auth.uid;
+        allow update: if request.auth != null && (
+                         resource.data.authorUid == request.auth.uid
+                         || request.resource.data.diff(resource.data).affectedKeys()
+                              .hasOnly(['likes', 'likedBy'])
+                      );
+        allow delete: if request.auth != null
+                      && resource.data.authorUid == request.auth.uid;
+      }
     }
   }
 }

@@ -576,6 +576,156 @@ function renderProgress() {
   </div>${footerHTML()}</div>`;
 }
 
+/* ================= Community forum ================= */
+let commChannel = 'general', commThread = null, commPosts = [], commReplies = [];
+let commUnsub = null, commThreadUnsub = null;
+const myUid = () => (S.profile && S.profile.uid) || (window.EdenForum && EdenForum.me().authorUid) || null;
+const forumCanPost = () => !!(window.EdenForum && EdenForum.canPost());
+const showLoginGate = () => document.documentElement.setAttribute('data-gate', 'on');
+const COMMUNITY_CHANNELS = [
+  { id: 'intro', key: 'ch_intro', icon: 'people' },
+  { id: 'general', key: 'ch_general', icon: 'leaf' },
+  { id: 'wins', key: 'ch_wins', icon: 'sun' }
+];
+function channelMeta(id) {
+  const cc = COMMUNITY_CHANNELS.find(c => c.id === id);
+  if (cc) return { label: t(cc.key), icon: cc.icon };
+  const c = courseById(id);
+  return c ? { label: ctitle(c), icon: c.icon } : { label: id, icon: 'leaf' };
+}
+function timeAgo(ts) {
+  const v = ts && ts.toMillis ? ts.toMillis() : (ts && ts.seconds ? ts.seconds * 1000 : 0);
+  if (!v) return t('comm_just_now');
+  const s = Math.floor((Date.now() - v) / 1000);
+  if (s < 60) return t('comm_just_now');
+  const m = Math.floor(s / 60); if (m < 60) return m + 'm';
+  const h = Math.floor(m / 60); if (h < 24) return h + 'h';
+  const d = Math.floor(h / 24); if (d < 7) return d + 'd';
+  return new Date(v).toLocaleDateString();
+}
+function channelListHTML() {
+  const item = (id, cls) => {
+    const m = channelMeta(id);
+    return `<button class="ch-item ${id === commChannel ? 'active' : ''}" data-action="comm-channel" data-ch="${id}">${svgIcon(m.icon)}<span>${m.label}</span></button>`;
+  };
+  const paths = S.path.map(id => courseById(id)).filter(Boolean).map(c => item(c.id)).join('');
+  return `
+    <div class="ch-group-label">${t('comm_channels')}</div>
+    ${COMMUNITY_CHANNELS.map(c => item(c.id)).join('')}
+    <div class="ch-group-label">${t('comm_paths')}</div>
+    ${paths}`;
+}
+function postCardHTML(p) {
+  const liked = p.likedBy && myUid() && p.likedBy.includes(myUid());
+  const isDisc = p.kind === 'discussion' && p.title;
+  const rc = p.replyCount || 0;
+  return `<article class="post ${isDisc ? 'is-disc' : ''}"${isDisc ? ` data-action="comm-open" data-id="${p.id}"` : ''}>
+    <div class="post-av">${esc(p.authorInitials || 'ER')}</div>
+    <div class="post-main">
+      <div class="post-head"><b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">· ${timeAgo(p.createdAt)}</span></div>
+      ${isDisc ? `<div class="post-title">${esc(p.title)}</div>` : ''}
+      <div class="post-body">${esc(p.body || '').replace(/\n/g, '<br>')}</div>
+      <div class="post-foot">
+        <button class="post-act ${liked ? 'liked' : ''}" data-action="comm-like" data-id="${p.id}">♥ <span>${p.likes || 0}</span></button>
+        ${isDisc ? `<span class="post-act soft">💬 ${rc} ${rc === 1 ? t('comm_reply_one') : t('comm_replies')}</span>` : ''}
+      </div>
+    </div>
+  </article>`;
+}
+function replyHTML(r, postId) {
+  const liked = r.likedBy && myUid() && r.likedBy.includes(myUid());
+  return `<div class="reply">
+    <div class="post-av sm">${esc(r.authorInitials || 'ER')}</div>
+    <div class="post-main">
+      <div class="post-head"><b>${esc(r.authorName || 'Learner')}</b>${r.authorHandle ? `<span class="post-handle">@${esc(r.authorHandle)}</span>` : ''}<span class="post-time">· ${timeAgo(r.createdAt)}</span></div>
+      <div class="post-body">${esc(r.body || '').replace(/\n/g, '<br>')}</div>
+      <div class="post-foot"><button class="post-act sm ${liked ? 'liked' : ''}" data-action="comm-rlike" data-id="${postId}" data-rid="${r.id}">♥ <span>${r.likes || 0}</span></button></div>
+    </div>
+  </div>`;
+}
+function composerHTML(isReply) {
+  if (!forumCanPost()) return `<div class="comm-signin"><span>🌱 ${t('comm_signin_post')}</span><button class="btn btn-primary btn-sm" data-action="show-login">${t('prof_signin')}</button></div>`;
+  const me = EdenForum.me();
+  if (isReply) {
+    return `<div class="composer reply-composer">
+      <div class="post-av sm">${esc(me.authorInitials)}</div>
+      <div class="composer-body">
+        <textarea id="commReplyBox" class="comm-input" rows="1" placeholder="${t('comm_msg_ph')}"></textarea>
+        <button class="btn btn-primary btn-sm" data-action="comm-reply">${t('comm_send')}</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="composer">
+    <div class="post-av sm">${esc(me.authorInitials)}</div>
+    <div class="composer-body">
+      <input id="commTitle" class="comm-input title" maxlength="120" placeholder="${t('comm_title_ph')}">
+      <textarea id="commBody" class="comm-input" rows="2" placeholder="${t('comm_body_ph')}"></textarea>
+      <div class="composer-foot"><span class="composer-hint">${t('comm_new')}</span><button class="btn btn-primary btn-sm" data-action="comm-post">${t('comm_post')}</button></div>
+    </div>
+  </div>`;
+}
+function renderCommunity() {
+  const m = channelMeta(commChannel);
+  let main;
+  if (commThread) {
+    const p = commPosts.find(x => x.id === commThread) || {};
+    main = `<div class="comm-main">
+      <button class="comm-back" data-action="comm-back">← ${t('comm_back')}</button>
+      <div id="commThreadHead">${p.id ? postCardHTML(p) : ''}</div>
+      <div class="thread-replies" id="commReplies"></div>
+      ${composerHTML(true)}
+    </div>`;
+  } else {
+    main = `<div class="comm-main">
+      <div class="comm-head"><span class="comm-ch-ic">${svgIcon(m.icon)}</span><div><h2>${m.label}</h2><span class="comm-ch-sub">${t('comm_title')}</span></div></div>
+      ${composerHTML(false)}
+      <div class="comm-feed" id="commFeed"></div>
+    </div>`;
+  }
+  return `<div class="page"><div class="page-pad">
+    <h1 class="page-title">${t('comm_title')}</h1>
+    <p class="page-sub">${t('comm_sub')}</p>
+    <div class="comm-wrap">
+      <aside class="comm-side">${channelListHTML()}</aside>
+      ${main}
+    </div>
+  </div></div>`;
+}
+function teardownCommunity() { if (commUnsub) { commUnsub(); commUnsub = null; } if (commThreadUnsub) { commThreadUnsub(); commThreadUnsub = null; } }
+function paintFeed() { const f = $('#commFeed'); if (!f) return; f.innerHTML = commPosts.length ? commPosts.map(postCardHTML).join('') : `<div class="empty-note">${t('comm_empty')}</div>`; makeFocusable(f); }
+function paintThreadHead() { const h = $('#commThreadHead'); if (!h) return; const p = commPosts.find(x => x.id === commThread); if (p) h.innerHTML = postCardHTML(p); }
+function paintReplies() { const r = $('#commReplies'); if (!r) return; r.innerHTML = commReplies.length ? commReplies.map(x => replyHTML(x, commThread)).join('') : `<div class="empty-note">${t('comm_empty_replies')}</div>`; makeFocusable(r); }
+function initCommunity(retries) {
+  teardownCommunity();
+  if (!window.EdenForum) {
+    /* auth.js loads as a deferred module — it may not be ready at first paint. Poll briefly. */
+    if ((retries || 0) < 24 && location.hash.indexOf('#/community') === 0) { setTimeout(() => initCommunity((retries || 0) + 1), 250); return; }
+    const f = $('#commFeed') || $('#commReplies'); if (f) f.innerHTML = `<div class="empty-note">${_lang() === 'pt' ? 'A comunidade precisa de ligação à Internet.' : 'The community needs an internet connection.'}</div>`;
+    return;
+  }
+  if (commThread) {
+    commUnsub = EdenForum.subscribeChannel(commChannel, posts => { commPosts = posts; paintThreadHead(); });
+    commThreadUnsub = EdenForum.subscribeThread(commThread, reps => { commReplies = reps; paintReplies(); });
+  } else {
+    commUnsub = EdenForum.subscribeChannel(commChannel, posts => { commPosts = posts; paintFeed(); });
+  }
+}
+function submitPost() {
+  if (!forumCanPost()) return showLoginGate();
+  const title = ($('#commTitle') && $('#commTitle').value || '').trim();
+  const body = ($('#commBody') && $('#commBody').value || '').trim();
+  if (!body) return;
+  EdenForum.createPost({ channel: commChannel, kind: title ? 'discussion' : 'message', title, body })
+    .then(() => { if ($('#commTitle')) $('#commTitle').value = ''; if ($('#commBody')) $('#commBody').value = ''; toast(t('comm_posted'), '🌿'); })
+    .catch(() => toast(_lang() === 'pt' ? 'Não foi possível publicar' : 'Could not post', '⚠️'));
+}
+function submitReply() {
+  if (!forumCanPost()) return showLoginGate();
+  const body = ($('#commReplyBox') && $('#commReplyBox').value || '').trim();
+  if (!body || !commThread) return;
+  EdenForum.addReply(commThread, body).then(() => { if ($('#commReplyBox')) $('#commReplyBox').value = ''; }).catch(() => {});
+}
+
 function renderProfile() {
   const p = S.profile || {};
   const isGuest = !p.uid;
@@ -632,7 +782,7 @@ function saveProfile() {
 }
 
 /* ---------- router ---------- */
-const routes = { home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin, profile: renderProfile };
+const routes = { home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin, profile: renderProfile, community: renderCommunity };
 /* a11y: make clickable non-native elements keyboard-operable */
 function makeFocusable(root) {
   (root || document).querySelectorAll('[data-action]').forEach(el => {
@@ -646,8 +796,10 @@ function render() {
   const [, route, param] = hash.split('/');
   $$('.nav-links a, .mobile-drawer a, .tabbar a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
   syncChrome();
+  if (route !== 'community') teardownCommunity();
   $('#app').innerHTML = route === 'course' ? renderCourse(param) : (routes[route] || renderHome)();
   makeFocusable($('#app'));
+  if (route === 'community') initCommunity();
   window.scrollTo({ top: 0, behavior: 'instant' });
   const libInput = $('#libSearch');
   if (libInput) {
@@ -665,7 +817,7 @@ function render() {
 addEventListener('hashchange', render);
 
 /* ---------- language (EN / PT) ---------- */
-const NAV_KEYS = { '#/home': 'nav_home', '#/library': 'nav_library', '#/paths': 'nav_paths', '#/live': 'nav_live', '#/progress': 'nav_progress', '#/analytics': 'nav_analytics', '#/admin': 'nav_admin' };
+const NAV_KEYS = { '#/home': 'nav_home', '#/library': 'nav_library', '#/paths': 'nav_paths', '#/community': 'nav_community', '#/live': 'nav_live', '#/progress': 'nav_progress', '#/analytics': 'nav_analytics', '#/admin': 'nav_admin' };
 function syncChrome() {
   $$('.nav-links a, .mobile-drawer a').forEach(a => { const k = NAV_KEYS[a.getAttribute('href')]; if (k) a.textContent = t(k); });
   $$('.tabbar a').forEach(a => { const k = NAV_KEYS[a.getAttribute('href')]; const s = a.querySelector('span'); if (k && s) s.textContent = t(k); });
@@ -1212,6 +1364,23 @@ document.addEventListener('click', e => {
     }
     case 'ai-open': setTutorOpen(true); break;
     case 'save-profile': saveProfile(); break;
+    case 'comm-channel': commChannel = el.dataset.ch; commThread = null; render(); break;
+    case 'comm-open': commThread = id; render(); break;
+    case 'comm-back': commThread = null; render(); break;
+    case 'comm-post': submitPost(); break;
+    case 'comm-reply': submitReply(); break;
+    case 'comm-like': {
+      if (!forumCanPost()) { showLoginGate(); break; }
+      const post = commPosts.find(x => x.id === id);
+      const liked = post && post.likedBy && post.likedBy.includes(myUid());
+      EdenForum.toggleLike(id, liked); break;
+    }
+    case 'comm-rlike': {
+      if (!forumCanPost()) { showLoginGate(); break; }
+      const rep = commReplies.find(x => x.id === el.dataset.rid);
+      const liked = rep && rep.likedBy && rep.likedBy.includes(myUid());
+      EdenForum.toggleReplyLike(id, el.dataset.rid, liked); break;
+    }
     case 'show-login': document.documentElement.setAttribute('data-gate', 'on'); break;
     case 'signout': if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); break;
     case 'toast-msg': toast(msg, 'ℹ️'); break;

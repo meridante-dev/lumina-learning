@@ -9,7 +9,9 @@ import {
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {
-  getFirestore, doc, getDoc, setDoc, serverTimestamp
+  getFirestore, doc, getDoc, setDoc, serverTimestamp,
+  collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, where,
+  increment, arrayUnion, arrayRemove
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -87,6 +89,72 @@ window.EdenCloud = {
     try { await updateProfile(u, { displayName: name }); } catch (e) {}
   }
 };
+
+/* ================= Community forum (real-time Firestore) ================= */
+function authorStub() {
+  const u = auth.currentUser;
+  const s = localState();
+  const prof = s.profile || {};
+  const name = (u && u.displayName) || prof.name || 'Learner';
+  const handle = prof.username || (u && u.email ? u.email.split('@')[0] : '');
+  const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER';
+  return { authorUid: u ? u.uid : null, authorName: name, authorHandle: handle, authorInitials: initials };
+}
+window.EdenForum = {
+  canPost() { return !!auth.currentUser; },
+  me() { return authorStub(); },
+  // live feed of a channel; cb receives an array of posts (sorted newest-activity first)
+  subscribeChannel(channel, cb) {
+    const q = query(collection(db, 'forum_posts'), where('channel', '==', channel));
+    return onSnapshot(q, snap => {
+      const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+      posts.sort((a, b) => (ms(b.lastActivity) || ms(b.createdAt)) - (ms(a.lastActivity) || ms(a.createdAt)));
+      cb(posts);
+    }, err => { console.error('[forum] channel sub', err); cb([]); });
+  },
+  subscribeThread(postId, cb) {
+    const q = query(collection(db, 'forum_posts', postId, 'replies'));
+    return onSnapshot(q, snap => {
+      const replies = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+      replies.sort((a, b) => (ms(a.createdAt) || 0) - (ms(b.createdAt) || 0));
+      cb(replies);
+    }, err => { console.error('[forum] thread sub', err); cb([]); });
+  },
+  async createPost({ channel, kind, title, body }) {
+    if (!auth.currentUser) throw new Error('not-signed-in');
+    return addDoc(collection(db, 'forum_posts'), Object.assign({
+      channel, kind: kind || 'message', title: title || '', body,
+      createdAt: serverTimestamp(), lastActivity: serverTimestamp(),
+      replyCount: 0, likes: 0, likedBy: []
+    }, authorStub()));
+  },
+  async addReply(postId, body) {
+    if (!auth.currentUser) throw new Error('not-signed-in');
+    await addDoc(collection(db, 'forum_posts', postId, 'replies'), Object.assign({
+      body, createdAt: serverTimestamp(), likes: 0, likedBy: []
+    }, authorStub()));
+    await updateDoc(doc(db, 'forum_posts', postId), { replyCount: increment(1), lastActivity: serverTimestamp() }).catch(() => {});
+  },
+  async toggleLike(postId, liked) {
+    const u = auth.currentUser; if (!u) return;
+    await updateDoc(doc(db, 'forum_posts', postId), {
+      likes: increment(liked ? -1 : 1),
+      likedBy: liked ? arrayRemove(u.uid) : arrayUnion(u.uid)
+    }).catch(() => {});
+  },
+  async toggleReplyLike(postId, replyId, liked) {
+    const u = auth.currentUser; if (!u) return;
+    await updateDoc(doc(db, 'forum_posts', postId, 'replies', replyId), {
+      likes: increment(liked ? -1 : 1),
+      likedBy: liked ? arrayRemove(u.uid) : arrayUnion(u.uid)
+    }).catch(() => {});
+  },
+  async remove(postId) {
+    if (!auth.currentUser) return;
+    await deleteDoc(doc(db, 'forum_posts', postId)).catch(() => {});
+  }
+};
+function ms(ts) { return ts && typeof ts.toMillis === 'function' ? ts.toMillis() : (ts && ts.seconds ? ts.seconds * 1000 : 0); }
 
 /* ---------- auth state ---------- */
 onAuthStateChanged(auth, async user => {

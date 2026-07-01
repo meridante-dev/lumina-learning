@@ -285,7 +285,10 @@ const DEFAULT_STATE = {
 const _lang = () => (typeof S !== 'undefined' && S.lang) || 'en';
 const UI = {
   en: {
-    nav_home:'Home', nav_library:'Library', nav_paths:'Paths', nav_live:'Live', nav_progress:'Progress', nav_analytics:'Analytics', nav_admin:'Admin',
+    nav_home:'Home', nav_library:'Library', nav_paths:'Paths', nav_live:'Live', nav_progress:'Progress', nav_analytics:'Analytics', nav_admin:'Admin', nav_community:'Community',
+    comm_title:'Community', comm_sub:'Learn together. Ask questions, share wins and help each other grow — organised by learning path.', comm_channels:'Community', comm_paths:'Learning paths', ch_intro:'Introductions', ch_general:'General', ch_wins:'Wins & harvests',
+    comm_new:'Start a discussion', comm_title_ph:'Title — ask a question or start a topic', comm_body_ph:'Share your thoughts…', comm_msg_ph:'Write a message…', comm_post:'Post', comm_send:'Send', comm_reply:'Reply', comm_replies:'replies', comm_reply_one:'reply',
+    comm_signin_post:'Sign in to join the conversation', comm_empty:'No posts here yet — be the first to start the conversation 🌱', comm_empty_replies:'No replies yet. Be the first.', comm_back:'Back', comm_posted:'Posted to the community', comm_members:'members learning here', comm_just_now:'just now',
     search_ph:'Search courses, the land…', org:'EdenRise · Academy',
     featured_eyebrow:'Featured Program · Curated for you by AI', match:'match', modules:'modules', certified:'CERTIFIED',
     all_levels:'All levels', Beginner:'Beginner', Intermediate:'Intermediate', Advanced:'Advanced', 'All levels':'All levels',
@@ -317,7 +320,10 @@ const UI = {
     auth_consent:'I agree to EdenRise storing my learning progress to sync it across my devices (GDPR).', auth_consent_req:'Please accept the privacy notice to continue.', auth_working:'One moment…', auth_signout:'Sign out', auth_signed_as:'Signed in as'
   },
   pt: {
-    nav_home:'Início', nav_library:'Biblioteca', nav_paths:'Percursos', nav_live:'Ao Vivo', nav_progress:'Progresso', nav_analytics:'Análises', nav_admin:'Admin',
+    nav_home:'Início', nav_library:'Biblioteca', nav_paths:'Percursos', nav_live:'Ao Vivo', nav_progress:'Progresso', nav_analytics:'Análises', nav_admin:'Admin', nav_community:'Comunidade',
+    comm_title:'Comunidade', comm_sub:'Aprendam juntos. Façam perguntas, partilhem conquistas e ajudem-se a crescer — organizado por percurso.', comm_channels:'Comunidade', comm_paths:'Percursos', ch_intro:'Apresentações', ch_general:'Geral', ch_wins:'Conquistas',
+    comm_new:'Iniciar uma discussão', comm_title_ph:'Título — faça uma pergunta ou inicie um tema', comm_body_ph:'Partilhe as suas ideias…', comm_msg_ph:'Escreva uma mensagem…', comm_post:'Publicar', comm_send:'Enviar', comm_reply:'Responder', comm_replies:'respostas', comm_reply_one:'resposta',
+    comm_signin_post:'Entre para participar na conversa', comm_empty:'Ainda sem publicações — seja o primeiro a começar a conversa 🌱', comm_empty_replies:'Ainda sem respostas. Seja o primeiro.', comm_back:'Voltar', comm_posted:'Publicado na comunidade', comm_members:'a aprender aqui', comm_just_now:'agora',
     search_ph:'Procurar cursos, a terra…', org:'EdenRise · Academia',
     featured_eyebrow:'Programa em Destaque · Escolhido para si pela IA', match:'compatível', modules:'módulos', certified:'CERTIFICADO',
     all_levels:'Todos os níveis', Beginner:'Iniciante', Intermediate:'Intermédio', Advanced:'Avançado', 'All levels':'Todos os níveis',
