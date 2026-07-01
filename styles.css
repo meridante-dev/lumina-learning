@@ -1335,6 +1335,8 @@ body {
     padding-top: calc(12px + env(safe-area-inset-top));
   }
   .nav-burger { display: inline-flex; }
+  /* push the menu button into the top-right corner (away from the logo) */
+  nav.topnav .nav-right { margin-left: auto; }
 
   /* --- content clears the top bar and the bottom tab bar --- */
   .page { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
