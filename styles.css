@@ -1277,3 +1277,33 @@ footer .links button:hover { color: var(--text); }
   .avatar { display: none; }
 }
 @media (min-width: 761px) { .mobile-drawer { display: none !important; } }
+
+/* ---------- Video-still posters ---------- */
+.thumb.has-poster { background-size: cover; background-position: center; }
+.thumb.has-poster::before { display: none; }
+.thumb.has-poster::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 42%, rgba(14,20,15,.7)); }
+.thumb .chip-row { position: relative; z-index: 2; }
+.course-poster.has-poster { background-size: cover; background-position: center; }
+.course-poster.has-poster::before { display: none; }
+
+/* hero cinematic art from the video still */
+.hero-art {
+  position: absolute; inset: 0 0 0 auto; width: 60%; z-index: 1;
+  background-size: cover; background-position: center right; opacity: .5;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 58%);
+  mask-image: linear-gradient(90deg, transparent, #000 58%);
+}
+
+/* ---------- mobile polish ---------- */
+@media (max-width: 760px) {
+  .hero { min-height: 82vh; padding-bottom: 40px; }
+  .hero h1 { font-size: clamp(38px, 12vw, 52px); }
+  .hero p.desc { font-size: 15px; }
+  .hero-eyebrow { font-size: 10.5px; letter-spacing: .1em; }
+  .hero-art {
+    width: 100%; opacity: .22; background-position: 84% top;
+    -webkit-mask-image: linear-gradient(180deg, #000, transparent 50%);
+    mask-image: linear-gradient(180deg, #000, transparent 50%);
+  }
+  .hero-actions .btn { flex: 1 1 auto; justify-content: center; }
+}

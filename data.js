@@ -30,7 +30,7 @@ const PILLARS = [
 const CATALOG = [
   {
     id: 'above-below-line', title: 'Above the Line, Below the Line', cat: 'Leadership', grad: 4, icon: 'compass',
-    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, video: mediaUrl('v3.mp4'),
+    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, video: mediaUrl('v3.mp4'), poster: 'media/above-below-line.jpg',
     desc: 'One question changes how you show up: am I above the line, or below it? The mindset of ownership, accountability and responsibility that shapes how we lead, work and grow together at EdenRise.',
     modules: ['Remember just one question', 'Above the line: ownership & accountability', 'Below the line: blame, excuses & denial', 'Catching yourself dropping below', 'Choosing to climb back above', 'Leading others above the line']
   },

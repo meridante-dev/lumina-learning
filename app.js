@@ -132,7 +132,7 @@ function cardHTML(c, opts = {}) {
       <button class="icon-btn" data-action="play" data-id="${c.id}" aria-label="Play ${c.title}" title="Play">▶</button>
       <button class="icon-btn ${inPath(c.id) ? 'in-path' : ''}" data-action="toggle-path" data-id="${c.id}" aria-label="${inPath(c.id) ? 'Remove from your path' : 'Add to your path'}" title="${inPath(c.id) ? 'In your path' : 'Add to path'}">${inPath(c.id) ? '✓' : '＋'}</button>
     </div>
-    <div class="thumb t-grad-${c.grad}"><span class="big-icon">${svgIcon(c.icon)}</span><div class="chip-row">${chips.join('')}</div></div>
+    <div class="thumb t-grad-${c.grad} ${c.poster ? 'has-poster' : ''}"${c.poster ? ` style="background-image:url('${c.poster}')"` : ''}>${c.poster ? '' : `<span class="big-icon">${svgIcon(c.icon)}</span>`}<div class="chip-row">${chips.join('')}</div></div>
     <div class="card-body">
       <h3>${c.title}</h3>
       <div class="meta"><span>${c.cat}</span><span class="dot"></span><span>${fmtMins(courseMins(c))}</span><span class="dot"></span><span>★ ${c.rating}</span></div>
@@ -199,6 +199,7 @@ function renderHome() {
   return `<div class="page">
   <header class="hero">
     <div class="hero-bg"></div><div class="hero-grid"></div>
+    ${featured.poster ? `<div class="hero-art" style="background-image:url('${featured.poster}')"></div>` : ''}
     <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div>
     <div class="hero-content">
       <span class="hero-eyebrow"><span class="pulse-dot"></span>Featured Program · Curated for you by AI</span>
@@ -208,7 +209,7 @@ function renderHome() {
         <span>${featured.modules.length} modules</span><span class="sep"></span>
         <span>${fmtMins(courseMins(featured))}</span><span class="sep"></span>
         <span>${featured.level}</span>
-        <span class="badge-hd">4K</span><span class="badge-hd">CERTIFIED</span>
+        <span class="badge-hd">CERTIFIED</span>
       </div>
       <p class="desc">${featured.desc}</p>
       <div class="hero-actions">
@@ -372,9 +373,9 @@ function renderCourse(id) {
   }).join('');
   return `<div class="page">
     <div class="course-hero">
-      <div class="bg t-grad-${c.grad}"></div>
+      <div class="bg t-grad-${c.grad}"${c.poster ? ` style="background-image:url('${c.poster}');background-size:cover;background-position:center"` : ''}></div>
       <div class="course-hero-inner">
-        <div class="course-poster t-grad-${c.grad}">${svgIcon(c.icon)}</div>
+        ${c.poster ? `<div class="course-poster has-poster" style="background-image:url('${c.poster}')"></div>` : `<div class="course-poster t-grad-${c.grad}">${svgIcon(c.icon)}</div>`}
         <div class="course-info">
           <div class="hero-meta">
             <span class="match">${c.ai ? '✦ In AI rotation' : c.cat}</span><span class="sep"></span>
