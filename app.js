@@ -4,7 +4,7 @@
 let S;
 try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem('edenrise-state-v2') || '{}')); }
 catch { S = structuredClone(DEFAULT_STATE); }
-const save = () => localStorage.setItem('edenrise-state-v2', JSON.stringify(S));
+const save = () => { localStorage.setItem('edenrise-state-v2', JSON.stringify(S)); if (window.EdenCloud && window.EdenCloud.push) window.EdenCloud.push(S); };
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -1354,8 +1354,28 @@ $('#avatarMenu').addEventListener('click', e => {
   if (b.dataset.m === 'onboard') startOnboarding();
   if (b.dataset.m === 'switch') toast('Workspace switching ships in the full product', '🏢');
   if (b.dataset.m === 'reset') { localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); }
-  if (b.dataset.m === 'signout') toast('SSO sign-out ships in the full product', '👋');
+  if (b.dataset.m === 'signout') { if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); }
 });
+
+/* ---------- bridge for the Firebase auth module (auth.js) ---------- */
+window.EdenApp = {
+  reloadState() {
+    try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem('edenrise-state-v2') || '{}')); } catch (e) {}
+    if (S.xp == null) S.xp = seedXp();
+    if (!S.badges) S.badges = [];
+    checkBadges(true);
+    updateXpChip(); render();
+    if (!S.onboarded) startOnboarding();
+  },
+  applyProfile(p) {
+    if (!p) return;
+    S.profile = p; save();
+    const initials = (p.name || 'JA').trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'JA';
+    const av = $('#avatarBtn'); if (av) { av.textContent = initials; av.title = p.name || p.email || ''; }
+  },
+  currentState() { return S; }
+};
+if (S.profile) EdenApp.applyProfile(S.profile);
 
 /* boot */
 if (S.xp == null) S.xp = seedXp();

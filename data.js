@@ -310,7 +310,10 @@ const UI = {
     ob_destination:'Your destination', ob_q2:'Pick a goal to work toward', ob_q2_sub:'The AI sequences courses toward this goal and re-plans as you prove skills.', ob_build:'Build my path ✦', ob_building:'Building your path to', courses_adaptive:'courses · adaptive', track_more:'track & more',
     tutor_name:'EdenRise Tutor', tutor_demo:'● Demo mode · scripted replies', summarize_course:'Summarize this course', quiz_now:'Quiz me now', whats_due:"What's due?", build_path:'Build me a path', ask_anything:'Ask anything about your land or courses…',
     connect_ai:'✦ Connect real AI', api_note:"Paste an Anthropic API key to power the tutor with Claude. The key is stored only in this browser's localStorage and sent only to api.anthropic.com.", save:'Save', use_demo:'Use demo mode',
-    footer_tag:'· The learning academy of EdenRise'
+    footer_tag:'· The learning academy of EdenRise',
+    auth_welcome:'Welcome to EdenRise Academy', auth_sub:'Sign in to save your progress across every device.', auth_google:'Continue with Google', auth_or:'or', auth_email:'Email', auth_password:'Password', auth_name:'Your name',
+    auth_signin:'Sign in', auth_signup:'Create account', auth_to_signup:'New here? Create an account', auth_to_signin:'Already have an account? Sign in', auth_guest:'Continue as guest',
+    auth_consent:'I agree to EdenRise storing my learning progress to sync it across my devices (GDPR).', auth_consent_req:'Please accept the privacy notice to continue.', auth_working:'One moment…', auth_signout:'Sign out', auth_signed_as:'Signed in as'
   },
   pt: {
     nav_home:'Início', nav_library:'Biblioteca', nav_paths:'Percursos', nav_live:'Ao Vivo', nav_progress:'Progresso', nav_analytics:'Análises', nav_admin:'Admin',
@@ -338,7 +341,10 @@ const UI = {
     ob_destination:'O seu destino', ob_q2:'Escolha um objetivo', ob_q2_sub:'A IA sequencia cursos para este objetivo e replaneia à medida que prova competências.', ob_build:'Criar o meu percurso ✦', ob_building:'A criar o seu percurso para', courses_adaptive:'cursos · adaptativo', track_more:'percurso e mais',
     tutor_name:'Tutor EdenRise', tutor_demo:'● Modo demo · respostas guionadas', summarize_course:'Resumir este curso', quiz_now:'Testar-me agora', whats_due:'O que falta entregar?', build_path:'Criar um percurso', ask_anything:'Pergunte sobre a sua terra ou cursos…',
     connect_ai:'✦ Ligar IA real', api_note:'Cole uma chave da API Anthropic para o tutor usar o Claude. A chave fica apenas neste navegador (localStorage) e é enviada apenas para api.anthropic.com.', save:'Guardar', use_demo:'Usar modo demo',
-    footer_tag:'· A academia de aprendizagem da EdenRise'
+    footer_tag:'· A academia de aprendizagem da EdenRise',
+    auth_welcome:'Bem-vindo à EdenRise Academy', auth_sub:'Entre para guardar o seu progresso em todos os dispositivos.', auth_google:'Continuar com Google', auth_or:'ou', auth_email:'Email', auth_password:'Palavra-passe', auth_name:'O seu nome',
+    auth_signin:'Entrar', auth_signup:'Criar conta', auth_to_signup:'Novo por aqui? Criar conta', auth_to_signin:'Já tem conta? Entrar', auth_guest:'Continuar como convidado',
+    auth_consent:'Concordo que a EdenRise guarde o meu progresso para o sincronizar entre dispositivos (RGPD).', auth_consent_req:'Aceite o aviso de privacidade para continuar.', auth_working:'Um momento…', auth_signout:'Sair', auth_signed_as:'Sessão iniciada como'
   }
 };
 function t(k){ const l = _lang(); return (UI[l] && UI[l][k] != null ? UI[l][k] : UI.en[k]) ?? k; }
