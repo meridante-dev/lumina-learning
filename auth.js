@@ -45,9 +45,39 @@ function showErr(msg) { const e = $('#authErr'); if (e) { e.textContent = msg ||
 
 /* ---------- state <-> Firestore ---------- */
 function localState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+/* merge instead of clobber — earned things take the best of both devices */
+function mergeStates(cloud, local) {
+  if (!cloud) return local;
+  if (!local || !local.onboarded) return cloud;
+  const m = Object.assign({}, cloud);
+  m.xp = Math.max(cloud.xp || 0, local.xp || 0);
+  m.badges = [...new Set([...(cloud.badges || []), ...(local.badges || [])])];
+  m.quizzesPassed = Math.max(cloud.quizzesPassed || 0, local.quizzesPassed || 0);
+  m.streak = Math.max(cloud.streak || 0, local.streak || 0);
+  m.lang = local.lang || cloud.lang;
+  /* per-course: whichever device is further along wins; earliest completion date kept */
+  const depth = p => !p ? -1 : (p.done ? 1000 : (p.mod || 0) * 10 + (p.pct || 0) / 10);
+  m.progress = Object.assign({}, cloud.progress);
+  Object.entries(local.progress || {}).forEach(([id, lp]) => {
+    const cp = m.progress[id];
+    if (depth(lp) > depth(cp)) m.progress[id] = lp;
+    const da = [lp && lp.doneAt, cp && cp.doneAt].filter(Boolean);
+    if (da.length && m.progress[id]) m.progress[id].doneAt = Math.min(...da);
+  });
+  /* notes: union, longer text wins per key */
+  m.notes = Object.assign({}, local.notes);
+  Object.entries(cloud.notes || {}).forEach(([k, v]) => { if (!m.notes[k] || String(v).length > String(m.notes[k]).length) m.notes[k] = v; });
+  /* identity: cloud is source of truth, local fills gaps (e.g. fresh onboarding) */
+  m.profile = Object.assign({}, local.profile, cloud.profile);
+  if (local.profile && local.profile.notify) m.profile.notify = Object.assign({}, local.profile.notify, (cloud.profile || {}).notify);
+  return m;
+}
 async function pullState(uid) {
   const snap = await getDoc(doc(db, 'users', uid));
-  if (snap.exists() && snap.data().state) { localStorage.setItem(KEY, JSON.stringify(snap.data().state)); return true; }
+  if (snap.exists() && snap.data().state) {
+    localStorage.setItem(KEY, JSON.stringify(mergeStates(snap.data().state, localState())));
+    return true;
+  }
   return false;
 }
 let pushTimer = null;
@@ -75,9 +105,12 @@ window.EdenCloud = {
   push(state) {
     const u = auth.currentUser; if (!u) return;
     clearTimeout(pushTimer);
-    pushTimer = setTimeout(() => {
-      setDoc(doc(db, 'users', u.uid), { state, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
-    }, 800);
+    pushTimer = setTimeout(() => { pushTimer = null; window.EdenCloud.flush(); }, 800);
+  },
+  flush() {
+    const u = auth.currentUser; if (!u) return;
+    if (pushTimer) { clearTimeout(pushTimer); pushTimer = null; }
+    setDoc(doc(db, 'users', u.uid), { state: localState(), updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
   },
   async signOut() {
     localStorage.setItem(MODE, 'out');

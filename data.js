@@ -334,6 +334,25 @@ const COURSE_HOOKS_PT = {
 const chook = c => ((_lang() === 'pt' ? COURSE_HOOKS_PT[c.id] : COURSE_HOOKS[c.id]) || COURSE_HOOKS[c.id] || [ctitle(c), ''])[0];
 const chooksub = c => ((_lang() === 'pt' ? COURSE_HOOKS_PT[c.id] : COURSE_HOOKS[c.id]) || COURSE_HOOKS[c.id] || ['', cdesc(c)])[1];
 
+/* ================= per-course quizzes — real content first =================
+   COURSE_QUIZ beats the generic category bank; grounded in the actual lessons. */
+const COURSE_QUIZ = {
+  'land-team-journey': {
+    en: [
+      { q: 'You catch yourself defending a decision instead of listening. Where are you?', opts: ['Above the line', 'Below the line', 'On the line', 'It depends on who is right'], a: 1 },
+      { q: 'What is the fastest way to shift from below the line back above it?', opts: ['Prove your point more firmly', 'Wait for the feeling to pass', 'Notice it and ask “where am I right now?”', 'Change the subject'], a: 2 },
+      { q: 'In a “no failure, only feedback” culture, a mistake on the land is treated as…', opts: ['A reason to assign blame', 'Information about the system to learn from', 'Something to hide until it is fixed', 'Proof someone is not capable'], a: 1 },
+      { q: 'Which question belongs ABOVE the line?', opts: ['“Whose fault is this?”', '“Why does this always happen to me?”', '“What is this teaching us?”', '“Who told you to do that?”'], a: 2 }
+    ],
+    pt: [
+      { q: 'Apanha-se a defender uma decisão em vez de escutar. Onde está?', opts: ['Acima da linha', 'Abaixo da linha', 'Em cima da linha', 'Depende de quem tem razão'], a: 1 },
+      { q: 'Qual é a forma mais rápida de voltar de baixo da linha para cima?', opts: ['Defender o seu ponto com mais força', 'Esperar que a sensação passe', 'Reparar e perguntar “onde estou agora?”', 'Mudar de assunto'], a: 2 },
+      { q: 'Numa cultura de “não há fracasso, só feedback”, um erro na terra é tratado como…', opts: ['Um motivo para atribuir culpa', 'Informação sobre o sistema, para aprender', 'Algo a esconder até estar resolvido', 'Prova de que alguém não é capaz'], a: 1 },
+      { q: 'Qual destas perguntas pertence ACIMA da linha?', opts: ['“De quem é a culpa?”', '“Porque é que isto me acontece sempre a mim?”', '“O que é que isto nos está a ensinar?”', '“Quem te mandou fazer isso?”'], a: 2 }
+    ]
+  }
+};
+
 /* per-module takeaways — "what you take with you" (real content courses) */
 const TAKEAWAYS = {
   'land-team-journey': {
@@ -378,7 +397,9 @@ const UI = {
     match_goal:'For your goal', missing_ask:'Not seeing what you need? Tell the AI →', missing_prompt:'Tell me what you’re looking for — a topic, a problem on the land, a skill — and I’ll find it or flag it for the EdenRise team to add. Your path only gets smarter when you push back on it.',
     assigned_tag:'Assigned', chosen_tag:'Your pick',
     voice_listening:'Listening…', voice_hint:'Say it naturally — “I’m looking for something about soil”', voice_unsupported:'Voice search needs Safari or Chrome', voice_search:'Voice search',
-    quiz_q:'Question', quiz_of:'of',
+    quiz_q:'Question', quiz_of:'of', quiz_ai_building:'✦ Claude is writing fresh questions from this course…', quiz_ai_tag:'✦ AI-generated from this course', take_quiz:'Take the quiz 🎯',
+    nudge_refresh_t:'A 2-minute refresher', nudge_refresh_b:'“{course}” was {n} days ago — one look keeps it rooted 🌱',
+    offline_note:'Offline — your progress is safe on this device and will sync when you’re back', online_note:'Back online — progress synced 🌿',
     nudge_bell:'Nudges', nudge_empty:'All caught up 🌿 Nothing needs you right now.', nudge_board_t:"Someone's gaining on you", nudge_board_b:'{name} is {xp} XP ahead — finish one lesson to catch up 🌿', nudge_top_t:"You're leading 🌟", nudge_top_b:'Top of the board this week. One lesson keeps you there.',
     nudge_level_t:'Almost a new level', nudge_level_b:'Just {xp} XP from {lvl} — a quiz gets you there.', nudge_streak_t:'{n}-day streak 🔥', nudge_streak_b:'Do one lesson today to keep it alive.', nudge_lesson_t:'Pick up where you left off', nudge_lesson_b:'“{mod}” in {course} is waiting.', nudge_badge_t:'One course from a badge', nudge_badge_b:'Finish one more course to unlock Grove Keeper 🏅', nudge_welcome:'Welcome back, {name} 🌱',
     notif_title:'Notifications', notif_sub:'Choose how EdenRise nudges you back. Opt-in and GDPR-friendly — change anytime.', notif_browser:'Browser notifications', notif_browser_d:'Gentle desktop reminders — works right away.', notif_email:'Email', notif_email_d:'A weekly nudge to your inbox.', notif_whatsapp:'WhatsApp', notif_whatsapp_d:'Streak & leaderboard pings on WhatsApp.', notif_phone_ph:'WhatsApp number (+351…)', notif_soon:'ready once delivery is connected', notif_on:'Notifications on 🌿', notif_blocked:'Your browser blocked notifications — enable them in site settings.',
@@ -424,7 +445,9 @@ const UI = {
     match_goal:'Para o seu objetivo', missing_ask:'Não encontra o que precisa? Diga à IA →', missing_prompt:'Diga-me o que procura — um tema, um problema na terra, uma competência — e eu encontro-o ou sinalizo-o à equipa EdenRise para o criar. O seu percurso só fica mais inteligente quando o desafia.',
     assigned_tag:'Atribuído', chosen_tag:'Escolha sua',
     voice_listening:'A ouvir…', voice_hint:'Diga naturalmente — “procuro algo sobre solo”', voice_unsupported:'A pesquisa por voz precisa de Safari ou Chrome', voice_search:'Pesquisa por voz',
-    quiz_q:'Pergunta', quiz_of:'de',
+    quiz_q:'Pergunta', quiz_of:'de', quiz_ai_building:'✦ O Claude está a escrever perguntas novas a partir deste curso…', quiz_ai_tag:'✦ Gerado por IA a partir deste curso', take_quiz:'Fazer o teste 🎯',
+    nudge_refresh_t:'Uma revisão de 2 minutos', nudge_refresh_b:'“{course}” foi há {n} dias — uma vista de olhos mantém-no enraizado 🌱',
+    offline_note:'Offline — o seu progresso está seguro neste dispositivo e sincroniza quando voltar', online_note:'De volta online — progresso sincronizado 🌿',
     nudge_bell:'Lembretes', nudge_empty:'Tudo em dia 🌿 Nada precisa de si agora.', nudge_board_t:'Estão a aproximar-se de si', nudge_board_b:'{name} está {xp} XP à frente — termine uma lição para alcançar 🌿', nudge_top_t:'Está na liderança 🌟', nudge_top_b:'No topo do ranking esta semana. Uma lição mantém-no lá.',
     nudge_level_t:'Quase um novo nível', nudge_level_b:'A apenas {xp} XP de {lvl} — um teste leva-o lá.', nudge_streak_t:'Sequência de {n} dias 🔥', nudge_streak_b:'Faça uma lição hoje para a manter viva.', nudge_lesson_t:'Continue de onde parou', nudge_lesson_b:'“{mod}” em {course} está à espera.', nudge_badge_t:'A um curso de um distintivo', nudge_badge_b:'Termine mais um curso para desbloquear Guardião do Bosque 🏅', nudge_welcome:'Bem-vindo de volta, {name} 🌱',
     notif_title:'Notificações', notif_sub:'Escolha como a EdenRise o incentiva a voltar. Opcional e compatível com o RGPD — mude quando quiser.', notif_browser:'Notificações do navegador', notif_browser_d:'Lembretes suaves no ecrã — funcionam já.', notif_email:'Email', notif_email_d:'Um lembrete semanal no seu email.', notif_whatsapp:'WhatsApp', notif_whatsapp_d:'Avisos de sequência e ranking no WhatsApp.', notif_phone_ph:'Número de WhatsApp (+351…)', notif_soon:'pronto assim que o envio for ligado', notif_on:'Notificações ativas 🌿', notif_blocked:'O navegador bloqueou as notificações — ative-as nas definições do site.',

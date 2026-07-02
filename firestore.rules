@@ -2,11 +2,14 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Admin accounts — identified by their signed-in email.
+    // Admin accounts — identified by their signed-in, VERIFIED email.
+    // (email_verified stops a password signup with a spoofed admin address.)
     function isAdmin() {
-      return request.auth != null && request.auth.token.email in [
-        'admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'
-      ];
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'
+        ];
     }
 
     // Each learner reads/writes their OWN profile + state.

@@ -709,6 +709,14 @@ function computeNudges() {
   if (nl) out.push({ id: 'lesson', icon: '▶', title: t('nudge_lesson_t'), body: t('nudge_lesson_b').replace('{mod}', nl.mod).replace('{course}', nl.course), route: nl.route });
   const done = CATALOG.filter(c => isDone(c.id)).length;
   if (done === 2 && !(S.badges || []).includes('grove')) out.push({ id: 'badge', icon: '🏅', title: t('nudge_badge_t'), body: t('nudge_badge_b'), route: '#/library' });
+  /* spaced repetition — finished courses resurface at 3/7/30-day windows */
+  const inWindow = d => (d >= 3 && d <= 4) || (d >= 7 && d <= 9) || (d >= 28 && d <= 34);
+  const refresh = Object.entries(S.progress)
+    .filter(([id, p]) => p && p.done && p.doneAt && courseById(id))
+    .map(([id, p]) => ({ id, days: Math.floor((Date.now() - p.doneAt) / 86400000) }))
+    .filter(x => inWindow(x.days))
+    .sort((a, b) => a.days - b.days)[0];
+  if (refresh) out.push({ id: 'refresh', icon: '🌱', title: t('nudge_refresh_t'), body: t('nudge_refresh_b').replace('{course}', ctitle(courseById(refresh.id))).replace('{n}', refresh.days), route: '#/course/' + refresh.id });
   return out.slice(0, 5);
 }
 function notifPrefs() { return (S.profile && S.profile.notify) || {}; }
@@ -1272,12 +1280,15 @@ function showTakeaways(c, mod, next) {
   $('#takeTitle').textContent = t('take_title');
   $('#takeSub').textContent = t('take_sub');
   $('#takeGo').textContent = next && next.kind === 'course-done' ? t('take_done') : t('take_continue');
+  const tq = $('#takeQuiz');
+  if (tq) { tq.style.display = next && next.kind === 'course-done' ? '' : 'none'; tq.textContent = t('take_quiz'); }
   $('#takeModal').classList.add('open');
 }
-function resolveTakeaways() {
+function resolveTakeaways(toQuiz) {
   $('#takeModal').classList.remove('open');
   const n = pendingNext; pendingNext = null;
   if (!n) return;
+  if (toQuiz && n.courseId) { closePlayer(); setTimeout(() => openQuiz(n.courseId), 250); return; }   /* watch → assess loop */
   if (n.kind === 'next') openPlayer(n.courseId, n.mod);
   else if (n.kind === 'soon') { closePlayer(); setTimeout(() => toast(_lang() === 'pt' ? 'É tudo por agora — o resto da jornada está a caminho 🌱' : 'That’s every lesson available so far — the rest of the journey is coming soon 🌱', '🌱'), 400); }
   else if (n.kind === 'course-done') {
@@ -1291,6 +1302,7 @@ function completeModule(courseId, mod) {
   if (S.review[courseId] === mod) { delete S.review[courseId]; toast('Review module cleared — nice recovery', '↺'); }
   if (mod >= c.modules.length - 1) {
     p.done = true; p.pct = 100; delete p.mod;
+    p.doneAt = p.doneAt || Date.now();   /* spaced-repetition anchor */
     save();
     toast(`${_lang() === 'pt' ? 'Curso concluído' : 'Course complete'}: ${ctitle(c)} 🎉`, '🏆');
     awardXp(XP.module + XP.course, 'course complete');
@@ -1309,12 +1321,48 @@ function completeModule(courseId, mod) {
 
 /* ---------- quiz ---------- */
 let quiz = null; /* {courseId, qs, idx, sel, score} */
-function openQuiz(courseId) {
-  const c = courseById(courseId) || courseById('leading-data');
-  const qs = QUIZ_BANK[c.cat] || QUIZ_BANK._default;
-  quiz = { courseId: c.id, qs, idx: 0, sel: null, score: 0, answered: false };
+/* quiz selection — real course questions first, then AI-generated from the
+   course itself (BYO Claude key), then the generic category bank */
+const aiQuizCache = {};
+async function generateAIQuiz(c) {
+  const lang = _lang() === 'pt' ? 'pt' : 'en';
+  const key = c.id + ':' + lang;
+  if (aiQuizCache[key]) return aiQuizCache[key];
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({
+      model: S.aiModel || 'claude-opus-4-8', max_tokens: 900,
+      system: `You write short, rigorous multiple-choice quizzes for EdenRise Academy (regenerative living school, Alentejo). Reply with ONLY a JSON array of exactly 3 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. Questions test understanding (not trivia) of the course's core ideas. Language: ${lang === 'pt' ? 'European Portuguese' : 'English'}. No markdown, no fences — raw JSON only.`,
+      messages: [{ role: 'user', content: `Course: "${ctitle(c)}" — ${chook(c)} ${chooksub(c)} ${cdesc(c)} Modules: ${cmods(c).join('; ')}.` }]
+    })
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+  const qs = JSON.parse(text.replace(/^[^\[]*/, '').replace(/[^\]]*$/, ''));
+  if (!Array.isArray(qs) || qs.length < 3 || !qs.every(x => x.q && Array.isArray(x.opts) && x.opts.length === 4 && x.a >= 0 && x.a < 4)) throw new Error('bad shape');
+  aiQuizCache[key] = qs.slice(0, 3);
+  return aiQuizCache[key];
+}
+function startQuiz(c, qs, ai) {
+  quiz = { courseId: c.id, qs, idx: 0, sel: null, score: 0, answered: false, ai: !!ai };
   $('#quizModal').classList.add('open');
   drawQuiz();
+}
+function openQuiz(courseId) {
+  const c = courseById(courseId) || courseById('leading-data');
+  const lang = _lang() === 'pt' ? 'pt' : 'en';
+  const cq = COURSE_QUIZ[c.id];
+  if (cq) { startQuiz(c, cq[lang] || cq.en, false); return; }        /* real content */
+  const fallback = () => startQuiz(c, QUIZ_BANK[c.cat] || QUIZ_BANK._default, false);
+  if (S.apiKey) {                                                     /* AI writes from the course */
+    $('#quizModal').classList.add('open');
+    $('#quizBody').innerHTML = `<div class="q-center"><div class="orb-spin"></div><p class="m-sub" style="margin-top:16px;">${t('quiz_ai_building')}</p></div>`;
+    generateAIQuiz(c).then(qs => startQuiz(c, qs, true)).catch(() => fallback());
+    return;
+  }
+  fallback();
 }
 function drawQuiz() {
   const c = courseById(quiz.courseId);
@@ -1345,7 +1393,7 @@ function drawQuiz() {
   /* aligned with the onboarding design language: progress bar + eyebrow + title */
   box.innerHTML = `
     <div class="onboard-progress" style="margin-bottom:18px;"><div class="fill" style="width:${Math.round(quiz.idx / quiz.qs.length * 100)}%"></div></div>
-    <div class="ob-eyebrow">${t('quiz_q')} ${quiz.idx + 1} ${t('quiz_of')} ${quiz.qs.length} · ${ctitle(c)}</div>
+    <div class="ob-eyebrow">${t('quiz_q')} ${quiz.idx + 1} ${t('quiz_of')} ${quiz.qs.length} · ${ctitle(c)}${quiz.ai ? ` &nbsp;<span style="color:var(--accent)">${t('quiz_ai_tag')}</span>` : ''}</div>
     <div class="ob-title" style="font-size:24px;margin-top:6px;">${q.q}</div>
     <div style="margin-top:18px;">
     ${q.opts.map((o, i) => `<div class="q-opt" data-opt="${i}"><span class="radio"></span><span>${o}</span></div>`).join('')}
@@ -1667,6 +1715,7 @@ document.addEventListener('click', e => {
     case 'ai-open': setTutorOpen(true); break;
     case 'ai-missing': setTutorOpen(true); botSay(t('missing_prompt'), 400); break;
     case 'take-go': resolveTakeaways(); break;
+    case 'take-quiz': resolveTakeaways(true); break;
     case 'voice-search': startVoiceSearch(); break;
     case 'save-profile': saveProfile(); break;
     case 'notif-toggle': toggleNotif(el.dataset.ch); break;
@@ -1959,6 +2008,17 @@ if (S.profile) EdenApp.applyProfile(S.profile);
   addEventListener('resize', apply, { passive: true });
   h.classList.add('dpr-' + Math.min(3, Math.round(devicePixelRatio || 1)));
 })();
+
+/* ---------- resilience: offline awareness + sync flush ---------- */
+addEventListener('offline', () => toast(t('offline_note'), '📴'));
+addEventListener('online', () => { save(); toast(t('online_note'), '🌿'); });
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && window.EdenCloud && EdenCloud.flush) EdenCloud.flush();
+});
+/* service worker — offline app shell + cached art */
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
 
 /* boot */
 if (S.xp == null) S.xp = seedXp();
