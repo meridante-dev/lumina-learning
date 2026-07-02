@@ -14,7 +14,8 @@ const prog = id => S.progress[id];
 const coursePct = id => { const p = prog(id); return p ? (p.done ? 100 : (p.pct || 0)) : 0; };
 const isDone = id => !!(prog(id) && prog(id).done);
 const inPath = id => S.path.includes(id);
-const courseMins = c => c.modules.length * 12;
+const courseMins = c => c.moduleDurations ? c.moduleDurations.reduce((a, b) => a + (b || 12), 0) : c.modules.length * 12;
+const moduleDur = (c, i) => (c.moduleDurations && c.moduleDurations[i]) ? c.moduleDurations[i] + 'm' : '12m';
 const fmtMins = m => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60 ? (m % 60) + 'm' : ''}`.trim() : `${m}m`;
 const vidFor = (id, mod) => VIDS[(id.length * 7 + mod * 3) % VIDS.length];
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -115,10 +116,21 @@ function checkBadges(silent) {
   BADGES.forEach(b => { if (!S.badges.includes(b.id) && badgeEarned(b.id)) { S.badges.push(b.id); earned.push(b); } });
   if (earned.length) { save(); if (!silent) earned.forEach((b, i) => setTimeout(() => toast(`Badge earned — ${b.title} 🏅`, '🏅'), 500 + i * 900)); }
 }
+let boardCache = null;   /* real members, from the leaderboard collection */
 function leaderboard() {
-  const rows = TEAM.map(t => ({ name: t.name, initials: t.initials, grad: t.grad,
-    xp: t.name.includes('João') ? S.xp : t.done * 100 + Math.round(t.pct * 2.6), me: t.name.includes('João') }));
-  return rows.sort((a, b) => b.xp - a.xp);
+  const meRow = { uid: myUid(), name: displayName(), initials: userInitials(), grad: 3, xp: S.xp || 0, streak: S.streak || 0, me: true };
+  const others = (boardCache || []).filter(r => r.uid && r.uid !== meRow.uid).map(r => Object.assign({ grad: 3 }, r, { me: false }));
+  return [meRow, ...others].sort((a, b) => b.xp - a.xp);
+}
+function initBoard(retries) {
+  if (!(window.EdenCloud && EdenCloud.listBoard)) {
+    if ((retries || 0) < 16) setTimeout(() => initBoard((retries || 0) + 1), 400);
+    return;
+  }
+  EdenCloud.listBoard().then(rows => {
+    boardCache = rows;
+    if (location.hash.indexOf('#/progress') === 0) render();
+  }).catch(() => {});
 }
 function myRank() {
   const b = leaderboard();
@@ -270,10 +282,10 @@ function renderHome() {
     </div>
   </section>
   <section class="stats">
-    <div class="stat"><div class="num">12d</div><div class="lbl">${t('learning_streak')}</div><div class="delta">${t('personal_best')}</div></div>
-    <div class="stat"><div class="num">${fmtMins(S.week.reduce((a, b) => a + b, 0))}</div><div class="lbl">${t('this_week')}</div><div class="delta">${t('vs_last_week')}</div></div>
-    <div class="stat"><div class="num">${Object.values(S.progress).filter(p => p.done).length + S.quizzesPassed}</div><div class="lbl">${t('skills_verified')}</div><div class="delta">▲ ${S.quizzesPassed} ${t('from_quizzes')}</div></div>
-    <div class="stat"><div class="num">94%</div><div class="lbl">${t('avg_score')}</div><div class="delta warn">${t('top_5')}</div></div>
+    <div class="stat"><div class="num">${S.streak || 0}d</div><div class="lbl">${t('learning_streak')}</div><div class="delta">${(S.streak || 0) > 0 && S.streak >= (S.bestStreak || 0) ? t('personal_best') : (S.bestStreak ? `${t('stats_best')} ${S.bestStreak}d` : t('no_data'))}</div></div>
+    <div class="stat"><div class="num">${fmtMins(weekMinutes())}</div><div class="lbl">${t('this_week')}</div><div class="delta">${minutesLast7()[6].v ? `▲ ${minutesLast7()[6].v}m ${t('stats_today')}` : t('no_data')}</div></div>
+    <div class="stat"><div class="num">${Object.values(S.progress).filter(p => p.done).length + S.quizzesPassed}</div><div class="lbl">${t('skills_verified')}</div><div class="delta">${S.quizzesPassed ? `▲ ${S.quizzesPassed} ${t('from_quizzes')}` : t('no_data')}</div></div>
+    <div class="stat"><div class="num">${avgQuizScore() != null ? avgQuizScore() + '%' : t('no_data')}</div><div class="lbl">${t('avg_score')}</div><div class="delta">${(S.quizScores || []).length ? (S.quizScores.length + ' ' + t('stats_quizzes')) : t('earn_first')}</div></div>
   </section>
   ${railHTML(t('trending'), t('community_learning'), trending.map((c, i) => cardHTML(c, { rank: c.trending })))}
   ${railHTML(`${t('because_completed')} “${_lang() === 'pt' ? 'Solo Vivo' : 'Living Soil'}”`, t('ai_recommendations'), recs.map(c => cardHTML(c)))}
@@ -339,42 +351,44 @@ function renderLive() {
 }
 
 function renderAnalytics() {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const max = Math.max(...S.week, 1);
-  const todayIdx = 3; /* demo: Thursday */
-  const skills = [
-    ['Data analysis', 86], ['Visualization', 58], ['SQL', 91],
-    ['Leadership comms', 64], ['AI tooling', 72], ['Security hygiene', 78]
-  ];
+  const week = minutesLast7();
+  const max = Math.max(...week.map(w => w.v), 1);
+  /* real skill picture: completion per category the learner has touched */
+  const cats = [...new Set(CATALOG.map(c => c.cat))].map(cat => {
+    const all = CATALOG.filter(c => c.cat === cat);
+    const touched = all.filter(c => coursePct(c.id) > 0);
+    if (!touched.length) return null;
+    return [tcat(cat), Math.round(all.reduce((a, c) => a + coursePct(c.id), 0) / all.length)];
+  }).filter(Boolean).sort((a, b) => b[1] - a[1]);
   const certs = CATALOG.filter(c => isDone(c.id));
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">Analytics</h1>
-    <p class="page-sub">Your learning, measured. Admins see the team roll-up; you see you.</p>
+    <p class="page-sub">Your learning, measured — every number here is real.</p>
     <section class="stats" style="margin:28px 0 0;">
-      <div class="stat"><div class="num">12d</div><div class="lbl">Streak</div><div class="delta">▲ Personal best</div></div>
-      <div class="stat"><div class="num">${fmtMins(S.week.reduce((a, b) => a + b, 0))}</div><div class="lbl">This week</div><div class="delta">▲ 38% vs last week</div></div>
-      <div class="stat"><div class="num">${certs.length}</div><div class="lbl">Certificates</div><div class="delta">▲ GDPR latest</div></div>
-      <div class="stat"><div class="num">${S.quizzesPassed}</div><div class="lbl">Quizzes passed</div><div class="delta">${S.quizzesPassed ? '▲ Keep going' : '— Take your first'}</div></div>
+      <div class="stat"><div class="num">${S.streak || 0}d</div><div class="lbl">${t('learning_streak')}</div><div class="delta">${S.bestStreak ? t('stats_best') + ' ' + S.bestStreak + 'd' : t('no_data')}</div></div>
+      <div class="stat"><div class="num">${fmtMins(weekMinutes())}</div><div class="lbl">${t('this_week')}</div><div class="delta">${week[6].v ? '▲ ' + week[6].v + 'm ' + t('stats_today') : t('no_data')}</div></div>
+      <div class="stat"><div class="num">${certs.length}</div><div class="lbl">Certificates</div><div class="delta">${certs.length ? '▲' : t('no_data')}</div></div>
+      <div class="stat"><div class="num">${S.quizzesPassed}</div><div class="lbl">Quizzes passed</div><div class="delta">${avgQuizScore() != null ? 'avg ' + avgQuizScore() + '%' : t('no_data')}</div></div>
     </section>
     <div class="two-col" style="margin-top:18px;">
       <div class="chart-card">
-        <h3>Minutes learned · this week</h3>
-        <div class="bars">${S.week.map((v, i) => `
+        <h3>Minutes learned · last 7 days</h3>
+        <div class="bars">${week.map((w, i) => `
           <div class="bar-col">
-            <span class="bv">${v || ''}</span>
-            <div class="bar ${i === todayIdx ? 'today' : ''}" style="height:${Math.max(4, v / max * 100)}%"></div>
-            <span class="bl">${days[i]}</span>
+            <span class="bv">${w.v || ''}</span>
+            <div class="bar ${i === 6 ? 'today' : ''}" style="height:${Math.max(4, w.v / max * 100)}%"></div>
+            <span class="bl">${w.label}</span>
           </div>`).join('')}
         </div>
       </div>
       <div class="chart-card">
         <h3>Certificates</h3>
-        ${certs.map(c => `<div class="cert-row"><span class="ci">${svgIcon(c.icon)}</span><span class="ct">${c.title}</span><span class="cd">★ verified</span></div>`).join('') || '<p class="empty-note">Complete a course to earn your first certificate.</p>'}
+        ${certs.map(c => `<div class="cert-row"><span class="ci">${svgIcon(c.icon)}</span><span class="ct">${ctitle(c)}</span><span class="cd">★ verified</span></div>`).join('') || '<p class="empty-note">Complete a course to earn your first certificate.</p>'}
       </div>
     </div>
     <div class="chart-card">
-      <h3>Skill confidence · from assessments</h3>
-      ${skills.map(([n, v]) => `<div class="skill-row"><span class="sn">${n}</span><div class="track"><div class="fill" style="width:${v}%"></div></div><span class="sv">${v}%</span></div>`).join('')}
+      <h3>Category progress · from your real activity</h3>
+      ${cats.map(([n, v]) => `<div class="skill-row"><span class="sn">${n}</span><div class="track"><div class="fill" style="width:${v}%"></div></div><span class="sv">${v}%</span></div>`).join('') || '<p class="empty-note">Start a course and your picture builds here.</p>'}
     </div>
   </div>${footerHTML()}</div>`;
 }
@@ -400,7 +414,7 @@ function renderCourse(id) {
     return `<div class="module-row ${done ? 'done' : ''} ${isCur ? 'current' : ''}" data-action="play" data-id="${id}" data-mod="${i}">
       <div class="m-num">${done ? '✓' : isCur ? '▶' : i + 1}</div>
       <div class="m-title">${cmods(c)[i] || m}${review ? ' &nbsp;<span class="review-flag">↺ AI re-queued for review</span>' : ''}</div>
-      <span class="m-dur">12m</span>
+      <span class="m-dur">${moduleDur(c, i)}</span>
       <button class="m-play">▶</button>
     </div>`;
   }).join('');
@@ -722,9 +736,11 @@ function renderProgress() {
   const rank = myRank();
   const maxXp = Math.max(...board.map(r => r.xp), 1);
   const doneCount = CATALOG.filter(c => isDone(c.id)).length;
-  const nudge = rank.ahead
-    ? `<div class="nudge-line">${svgIcon('bird')}<span><b>${rank.ahead.name.split(' ')[0]}</b> ${t('xp_ahead_1')} <b>${rank.ahead.xp - S.xp} XP</b> ${t('xp_ahead_2')}</span></div>`
-    : `<div class="nudge-line">${svgIcon('sun')}<span>${t('top_board')}</span></div>`;
+  const nudge = board.length < 2
+    ? `<div class="nudge-line">${svgIcon('sprout')}<span>${t('board_grow')}</span></div>`
+    : (rank.ahead
+      ? `<div class="nudge-line">${svgIcon('bird')}<span><b>${rank.ahead.name.split(' ')[0]}</b> ${t('xp_ahead_1')} <b>${rank.ahead.xp - S.xp} XP</b> ${t('xp_ahead_2')}</span></div>`
+      : `<div class="nudge-line">${svgIcon('sun')}<span>${t('top_board')}</span></div>`);
 
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">${t('my_progress')}</h1>
@@ -796,6 +812,7 @@ function bumpStreak() {
   if (S.lastActiveDay === today) return;
   const yesterday = new Date(Date.now() - 86400000).toDateString();
   S.streak = (S.lastActiveDay === yesterday) ? (S.streak || 0) + 1 : 1;
+  if (S.streak > (S.bestStreak || 0)) S.bestStreak = S.streak;
   S.lastActiveDay = today;
   checkBadges(true);
 }
@@ -854,8 +871,10 @@ function computeNudges() {
   const lv = levelFor(S.xp);
   const rank = myRank();
   const nl = nextLesson();
-  if (rank.ahead) out.push({ id: 'board', icon: '🌿', title: t('nudge_board_t'), body: t('nudge_board_b').replace('{name}', rank.ahead.name.split(' ')[0]).replace('{xp}', rank.ahead.xp - S.xp), route: '#/progress' });
-  else out.push({ id: 'top', icon: '🌟', title: t('nudge_top_t'), body: t('nudge_top_b'), route: '#/progress' });
+  if (rank.total >= 2) {
+    if (rank.ahead) out.push({ id: 'board', icon: '🌿', title: t('nudge_board_t'), body: t('nudge_board_b').replace('{name}', rank.ahead.name.split(' ')[0]).replace('{xp}', rank.ahead.xp - S.xp), route: '#/progress' });
+    else out.push({ id: 'top', icon: '🌟', title: t('nudge_top_t'), body: t('nudge_top_b'), route: '#/progress' });
+  }
   if (lv.next != null && lv.toNext <= 140) out.push({ id: 'level', icon: '🌱', title: t('nudge_level_t'), body: t('nudge_level_b').replace('{xp}', lv.toNext).replace('{lvl}', tlevel(lv.idx + 1)), route: '#/library' });
   if (S.streak > 0) out.push({ id: 'streak', icon: '🔥', title: t('nudge_streak_t').replace('{n}', S.streak), body: t('nudge_streak_b'), route: nl ? nl.route : '#/library' });
   if (nl) out.push({ id: 'lesson', icon: '▶', title: t('nudge_lesson_t'), body: t('nudge_lesson_b').replace('{mod}', nl.mod).replace('{course}', nl.course), route: nl.route });
@@ -1203,6 +1222,7 @@ function render() {
   makeFocusable($('#app'));
   if (route === 'community') initCommunity();
   if (route === 'admin' && isAdmin()) initAdmin();
+  if (route === 'progress' && boardCache === null) initBoard();
   window.scrollTo({ top: 0, behavior: 'instant' });
   const libInput = $('#libSearch');
   if (libInput) {
@@ -1341,6 +1361,26 @@ videoEl.addEventListener('error', () => {
     startSim(courseById(playing.courseId), playing.mod);
   } else startSim({ icon: '🔴', modules: [$('#playerTitle').textContent] }, 0);
 });
+
+/* real learning minutes — ticks while the player is open and the tab visible */
+const dayKey = () => new Date().toISOString().slice(0, 10);
+setInterval(() => {
+  if (!playerEl.classList.contains('open') || document.visibilityState !== 'visible') return;
+  S.mins = S.mins || {};
+  S.mins[dayKey()] = Math.round(((S.mins[dayKey()] || 0) + 0.5) * 10) / 10;
+  bumpStreak();
+  save();
+}, 30000);
+function minutesLast7() {
+  const out = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000);
+    out.push({ label: d.toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { weekday: 'short' }), v: Math.round((S.mins || {})[d.toISOString().slice(0, 10)] || 0) });
+  }
+  return out;
+}
+const weekMinutes = () => minutesLast7().reduce((a, b) => a + b.v, 0);
+const avgQuizScore = () => (S.quizScores && S.quizScores.length) ? Math.round(S.quizScores.reduce((a, b) => a + b, 0) / S.quizScores.length) : null;
 
 function resetStages() {
   stopSim(); simStage.classList.remove('on');
@@ -1552,6 +1592,7 @@ function drawQuiz() {
   if (quiz.idx >= quiz.qs.length) {
     const pctScore = Math.round(quiz.score / quiz.qs.length * 100);
     const pass = pctScore >= 70;
+    S.quizScores = (S.quizScores || []).concat(pctScore).slice(-30);
     if (pass) { S.quizzesPassed++; save(); awardXp(XP.quiz, 'quiz passed'); checkBadges(); }
     else {
       const p = prog(quiz.courseId);
@@ -2233,6 +2274,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
 }
 
 /* boot */
+setTimeout(() => { if (boardCache === null) initBoard(); }, 2500);
 if (S.xp == null) S.xp = seedXp();
 if (!S.badges) S.badges = [];
 checkBadges(true);

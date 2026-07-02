@@ -33,6 +33,7 @@ const CATALOG = [
     level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line-cover.jpg',
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
     modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Coming soon', 'Coming soon'],
+    moduleDurations: [5, 5, 12, 12],   /* real: 5:04 + 4:29 from Vimeo; estimates for coming-soon */
     moduleMedia: [
       { type: 'vimeo', id: '1206132511' },
       { type: 'vimeo', id: '1206132221' },
@@ -206,16 +207,6 @@ const PATH_RATIONALES = [
   'Capstone moved one step closer — your average score (94%) suggests you can compress the remaining design theory and start planning your own land.'
 ];
 
-const TEAM = [
-  { name: 'João Amaral', initials: 'JA', role: 'Founder & Steward (you)', grad: 1, pct: 72, done: 3, last: 'Now', risk: false },
-  { name: 'Marta Oliveira', initials: 'MO', role: 'Head of Regeneration', grad: 7, pct: 91, done: 7, last: '2h ago', risk: false },
-  { name: 'Dev Santos', initials: 'DS', role: 'Water Lead', grad: 5, pct: 84, done: 6, last: 'Today', risk: false },
-  { name: 'Sofia Reis', initials: 'SR', role: 'Land Manager', grad: 6, pct: 58, done: 4, last: 'Yesterday', risk: false },
-  { name: 'Liam Walsh', initials: 'LW', role: 'Volunteer Coordinator', grad: 2, pct: 31, done: 1, last: '6d ago', risk: true },
-  { name: 'Ana Duarte', initials: 'AD', role: 'Hospitality & Visitors', grad: 3, pct: 66, done: 5, last: 'Today', risk: false },
-  { name: 'Tom Becker', initials: 'TB', role: 'Forest Crew', grad: 4, pct: 22, done: 1, last: '12d ago', risk: true },
-  { name: 'Inês Costa', initials: 'IC', role: 'Seed & Nursery', grad: 8, pct: 77, done: 5, last: '1h ago', risk: false }
-];
 
 const GOAL_PRESETS = {
   'Regenerative Steward': ['land-literacy', 'living-soil', 'land-team-journey', 'agroforestry', 'regen-design', 'capstone-land'],
@@ -258,7 +249,10 @@ const DEFAULT_STATE = {
   lang: 'en',
   xp: null,          /* seeded from progress on first boot */
   badges: [],
-  streak: 12,
+  streak: 0,
+  bestStreak: 0,
+  mins: {},          /* real minutes learned, by day */
+  quizScores: [],
   role: null,
   assignments: [],
   notes: {},
@@ -266,21 +260,11 @@ const DEFAULT_STATE = {
   aiModel: 'claude-opus-4-8',
   goal: 'Regenerative Steward',
   path: ['land-literacy', 'living-soil', 'land-team-journey', 'agroforestry', 'regen-design', 'capstone-land'],
-  progress: {
-    'land-literacy': { done: true, score: 92 },
-    'living-soil': { done: true, score: 92, note: '2 modules skipped by AI' },
-    'ethics': { done: true, score: 88, cert: true },
-    'land-team-journey': { mod: 0, pct: 20 },
-    'fire-safety': { mod: 6, pct: 78 },
-    'foraging': { mod: 3, pct: 42 },
-    'agroforestry': { mod: 1, pct: 23 },
-    'nature-connection': { mod: 0, pct: 6 }
-  },
+  progress: {},      /* truth only — earned, never seeded */
   review: {},
   reminders: [],
   rationaleIdx: 0,
-  quizzesPassed: 0,
-  week: [38, 52, 24, 65, 41, 0, 32]
+  quizzesPassed: 0
 };
 
 /* ================= course invitation copy — hook headline + subheadline =================
@@ -400,6 +384,7 @@ const UI = {
     quiz_q:'Question', quiz_of:'of', quiz_ai_building:'✦ Claude is writing fresh questions from this course…', quiz_ai_tag:'✦ AI-generated from this course', take_quiz:'Take the quiz 🎯',
     nudge_refresh_t:'A 2-minute refresher', nudge_refresh_b:'“{course}” was {n} days ago — one look keeps it rooted 🌱',
     offline_note:'Offline — your progress is safe on this device and will sync when you’re back', online_note:'Back online — progress synced 🌿',
+    stats_today:'today', stats_best:'best', stats_quizzes:'quizzes taken', board_grow:'The board grows as the team joins — invite someone 🌱', no_data:'—',
     daily_title:'Today’s question', daily_sub:'Thirty seconds to keep it rooted', daily_from:'from', daily_correct:'Rooted! +10 XP 🌱', daily_wrong:'Good try — now it’ll stick.', daily_tomorrow:'Come back tomorrow for the next one 🌿', daily_streak:'day streak',
     gdpr_title:'Privacy & your data', gdpr_sub:'Your data belongs to you — take it with you or erase it, anytime (GDPR).', gdpr_export:'Download my data', gdpr_exported:'Your data file is downloading 🌿', gdpr_delete:'Delete my account', gdpr_delete_warn:'This permanently erases your account, progress, XP and badges for everyone. Type DELETE to confirm.', gdpr_deleted:'Account deleted. Be well 🌿', gdpr_recent_login:'For safety, sign in again first — then delete works.', gdpr_guest_note:'Guest data lives only on this device — deleting clears it here.',
     studio_title:'AI Course Studio', studio_sub:'Paste a transcript or lesson notes, add the video link — the AI writes the whole bilingual course: modules, invitation, takeaways and quiz. You approve before it goes live.', studio_gen:'Write the course ✦', studio_generating:'Writing the course — modules, takeaways, quiz, both languages…', studio_need_key:'Connect a Claude key first (✦ orb → ⚙ settings) — the Studio writes with your key.', studio_publish:'Publish to Library 🌿', studio_draft:'Draft — review before publishing', studio_published:'Published — it’s in everyone’s Library now 🌿', studio_video_ph:'Vimeo or YouTube link (optional)', studio_text_ph:'Paste the transcript, notes, or a rich description of the lesson…', studio_title_ph:'Working title (optional)', studio_discard:'Discard', studio_custom:'Published by your team', studio_delete_confirm:'Remove this course for everyone?', studio_failed:'Couldn’t generate — try again (check your key/credits)',
@@ -451,6 +436,7 @@ const UI = {
     quiz_q:'Pergunta', quiz_of:'de', quiz_ai_building:'✦ O Claude está a escrever perguntas novas a partir deste curso…', quiz_ai_tag:'✦ Gerado por IA a partir deste curso', take_quiz:'Fazer o teste 🎯',
     nudge_refresh_t:'Uma revisão de 2 minutos', nudge_refresh_b:'“{course}” foi há {n} dias — uma vista de olhos mantém-no enraizado 🌱',
     offline_note:'Offline — o seu progresso está seguro neste dispositivo e sincroniza quando voltar', online_note:'De volta online — progresso sincronizado 🌿',
+    stats_today:'hoje', stats_best:'melhor', stats_quizzes:'testes feitos', board_grow:'O ranking cresce à medida que a equipa entra — convide alguém 🌱', no_data:'—',
     daily_title:'A pergunta de hoje', daily_sub:'Trinta segundos para manter as raízes', daily_from:'de', daily_correct:'Enraizado! +10 XP 🌱', daily_wrong:'Boa tentativa — agora vai ficar.', daily_tomorrow:'Volte amanhã para a próxima 🌿', daily_streak:'dias seguidos',
     gdpr_title:'Privacidade e os seus dados', gdpr_sub:'Os seus dados pertencem-lhe — leve-os consigo ou apague-os, quando quiser (RGPD).', gdpr_export:'Descarregar os meus dados', gdpr_exported:'O seu ficheiro de dados está a descarregar 🌿', gdpr_delete:'Eliminar a minha conta', gdpr_delete_warn:'Isto apaga permanentemente a sua conta, progresso, XP e distintivos. Escreva DELETE para confirmar.', gdpr_deleted:'Conta eliminada. Fique bem 🌿', gdpr_recent_login:'Por segurança, inicie sessão novamente primeiro — depois a eliminação funciona.', gdpr_guest_note:'Os dados de convidado vivem só neste dispositivo — eliminar limpa-os aqui.',
     studio_title:'Estúdio de Cursos IA', studio_sub:'Cole a transcrição ou as notas da lição, junte o link do vídeo — a IA escreve o curso bilingue completo: módulos, convite, aprendizagens e teste. Aprova antes de publicar.', studio_gen:'Escrever o curso ✦', studio_generating:'A escrever o curso — módulos, aprendizagens, teste, nas duas línguas…', studio_need_key:'Ligue primeiro uma chave Claude (✦ orbe → ⚙ definições) — o Estúdio escreve com a sua chave.', studio_publish:'Publicar na Biblioteca 🌿', studio_draft:'Rascunho — reveja antes de publicar', studio_published:'Publicado — já está na Biblioteca de todos 🌿', studio_video_ph:'Link Vimeo ou YouTube (opcional)', studio_text_ph:'Cole a transcrição, notas, ou uma boa descrição da lição…', studio_title_ph:'Título de trabalho (opcional)', studio_discard:'Descartar', studio_custom:'Publicado pela sua equipa', studio_delete_confirm:'Remover este curso para todos?', studio_failed:'Não foi possível gerar — tente novamente (verifique a chave/créditos)',

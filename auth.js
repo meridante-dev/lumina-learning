@@ -110,7 +110,20 @@ window.EdenCloud = {
   flush() {
     const u = auth.currentUser; if (!u) return;
     if (pushTimer) { clearTimeout(pushTimer); pushTimer = null; }
-    setDoc(doc(db, 'users', u.uid), { state: localState(), updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
+    const st = localState();
+    setDoc(doc(db, 'users', u.uid), { state: st, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
+    /* public board entry — the real leaderboard everyone can read */
+    const p = st.profile || {};
+    const name = p.name || (p.email ? p.email.split('@')[0] : 'Learner');
+    setDoc(doc(db, 'leaderboard', u.uid), {
+      name, username: p.username || '',
+      initials: name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER',
+      xp: st.xp || 0, streak: st.streak || 0, updatedAt: serverTimestamp()
+    }, { merge: true }).catch(() => {});
+  },
+  async listBoard() {
+    const snap = await getDocs(collection(db, 'leaderboard'));
+    return snap.docs.map(d => Object.assign({ uid: d.id }, d.data()));
   },
   async signOut() {
     localStorage.setItem(MODE, 'out');
@@ -126,6 +139,7 @@ window.EdenCloud = {
   async deleteAccount() {
     const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
     await deleteDoc(doc(db, 'users', u.uid));
+    await deleteDoc(doc(db, 'leaderboard', u.uid)).catch(() => {});
     await deleteUser(u);                       /* throws auth/requires-recent-login if stale */
     localStorage.removeItem(KEY);
     localStorage.setItem(MODE, 'out');
