@@ -1701,3 +1701,8 @@ html.os-android body { text-rendering: optimizeLegibility; }
   .palette { width: calc(100vw - 24px); margin-top: calc(14px + env(safe-area-inset-top)); }
   .palette-input-row input { font-size: 16px; } /* prevents iOS zoom-on-focus */
 }
+
+/* premium minimal divider between hero and rails (replaces the pillar band) */
+.hero-divider { position: relative; height: 1px; margin: 54px auto 46px; max-width: 620px; background: linear-gradient(90deg, transparent, rgba(200,164,93,.45) 35%, rgba(166,195,165,.45) 65%, transparent); }
+.hero-divider::after { content: ''; position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; transform: translate(-50%, -50%) rotate(45deg); background: var(--accent); opacity: .8; }
+@media (max-width: 700px) { .hero-divider { margin: 38px auto 30px; max-width: 72vw; } }
