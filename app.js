@@ -426,9 +426,9 @@ const footerHTML = () => `
   <div class="logo"><span class="logo-mark"><svg class="er-mark" viewBox="0 0 30 38" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 37.5V15a11 11 0 0 1 22 0v22.5" stroke="rgba(166,195,165,.5)" stroke-width="1"/><g transform="translate(15 0)"><path d="M0 33V13" stroke="#b27a52" stroke-width="1.1" stroke-linecap="round"/><g fill="#b27a52"><path d="M0 0C-3.4-3-3.4-9 0-12 3.4-9 3.4-3 0 0Z" transform="translate(0 13)"/><path d="M0 0C-3.1-2.6-3.1-8 0-11 3.1-8 3.1-2.6 0 0Z" transform="translate(0 18) rotate(36)"/><path d="M0 0C-3.1-2.6-3.1-8 0-11 3.1-8 3.1-2.6 0 0Z" transform="translate(0 18) rotate(-36)"/><path d="M0 0C-2.9-2.4-2.9-7.4 0-10 2.9-7.4 2.9-2.4 0 0Z" transform="translate(0 23) rotate(60)"/><path d="M0 0C-2.9-2.4-2.9-7.4 0-10 2.9-7.4 2.9-2.4 0 0Z" transform="translate(0 23) rotate(-60)"/><path d="M0 0C-2.6-2.1-2.6-6.6 0-9 2.6-6.6 2.6-2.1 0 0Z" transform="translate(0 28) rotate(104)"/><path d="M0 0C-2.6-2.1-2.6-6.6 0-9 2.6-6.6 2.6-2.1 0 0Z" transform="translate(0 28) rotate(-104)"/></g></g></svg></span><span class="logo-word"><span class="er-name">EDENRISE</span><span class="er-sub">Wellness Resort</span></span></div>
   <span>${t('footer_tag')}</span>
   <div class="links">
-    <button data-action="toast-msg" data-msg="Admin console ships in the full product — team roll-ups, content upload, SSO.">Admin console</button>
+    <button data-action="goto" data-route="#/admin" data-admin>Admin console</button>
     <button data-action="ai-open">Help</button>
-    <button data-action="toast-msg" data-msg="Demo data lives only in your browser (localStorage).">Privacy</button>
+    <button data-action="privacy-note">Privacy</button>
     <button data-action="reset-demo">Reset demo</button>
   </div>
 </footer>`;
@@ -558,7 +558,6 @@ function renderAdmin() {
       <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
       <div class="ct"><b>${c.title}</b><span>${c.cat} · ${c.modules.length} modules · ${c.learners || 0} learners</span></div>
       <span class="pub-chip ${c.draft ? 'draft' : 'live'}">${c.draft ? 'DRAFT · AI-built' : 'PUBLISHED'}</span>
-      <button class="btn btn-glass btn-sm" data-action="toast-msg" data-msg="Course editor ships in the full product — module reorder, quiz authoring, captions.">Edit</button>
     </div>`).join('');
   const assignments = S.assignments.map((a, i) => {
     const c = courseById(a.courseId);
@@ -804,19 +803,23 @@ function channelListHTML() {
     <div class="ch-group-label">${t('comm_paths')}</div>
     ${paths}`;
 }
+const mentions = html => html.replace(/(^|[\s>])@([a-z0-9][a-z0-9_.-]{1,24})/gi, '$1<span class="mention">@$2</span>');
+const canModerate = p => { const me = myUid(); return !!me && (p.authorUid === me || isAdmin()); };
 function postCardHTML(p) {
   const liked = p.likedBy && myUid() && p.likedBy.includes(myUid());
   const isDisc = p.kind === 'discussion' && p.title;
   const rc = p.replyCount || 0;
-  return `<article class="post ${isDisc ? 'is-disc' : ''}"${isDisc ? ` data-action="comm-open" data-id="${p.id}"` : ''}>
+  return `<article class="post ${isDisc ? 'is-disc' : ''} ${p.pinned ? 'pinned' : ''}"${isDisc ? ` data-action="comm-open" data-id="${p.id}"` : ''}>
     <div class="post-av">${esc(p.authorInitials || 'ER')}</div>
     <div class="post-main">
-      <div class="post-head"><b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">· ${timeAgo(p.createdAt)}</span></div>
+      <div class="post-head">${p.pinned ? `<span class="pin-badge">📌 ${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">· ${timeAgo(p.createdAt)}</span></div>
       ${isDisc ? `<div class="post-title">${esc(p.title)}</div>` : ''}
-      <div class="post-body">${esc(p.body || '').replace(/\n/g, '<br>')}</div>
+      <div class="post-body">${mentions(esc(p.body || '').replace(/\n/g, '<br>'))}</div>
       <div class="post-foot">
         <button class="post-act ${liked ? 'liked' : ''}" data-action="comm-like" data-id="${p.id}">♥ <span>${p.likes || 0}</span></button>
         ${isDisc ? `<span class="post-act soft">💬 ${rc} ${rc === 1 ? t('comm_reply_one') : t('comm_replies')}</span>` : ''}
+        ${isAdmin() ? `<button class="post-act" data-action="comm-pin" data-id="${p.id}">📌 ${p.pinned ? t('comm_unpin') : t('comm_pin')}</button>` : ''}
+        ${canModerate(p) ? `<button class="post-act danger" data-action="comm-del" data-id="${p.id}">✕ ${t('comm_delete')}</button>` : ''}
       </div>
     </div>
   </article>`;
@@ -827,8 +830,11 @@ function replyHTML(r, postId) {
     <div class="post-av sm">${esc(r.authorInitials || 'ER')}</div>
     <div class="post-main">
       <div class="post-head"><b>${esc(r.authorName || 'Learner')}</b>${r.authorHandle ? `<span class="post-handle">@${esc(r.authorHandle)}</span>` : ''}<span class="post-time">· ${timeAgo(r.createdAt)}</span></div>
-      <div class="post-body">${esc(r.body || '').replace(/\n/g, '<br>')}</div>
-      <div class="post-foot"><button class="post-act sm ${liked ? 'liked' : ''}" data-action="comm-rlike" data-id="${postId}" data-rid="${r.id}">♥ <span>${r.likes || 0}</span></button></div>
+      <div class="post-body">${mentions(esc(r.body || '').replace(/\n/g, '<br>'))}</div>
+      <div class="post-foot">
+        <button class="post-act sm ${liked ? 'liked' : ''}" data-action="comm-rlike" data-id="${postId}" data-rid="${r.id}">♥ <span>${r.likes || 0}</span></button>
+        ${canModerate(r) ? `<button class="post-act sm danger" data-action="comm-rdel" data-id="${postId}" data-rid="${r.id}">✕ ${t('comm_delete')}</button>` : ''}
+      </div>
     </div>
   </div>`;
 }
@@ -881,7 +887,7 @@ function renderCommunity() {
   </div></div>`;
 }
 function teardownCommunity() { if (commUnsub) { commUnsub(); commUnsub = null; } if (commThreadUnsub) { commThreadUnsub(); commThreadUnsub = null; } }
-function paintFeed() { const f = $('#commFeed'); if (!f) return; f.innerHTML = commPosts.length ? commPosts.map(postCardHTML).join('') : `<div class="empty-note">${t('comm_empty')}</div>`; makeFocusable(f); }
+function paintFeed() { const f = $('#commFeed'); if (!f) return; const ordered = [...commPosts].sort((a, b) => (!!b.pinned) - (!!a.pinned)); f.innerHTML = ordered.length ? ordered.map(postCardHTML).join('') : `<div class="empty-note">${t('comm_empty')}</div>`; makeFocusable(f); }
 function paintThreadHead() { const h = $('#commThreadHead'); if (!h) return; const p = commPosts.find(x => x.id === commThread); if (p) h.innerHTML = postCardHTML(p); }
 function paintReplies() { const r = $('#commReplies'); if (!r) return; r.innerHTML = commReplies.length ? commReplies.map(x => replyHTML(x, commThread)).join('') : `<div class="empty-note">${t('comm_empty_replies')}</div>`; makeFocusable(r); }
 function initCommunity(retries) {
@@ -1611,9 +1617,26 @@ document.addEventListener('click', e => {
       const liked = rep && rep.likedBy && rep.likedBy.includes(myUid());
       EdenForum.toggleReplyLike(id, el.dataset.rid, liked); break;
     }
+    case 'comm-pin': {
+      const post = commPosts.find(x => x.id === id);
+      if (post && window.EdenForum) EdenForum.togglePin(id, !!post.pinned);
+      break;
+    }
+    case 'comm-del': {
+      if (!confirm(t('comm_confirm_del'))) break;
+      if (window.EdenForum) EdenForum.remove(id).then(() => toast(t('comm_deleted'), '－'));
+      if (commThread === id) { commThread = null; render(); }
+      break;
+    }
+    case 'comm-rdel': {
+      if (!confirm(t('comm_confirm_del_reply'))) break;
+      if (window.EdenForum) EdenForum.removeReply(id, el.dataset.rid).then(() => toast(t('comm_deleted'), '－'));
+      break;
+    }
     case 'show-login': document.documentElement.setAttribute('data-gate', 'on'); break;
     case 'signout': if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); break;
     case 'toast-msg': toast(msg, 'ℹ️'); break;
+    case 'privacy-note': toast(t('comm_privacy'), '🔒'); break;
     case 'nudge':
       if (el.dataset.uid) emailNudgeMember(el.dataset.uid, el);
       else toast(`Nudge queued for ${el.dataset.name} — sends once email/WhatsApp delivery is connected`, '👋');
@@ -1673,7 +1696,6 @@ addEventListener('keydown', e => {
   if (!el || /^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(el.tagName)) return;
   if (el.matches('[data-action], [role="button"]')) { e.preventDefault(); el.click(); }
 });
-$('#orgChip').addEventListener('click', () => toast('Workspace switching ships in the full product', '🏢'));
 $('#playerBack').addEventListener('click', closePlayer);
 $('#playerComplete').addEventListener('click', () => { if (playing) completeModule(playing.courseId, playing.mod); else closePlayer(); });
 $('#aiFab').addEventListener('click', () => setTutorOpen(!tutorPanel.classList.contains('open')));
@@ -1826,7 +1848,6 @@ $('#avatarMenu').addEventListener('click', e => {
   $('#avatarMenu').classList.remove('open');
   if (b.dataset.m === 'profile') location.hash = '#/profile';
   if (b.dataset.m === 'onboard') startOnboarding();
-  if (b.dataset.m === 'switch') toast('Workspace switching ships in the full product', '🏢');
   if (b.dataset.m === 'reset') { localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); }
   if (b.dataset.m === 'signout') { if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); }
 });

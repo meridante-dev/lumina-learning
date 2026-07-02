@@ -161,7 +161,17 @@ window.EdenForum = {
   async remove(postId) {
     if (!auth.currentUser) return;
     await deleteDoc(doc(db, 'forum_posts', postId)).catch(() => {});
-  }
+  },
+  async removeReply(postId, replyId) {
+    if (!auth.currentUser) return;
+    await deleteDoc(doc(db, 'forum_posts', postId, 'replies', replyId)).catch(() => {});
+    await updateDoc(doc(db, 'forum_posts', postId), { replyCount: increment(-1) }).catch(() => {});
+  },
+  async togglePin(postId, pinned) {
+    if (!auth.currentUser) return;
+    await updateDoc(doc(db, 'forum_posts', postId), { pinned: !pinned }).catch(() => {});
+  },
+  uid() { const u = auth.currentUser; return u ? u.uid : null; }
 };
 function ms(ts) { return ts && typeof ts.toMillis === 'function' ? ts.toMillis() : (ts && ts.seconds ? ts.seconds * 1000 : 0); }
 
