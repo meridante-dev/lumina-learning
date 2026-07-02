@@ -1728,3 +1728,31 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .studio .btn { align-self: flex-start; }
 .studio-status { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-dim); padding: 10px 0; }
 .studio-draft { border: 1px solid rgba(200,164,93,.3); border-radius: 16px; padding: 22px 24px; margin-top: 14px; background: linear-gradient(180deg, rgba(200,164,93,.05), transparent); }
+
+/* ================= Motion craft: level-up, skeletons, press feel ================= */
+.levelup { position: fixed; inset: 0; z-index: 400; display: flex; align-items: center; justify-content: center; background: rgba(10,14,10,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: luIn .4s ease both; pointer-events: none; }
+.levelup.leave { animation: luOut .5s ease both; }
+@keyframes luIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes luOut { from { opacity: 1; } to { opacity: 0; } }
+.levelup-card { text-align: center; animation: luCard .6s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes luCard { from { transform: scale(.7) translateY(18px); opacity: 0; } to { transform: none; opacity: 1; } }
+.levelup-ring { width: 92px; height: 92px; margin: 0 auto 18px; border-radius: 50%; display: grid; place-items: center; font-size: 38px; background: radial-gradient(circle, rgba(200,164,93,.18), transparent 70%); border: 1.5px solid rgba(200,164,93,.6); box-shadow: 0 0 60px rgba(200,164,93,.25); animation: luRing 2.2s ease infinite; }
+@keyframes luRing { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+.levelup-eyebrow { font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+.levelup-name { font-family: var(--font-display); font-size: 42px; font-weight: 600; color: var(--text); margin-top: 6px; }
+
+.skel { height: 12px; border-radius: 6px; background: linear-gradient(90deg, var(--surface-2) 25%, rgba(231,237,227,.09) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: skelShine 1.3s ease infinite; }
+@keyframes skelShine { to { background-position: -200% 0; } }
+.skel-row td { padding: 18px 12px; }
+.skel-post { pointer-events: none; }
+.skel-post .skel.av { width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0; }
+
+/* tactile press on cards & primary actions */
+.card:active { transform: scale(.985); transition: transform .1s; }
+.btn:active { transform: scale(.97); }
+/* course hero gently rises */
+.course-hero-inner { animation: pageIn .5s ease both; }
+@media (prefers-reduced-motion: reduce) {
+  .levelup, .levelup-card, .levelup-ring, .skel, .take-spark, .take-item { animation: none !important; }
+  .card:active, .btn:active { transform: none; }
+}

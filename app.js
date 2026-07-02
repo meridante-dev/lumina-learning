@@ -83,7 +83,17 @@ function awardXp(n, reason) {
   const after = levelFor(S.xp).idx;
   save(); updateXpChip();
   toast(`+${n} XP${reason ? ' · ' + reason : ''}`, '✦');
-  if (after > before) setTimeout(() => toast(`Level up — you're a ${LEVELS[after].name} now 🌿`, '🌿'), 800);
+  if (after > before) setTimeout(() => celebrateLevel(after), 700);
+}
+/* restrained level-up moment — one breath of celebration, never confetti-noise */
+function celebrateLevel(idx) {
+  if (document.querySelector('.levelup')) return;
+  const el = document.createElement('div');
+  el.className = 'levelup';
+  el.innerHTML = `<div class="levelup-card"><div class="levelup-ring">🌿</div><div class="levelup-eyebrow">${_lang() === 'pt' ? 'Novo nível' : 'Level up'}</div><div class="levelup-name">${tlevel(idx)}</div></div>`;
+  document.body.appendChild(el);
+  setTimeout(() => el.classList.add('leave'), 2300);
+  setTimeout(() => el.remove(), 2900);
 }
 function badgeEarned(id) {
   const done = CATALOG.filter(c => isDone(c.id));
@@ -537,7 +547,7 @@ function initAdmin(retries) {
     const r = $('#cockpitRoster'); if (r) r.innerHTML = `<tr><td colspan="8" class="empty-note">The cockpit needs an internet connection.</td></tr>`;
     return;
   }
-  const r = $('#cockpitRoster'); if (r) r.innerHTML = `<tr><td colspan="8" class="empty-note">Loading members…</td></tr>`;
+  const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="8"><div class="skel"></div></td></tr>`).join('');
   EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); }).catch(err => {
     console.error('[cockpit]', err);
     const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="8" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
@@ -568,18 +578,10 @@ const slugify = s => (s || 'course').toLowerCase().normalize('NFD').replace(/[̀
 async function generateCourseDraft(title, text) {
   const cats = [...new Set(CATALOG.filter(x => !x.custom).map(x => x.cat))];
   const icons = Object.keys(ICONS).join(', ');
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({
-      model: S.aiModel || 'claude-opus-4-8', max_tokens: 4000,
+  const raw = await llmComplete({ maxTokens: 4000,
       system: `You are the course architect for EdenRise Academy (regenerative-living school, Baixo Alentejo, Portugal; warm, grounded, zero corporate jargon). From lesson material, produce ONE course as raw JSON only (no fences): {"title":str,"title_pt":str,"hook":str,"hook_pt":str,"hookSub":str,"hookSub_pt":str,"desc":str(1-2 sentences),"desc_pt":str,"cat":one of [${cats.join(' | ')}],"icon":one of [${icons}],"modules":[3-5 str],"modules_pt":[same length],"takeaways":[per module, array of exactly 3 str],"takeaways_pt":[same shape],"quiz":[3 of {"q":str,"opts":[4 str],"a":0-3}],"quiz_pt":[same shape]}. Portuguese = European Portuguese. Hooks are short invitations (MasterClass style). Takeaways are what a learner keeps. Quiz tests understanding of THIS material.`,
       messages: [{ role: 'user', content: `Working title: ${title || '(none)'}\n\nLesson material:\n${text.slice(0, 14000)}` }]
-    })
   });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const data = await res.json();
-  const raw = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
   const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
   if (!j.title || !Array.isArray(j.modules) || !Array.isArray(j.quiz)) throw new Error('bad shape');
   return j;
@@ -1036,7 +1038,7 @@ function renderCommunity() {
     main = `<div class="comm-main">
       <div class="comm-head"><span class="comm-ch-ic">${svgIcon(m.icon)}</span><div><h2>${m.label}</h2><span class="comm-ch-sub">${t('comm_title')}</span></div></div>
       ${composerHTML(false)}
-      <div class="comm-feed" id="commFeed"></div>
+      <div class="comm-feed" id="commFeed">${'<div class="post skel-post"><div class="skel av"></div><div style="flex:1"><div class="skel" style="width:38%"></div><div class="skel" style="width:82%;margin-top:8px"></div></div></div>'.repeat(3)}</div>
     </div>`;
   }
   return `<div class="page"><div class="page-pad">
@@ -1129,8 +1131,40 @@ function renderProfile() {
       <div class="notif-row"><div class="notif-info"><b>${t('notif_whatsapp')}</b><span>${t('notif_whatsapp_d')} · <em>${t('notif_soon')}</em></span></div><div class="toggle ${notify.whatsapp ? 'on' : ''}" data-action="notif-toggle" data-ch="whatsapp" role="switch" aria-checked="${notify.whatsapp ? 'true' : 'false'}" tabindex="0"></div></div>
       ${notify.whatsapp ? `<input class="auth-input" id="pfPhone" placeholder="${t('notif_phone_ph')}" value="${esc(p.phone || '')}" style="margin-top:12px;max-width:300px;">` : ''}
     </div>
+    <div class="admin-section">
+      <h2>${t('gdpr_title')}</h2>
+      <p class="sect-sub">${t('gdpr_sub')}${isGuest ? ' ' + t('gdpr_guest_note') : ''}</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-glass" data-action="gdpr-export">⤓ ${t('gdpr_export')}</button>
+        <button class="btn btn-glass danger-btn" data-action="gdpr-delete">✕ ${t('gdpr_delete')}</button>
+      </div>
+    </div>
     ${isGuest ? '' : `<button class="btn btn-glass" data-action="signout" style="margin-top:20px;">${t('prof_signout')}</button>`}
   </div>${footerHTML()}</div>`;
+}
+function exportMyData() {
+  const data = { exportedAt: new Date().toISOString(), app: 'EdenRise Academy', profile: S.profile || {}, goal: S.goal, role: S.role, path: S.path, progress: S.progress, xp: S.xp, badges: S.badges, streak: S.streak, quizzesPassed: S.quizzesPassed, notes: S.notes, lang: S.lang, notify: (S.profile || {}).notify || {} };
+  delete data.profile.notify;
+  const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+  const a = document.createElement('a'); a.href = url; a.download = 'edenrise-my-data.json'; document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast(t('gdpr_exported'), '⤓');
+}
+async function deleteMyAccount() {
+  const typed = prompt(t('gdpr_delete_warn'));
+  if (typed !== 'DELETE') return;
+  const isGuest = !(S.profile && S.profile.uid);
+  if (isGuest || !(window.EdenCloud && EdenCloud.deleteAccount)) {
+    localStorage.removeItem('edenrise-state-v2'); localStorage.removeItem('eden-auth-mode');
+    toast(t('gdpr_deleted'), '🌿'); setTimeout(() => location.reload(), 900); return;
+  }
+  try {
+    await EdenCloud.deleteAccount();
+    toast(t('gdpr_deleted'), '🌿');
+  } catch (e) {
+    if (String(e && e.code).includes('requires-recent-login')) toast(t('gdpr_recent_login'), 'ℹ️');
+    else toast(t('mail_failed'), '⚠️');
+  }
 }
 function saveProfile() {
   const name = ($('#pfName').value || '').trim();
@@ -1483,18 +1517,11 @@ async function generateAIQuiz(c) {
   const lang = _lang() === 'pt' ? 'pt' : 'en';
   const key = c.id + ':' + lang;
   if (aiQuizCache[key]) return aiQuizCache[key];
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({
-      model: S.aiModel || 'claude-opus-4-8', max_tokens: 900,
-      system: `You write short, rigorous multiple-choice quizzes for EdenRise Academy (regenerative living school, Alentejo). Reply with ONLY a JSON array of exactly 3 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. Questions test understanding (not trivia) of the course's core ideas. Language: ${lang === 'pt' ? 'European Portuguese' : 'English'}. No markdown, no fences — raw JSON only.`,
-      messages: [{ role: 'user', content: `Course: "${ctitle(c)}" — ${chook(c)} ${chooksub(c)} ${cdesc(c)} Modules: ${cmods(c).join('; ')}.` }]
-    })
+  const text = await llmComplete({
+    system: `You write short, rigorous multiple-choice quizzes for EdenRise Academy (regenerative living school, Alentejo). Reply with ONLY a JSON array of exactly 3 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. Questions test understanding (not trivia) of the course's core ideas. Language: ${lang === 'pt' ? 'European Portuguese' : 'English'}. No markdown, no fences — raw JSON only.`,
+    messages: [{ role: 'user', content: `Course: "${ctitle(c)}" — ${chook(c)} ${chooksub(c)} ${cdesc(c)} Modules: ${cmods(c).join('; ')}.` }],
+    maxTokens: 900
   });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const data = await res.json();
-  const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
   const qs = JSON.parse(text.replace(/^[^\[]*/, '').replace(/[^\]]*$/, ''));
   if (!Array.isArray(qs) || qs.length < 3 || !qs.every(x => x.q && Array.isArray(x.opts) && x.opts.length === 4 && x.a >= 0 && x.a < 4)) throw new Error('bad shape');
   aiQuizCache[key] = qs.slice(0, 3);
@@ -1714,33 +1741,39 @@ Deadlines: "Fire Safety on the Land" is required and due in 3 days (it's fire se
 Style: warm, encouraging, concise (2-4 sentences unless asked for depth). Refer to his actual progress and path when relevant. You can offer to quiz him — if he agrees, tell him to press the "Quiz me now" button. Never invent courses that aren't in his path or the descriptions above.
 ${_lang() === 'pt' ? 'IMPORTANT: Respond in European Portuguese (português de Portugal).' : ''}`;
 }
+/* provider-agnostic completion — Claude (sk-ant-…) or free-tier Gemini (AIza…) */
+const llmProvider = () => (S.apiKey || '').startsWith('AIza') ? 'gemini' : 'anthropic';
+async function llmComplete({ system, messages, maxTokens }) {
+  if (llmProvider() === 'gemini') {
+    const model = 'gemini-2.5-flash';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${S.apiKey}`, {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: system }] },
+        contents: messages.map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] })),
+        generationConfig: { maxOutputTokens: maxTokens }
+      })
+    });
+    if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); }
+    const data = await res.json();
+    return (((data.candidates || [])[0] || {}).content || { parts: [] }).parts.map(p => p.text || '').join('') || '…';
+  }
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model: S.aiModel || 'claude-opus-4-8', max_tokens: maxTokens, system, messages })
+  });
+  if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); }
+  const data = await res.json();
+  return data.content.filter(b => b.type === 'text').map(b => b.text).join('\n') || '…';
+}
 async function askClaude(text) {
   tutorHistory.push({ role: 'user', content: text });
   const typing = document.createElement('div');
   typing.className = 'msg bot typing'; typing.innerHTML = '<span></span><span></span><span></span>';
   $('#aiMsgs').appendChild(typing); $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': S.apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: S.aiModel || 'claude-opus-4-8',
-        max_tokens: 700,
-        system: buildTutorSystem(),
-        messages: tutorHistory.slice(-12)
-      })
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error && err.error.message ? err.error.message : `HTTP ${res.status}`);
-    }
-    const data = await res.json();
-    const reply = data.content.filter(b => b.type === 'text').map(b => b.text).join('\n') || '…';
+    const reply = await llmComplete({ system: buildTutorSystem(), messages: tutorHistory.slice(-12), maxTokens: 700 });
     tutorHistory.push({ role: 'assistant', content: reply });
     typing.classList.remove('typing');
     typing.innerHTML = esc(reply).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
@@ -1885,6 +1918,8 @@ document.addEventListener('click', e => {
     }
     case 'voice-search': startVoiceSearch(); break;
     case 'save-profile': saveProfile(); break;
+    case 'gdpr-export': exportMyData(); break;
+    case 'gdpr-delete': deleteMyAccount(); break;
     case 'notif-toggle': toggleNotif(el.dataset.ch); break;
     case 'comm-channel': commChannel = el.dataset.ch; commThread = null; render(); break;
     case 'comm-open': commThread = id; render(); break;
@@ -2019,7 +2054,7 @@ addEventListener('keydown', e => {
 /* tutor settings */
 function syncTutorStatus() {
   $('#tutorStatus').textContent = S.apiKey
-    ? `● Live · ${(S.aiModel || 'claude-opus-4-8').replace('claude-', 'Claude ').replace(/-/g, ' ')}`
+    ? (llmProvider() === 'gemini' ? '● Live · Gemini 2.5 Flash (free tier)' : `● Live · ${(S.aiModel || 'claude-opus-4-8').replace('claude-', 'Claude ').replace(/-/g, ' ')}`)
     : '● Demo mode · scripted replies';
 }
 $('#tutorSettingsBtn').addEventListener('click', () => {

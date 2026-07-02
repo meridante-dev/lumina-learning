@@ -7,7 +7,7 @@ import {
   getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence,
   GoogleAuthProvider, signInWithPopup,
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile,
-  sendPasswordResetEmail, sendEmailVerification
+  sendPasswordResetEmail, sendEmailVerification, deleteUser
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {
   getFirestore, doc, getDoc, getDocs, setDoc, serverTimestamp,
@@ -121,6 +121,15 @@ window.EdenCloud = {
   async updateName(name) {
     const u = auth.currentUser; if (!u || !name) return;
     try { await updateProfile(u, { displayName: name }); } catch (e) {}
+  },
+  /* GDPR: erase the Firestore doc, the auth account, and this device's copy */
+  async deleteAccount() {
+    const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
+    await deleteDoc(doc(db, 'users', u.uid));
+    await deleteUser(u);                       /* throws auth/requires-recent-login if stale */
+    localStorage.removeItem(KEY);
+    localStorage.setItem(MODE, 'out');
+    setTimeout(() => location.reload(), 900);
   },
   /* team-published courses (AI Course Studio) — readable by everyone */
   async saveCourse(course) {
