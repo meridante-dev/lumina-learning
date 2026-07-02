@@ -629,7 +629,7 @@ function studioDraftHTML(c) {
   </div>`;
 }
 async function studioGenerate() {
-  if (!S.apiKey) { toast(t('studio_need_key'), 'ℹ️'); return; }
+  if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
   const text = ($('#stText').value || '').trim();
   if (text.length < 40) { $('#stText').focus(); return; }
   const media = parseVideoLink(($('#stVideo').value || '').trim());
@@ -694,6 +694,13 @@ function renderAdmin() {
     <div class="admin-section">
       <h2>${t('studio_title')}</h2>
       <p class="sect-sub">${t('studio_sub')}</p>
+      <div class="org-key">
+        <div class="notif-info"><b>${t('orgkey_title')}</b><span>${t('orgkey_sub')}</span></div>
+        <div style="display:flex;gap:8px;flex:1;min-width:280px;">
+          <input class="auth-input" id="orgKeyInput" type="password" placeholder="AIza… / sk-ant-…" value="${esc((window.EdenOrg && window.EdenOrg.aiKey) || '')}" style="flex:1;">
+          <button class="btn btn-primary btn-sm" data-action="orgkey-save">${t('save')}</button>
+        </div>
+      </div>
       <div class="studio">
         <input class="auth-input" id="stTitle" placeholder="${t('studio_title_ph')}">
         <input class="auth-input" id="stVideo" placeholder="${t('studio_video_ph')}">
@@ -1248,7 +1255,7 @@ function syncChrome() {
   const tn = $('#aiTitle'); if (tn) tn.textContent = t('tutor_name');
   $$('.quick-row .quick[data-tk]').forEach(b => { b.textContent = t(b.dataset.tk); });
   const inp = $('#aiInput'); if (inp) inp.placeholder = t('ask_anything');
-  const stEl = $('#tutorStatus'); if (stEl && !S.apiKey) stEl.textContent = t('tutor_demo');
+  const stEl = $('#tutorStatus'); if (stEl && !aiKey()) stEl.textContent = t('tutor_demo');
   const tsTitle = $('#tutorSettings .ts-title'); if (tsTitle) tsTitle.textContent = t('connect_ai');
   const tsNote = $('#tutorSettings .ts-note'); if (tsNote) tsNote.textContent = t('api_note');
   const sv = $('#apiKeySave'); if (sv) sv.textContent = t('save');
@@ -1578,7 +1585,7 @@ function openQuiz(courseId) {
   const cq = COURSE_QUIZ[c.id] || c.quiz;
   if (cq) { startQuiz(c, cq[lang] || cq.en || cq, false); return; }   /* real content (incl. studio courses) */
   const fallback = () => startQuiz(c, QUIZ_BANK[c.cat] || QUIZ_BANK._default, false);
-  if (S.apiKey) {                                                     /* AI writes from the course */
+  if (aiKey()) {                                                     /* AI writes from the course */
     $('#quizModal').classList.add('open');
     $('#quizBody').innerHTML = `<div class="q-center"><div class="orb-spin"></div><p class="m-sub" style="margin-top:16px;">${t('quiz_ai_building')}</p></div>`;
     generateAIQuiz(c).then(qs => startQuiz(c, qs, true)).catch(() => fallback());
@@ -1783,11 +1790,12 @@ Style: warm, encouraging, concise (2-4 sentences unless asked for depth). Refer 
 ${_lang() === 'pt' ? 'IMPORTANT: Respond in European Portuguese (português de Portugal).' : ''}`;
 }
 /* provider-agnostic completion — Claude (sk-ant-…) or free-tier Gemini (AIza…) */
-const llmProvider = () => (S.apiKey || '').startsWith('AIza') ? 'gemini' : 'anthropic';
+const aiKey = () => S.apiKey || (window.EdenOrg && window.EdenOrg.aiKey) || '';
+const llmProvider = () => aiKey().startsWith('AIza') ? 'gemini' : 'anthropic';
 async function llmComplete({ system, messages, maxTokens }) {
   if (llmProvider() === 'gemini') {
     const model = 'gemini-2.5-flash';
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${S.apiKey}`, {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${aiKey()}`, {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         system_instruction: { parts: [{ text: system }] },
@@ -1801,7 +1809,7 @@ async function llmComplete({ system, messages, maxTokens }) {
   }
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    headers: { 'content-type': 'application/json', 'x-api-key': aiKey(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
     body: JSON.stringify({ model: S.aiModel || 'claude-opus-4-8', max_tokens: maxTokens, system, messages })
   });
   if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); }
@@ -1835,7 +1843,7 @@ function tutorRespond(text) {
     setTimeout(() => openQuiz(id || 'leading-data'), 900);
     return;
   }
-  if (S.apiKey) { askClaude(text); return; }
+  if (aiKey()) { askClaude(text); return; }
   scriptedRespond(text);
 }
 function scriptedRespond(text) {
@@ -1946,6 +1954,16 @@ document.addEventListener('click', e => {
     case 'take-go': resolveTakeaways(); break;
     case 'take-quiz': resolveTakeaways(true); break;
     case 'daily-answer': answerDaily(el); break;
+    case 'orgkey-save': {
+      const k = ($('#orgKeyInput').value || '').trim();
+      if (!(window.EdenCloud && EdenCloud.saveOrgConfig)) { toast(t('mail_failed'), '⚠️'); break; }
+      EdenCloud.saveOrgConfig({ aiKey: k }).then(() => {
+        window.EdenOrg = Object.assign({}, window.EdenOrg, { aiKey: k });
+        syncTutorStatus();
+        toast(t('orgkey_saved'), '🌿');
+      }).catch(() => toast(t('mail_failed'), '⚠️'));
+      break;
+    }
     case 'studio-gen': studioGenerate(); break;
     case 'studio-publish': studioPublish(); break;
     case 'studio-discard': studioDraft = null; $('#stDraft').innerHTML = ''; break;
@@ -2094,8 +2112,9 @@ addEventListener('keydown', e => {
 
 /* tutor settings */
 function syncTutorStatus() {
-  $('#tutorStatus').textContent = S.apiKey
-    ? (llmProvider() === 'gemini' ? '● Live · Gemini 2.5 Flash (free tier)' : `● Live · ${(S.aiModel || 'claude-opus-4-8').replace('claude-', 'Claude ').replace(/-/g, ' ')}`)
+  const orgOnly = !S.apiKey && aiKey();
+  $('#tutorStatus').textContent = aiKey()
+    ? (llmProvider() === 'gemini' ? `● Live · Gemini 2.5 Flash${orgOnly ? ' · team key' : ' (free tier)'}` : `● Live · ${(S.aiModel || 'claude-opus-4-8').replace('claude-', 'Claude ').replace(/-/g, ' ')}${orgOnly ? ' · team key' : ''}`)
     : '● Demo mode · scripted replies';
 }
 $('#tutorSettingsBtn').addEventListener('click', () => {

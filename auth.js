@@ -121,6 +121,10 @@ window.EdenCloud = {
       xp: st.xp || 0, streak: st.streak || 0, updatedAt: serverTimestamp()
     }, { merge: true }).catch(() => {});
   },
+  async saveOrgConfig(cfg) {
+    if (!auth.currentUser) throw new Error('not-signed-in');
+    await setDoc(doc(db, 'config', 'org'), cfg, { merge: true });
+  },
   async listBoard() {
     const snap = await getDocs(collection(db, 'leaderboard'));
     return snap.docs.map(d => Object.assign({ uid: d.id }, d.data()));
@@ -251,6 +255,13 @@ function ms(ts) { return ts && typeof ts.toMillis === 'function' ? ts.toMillis()
   }).catch(() => { if ((tries || 0) < 3) setTimeout(() => loadCustomCourses((tries || 0) + 1), 4000); });
 })(0);
 
+async function loadOrgConfig() {
+  try {
+    const snap = await getDoc(doc(db, 'config', 'org'));
+    if (snap.exists()) { window.EdenOrg = snap.data(); if (window.syncTutorStatus) window.syncTutorStatus(); }
+  } catch (e) { /* not signed in yet or rules pending */ }
+}
+
 /* ---------- auth state ---------- */
 onAuthStateChanged(auth, async user => {
   if (user) {
@@ -259,6 +270,7 @@ onAuthStateChanged(auth, async user => {
     try {
       const profile = await ensureProfile(user);
       await pullState(user.uid);
+      loadOrgConfig();
       stampProfileLocal(profile);
       if (window.EdenApp) { window.EdenApp.reloadState(); window.EdenApp.applyProfile(profile); }
     } catch (e) { console.error('[auth] sync failed', e); }
