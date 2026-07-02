@@ -1756,3 +1756,7 @@ html.os-android body { text-rendering: optimizeLegibility; }
   .levelup, .levelup-card, .levelup-ring, .skel, .take-spark, .take-item { animation: none !important; }
   .card:active, .btn:active { transform: none; }
 }
+
+/* team AI key row (admin) */
+.org-key { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; background: rgba(200,164,93,.06); border: 1px solid rgba(200,164,93,.22); border-radius: 14px; padding: 14px 18px; margin-bottom: 16px; max-width: 680px; }
+.org-key .notif-info { max-width: 320px; }

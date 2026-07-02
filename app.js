@@ -1222,6 +1222,9 @@ function render() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
   if ((route === 'analytics' || route === 'admin') && !isAdmin()) { location.hash = '#/home'; return; }
+  /* overlay hygiene — a stuck full-screen layer must never block the app */
+  const takeM = $('#takeModal'); if (takeM && takeM.classList.contains('open') && !pendingNext) takeM.classList.remove('open');
+  document.querySelectorAll('.levelup').forEach(el => el.remove());
   $$('.nav-links a, .mobile-drawer a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
   syncChrome();
   if (route !== 'community') teardownCommunity();
@@ -2098,11 +2101,13 @@ $('#palInput').addEventListener('keydown', e => {
 $('#palResults').addEventListener('click', e => { const it = e.target.closest('.palette-item'); if (it) runPal(it); });
 $('#palette').addEventListener('click', e => { if (e.target === $('#palette')) closePalette(); });
 $('#quizModal').addEventListener('click', e => { if (e.target === $('#quizModal')) { $('#quizModal').classList.remove('open'); render(); } });
+$('#takeModal').addEventListener('click', e => { if (e.target === $('#takeModal')) resolveTakeaways(); });
 
 addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
   if (e.key === 'Escape') {
-    if (mDrawer.classList.contains('open')) setDrawer(false);
+    if ($('#takeModal').classList.contains('open')) resolveTakeaways();
+    else if (mDrawer.classList.contains('open')) setDrawer(false);
     else if ($('#palette').classList.contains('open')) closePalette();
     else if ($('#quizModal').classList.contains('open')) { $('#quizModal').classList.remove('open'); render(); }
     else if (playerEl.classList.contains('open')) closePlayer();
