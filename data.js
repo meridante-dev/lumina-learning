@@ -281,6 +281,15 @@ const DEFAULT_STATE = {
   week: [38, 52, 24, 65, 41, 0, 32]
 };
 
+/* ================= email nudge delivery (Google Apps Script webhook) =================
+   Deploy apps-script/nudge-mailer.gs as a web app and paste its /exec URL below.
+   Empty webhook = delivery off (UI degrades to "not connected" toasts).
+   Sends are consent-gated client-side AND rate-capped server-side (1/person/week). */
+const MAIL = {
+  webhook: '',
+  secret: '67763609855821fded169452'
+};
+
 /* ================= i18n — English / Português ================= */
 const _lang = () => (typeof S !== 'undefined' && S.lang) || 'en';
 const UI = {
@@ -292,6 +301,7 @@ const UI = {
     nudge_bell:'Nudges', nudge_empty:'All caught up 🌿 Nothing needs you right now.', nudge_board_t:"Someone's gaining on you", nudge_board_b:'{name} is {xp} XP ahead — finish one lesson to catch up 🌿', nudge_top_t:"You're leading 🌟", nudge_top_b:'Top of the board this week. One lesson keeps you there.',
     nudge_level_t:'Almost a new level', nudge_level_b:'Just {xp} XP from {lvl} — a quiz gets you there.', nudge_streak_t:'{n}-day streak 🔥', nudge_streak_b:'Do one lesson today to keep it alive.', nudge_lesson_t:'Pick up where you left off', nudge_lesson_b:'“{mod}” in {course} is waiting.', nudge_badge_t:'One course from a badge', nudge_badge_b:'Finish one more course to unlock Grove Keeper 🏅', nudge_welcome:'Welcome back, {name} 🌱',
     notif_title:'Notifications', notif_sub:'Choose how EdenRise nudges you back. Opt-in and GDPR-friendly — change anytime.', notif_browser:'Browser notifications', notif_browser_d:'Gentle desktop reminders — works right away.', notif_email:'Email', notif_email_d:'A weekly nudge to your inbox.', notif_whatsapp:'WhatsApp', notif_whatsapp_d:'Streak & leaderboard pings on WhatsApp.', notif_phone_ph:'WhatsApp number (+351…)', notif_soon:'ready once delivery is connected', notif_on:'Notifications on 🌿', notif_blocked:'Your browser blocked notifications — enable them in site settings.',
+    mail_not_connected:'Email delivery isn’t connected yet — deploy the mailer first', mail_sent:'Encouragement sent 🌿', mail_rate_limited:'Already nudged this week — we keep it gentle 🌿', mail_no_email:'No email on this account', mail_not_opted:'hasn’t opted into email nudges — consent first 🌿', mail_optin_sent:'Welcome email sent — check your inbox 📬', mail_failed:'Couldn’t send — try again in a moment',
     search_ph:'Search courses, the land…', org:'EdenRise · Academy',
     featured_eyebrow:'Featured Program · Curated for you by AI', match:'match', modules:'modules', certified:'CERTIFIED',
     all_levels:'All levels', Beginner:'Beginner', Intermediate:'Intermediate', Advanced:'Advanced', 'All levels':'All levels',
@@ -331,6 +341,7 @@ const UI = {
     nudge_bell:'Lembretes', nudge_empty:'Tudo em dia 🌿 Nada precisa de si agora.', nudge_board_t:'Estão a aproximar-se de si', nudge_board_b:'{name} está {xp} XP à frente — termine uma lição para alcançar 🌿', nudge_top_t:'Está na liderança 🌟', nudge_top_b:'No topo do ranking esta semana. Uma lição mantém-no lá.',
     nudge_level_t:'Quase um novo nível', nudge_level_b:'A apenas {xp} XP de {lvl} — um teste leva-o lá.', nudge_streak_t:'Sequência de {n} dias 🔥', nudge_streak_b:'Faça uma lição hoje para a manter viva.', nudge_lesson_t:'Continue de onde parou', nudge_lesson_b:'“{mod}” em {course} está à espera.', nudge_badge_t:'A um curso de um distintivo', nudge_badge_b:'Termine mais um curso para desbloquear Guardião do Bosque 🏅', nudge_welcome:'Bem-vindo de volta, {name} 🌱',
     notif_title:'Notificações', notif_sub:'Escolha como a EdenRise o incentiva a voltar. Opcional e compatível com o RGPD — mude quando quiser.', notif_browser:'Notificações do navegador', notif_browser_d:'Lembretes suaves no ecrã — funcionam já.', notif_email:'Email', notif_email_d:'Um lembrete semanal no seu email.', notif_whatsapp:'WhatsApp', notif_whatsapp_d:'Avisos de sequência e ranking no WhatsApp.', notif_phone_ph:'Número de WhatsApp (+351…)', notif_soon:'pronto assim que o envio for ligado', notif_on:'Notificações ativas 🌿', notif_blocked:'O navegador bloqueou as notificações — ative-as nas definições do site.',
+    mail_not_connected:'O envio de emails ainda não está ligado — implemente primeiro o mailer', mail_sent:'Incentivo enviado 🌿', mail_rate_limited:'Já foi incentivado esta semana — mantemos a suavidade 🌿', mail_no_email:'Esta conta não tem email', mail_not_opted:'não ativou os lembretes por email — consentimento primeiro 🌿', mail_optin_sent:'Email de boas-vindas enviado — veja a sua caixa 📬', mail_failed:'Não foi possível enviar — tente novamente',
     search_ph:'Procurar cursos, a terra…', org:'EdenRise · Academia',
     featured_eyebrow:'Programa em Destaque · Escolhido para si pela IA', match:'compatível', modules:'módulos', certified:'CERTIFICADO',
     all_levels:'Todos os níveis', Beginner:'Iniciante', Intermediate:'Intermédio', Advanced:'Avançado', 'All levels':'Todos os níveis',

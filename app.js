@@ -433,6 +433,56 @@ const footerHTML = () => `
   </div>
 </footer>`;
 
+/* ---------- email nudge delivery (Apps Script webhook) ---------- */
+const mailReady = () => !!(typeof MAIL !== 'undefined' && MAIL.webhook);
+async function sendMail(payload) {
+  /* plain-text body = CORS "simple request" — Apps Script has no preflight handler */
+  const res = await fetch(MAIL.webhook, { method: 'POST', body: JSON.stringify(Object.assign({ secret: MAIL.secret }, payload)) });
+  return res.json();
+}
+function titleInLang(courseId, lang) {
+  const c = courseById(courseId); if (!c) return courseId;
+  return (lang === 'pt' && COURSE_PT[c.id] && COURSE_PT[c.id].title) || c.title;
+}
+function composeMemberNudge(m) {
+  /* warm, progress-first copy in the MEMBER's language — never guilt */
+  const st = m.state || {};
+  const lang = st.lang === 'pt' ? 'pt' : 'en';
+  const name = ((m.profile && m.profile.name) || 'there').split(' ')[0];
+  const path = st.path || [], prg = st.progress || {};
+  const nextId = path.find(id => !(prg[id] && prg[id].done));
+  const doneCount = path.filter(id => prg[id] && prg[id].done).length;
+  const pct = path.length ? Math.round(doneCount / path.length * 100) : 0;
+  if (nextId) {
+    const course = titleInLang(nextId, lang);
+    return lang === 'pt'
+      ? { lang, title: `Está a crescer bem, ${name} 🌿`, body: `Já completou ${pct}% do seu percurso — um passo de cada vez, como a terra gosta. O próximo capítulo é <b>${course}</b>. Dez minutos tranquilos chegam.` }
+      : { lang, title: `You're growing well, ${name} 🌿`, body: `You're ${pct}% of the way along your path — one step at a time, the way the land likes it. Your next chapter is <b>${course}</b>. Ten quiet minutes is all it takes.` };
+  }
+  return lang === 'pt'
+    ? { lang, title: `O bosque sente a sua falta, ${name} 🌿`, body: `O seu percurso está à sua espera, sem pressa. Quando tiver dez minutos, há sempre algo novo a crescer na EdenRise Academy.` }
+    : { lang, title: `The grove misses you, ${name} 🌿`, body: `Your path is waiting, no rush at all. Whenever you have ten minutes, there's always something new growing at EdenRise Academy.` };
+}
+async function emailNudgeMember(uid, btn) {
+  if (!mailReady()) return toast(t('mail_not_connected'), 'ℹ️');
+  const m = (adminMembers || []).find(x => x.uid === uid);
+  if (!m) return;
+  const email = (m.profile && m.profile.email) || '';
+  const sp = (m.state && m.state.profile) || {};
+  const first = ((m.profile && m.profile.name) || email).split(/[@\s]/)[0];
+  if (!email) return toast(t('mail_no_email'), 'ℹ️');
+  if (!(sp.notify && sp.notify.email)) return toast(`${first} ${t('mail_not_opted')}`, 'ℹ️');
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  try {
+    const n = composeMemberNudge(m);
+    const r = await sendMail({ kind: 'nudge', to: email, name: (m.profile && m.profile.name) || '', lang: n.lang, title: n.title, body: n.body });
+    if (r.ok) toast(t('mail_sent'), '🌿');
+    else if (r.error === 'rate-limited') toast(t('mail_rate_limited'), '🌿');
+    else toast(t('mail_failed'), '⚠️');
+  } catch (e) { toast(t('mail_failed'), '⚠️'); }
+  if (btn) { btn.disabled = false; btn.textContent = 'Nudge'; }
+}
+
 /* ---------- Leader's Cockpit (real member data) ---------- */
 let adminMembers = null;
 function memberSummary(m) {
@@ -457,7 +507,7 @@ function memberRow(s) {
     <td>${s.streak}d</td>
     <td style="color:var(--text-faint);">${s.days == null ? '—' : s.days === 0 ? 'today' : s.days + 'd ago'}</td>
     <td><span class="status-chip ${s.atRisk ? 'risk' : 'ok'}">${s.atRisk ? '⚠ At risk' : '● On track'}</span></td>
-    <td><button class="btn btn-glass btn-sm" data-action="nudge" data-name="${esc(s.name)}">Nudge</button></td>
+    <td><button class="btn btn-glass btn-sm" data-action="nudge" data-uid="${esc(s.uid)}" data-name="${esc(s.name)}">Nudge</button></td>
   </tr>`;
 }
 function paintCockpit() {
@@ -707,6 +757,12 @@ async function toggleNotif(ch) {
   }
   notify[ch] = !notify[ch];
   save(); render();
+  /* one-time warm welcome when email nudges turn on — also proves the pipeline */
+  if (ch === 'email' && notify.email && mailReady() && prof.email) {
+    sendMail({ kind: 'optin', to: prof.email, name: prof.name || '', lang: _lang() })
+      .then(r => { if (r.ok) toast(t('mail_optin_sent'), '🌿'); })
+      .catch(() => {});
+  }
 }
 
 /* ================= Community forum ================= */
@@ -901,7 +957,7 @@ function renderProfile() {
       <h2>${t('notif_title')}</h2>
       <p class="sect-sub">${t('notif_sub')}</p>
       <div class="notif-row"><div class="notif-info"><b>${t('notif_browser')}</b><span>${t('notif_browser_d')}</span></div><div class="toggle ${notify.push ? 'on' : ''}" data-action="notif-toggle" data-ch="push" role="switch" aria-checked="${notify.push ? 'true' : 'false'}" tabindex="0"></div></div>
-      <div class="notif-row"><div class="notif-info"><b>${t('notif_email')}</b><span>${t('notif_email_d')} · <em>${t('notif_soon')}</em></span></div><div class="toggle ${notify.email ? 'on' : ''}" data-action="notif-toggle" data-ch="email" role="switch" aria-checked="${notify.email ? 'true' : 'false'}" tabindex="0"></div></div>
+      <div class="notif-row"><div class="notif-info"><b>${t('notif_email')}</b><span>${t('notif_email_d')}${mailReady() ? '' : ` · <em>${t('notif_soon')}</em>`}</span></div><div class="toggle ${notify.email ? 'on' : ''}" data-action="notif-toggle" data-ch="email" role="switch" aria-checked="${notify.email ? 'true' : 'false'}" tabindex="0"></div></div>
       <div class="notif-row"><div class="notif-info"><b>${t('notif_whatsapp')}</b><span>${t('notif_whatsapp_d')} · <em>${t('notif_soon')}</em></span></div><div class="toggle ${notify.whatsapp ? 'on' : ''}" data-action="notif-toggle" data-ch="whatsapp" role="switch" aria-checked="${notify.whatsapp ? 'true' : 'false'}" tabindex="0"></div></div>
       ${notify.whatsapp ? `<input class="auth-input" id="pfPhone" placeholder="${t('notif_phone_ph')}" value="${esc(p.phone || '')}" style="margin-top:12px;max-width:300px;">` : ''}
     </div>
@@ -1558,7 +1614,10 @@ document.addEventListener('click', e => {
     case 'show-login': document.documentElement.setAttribute('data-gate', 'on'); break;
     case 'signout': if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); break;
     case 'toast-msg': toast(msg, 'ℹ️'); break;
-    case 'nudge': toast(`Nudge queued for ${el.dataset.name} — sends once email/WhatsApp delivery is connected`, '👋'); break;
+    case 'nudge':
+      if (el.dataset.uid) emailNudgeMember(el.dataset.uid, el);
+      else toast(`Nudge queued for ${el.dataset.name} — sends once email/WhatsApp delivery is connected`, '👋');
+      break;
     case 'export-members': exportMembersCSV(); break;
     case 'assign': {
       const courseId = $('#asgCourse').value, team = $('#asgTeam').value, due = $('#asgDue').value || 'soon';
