@@ -161,6 +161,8 @@ const CATALOG = [
     modules: ['Why the commons works', 'Sharing tools & labour', 'Running a work party', 'Decisions without burnout', 'A 90-day community plan']
   }
 ];
+/* designed brand covers — every course ships with art (land-team-journey keeps its filmed cover) */
+CATALOG.forEach(c => { if (!c.poster) c.poster = 'media/covers/' + c.id + '.jpg'; });
 
 const LIVE_SESSIONS = [
   { id: 'live-now', title: 'Field Hours: Live Soil Clinic', host: 'Marta Oliveira · Head of Regeneration', when: 'LIVE NOW', live: true, viewers: 47, grad: 7, icon: 'sprout', desc: 'Bring a photo or sample of your soil — Marta reads it live and prescribes the first three things to do.' },
