@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdenRise Academy — Partner Deck</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0e140f; --surface:#141c16; --line:#2a352c; --text:#f7f6f1; --dim:#c9cec4; --faint:#8a948a; --gold:#c8a45d; --sage:#a6c3a5; --copper:#b27a52; }
+  * { margin:0; box-sizing:border-box; }
+  html,body { height:100%; background:var(--bg); color:var(--text); font-family:Inter,sans-serif; overflow:hidden; }
+  .slide { position:absolute; inset:0; display:none; flex-direction:column; justify-content:center; padding:7vh 9vw; background:
+    radial-gradient(ellipse 75% 60% at 82% 8%, rgba(90,111,80,.35), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 6% 100%, rgba(200,164,93,.15), transparent 55%), var(--bg); }
+  .slide.on { display:flex; animation: in .5s ease both; }
+  @keyframes in { from { opacity:0; transform: translateY(14px);} to { opacity:1; transform:none; } }
+  .eyebrow { font-size:12px; letter-spacing:.32em; text-transform:uppercase; color:var(--gold); font-weight:700; margin-bottom:22px; }
+  h1 { font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(40px,6.5vw,84px); line-height:1.06; letter-spacing:-.01em; max-width:16em; }
+  h1 em { font-style:italic; color:var(--gold); }
+  h2 { font-family:'Cormorant Garamond',serif; font-weight:600; font-size:clamp(30px,4.2vw,54px); line-height:1.12; margin-bottom:28px; max-width:18em; }
+  h2 em { font-style:italic; color:var(--gold); }
+  p.lead { font-size:clamp(15px,1.5vw,20px); color:var(--dim); line-height:1.65; max-width:34em; }
+  .cols { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:34px; }
+  .cols.two { grid-template-columns:1fr 1fr; }
+  .cardx { background:rgba(20,28,22,.75); border:1px solid var(--line); border-radius:16px; padding:24px; }
+  .cardx .ic { font-size:24px; margin-bottom:12px; }
+  .cardx b { display:block; font-size:15px; margin-bottom:7px; }
+  .cardx span { font-size:13px; color:var(--faint); line-height:1.55; display:block; }
+  .hair { height:1px; max-width:420px; background:linear-gradient(90deg, rgba(200,164,93,.5), rgba(166,195,165,.4), transparent); margin:26px 0; }
+  .steps { display:flex; align-items:center; gap:14px; margin-top:36px; flex-wrap:wrap; }
+  .step { background:rgba(20,28,22,.8); border:1px solid var(--line); border-radius:99px; padding:12px 22px; font-size:14px; color:var(--dim); }
+  .step b { color:var(--text); }
+  .arrow { color:var(--gold); font-size:18px; }
+  .logo { display:flex; align-items:center; gap:14px; margin-bottom:44px; }
+  .logo .word { display:flex; flex-direction:column; }
+  .logo .er { font-family:'Cormorant Garamond',serif; font-size:24px; letter-spacing:.18em; }
+  .logo .sub { font-size:10px; letter-spacing:.32em; color:var(--sage); text-transform:uppercase; margin-top:4px; }
+  .foot { position:fixed; bottom:26px; left:9vw; right:9vw; display:flex; justify-content:space-between; font-size:12px; color:var(--faint); }
+  .kbd { color:var(--faint); }
+  ul.clean { list-style:none; margin-top:26px; }
+  ul.clean li { padding:13px 0; border-top:1px solid var(--line); font-size:clamp(14px,1.35vw,17px); color:var(--dim); display:flex; gap:14px; align-items:baseline; }
+  ul.clean li b { color:var(--text); }
+  ul.clean .n { color:var(--gold); font-weight:700; font-size:13px; }
+  .big-quote { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,3.4vw,44px); color:var(--text); line-height:1.3; max-width:20em; }
+  .pill { display:inline-block; border:1px solid rgba(200,164,93,.45); color:var(--gold); border-radius:99px; padding:8px 20px; font-size:13px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; margin-bottom:26px; }
+  .progress { position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg,var(--gold),var(--sage)); transition:width .3s; }
+</style>
+</head>
+<body>
+<div class="progress" id="prog"></div>
+
+<!-- 1 · COVER -->
+<section class="slide on">
+  <div class="logo">
+    <svg width="40" height="51" viewBox="0 0 30 38" fill="none"><path d="M4 37.5V15a11 11 0 0 1 22 0v22.5" stroke="rgba(166,195,165,.6)" stroke-width="1"/><g transform="translate(15 0)"><path d="M0 33V13" stroke="#b27a52" stroke-width="1.1" stroke-linecap="round"/><g fill="#b27a52"><path d="M0 0C-3.4-3-3.4-9 0-12 3.4-9 3.4-3 0 0Z" transform="translate(0 13)"/><path d="M0 0C-3.1-2.6-3.1-8 0-11 3.1-8 3.1-2.6 0 0Z" transform="translate(0 18) rotate(36)"/><path d="M0 0C-3.1-2.6-3.1-8 0-11 3.1-8 3.1-2.6 0 0Z" transform="translate(0 18) rotate(-36)"/><path d="M0 0C-2.9-2.4-2.9-7.4 0-10 2.9-7.4 2.9-2.4 0 0Z" transform="translate(0 23) rotate(60)"/><path d="M0 0C-2.9-2.4-2.9-7.4 0-10 2.9-7.4 2.9-2.4 0 0Z" transform="translate(0 23) rotate(-60)"/><path d="M0 0C-2.6-2.1-2.6-6.6 0-9 2.6-6.6 2.6-2.1 0 0Z" transform="translate(0 28) rotate(104)"/><path d="M0 0C-2.6-2.1-2.6-6.6 0-9 2.6-6.6 2.6-2.1 0 0Z" transform="translate(0 28) rotate(-104)"/></g></g></svg>
+    <div class="word"><span class="er">EDENRISE</span><span class="sub">Academy</span></div>
+  </div>
+  <h1>Regenerative living, <em>learned.</em></h1>
+  <div class="hair"></div>
+  <p class="lead">A living learning platform for the people who work the land — built by EdenRise, in English and Portuguese, powered by AI.</p>
+</section>
+
+<!-- 2 · THE PROBLEM -->
+<section class="slide">
+  <div class="eyebrow">The problem</div>
+  <h2>Field teams don't learn from <em>portals.</em></h2>
+  <p class="lead">Corporate LMS platforms were built for desks: logins people forget, SCORM files nobody finishes, dashboards nobody reads. Meanwhile the knowledge that matters — how we treat the soil, the water, and each other — lives in people's heads and leaves when they do.</p>
+  <ul class="clean">
+    <li><span class="n">01</span><span><b>Completion is the metric that matters</b> — and industry averages are dismal.</span></li>
+    <li><span class="n">02</span><span><b>Deskless teams</b> need learning that meets them on a phone, in their language, in minutes.</span></li>
+    <li><span class="n">03</span><span><b>Making courses is the bottleneck</b> — filming is easy; structuring, translating and assessing is weeks of work.</span></li>
+  </ul>
+</section>
+
+<!-- 3 · THE PRODUCT -->
+<section class="slide">
+  <div class="eyebrow">The product</div>
+  <h2>A Netflix-quality academy that <em>behaves like a coach.</em></h2>
+  <div class="cols">
+    <div class="cardx"><div class="ic">🎬</div><b>Cinematic learning</b><span>Filmed lessons, invitation copy for every course, cover art, a real player — learning people *want* to open.</span></div>
+    <div class="cardx"><div class="ic">🌱</div><b>It makes learning stick</b><span>Three takeaways after every module, a 30-second daily question, spaced-repetition refreshers at 3/7/30 days.</span></div>
+    <div class="cardx"><div class="ic">🇵🇹</div><b>Bilingual to the bone</b><span>One tap flips the entire platform — courses, quizzes, AI tutor — between English and Portuguese.</span></div>
+    <div class="cardx"><div class="ic">📱</div><b>Native on any phone</b><span>Installs from the home screen, adapts to the device, voice search, works offline in the field.</span></div>
+    <div class="cardx"><div class="ic">💬</div><b>Community per journey</b><span>Every learning path has its own discussion space — questions, wins, pinned guidance.</span></div>
+    <div class="cardx"><div class="ic">🏅</div><b>Quiet gamification</b><span>XP, nature levels, badges and a leaderboard — encouragement, never noise. Real streaks from real learning days.</span></div>
+  </div>
+</section>
+
+<!-- 4 · THE AI ENGINE -->
+<section class="slide">
+  <div class="eyebrow">The AI engine</div>
+  <h2>Filming the lesson is the <em>only</em> manual step.</h2>
+  <div class="steps">
+    <span class="step"><b>Film</b> a lesson</span><span class="arrow">→</span>
+    <span class="step">AI writes the <b>course</b> — modules, invitation, takeaways</span><span class="arrow">→</span>
+    <span class="step">AI writes the <b>quiz</b> in both languages</span><span class="arrow">→</span>
+    <span class="step"><b>Publish</b> to everyone, instantly</span>
+  </div>
+  <div class="hair"></div>
+  <p class="lead">Plus a personal AI tutor that knows each learner's progress and goal, answers in their language, and writes fresh assessments from our own content — the workflow enterprise platforms charge tens of thousands for, running on our stack.</p>
+</section>
+
+<!-- 5 · THE LOOP -->
+<section class="slide">
+  <div class="eyebrow">Why completion goes up</div>
+  <h2>Learn. Measure. <em>Re-engage.</em></h2>
+  <div class="cols">
+    <div class="cardx"><div class="ic">▶</div><b>Learn</b><span>Watch → three takeaways → quiz on that exact content. The peak-end moment learners remember.</span></div>
+    <div class="cardx"><div class="ic">📊</div><b>Measure</b><span>The Leader's Cockpit shows every member's real progress, streaks and at-risk flags — live, not surveyed.</span></div>
+    <div class="cardx"><div class="ic">🌿</div><b>Re-engage</b><span>Consent-first nudges — in-app, browser, and email that a leader sends with one click. Capped at one a week: encouraging, never spam.</span></div>
+  </div>
+  <div class="hair"></div>
+  <p class="big-quote">"Ana is 68 XP ahead of you — one lesson to catch up."</p>
+</section>
+
+<!-- 6 · PRIVACY -->
+<section class="slide">
+  <div class="eyebrow">Trust, built in</div>
+  <h2>Consent-first. <em>GDPR by design.</em></h2>
+  <ul class="clean">
+    <li><span class="n">01</span><span><b>EU data residency</b> — every learner's data lives in their own record, Firestore (eur3).</span></li>
+    <li><span class="n">02</span><span><b>Explicit consent</b> at signup and per notification channel; every email says "you chose this — switch it off anytime".</span></li>
+    <li><span class="n">03</span><span><b>User rights, self-serve</b> — download-my-data and delete-my-account, one tap on the profile.</span></li>
+    <li><span class="n">04</span><span><b>Progress follows the person</b> — sign in anywhere; devices merge, never clobber.</span></li>
+  </ul>
+</section>
+
+<!-- 7 · BENCHMARK -->
+<section class="slide">
+  <div class="eyebrow">Where we stand</div>
+  <h2>The features of a <em>€50k/yr</em> enterprise stack.</h2>
+  <p class="lead">We benchmarked the 2026 leaders — Docebo, Sana, 360Learning, Axonify. The patterns that define "modern": generative course authoring, AI tutoring, daily reinforcement, engagement loops. EdenRise Academy runs all of them today — plus bilingual depth and voice search most of them don't have — on infrastructure that costs essentially zero.</p>
+  <div class="steps" style="margin-top:30px;">
+    <span class="step">AI authoring ✓</span><span class="step">AI tutor ✓</span><span class="step">Daily reinforcement ✓</span>
+    <span class="step">Nudges ✓</span><span class="step">Community ✓</span><span class="step">Leader analytics ✓</span><span class="step">EN·PT ✓</span>
+  </div>
+</section>
+
+<!-- 8 · ROADMAP -->
+<section class="slide">
+  <div class="eyebrow">Where it goes next</div>
+  <h2>From academy to <em>organisational memory.</em></h2>
+  <ul class="clean">
+    <li><span class="n">Next</span><span><b>Department Digests</b> — AI turns each team's week (from our project tools) into a 2-minute video, published like a course. Every department stays connected to the whole.</span></li>
+    <li><span class="n">Then</span><span><b>AI role-play coaching</b> — practice the hard conversations with an AI teammate, scored against our leadership framework.</span></li>
+    <li><span class="n">Then</span><span><b>WhatsApp learning</b> — nudges and micro-lessons where the team already talks.</span></li>
+    <li><span class="n">Vision</span><span><b>The EdenRise method, productised</b> — a white-label regenerative-learning platform for other communities, resorts and land projects.</span></li>
+  </ul>
+</section>
+
+<!-- 9 · CLOSE -->
+<section class="slide">
+  <div class="pill">Live today</div>
+  <h1>Come see it <em>growing.</em></h1>
+  <div class="hair"></div>
+  <p class="lead">EdenRise Academy — built in weeks, live in two languages, teaching a real team on real land. Let's grow it together.</p>
+</section>
+
+<div class="foot"><span>EdenRise Academy · Partner Deck · 2026</span><span class="kbd">← → to navigate</span></div>
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  let i = 0;
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, j) => s.classList.toggle('on', j === i));
+    document.getElementById('prog').style.width = ((i + 1) / slides.length * 100) + '%';
+  }
+  addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') go(i + 1); if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(i - 1); });
+  addEventListener('click', e => go(e.clientX > innerWidth / 2 ? i + 1 : i - 1));
+  let tx = null;
+  addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+  addEventListener('touchend', e => { if (tx == null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) go(dx < 0 ? i + 1 : i - 1); tx = null; }, { passive: true });
+  go(0);
+</script>
+</body>
+</html>
