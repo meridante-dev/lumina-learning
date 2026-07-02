@@ -1322,7 +1322,6 @@ body {
 .rail { overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
 
 /* bottom tab bar — hidden on desktop */
-.tabbar { display: none; }
 
 @media (max-width: 1024px) {
   /* --- top app bar: solid, separated, safe-area aware --- */
@@ -1339,37 +1338,19 @@ body {
   nav.topnav .nav-right { margin-left: auto; }
 
   /* --- content clears the top bar and the bottom tab bar --- */
-  .page { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+  .page { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
   .page-pad { padding-top: calc(84px + env(safe-area-inset-top)); }
   .hero { padding-top: calc(66px + env(safe-area-inset-top)); }
 
   /* --- bottom tab bar in the thumb zone --- */
-  .tabbar {
-    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 250;
-    background: rgba(13,19,14,.96);
-    -webkit-backdrop-filter: blur(20px) saturate(1.3);
-    backdrop-filter: blur(20px) saturate(1.3);
-    border-top: 1px solid var(--line);
-    padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
-  }
-  .tabbar a, .tabbar button {
-    flex: 1; min-height: 46px;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-    background: none; border: none; cursor: pointer; text-decoration: none;
-    color: var(--text-faint); font-size: 10px; font-weight: 600; font-family: var(--font-body);
-    letter-spacing: .02em; padding: 5px 0; transition: color .2s;
-  }
-  .tabbar svg { width: 22px; height: 22px; }
-  .tabbar a.active, .tabbar button.active { color: var(--accent-2); }
-  .tabbar a:active, .tabbar button:active { transform: scale(.94); }
 
   /* floating AI help stays visible — lifted above the bottom tab bar */
-  .ai-fab { bottom: calc(78px + env(safe-area-inset-bottom) + 12px); right: 18px; }
+  .ai-fab { bottom: calc(20px + env(safe-area-inset-bottom)); right: 18px; }
   .ai-panel { bottom: calc(150px + env(safe-area-inset-bottom)); }
 
   /* tighter, thumb-friendly touches */
   .rail { scroll-padding: 0 16px; }
-  footer { padding-bottom: calc(36px + 78px + env(safe-area-inset-bottom)); }
+  footer { padding-bottom: calc(36px + env(safe-area-inset-bottom)); }
 }
 
 /* iOS notch side padding on very small phones in landscape */
@@ -1409,9 +1390,6 @@ body {
   .rail { padding-left: 40px; padding-right: 40px; scroll-padding: 0 40px; }
   .page-pad { padding-left: 40px; padding-right: 40px; }
   .path-banner, .stats { margin-left: 40px; margin-right: 40px; }
-  .tabbar { padding-left: 8%; padding-right: 8%; }
-  .tabbar a, .tabbar button { font-size: 11px; }
-  .tabbar svg { width: 24px; height: 24px; }
 }
 /* iPad landscape & up → full desktop top-nav (already handled ≥1025) */
 
@@ -1665,3 +1643,61 @@ html:not(.is-admin) [data-admin] { display: none !important; }
 .pin-badge { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); background: rgba(200,164,93,.12); border: 1px solid rgba(200,164,93,.3); border-radius: 6px; padding: 2px 8px; margin-right: 2px; }
 .mention { color: var(--accent); font-weight: 600; }
 .post-act.danger:hover { color: #d98a76; }
+
+/* ================= Elevation pass: hooks, takeaways, voice, device tuning ================= */
+/* course invitation copy */
+.hook-line { display: block; font-family: var(--font-display); font-size: 1.35em; font-style: italic; color: var(--text); margin-bottom: 6px; letter-spacing: .01em; }
+.course-hook { font-family: var(--font-display); font-size: 22px; font-style: italic; color: var(--accent); margin: 6px 0 10px; line-height: 1.3; }
+.card-hook { font-size: 12.5px; color: var(--text-dim); line-height: 1.45; margin: 4px 0 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-style: italic; }
+.chip.choice { color: var(--accent-2); border-color: rgba(166,195,165,.4); }
+
+/* honest AI framing */
+.link-quiet { background: none; border: none; cursor: pointer; font-family: var(--font-body); font-size: 12.5px; color: var(--text-faint); padding: 10px 2px 0; text-align: left; transition: color .15s; }
+.link-quiet:hover { color: var(--accent); text-decoration: underline; }
+
+/* takeaways — the peak-end moment */
+.take-overlay { position: fixed; inset: 0; z-index: 320; display: none; align-items: center; justify-content: center; padding: 22px; background: rgba(10,14,10,.82); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.take-overlay.open { display: flex; }
+.take-card { width: 100%; max-width: 520px; background: linear-gradient(180deg, rgba(26,35,27,.98), rgba(15,21,16,.99)); border: 1px solid rgba(200,164,93,.28); border-radius: 22px; padding: 36px 34px 30px; text-align: left; animation: authIn .5s cubic-bezier(.2,.7,.3,1); box-shadow: 0 40px 120px rgba(0,0,0,.6); }
+.take-spark { font-size: 30px; margin-bottom: 14px; animation: takePop .6s cubic-bezier(.3,1.6,.4,1) both; }
+@keyframes takePop { from { transform: scale(0) rotate(-30deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.take-card h2 { font-family: var(--font-display); font-size: 28px; font-weight: 600; margin: 8px 0 4px; }
+.take-sub { font-size: 13.5px; color: var(--text-faint); margin: 0 0 20px; }
+.take-item { display: flex; gap: 14px; align-items: flex-start; padding: 13px 0; border-top: 1px solid var(--line); opacity: 0; animation: takeIn .5s ease both; }
+@keyframes takeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.take-num { width: 26px; height: 26px; border-radius: 9px; background: rgba(200,164,93,.14); border: 1px solid rgba(200,164,93,.35); color: var(--accent); font-size: 12.5px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; margin-top: 1px; }
+.take-item p { font-size: 14.5px; line-height: 1.6; color: var(--text-dim); margin: 0; }
+.take-card .btn { width: 100%; justify-content: center; margin-top: 22px; }
+
+/* voice search */
+.mic-btn { position: relative; background: none; border: none; cursor: pointer; color: var(--text-dim); display: inline-flex; align-items: center; justify-content: center; padding: 6px; border-radius: 9px; transition: color .15s; }
+.mic-btn svg { width: 18px; height: 18px; }
+.mic-btn:hover { color: var(--text); }
+.mic-btn.listening { color: var(--accent); }
+.mic-btn.listening::after { content: ''; position: absolute; inset: -2px; border-radius: 12px; border: 1.5px solid var(--accent); animation: micPulse 1.2s ease-out infinite; }
+@keyframes micPulse { 0% { opacity: .9; transform: scale(.85); } 100% { opacity: 0; transform: scale(1.35); } }
+.bell.mic-btn { background: var(--surface-2); border: 1px solid var(--line); width: 38px; height: 38px; }
+.nav-mic { display: none; }
+.pal-voice-state { font-size: 11.5px; color: var(--accent); white-space: nowrap; display: none; }
+.pal-voice-state.on { display: inline; animation: pulse 1.4s ease infinite; }
+.palette-input-row { align-items: center; gap: 8px; }
+
+/* device-class adaptation (html classes set by JS: os-*, dev-*) */
+html.dev-tablet .nav-mic, html.dev-phone .nav-mic, html.dev-phone-sm .nav-mic, html.dev-phone-lg .nav-mic { display: inline-flex; }
+html.dev-phone-sm .hero-content h1 { font-size: clamp(30px, 11vw, 40px); }
+html.dev-phone-sm .page-title { font-size: 30px; }
+html.dev-phone-sm .btn { padding: 11px 16px; font-size: 13px; }
+html.dev-phone-sm .hero-actions { gap: 8px; }
+html.dev-phone-lg .hero-content h1 { font-size: clamp(38px, 10.5vw, 52px); }
+html.dev-phone-lg .grid { grid-template-columns: repeat(auto-fill, minmax(46%, 1fr)); }
+html.os-android * { -webkit-tap-highlight-color: transparent; }
+html.os-android .btn, html.os-android .ch-item, html.os-android .mod-pill { min-height: 44px; }
+html.os-android body { text-rendering: optimizeLegibility; }
+@supports (height: 100dvh) {
+  .auth-gate, .take-overlay, .onboard-overlay, .player-overlay { min-height: 100dvh; }
+}
+/* palette comfortable on phones */
+@media (max-width: 640px) {
+  .palette { width: calc(100vw - 24px); margin-top: calc(14px + env(safe-area-inset-top)); }
+  .palette-input-row input { font-size: 16px; } /* prevents iOS zoom-on-focus */
+}

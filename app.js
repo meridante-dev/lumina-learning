@@ -128,7 +128,8 @@ function cardHTML(c, opts = {}) {
   const chips = [];
   if (opts.rank) chips.push(`<span class="chip">#${opts.rank} ${t('this_week_rank')}</span>`);
   if (c.ai) chips.push(`<span class="chip ai">${t('ai_path_chip')}</span>`);
-  if (c.required) chips.push(`<span class="chip">${t('required')}</span>`);
+  if (c.required) chips.push(`<span class="chip">${t('assigned_tag')}</span>`);
+  else if (inPath(c.id)) chips.push(`<span class="chip choice">${t('chosen_tag')}</span>`);
   if (c.teamGoal) chips.push(`<span class="chip">${t('team_goal')}</span>`);
   if (c.isNew) chips.push(`<span class="chip">${t('new')}</span>`);
   if (p && !p.done) chips.push(`<span class="chip">${t('module')} ${(p.mod || 0) + 1}/${c.modules.length}</span>`);
@@ -145,6 +146,7 @@ function cardHTML(c, opts = {}) {
     <div class="thumb t-grad-${c.grad} ${c.poster ? 'has-poster' : ''}"${c.poster ? ` style="background-image:url('${c.poster}')"` : ''}>${c.poster ? '' : `<span class="big-icon">${svgIcon(c.icon)}</span>`}<div class="chip-row">${chips.join('')}</div></div>
     <div class="card-body">
       <h3>${ctitle(c)}</h3>
+      <p class="card-hook">${chook(c)}</p>
       <div class="meta"><span>${tcat(c.cat)}</span><span class="dot"></span><span>${fmtMins(courseMins(c))}</span><span class="dot"></span><span>★ ${c.rating}</span></div>
       ${foot}
     </div>
@@ -215,13 +217,13 @@ function renderHome() {
       <span class="hero-eyebrow"><span class="pulse-dot"></span>${t('featured_eyebrow')}</span>
       <h1>${words.join(' ')} <span class="grad-text">${lastWord}</span></h1>
       <div class="hero-meta">
-        <span class="match">97% ${t('match')}</span><span class="sep"></span>
+        <span class="match">✦ ${t('match_goal')} · ${tgoal(S.goal)}</span><span class="sep"></span>
         <span>${featured.modules.length} ${t('modules')}</span><span class="sep"></span>
         <span>${fmtMins(courseMins(featured))}</span><span class="sep"></span>
         <span>${t(featured.level) || featured.level}</span>
         <span class="badge-hd">${t('certified')}</span>
       </div>
-      <p class="desc">${cdesc(featured)}</p>
+      <p class="desc"><span class="hook-line">${chook(featured)}</span> ${chooksub(featured)}</p>
       <div class="hero-actions">
         <button class="btn btn-primary" data-action="play" data-id="${featured.id}">▶&nbsp; ${fp && fp.mod != null ? `${t('resume_module')} ${fp.mod + 1}` : t('start_learning')}</button>
         <button class="btn btn-glass" data-action="ai-overview" data-id="${featured.id}">✦&nbsp; ${t('ai_overview')}</button>
@@ -231,6 +233,7 @@ function renderHome() {
         <div class="track"><div class="fill" style="width:${coursePct(featured.id)}%"></div></div>
         <span>${coursePct(featured.id)}% ${t('complete')} · ${t('est')} ${fmtMins(Math.round(courseMins(featured) * (100 - coursePct(featured.id)) / 100))} ${t('left')}</span>
       </div>
+      <button class="link-quiet" data-action="ai-missing">${t('missing_ask')}</button>
     </div>
     <aside class="hero-side">
       <h4><span class="ai-spark">✦</span> ${t('your_ai_path')}</h4>
@@ -403,7 +406,8 @@ function renderCourse(id) {
             <span class="sep"></span><span>★ ${c.rating} · ${c.learners} ${t('learners')}</span>
           </div>
           <h1>${ctitle(c)}</h1>
-          <p class="desc">${cdesc(c)}</p>
+          <p class="course-hook">${chook(c)}</p>
+          <p class="desc">${chooksub(c)} ${cdesc(c)}</p>
           <div class="hero-actions">
             <button class="btn btn-primary" data-action="play" data-id="${id}">▶&nbsp; ${isDone(id) ? t('rewatch') : p ? `${t('resume_module')} ${(p.mod || 0) + 1}` : t('start_course')}</button>
             <button class="btn btn-glass" data-action="quiz" data-id="${id}">🎯&nbsp; ${t('quiz_me')}</button>
@@ -1000,7 +1004,7 @@ function render() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
   if ((route === 'analytics' || route === 'admin') && !isAdmin()) { location.hash = '#/home'; return; }
-  $$('.nav-links a, .mobile-drawer a, .tabbar a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
+  $$('.nav-links a, .mobile-drawer a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
   syncChrome();
   if (route !== 'community') teardownCommunity();
   $('#app').innerHTML = route === 'course' ? renderCourse(param) : (routes[route] || renderHome)();
@@ -1027,7 +1031,6 @@ addEventListener('hashchange', render);
 const NAV_KEYS = { '#/home': 'nav_home', '#/library': 'nav_library', '#/paths': 'nav_paths', '#/community': 'nav_community', '#/live': 'nav_live', '#/progress': 'nav_progress', '#/analytics': 'nav_analytics', '#/admin': 'nav_admin' };
 function syncChrome() {
   $$('.nav-links a, .mobile-drawer a').forEach(a => { const k = NAV_KEYS[a.getAttribute('href')]; if (k) a.textContent = t(k); });
-  $$('.tabbar a').forEach(a => { const k = NAV_KEYS[a.getAttribute('href')]; const s = a.querySelector('span'); if (k && s) s.textContent = t(k); });
   const search = $('#navSearch'); if (search) search.innerHTML = `⌕&nbsp; ${t('search_ph')} <kbd>⌘K</kbd>`;
   const org = $('#orgChip'); if (org) org.innerHTML = `<span class="org-dot"></span>${t('org')}`;
   const tn = $('#aiTitle'); if (tn) tn.textContent = t('tutor_name');
@@ -1246,31 +1249,61 @@ videoEl.addEventListener('timeupdate', () => {
 });
 videoEl.addEventListener('ended', () => { if (playing) completeModule(playing.courseId, playing.mod); });
 
+/* "what you take with you" — 3 key learnings shown at each module's end (peak-end moment) */
+function takeawaysFor(c, mod) {
+  const tw = TAKEAWAYS[c.id];
+  const lang = _lang() === 'pt' ? 'pt' : 'en';
+  if (tw && tw[lang] && tw[lang][mod]) return tw[lang][mod];
+  const m = cmods(c)[mod] || ctitle(c);
+  return _lang() === 'pt'
+    ? [`A prática central de “${m}” — comece pequeno e repita até virar hábito.`,
+       `Como isto se liga ao seu trabalho diário na terra e à sua equipa.`,
+       `Uma pergunta para levar: o que mudaria se aplicasse isto amanhã?`]
+    : [`The core practice from “${m}” — start small and repeat it until it's habit.`,
+       `How this connects to your daily work on the land, and to your team.`,
+       `A question to carry: what would change if you applied this tomorrow?`];
+}
+let pendingNext = null; /* what happens after the takeaways card */
+function showTakeaways(c, mod, next) {
+  pendingNext = next;
+  $('#takeList').innerHTML = takeawaysFor(c, mod).map((x, i) =>
+    `<div class="take-item" style="animation-delay:${.15 + i * .18}s"><span class="take-num">${i + 1}</span><p>${x}</p></div>`).join('');
+  $('#takeMod').textContent = `${cmods(c)[mod]} · ${ctitle(c)}`;
+  $('#takeTitle').textContent = t('take_title');
+  $('#takeSub').textContent = t('take_sub');
+  $('#takeGo').textContent = next && next.kind === 'course-done' ? t('take_done') : t('take_continue');
+  $('#takeModal').classList.add('open');
+}
+function resolveTakeaways() {
+  $('#takeModal').classList.remove('open');
+  const n = pendingNext; pendingNext = null;
+  if (!n) return;
+  if (n.kind === 'next') openPlayer(n.courseId, n.mod);
+  else if (n.kind === 'soon') { closePlayer(); setTimeout(() => toast(_lang() === 'pt' ? 'É tudo por agora — o resto da jornada está a caminho 🌱' : 'That’s every lesson available so far — the rest of the journey is coming soon 🌱', '🌱'), 400); }
+  else if (n.kind === 'course-done') {
+    closePlayer();
+    setTimeout(() => { openTutorWith(`${_lang() === 'pt' ? 'Terminou' : 'You finished'} <b>${ctitle(courseById(n.courseId))}</b> — ${_lang() === 'pt' ? 'quer o teste de certificação agora? São 3 perguntas.' : 'want the certification quiz now? It’s 3 questions.'}`, ['Quiz me now', 'Build me a path']); }, 700);
+  }
+}
 function completeModule(courseId, mod) {
   const c = courseById(courseId);
   const p = S.progress[courseId] || (S.progress[courseId] = { mod: 0, pct: 0 });
   if (S.review[courseId] === mod) { delete S.review[courseId]; toast('Review module cleared — nice recovery', '↺'); }
   if (mod >= c.modules.length - 1) {
     p.done = true; p.pct = 100; delete p.mod;
-    save(); closePlayer();
-    toast(`Course complete: ${c.title} 🎉`, '🏆');
+    save();
+    toast(`${_lang() === 'pt' ? 'Curso concluído' : 'Course complete'}: ${ctitle(c)} 🎉`, '🏆');
     awardXp(XP.module + XP.course, 'course complete');
     checkBadges();
-    setTimeout(() => { openTutorWith(`You finished <b>${c.title}</b> — that unlocks the next step on your path. Want the certification quiz now? It's 3 questions.`, ['Quiz me now', 'Build me a path']); }, 700);
+    showTakeaways(c, mod, { kind: 'course-done', courseId });
   } else {
     const nextMedia = modMedia(c, mod + 1);
     p.mod = mod + 1;
     p.pct = Math.round((p.mod / c.modules.length) * 100);
     save();
-    toast(`Module ${mod + 1} complete`, '✓');
     awardXp(XP.module, 'module');
     checkBadges();
-    if (nextMedia && nextMedia.type === 'soon') {
-      closePlayer();
-      setTimeout(() => toast('That’s every lesson available so far — the rest of the Land Team Journey is coming soon 🌱', '🌱'), 500);
-    } else {
-      openPlayer(courseId, mod + 1);
-    }
+    showTakeaways(c, mod, (nextMedia && nextMedia.type === 'soon') ? { kind: 'soon' } : { kind: 'next', courseId, mod: mod + 1 });
   }
 }
 
@@ -1309,15 +1342,17 @@ function drawQuiz() {
     return;
   }
   const q = quiz.qs[quiz.idx];
+  /* aligned with the onboarding design language: progress bar + eyebrow + title */
   box.innerHTML = `
-    <h3>${c.title} · checkpoint</h3>
-    <p class="m-sub">Adaptive quiz — score 70%+ to verify the skill.</p>
-    <div class="q-text">${q.q}</div>
+    <div class="onboard-progress" style="margin-bottom:18px;"><div class="fill" style="width:${Math.round(quiz.idx / quiz.qs.length * 100)}%"></div></div>
+    <div class="ob-eyebrow">${t('quiz_q')} ${quiz.idx + 1} ${t('quiz_of')} ${quiz.qs.length} · ${ctitle(c)}</div>
+    <div class="ob-title" style="font-size:24px;margin-top:6px;">${q.q}</div>
+    <div style="margin-top:18px;">
     ${q.opts.map((o, i) => `<div class="q-opt" data-opt="${i}"><span class="radio"></span><span>${o}</span></div>`).join('')}
+    </div>
     <div class="q-foot">
-      <span class="q-progress">Question ${quiz.idx + 1} of ${quiz.qs.length}</span>
+      <button class="ob-skip" data-action="quiz-close">Exit</button>
       <span style="flex:1"></span>
-      <button class="btn btn-glass btn-sm" data-action="quiz-close">Exit</button>
       <button class="btn btn-primary btn-sm" id="quizNext" disabled style="opacity:.5">Check answer</button>
     </div>`;
   box.querySelectorAll('.q-opt').forEach(el => el.addEventListener('click', () => {
@@ -1355,10 +1390,42 @@ const PALETTE_ACTIONS = [
 ];
 let palIdx = 0;
 function openPalette() { $('#palette').classList.add('open'); const i = $('#palInput'); i.value = ''; drawPalette(''); setTimeout(() => i.focus(), 30); }
+
+/* ---------- voice search (Web Speech API) ---------- */
+let voiceRec = null;
+function startVoiceSearch() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { toast(t('voice_unsupported'), 'ℹ️'); return; }
+  if (voiceRec) { try { voiceRec.stop(); } catch (e) {} voiceRec = null; setVoiceUI(false); return; }
+  const r = voiceRec = new SR();
+  r.lang = _lang() === 'pt' ? 'pt-PT' : 'en-US';
+  r.interimResults = true;
+  r.maxAlternatives = 1;
+  openPalette();
+  setVoiceUI(true);
+  $('#palInput').placeholder = t('voice_hint');
+  r.onresult = e => {
+    const txt = [...e.results].map(x => x[0].transcript).join(' ').trim();
+    $('#palInput').value = txt;
+    drawPalette(txt);
+  };
+  r.onend = () => { voiceRec = null; setVoiceUI(false); };
+  r.onerror = () => { voiceRec = null; setVoiceUI(false); };
+  try { r.start(); } catch (e) { voiceRec = null; setVoiceUI(false); }
+}
+function setVoiceUI(on) {
+  $$('.mic-btn').forEach(b => { b.classList.toggle('listening', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+  const st = $('#palVoiceState'); if (st) { st.textContent = on ? `● ${t('voice_listening')}` : ''; st.classList.toggle('on', on); }
+}
 function closePalette() { $('#palette').classList.remove('open'); }
 function drawPalette(q) {
   q = q.toLowerCase();
-  const courses = CATALOG.filter(c => !q || (c.title + ' ' + c.cat).toLowerCase().includes(q)).slice(0, 6);
+  /* natural-language friendly: strip voice filler, match across title/hook/desc in both languages */
+  q = q.replace(/^(i'?m looking for|i want|find me|show me|procuro|estou à procura de|quero|encontra)\s+/i, '')
+       .replace(/^(something|anything|a course|um curso|algo|alguma coisa)\s+(about|on|sobre|de)?\s*/i, '').trim().toLowerCase();
+  const words = q.split(/\s+/).filter(w => w.length > 2);
+  const hay = c => (c.title + ' ' + c.cat + ' ' + c.desc + ' ' + ctitle(c) + ' ' + cdesc(c) + ' ' + tcat(c.cat) + ' ' + chook(c) + ' ' + chooksub(c)).toLowerCase();
+  const courses = CATALOG.filter(c => !q || hay(c).includes(q) || (words.length && words.some(w => hay(c).includes(w)))).slice(0, 6);
   const acts = PALETTE_ACTIONS.filter(a => !q || a.t.toLowerCase().includes(q));
   palIdx = 0;
   let html = '';
@@ -1598,6 +1665,9 @@ document.addEventListener('click', e => {
       break;
     }
     case 'ai-open': setTutorOpen(true); break;
+    case 'ai-missing': setTutorOpen(true); botSay(t('missing_prompt'), 400); break;
+    case 'take-go': resolveTakeaways(); break;
+    case 'voice-search': startVoiceSearch(); break;
     case 'save-profile': saveProfile(); break;
     case 'notif-toggle': toggleNotif(el.dataset.ch); break;
     case 'comm-channel': commChannel = el.dataset.ch; commThread = null; render(); break;
@@ -1872,6 +1942,23 @@ window.EdenApp = {
   currentState() { return S; }
 };
 if (S.profile) EdenApp.applyProfile(S.profile);
+
+/* ---------- device adaptation — read the device, adapt the shell ----------
+   html gets classes like: os-android os-ios dev-phone-sm dev-phone dev-phone-lg
+   dev-tablet dpr-2 — CSS tunes type scale, hit areas and grids per class. */
+(function deviceClass() {
+  const h = document.documentElement, ua = navigator.userAgent;
+  const os = /android/i.test(ua) ? 'android' : /iphone|ipad|ipod|macintosh.*mobile/i.test(ua) ? 'ios' : 'desktop';
+  h.classList.add('os-' + os);
+  const apply = () => {
+    const w = innerWidth;
+    h.classList.remove('dev-phone-sm', 'dev-phone', 'dev-phone-lg', 'dev-tablet', 'dev-desktop');
+    h.classList.add(w <= 360 ? 'dev-phone-sm' : w <= 400 ? 'dev-phone' : w <= 480 ? 'dev-phone-lg' : w <= 1024 ? 'dev-tablet' : 'dev-desktop');
+  };
+  apply();
+  addEventListener('resize', apply, { passive: true });
+  h.classList.add('dpr-' + Math.min(3, Math.round(devicePixelRatio || 1)));
+})();
 
 /* boot */
 if (S.xp == null) S.xp = seedXp();

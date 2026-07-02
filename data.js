@@ -281,6 +281,79 @@ const DEFAULT_STATE = {
   week: [38, 52, 24, 65, 41, 0, 32]
 };
 
+/* ================= course invitation copy — hook headline + subheadline =================
+   MasterClass-style invites: every course opens with a line that pulls you in. */
+const COURSE_HOOKS = {
+  'land-team-journey': ['One question changes how you show up.', 'Above the line or below it — the mindset the whole journey grows from.'],
+  'land-literacy': ['Learn to read the land like a story.', 'Slope, soil, water, wind — see what the land has been telling you all along.'],
+  'living-soil': ['There’s a universe under your feet.', 'Feed the soil, and everything above it thrives.'],
+  'water-cycles': ['Water writes the landscape.', 'Slow it, sink it, store it — become fluent in the land’s oldest language.'],
+  'agroforestry': ['Plant a forest you can eat.', 'Layers, guilds and time — design abundance that outlives you.'],
+  'regen-design': ['Design the way nature does.', 'Patterns, edges and flows — turn observation into regeneration.'],
+  'capstone-land': ['Your land. Your plan.', 'Bring everything together into a living plan for a real place.'],
+  'composting': ['Turn waste into wealth.', 'The quiet alchemy of decay — master the art of living compost.'],
+  'seed-saving': ['Every seed is a memory.', 'Save, select and pass on the varieties that belong to this land.'],
+  'foraging': ['The Alentejo is already a pantry.', 'What’s edible, medicinal and sacred on the paths you walk every day.'],
+  'native-flora': ['Meet your wild neighbours.', 'Native plants and pollinators — the quiet workforce of a living land.'],
+  'rainwater': ['Catch the rain before it runs.', 'Swales, tanks and soil — harvest the winter for the summer.'],
+  'rewilding': ['Let the wild come home.', 'Habitat, corridors and patience — invite life back in.'],
+  'cork-oak': ['The montado is a masterpiece.', 'Portugal’s cork oak landscape — tending a thousand-year system.'],
+  'natural-building': ['Build with what the land gives.', 'Earth, straw and lime — structures that breathe.'],
+  'herbal': ['Your pharmacy grows outside.', 'Gather, dry and prepare the plants that heal.'],
+  'fire-safety': ['Fire season is coming. Be ready.', 'Defensible space, fuel breaks and calm plans for hot days.'],
+  'ethics': ['Whose land is it, really?', 'Stewardship, rights and responsibility — the ethics beneath everything.'],
+  'seasonal-rhythm': ['Live at the speed of seasons.', 'Plant, harvest, rest — sync your year with the land’s calendar.'],
+  'nature-connection': ['Slow down. Notice everything.', 'The art of attention — the skill every other skill grows from.'],
+  'community-land': ['No one stewards alone.', 'Commons, councils and shared care for shared ground.']
+};
+const COURSE_HOOKS_PT = {
+  'land-team-journey': ['Uma pergunta muda como aparecemos.', 'Acima ou abaixo da linha — a mentalidade de onde cresce toda a jornada.'],
+  'land-literacy': ['Aprenda a ler a terra como uma história.', 'Declive, solo, água, vento — veja o que a terra sempre lhe quis dizer.'],
+  'living-soil': ['Há um universo debaixo dos seus pés.', 'Alimente o solo, e tudo acima dele floresce.'],
+  'water-cycles': ['A água escreve a paisagem.', 'Abrande-a, infiltre-a, guarde-a — fale a língua mais antiga da terra.'],
+  'agroforestry': ['Plante uma floresta que se come.', 'Camadas, consórcios e tempo — desenhe uma abundância que lhe sobrevive.'],
+  'regen-design': ['Desenhe como a natureza desenha.', 'Padrões, margens e fluxos — transforme observação em regeneração.'],
+  'capstone-land': ['A sua terra. O seu plano.', 'Junte tudo num plano vivo para um lugar real.'],
+  'composting': ['Transforme resto em riqueza.', 'A alquimia silenciosa da decomposição — a arte do composto vivo.'],
+  'seed-saving': ['Cada semente é uma memória.', 'Guarde, selecione e transmita as variedades que pertencem a esta terra.'],
+  'foraging': ['O Alentejo já é uma despensa.', 'O que é comestível, medicinal e sagrado nos caminhos que percorre.'],
+  'native-flora': ['Conheça os seus vizinhos selvagens.', 'Flora nativa e polinizadores — a força de trabalho silenciosa da terra.'],
+  'rainwater': ['Apanhe a chuva antes que fuja.', 'Valas, cisternas e solo — colha o inverno para o verão.'],
+  'rewilding': ['Deixe o selvagem voltar a casa.', 'Habitat, corredores e paciência — convide a vida a regressar.'],
+  'cork-oak': ['O montado é uma obra-prima.', 'A paisagem do sobreiro — cuidar de um sistema com mil anos.'],
+  'natural-building': ['Construa com o que a terra dá.', 'Terra, palha e cal — estruturas que respiram.'],
+  'herbal': ['A sua farmácia cresce lá fora.', 'Colha, seque e prepare as plantas que curam.'],
+  'fire-safety': ['A época dos fogos vem aí. Esteja pronto.', 'Espaço defensável, faixas de gestão e planos serenos para dias quentes.'],
+  'ethics': ['De quem é a terra, realmente?', 'Zeladoria, direitos e responsabilidade — a ética por baixo de tudo.'],
+  'seasonal-rhythm': ['Viva ao ritmo das estações.', 'Plantar, colher, descansar — sincronize o ano com o calendário da terra.'],
+  'nature-connection': ['Abrande. Repare em tudo.', 'A arte da atenção — a competência de onde crescem todas as outras.'],
+  'community-land': ['Ninguém cuida sozinho.', 'Baldios, conselhos e cuidado partilhado por um chão partilhado.']
+};
+const chook = c => ((_lang() === 'pt' ? COURSE_HOOKS_PT[c.id] : COURSE_HOOKS[c.id]) || COURSE_HOOKS[c.id] || [ctitle(c), ''])[0];
+const chooksub = c => ((_lang() === 'pt' ? COURSE_HOOKS_PT[c.id] : COURSE_HOOKS[c.id]) || COURSE_HOOKS[c.id] || ['', cdesc(c)])[1];
+
+/* per-module takeaways — "what you take with you" (real content courses) */
+const TAKEAWAYS = {
+  'land-team-journey': {
+    en: [
+      ['Above the line is openness, curiosity and commitment to learning; below it is defensiveness, blame and needing to be right.',
+       'Everyone drifts below the line — the skill is noticing it in the moment, without judgement.',
+       'One honest question shifts everything: “Where am I right now?”'],
+      ['Failure is data — every result is information about the system, not a verdict on you.',
+       'Teams that treat mistakes as feedback learn faster and hide less.',
+       'Ask “what is this teaching us?” before “whose fault is this?”']
+    ],
+    pt: [
+      ['Acima da linha é abertura, curiosidade e vontade de aprender; abaixo é defesa, culpa e precisar de ter razão.',
+       'Todos deslizamos para baixo da linha — a competência é reparar no momento, sem julgamento.',
+       'Uma pergunta honesta muda tudo: “Onde estou agora?”'],
+      ['O fracasso é informação — cada resultado fala do sistema, não é um veredicto sobre si.',
+       'Equipas que tratam erros como feedback aprendem mais depressa e escondem menos.',
+       'Pergunte “o que nos está a ensinar?” antes de “de quem é a culpa?”']
+    ]
+  }
+};
+
 /* ================= email nudge delivery (Google Apps Script webhook) =================
    Deploy apps-script/nudge-mailer.gs as a web app and paste its /exec URL below.
    Empty webhook = delivery off (UI degrades to "not connected" toasts).
@@ -299,6 +372,11 @@ const UI = {
     comm_new:'Start a discussion', comm_title_ph:'Title — ask a question or start a topic', comm_body_ph:'Share your thoughts…', comm_msg_ph:'Write a message…', comm_post:'Post', comm_send:'Send', comm_reply:'Reply', comm_replies:'replies', comm_reply_one:'reply',
     comm_signin_post:'Sign in to join the conversation', comm_empty:'No posts here yet — be the first to start the conversation 🌱', comm_empty_replies:'No replies yet. Be the first.', comm_back:'Back', comm_posted:'Posted to the community', comm_members:'members learning here', comm_just_now:'just now',
     comm_pinned:'Pinned', comm_pin:'Pin', comm_unpin:'Unpin', comm_delete:'Delete', comm_confirm_del:'Delete this post for everyone?', comm_confirm_del_reply:'Delete this reply?', comm_deleted:'Deleted', comm_privacy:'Your progress is stored in your EdenRise account (Firestore, EU) and only you — and EdenRise admins — can see it. Turn nudges on or off anytime in your profile.',
+    take_title:'What you take with you', take_sub:'Three things worth keeping from this module.', take_continue:'Keep going →', take_done:'Finish course 🎉',
+    match_goal:'For your goal', missing_ask:'Not seeing what you need? Tell the AI →', missing_prompt:'Tell me what you’re looking for — a topic, a problem on the land, a skill — and I’ll find it or flag it for the EdenRise team to add. Your path only gets smarter when you push back on it.',
+    assigned_tag:'Assigned', chosen_tag:'Your pick',
+    voice_listening:'Listening…', voice_hint:'Say it naturally — “I’m looking for something about soil”', voice_unsupported:'Voice search needs Safari or Chrome', voice_search:'Voice search',
+    quiz_q:'Question', quiz_of:'of',
     nudge_bell:'Nudges', nudge_empty:'All caught up 🌿 Nothing needs you right now.', nudge_board_t:"Someone's gaining on you", nudge_board_b:'{name} is {xp} XP ahead — finish one lesson to catch up 🌿', nudge_top_t:"You're leading 🌟", nudge_top_b:'Top of the board this week. One lesson keeps you there.',
     nudge_level_t:'Almost a new level', nudge_level_b:'Just {xp} XP from {lvl} — a quiz gets you there.', nudge_streak_t:'{n}-day streak 🔥', nudge_streak_b:'Do one lesson today to keep it alive.', nudge_lesson_t:'Pick up where you left off', nudge_lesson_b:'“{mod}” in {course} is waiting.', nudge_badge_t:'One course from a badge', nudge_badge_b:'Finish one more course to unlock Grove Keeper 🏅', nudge_welcome:'Welcome back, {name} 🌱',
     notif_title:'Notifications', notif_sub:'Choose how EdenRise nudges you back. Opt-in and GDPR-friendly — change anytime.', notif_browser:'Browser notifications', notif_browser_d:'Gentle desktop reminders — works right away.', notif_email:'Email', notif_email_d:'A weekly nudge to your inbox.', notif_whatsapp:'WhatsApp', notif_whatsapp_d:'Streak & leaderboard pings on WhatsApp.', notif_phone_ph:'WhatsApp number (+351…)', notif_soon:'ready once delivery is connected', notif_on:'Notifications on 🌿', notif_blocked:'Your browser blocked notifications — enable them in site settings.',
@@ -340,6 +418,11 @@ const UI = {
     comm_new:'Iniciar uma discussão', comm_title_ph:'Título — faça uma pergunta ou inicie um tema', comm_body_ph:'Partilhe as suas ideias…', comm_msg_ph:'Escreva uma mensagem…', comm_post:'Publicar', comm_send:'Enviar', comm_reply:'Responder', comm_replies:'respostas', comm_reply_one:'resposta',
     comm_signin_post:'Entre para participar na conversa', comm_empty:'Ainda sem publicações — seja o primeiro a começar a conversa 🌱', comm_empty_replies:'Ainda sem respostas. Seja o primeiro.', comm_back:'Voltar', comm_posted:'Publicado na comunidade', comm_members:'a aprender aqui', comm_just_now:'agora',
     comm_pinned:'Fixado', comm_pin:'Fixar', comm_unpin:'Soltar', comm_delete:'Eliminar', comm_confirm_del:'Eliminar esta publicação para todos?', comm_confirm_del_reply:'Eliminar esta resposta?', comm_deleted:'Eliminado', comm_privacy:'O seu progresso é guardado na sua conta EdenRise (Firestore, UE) e só você — e os administradores da EdenRise — o podem ver. Ative ou desative os lembretes no seu perfil quando quiser.',
+    take_title:'O que leva consigo', take_sub:'Três coisas a guardar deste módulo.', take_continue:'Continuar →', take_done:'Terminar curso 🎉',
+    match_goal:'Para o seu objetivo', missing_ask:'Não encontra o que precisa? Diga à IA →', missing_prompt:'Diga-me o que procura — um tema, um problema na terra, uma competência — e eu encontro-o ou sinalizo-o à equipa EdenRise para o criar. O seu percurso só fica mais inteligente quando o desafia.',
+    assigned_tag:'Atribuído', chosen_tag:'Escolha sua',
+    voice_listening:'A ouvir…', voice_hint:'Diga naturalmente — “procuro algo sobre solo”', voice_unsupported:'A pesquisa por voz precisa de Safari ou Chrome', voice_search:'Pesquisa por voz',
+    quiz_q:'Pergunta', quiz_of:'de',
     nudge_bell:'Lembretes', nudge_empty:'Tudo em dia 🌿 Nada precisa de si agora.', nudge_board_t:'Estão a aproximar-se de si', nudge_board_b:'{name} está {xp} XP à frente — termine uma lição para alcançar 🌿', nudge_top_t:'Está na liderança 🌟', nudge_top_b:'No topo do ranking esta semana. Uma lição mantém-no lá.',
     nudge_level_t:'Quase um novo nível', nudge_level_b:'A apenas {xp} XP de {lvl} — um teste leva-o lá.', nudge_streak_t:'Sequência de {n} dias 🔥', nudge_streak_b:'Faça uma lição hoje para a manter viva.', nudge_lesson_t:'Continue de onde parou', nudge_lesson_b:'“{mod}” em {course} está à espera.', nudge_badge_t:'A um curso de um distintivo', nudge_badge_b:'Termine mais um curso para desbloquear Guardião do Bosque 🏅', nudge_welcome:'Bem-vindo de volta, {name} 🌱',
     notif_title:'Notificações', notif_sub:'Escolha como a EdenRise o incentiva a voltar. Opcional e compatível com o RGPD — mude quando quiser.', notif_browser:'Notificações do navegador', notif_browser_d:'Lembretes suaves no ecrã — funcionam já.', notif_email:'Email', notif_email_d:'Um lembrete semanal no seu email.', notif_whatsapp:'WhatsApp', notif_whatsapp_d:'Avisos de sequência e ranking no WhatsApp.', notif_phone_ph:'Número de WhatsApp (+351…)', notif_soon:'pronto assim que o envio for ligado', notif_on:'Notificações ativas 🌿', notif_blocked:'O navegador bloqueou as notificações — ative-as nas definições do site.',
