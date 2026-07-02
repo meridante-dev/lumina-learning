@@ -1434,13 +1434,38 @@ function tutorRespond(text) {
 }
 function scriptedRespond(text) {
   const id = currentCourseId(); const c = id && courseById(id);
-  const t = text.toLowerCase();
-  if (t.includes('quiz')) { botSay(`Loading a checkpoint quiz for <b>${c ? c.title : 'your current course'}</b>… 3 questions, adaptive. Good luck 🎯`); setTimeout(() => openQuiz(id || 'leading-data'), 900); return; }
-  if (t.includes('summar') || t.includes('recap')) { botSay(c ? `<b>${c.title}</b> in one breath: ${c.desc} The modules build toward “${c.modules[c.modules.length - 1]}” — and based on your quiz history, pay extra attention to module ${Math.min(3, c.modules.length)}: “${c.modules[Math.min(2, c.modules.length - 1)]}”.` : `Open a course and I'll summarize it with your gaps in mind.`); return; }
-  if (t.includes('path')) { botSay(`On it — I rebalanced your path toward <b>${S.goal}</b>. Check the Paths tab; I moved your weakest verified skill earlier and trimmed what you've already proven.`); setTimeout(regenPath, 800); return; }
-  if (t.includes('explain') || t.includes('new')) { botSay(c ? `Sure — imagine <b>${c.title.toLowerCase()}</b> as learning to drive: the early modules are mirrors-and-seatbelt basics, the middle ones are real traffic, and the capstone is your driving test. You're ${coursePct(c.id) || 0}% in — solidly “real traffic”. 🚗` : `Happy to — open any course and I'll explain it from zero.`); return; }
-  if (t.includes('due') || t.includes('deadline') || t.includes('assigned')) { botSay(`You have <b>Fire Safety on the Land</b> due in 3 days (8 minutes left in your current module — easy win), and the team's <b>Living by the Seasons</b> is due June 30.`); return; }
-  botSay(c ? `Good question. In the context of <b>${c.title}</b>: ${c.desc.split('.')[0]}. Want me to turn that into flashcards, or queue the related module?` : `I can summarize courses, quiz you, track deadlines, or rebuild your path — try “what's due?” or “quiz me”.`);
+  const t0 = text.toLowerCase();
+  const pt = _lang() === 'pt';
+  const title = c ? ctitle(c) : '';
+  const mods = c ? cmods(c) : [];
+  if (t0.includes('quiz') || t0.includes('teste')) {
+    botSay(pt ? `A preparar um teste de verificação para <b>${c ? title : 'o seu curso atual'}</b>… 3 perguntas, adaptativo. Boa sorte 🎯`
+              : `Loading a checkpoint quiz for <b>${c ? title : 'your current course'}</b>… 3 questions, adaptive. Good luck 🎯`);
+    setTimeout(() => openQuiz(id || 'leading-data'), 900); return;
+  }
+  if (t0.includes('summar') || t0.includes('recap') || t0.includes('resum')) {
+    botSay(c ? (pt ? `<b>${title}</b> num fôlego: ${cdesc(c)} Os módulos constroem até “${mods[mods.length - 1]}” — e pelo seu histórico de testes, dê atenção extra ao módulo ${Math.min(3, mods.length)}: “${mods[Math.min(2, mods.length - 1)]}”.`
+                    : `<b>${title}</b> in one breath: ${cdesc(c)} The modules build toward “${mods[mods.length - 1]}” — and based on your quiz history, pay extra attention to module ${Math.min(3, mods.length)}: “${mods[Math.min(2, mods.length - 1)]}”.`)
+             : (pt ? `Abra um curso e eu resumo-o a pensar nas suas lacunas.` : `Open a course and I'll summarize it with your gaps in mind.`)); return;
+  }
+  if (t0.includes('path') || t0.includes('percurso')) {
+    botSay(pt ? `É para já — reequilibrei o seu percurso rumo a <b>${tgoal(S.goal)}</b>. Veja o separador Percursos; adiantei a sua competência mais fraca e cortei o que já provou saber.`
+              : `On it — I rebalanced your path toward <b>${tgoal(S.goal)}</b>. Check the Paths tab; I moved your weakest verified skill earlier and trimmed what you've already proven.`);
+    setTimeout(regenPath, 800); return;
+  }
+  if (t0.includes('explain') || t0.includes('new') || t0.includes('explica')) {
+    botSay(c ? (pt ? `Claro — imagine <b>${title.toLowerCase()}</b> como aprender a conduzir: os primeiros módulos são espelhos-e-cinto, os do meio são trânsito real, e o final é o exame de condução. Está a ${coursePct(c.id) || 0}% — em pleno “trânsito real”. 🚗`
+                    : `Sure — imagine <b>${title.toLowerCase()}</b> as learning to drive: the early modules are mirrors-and-seatbelt basics, the middle ones are real traffic, and the capstone is your driving test. You're ${coursePct(c.id) || 0}% in — solidly “real traffic”. 🚗`)
+             : (pt ? `Com todo o gosto — abra qualquer curso e explico-o do zero.` : `Happy to — open any course and I'll explain it from zero.`)); return;
+  }
+  if (t0.includes('due') || t0.includes('deadline') || t0.includes('assigned') || t0.includes('prazo')) {
+    botSay(pt ? `Tem <b>Segurança contra Incêndios na Terra</b> com prazo em 3 dias (faltam 8 minutos no módulo atual — vitória fácil), e o <b>Viver com as Estações</b> da equipa tem prazo a 30 de junho.`
+              : `You have <b>Fire Safety on the Land</b> due in 3 days (8 minutes left in your current module — easy win), and the team's <b>Living by the Seasons</b> is due June 30.`); return;
+  }
+  botSay(c ? (pt ? `Boa pergunta. No contexto de <b>${title}</b>: ${cdesc(c).split('.')[0]}. Quer que transforme isto em flashcards, ou que ponha o módulo relacionado na fila?`
+                  : `Good question. In the context of <b>${title}</b>: ${cdesc(c).split('.')[0]}. Want me to turn that into flashcards, or queue the related module?`)
+           : (pt ? `Posso resumir cursos, testá-lo, acompanhar prazos ou reconstruir o seu percurso — experimente “o que tem prazo?” ou “teste-me”.`
+                  : `I can summarize courses, quiz you, track deadlines, or rebuild your path — try “what's due?” or “quiz me”.`));
 }
 
 /* ---------- path regeneration ---------- */

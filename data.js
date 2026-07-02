@@ -320,7 +320,8 @@ const UI = {
     prof_title:'Profile', prof_sub:'Your account and how you appear across EdenRise.', prof_edit:'Edit profile', prof_name:'Full name', prof_username:'Username', prof_role:'What you do', prof_goal:'Your learning goal', prof_save:'Save changes', prof_saved:'Profile saved', prof_via:'via', prof_signout:'Sign out', prof_guest:"You're exploring as a guest. Sign in to save your profile and progress to the cloud.", prof_signin:'Sign in',
     auth_welcome:'Welcome to EdenRise Academy', auth_sub:'Sign in to save your progress across every device.', auth_google:'Continue with Google', auth_or:'or', auth_email:'Email', auth_password:'Password', auth_name:'Your name',
     auth_signin:'Sign in', auth_signup:'Create account', auth_to_signup:'New here? Create an account', auth_to_signin:'Already have an account? Sign in', auth_guest:'Continue as guest',
-    auth_consent:'I agree to EdenRise storing my learning progress to sync it across my devices (GDPR).', auth_consent_req:'Please accept the privacy notice to continue.', auth_working:'One moment…', auth_signout:'Sign out', auth_signed_as:'Signed in as'
+    auth_consent:'I agree to EdenRise storing my learning progress to sync it across my devices (GDPR).', auth_consent_req:'Please accept the privacy notice to continue.', auth_working:'One moment…', auth_signout:'Sign out', auth_signed_as:'Signed in as',
+    auth_forgot:'Forgot password?', auth_reset_sent:'Reset link sent — check your inbox 🌿', auth_reset_need_email:'Type your email above first, then tap "Forgot password?" again.', auth_verify_sent:'Welcome! We sent a verification link to your email 🌿'
   },
   pt: {
     nav_home:'Início', nav_library:'Biblioteca', nav_paths:'Percursos', nav_live:'Ao Vivo', nav_progress:'Progresso', nav_analytics:'Análises', nav_admin:'Admin', nav_community:'Comunidade',
@@ -358,7 +359,8 @@ const UI = {
     prof_title:'Perfil', prof_sub:'A sua conta e como aparece na EdenRise.', prof_edit:'Editar perfil', prof_name:'Nome completo', prof_username:'Nome de utilizador', prof_role:'O que faz', prof_goal:'O seu objetivo de aprendizagem', prof_save:'Guardar alterações', prof_saved:'Perfil guardado', prof_via:'via', prof_signout:'Sair', prof_guest:'Está a explorar como convidado. Entre para guardar o seu perfil e progresso na cloud.', prof_signin:'Entrar',
     auth_welcome:'Bem-vindo à EdenRise Academy', auth_sub:'Entre para guardar o seu progresso em todos os dispositivos.', auth_google:'Continuar com Google', auth_or:'ou', auth_email:'Email', auth_password:'Palavra-passe', auth_name:'O seu nome',
     auth_signin:'Entrar', auth_signup:'Criar conta', auth_to_signup:'Novo por aqui? Criar conta', auth_to_signin:'Já tem conta? Entrar', auth_guest:'Continuar como convidado',
-    auth_consent:'Concordo que a EdenRise guarde o meu progresso para o sincronizar entre dispositivos (RGPD).', auth_consent_req:'Aceite o aviso de privacidade para continuar.', auth_working:'Um momento…', auth_signout:'Sair', auth_signed_as:'Sessão iniciada como'
+    auth_consent:'Concordo que a EdenRise guarde o meu progresso para o sincronizar entre dispositivos (RGPD).', auth_consent_req:'Aceite o aviso de privacidade para continuar.', auth_working:'Um momento…', auth_signout:'Sair', auth_signed_as:'Sessão iniciada como',
+    auth_forgot:'Esqueceu a palavra-passe?', auth_reset_sent:'Link de recuperação enviado — veja o seu email 🌿', auth_reset_need_email:'Escreva o seu email acima e toque de novo em "Esqueceu a palavra-passe?".', auth_verify_sent:'Bem-vindo! Enviámos um link de verificação para o seu email 🌿'
   }
 };
 function t(k){ const l = _lang(); return (UI[l] && UI[l][k] != null ? UI[l][k] : UI.en[k]) ?? k; }

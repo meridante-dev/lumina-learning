@@ -6,7 +6,8 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/fireba
 import {
   getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence,
   GoogleAuthProvider, signInWithPopup,
-  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile,
+  sendPasswordResetEmail, sendEmailVerification
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {
   getFirestore, doc, getDoc, getDocs, setDoc, serverTimestamp,
@@ -221,6 +222,7 @@ function translateGate() {
   const pw = $('#authPass'); if (pw) pw.placeholder = T('auth_password');
   const nm = $('#authName'); if (nm) nm.placeholder = T('auth_name');
   const guest = $('#authGuest'); if (guest) guest.textContent = T('auth_guest');
+  const forgot = $('#authForgot'); if (forgot) forgot.textContent = T('auth_forgot');
   refreshMode();
 }
 
@@ -251,6 +253,7 @@ function wire() {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         if (name) await updateProfile(cred.user, { displayName: name });
         await setDoc(doc(db, 'users', cred.user.uid), { consent: true, consentAt: serverTimestamp() }, { merge: true });
+        sendEmailVerification(cred.user).then(() => { if (window.toast) window.toast(T('auth_verify_sent'), '📬'); }).catch(() => {});
         // onAuthStateChanged already fired; refresh profile name
         if (window.EdenApp) window.EdenApp.applyProfile({ name: name || email.split('@')[0], email });
       } else {
@@ -260,6 +263,14 @@ function wire() {
   });
 
   $('#authToggle').addEventListener('click', () => { signupMode = !signupMode; refreshMode(); });
+  $('#authForgot').addEventListener('click', async () => {
+    showErr('');
+    const email = $('#authEmail').value.trim();
+    if (!email) { showErr(T('auth_reset_need_email')); return; }
+    setBusy(true);
+    try { await sendPasswordResetEmail(auth, email); setBusy(false); showErr(''); if (window.toast) window.toast(T('auth_reset_sent'), '📬'); }
+    catch (e) { setBusy(false); showErr(friendly(e.code)); }
+  });
   $('#authGuest').addEventListener('click', () => { localStorage.setItem(MODE, 'guest'); hideGate(); if (window.EdenApp) window.EdenApp.maybeOnboard(); });
 
   // language buttons anywhere (incl. the gate) re-translate the gate
