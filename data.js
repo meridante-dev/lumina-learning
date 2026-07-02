@@ -286,7 +286,7 @@ const DEFAULT_STATE = {
    Empty webhook = delivery off (UI degrades to "not connected" toasts).
    Sends are consent-gated client-side AND rate-capped server-side (1/person/week). */
 const MAIL = {
-  webhook: '',
+  webhook: 'https://script.google.com/macros/s/AKfycbzb7uQRPEGwiPtUKeMA8ww1AbXqmK3dFUfd7xIWajFnGf2Tcocyfj44d-Rcb06gH428/exec',
   secret: '67763609855821fded169452'
 };
 
