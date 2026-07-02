@@ -19,6 +19,12 @@ service cloud.firestore {
       allow write: if request.auth != null && request.auth.uid == uid;
     }
 
+    // Team-published courses (AI Course Studio) — everyone reads, only admins publish.
+    match /courses/{courseId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
     // Community forum — everyone reads; signed-in users post; authors (or admins)
     // edit/delete; any signed-in user may react/bump.
     match /forum_posts/{postId} {

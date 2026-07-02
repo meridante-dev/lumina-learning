@@ -122,6 +122,19 @@ window.EdenCloud = {
     const u = auth.currentUser; if (!u || !name) return;
     try { await updateProfile(u, { displayName: name }); } catch (e) {}
   },
+  /* team-published courses (AI Course Studio) — readable by everyone */
+  async saveCourse(course) {
+    const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
+    await setDoc(doc(db, 'courses', course.id), { course, authorUid: u.uid, authorEmail: u.email || '', createdAt: serverTimestamp() });
+  },
+  async deleteCourse(id) {
+    if (!auth.currentUser) return;
+    await deleteDoc(doc(db, 'courses', id));
+  },
+  async listCourses() {
+    const snap = await getDocs(collection(db, 'courses'));
+    return snap.docs.map(d => d.data().course).filter(Boolean);
+  },
   // admin-only (enforced by Firestore rules): read every member's profile + state
   async listMembers() {
     const snap = await getDocs(collection(db, 'users'));
@@ -207,6 +220,13 @@ window.EdenForum = {
   uid() { const u = auth.currentUser; return u ? u.uid : null; }
 };
 function ms(ts) { return ts && typeof ts.toMillis === 'function' ? ts.toMillis() : (ts && ts.seconds ? ts.seconds * 1000 : 0); }
+
+/* load team-published courses for everyone (guests included) */
+(function loadCustomCourses(tries) {
+  window.EdenCloud.listCourses().then(list => {
+    if (list.length && window.EdenApp) window.EdenApp.applyCustomCourses(list);
+  }).catch(() => { if ((tries || 0) < 3) setTimeout(() => loadCustomCourses((tries || 0) + 1), 4000); });
+})(0);
 
 /* ---------- auth state ---------- */
 onAuthStateChanged(auth, async user => {

@@ -241,6 +241,7 @@ function renderHome() {
     </aside>
   </header>
   <div class="hero-divider" aria-hidden="true"></div>
+  ${dailyDropHTML()}
   ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
   ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
   <section class="path-banner">
@@ -554,6 +555,92 @@ function exportMembersCSV() {
   toast('Member CSV exported', '⤓');
 }
 
+/* ================= AI Course Studio — transcript + link → published course ================= */
+let studioDraft = null;
+function parseVideoLink(url) {
+  if (!url) return null;
+  let m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/); if (m) return { type: 'vimeo', id: m[1] };
+  m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{6,})/); if (m) return { type: 'youtube', id: m[1] };
+  if (/\.mp4(\?|$)/.test(url)) return { type: 'mp4', src: url };
+  return null;
+}
+const slugify = s => (s || 'course').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'course';
+async function generateCourseDraft(title, text) {
+  const cats = [...new Set(CATALOG.filter(x => !x.custom).map(x => x.cat))];
+  const icons = Object.keys(ICONS).join(', ');
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({
+      model: S.aiModel || 'claude-opus-4-8', max_tokens: 4000,
+      system: `You are the course architect for EdenRise Academy (regenerative-living school, Baixo Alentejo, Portugal; warm, grounded, zero corporate jargon). From lesson material, produce ONE course as raw JSON only (no fences): {"title":str,"title_pt":str,"hook":str,"hook_pt":str,"hookSub":str,"hookSub_pt":str,"desc":str(1-2 sentences),"desc_pt":str,"cat":one of [${cats.join(' | ')}],"icon":one of [${icons}],"modules":[3-5 str],"modules_pt":[same length],"takeaways":[per module, array of exactly 3 str],"takeaways_pt":[same shape],"quiz":[3 of {"q":str,"opts":[4 str],"a":0-3}],"quiz_pt":[same shape]}. Portuguese = European Portuguese. Hooks are short invitations (MasterClass style). Takeaways are what a learner keeps. Quiz tests understanding of THIS material.`,
+      messages: [{ role: 'user', content: `Working title: ${title || '(none)'}\n\nLesson material:\n${text.slice(0, 14000)}` }]
+    })
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  const raw = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+  const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
+  if (!j.title || !Array.isArray(j.modules) || !Array.isArray(j.quiz)) throw new Error('bad shape');
+  return j;
+}
+function draftToCourse(j, media) {
+  const id = 'team-' + slugify(j.title);
+  return {
+    id, title: j.title, cat: cats0(j.cat), grad: 1 + (id.length % 8), icon: ICONS[j.icon] ? j.icon : 'leaf',
+    level: 'All levels', rating: 5.0, learners: 0, isNew: true, custom: true,
+    desc: j.desc || '', hook: j.hook || '', hookSub: j.hookSub || '',
+    modules: j.modules,
+    moduleMedia: media ? j.modules.map(() => media) : undefined,
+    takeaways: { en: j.takeaways || [], pt: j.takeaways_pt || [] },
+    quiz: { en: j.quiz, pt: j.quiz_pt || j.quiz },
+    pt: { title: j.title_pt || j.title, desc: j.desc_pt || j.desc, modules: j.modules_pt || j.modules, hook: j.hook_pt || j.hook, hookSub: j.hookSub_pt || j.hookSub }
+  };
+  function cats0(c) { return [...new Set(CATALOG.map(x => x.cat))].includes(c) ? c : 'Stewardship'; }
+}
+function studioDraftHTML(c) {
+  return `<div class="studio-draft">
+    <div class="ob-eyebrow">${t('studio_draft')}</div>
+    <h3 style="font-family:var(--font-display);font-size:22px;margin:8px 0 2px;">${esc(ctitle(c))}</h3>
+    <p class="course-hook" style="font-size:17px;margin:4px 0 6px;">${esc(chook(c))}</p>
+    <p class="m-sub">${esc(chooksub(c))} ${esc(cdesc(c))}</p>
+    <div style="margin:12px 0;font-size:13px;color:var(--text-dim);">${cmods(c).map((m, i) => `<div style="padding:6px 0;border-top:1px solid var(--line);">${i + 1}. ${esc(m)}</div>`).join('')}</div>
+    <p class="m-sub" style="color:var(--text-faint);">${tcat(c.cat)} · ${c.modules.length} ${t('modules')} · ${(c.quiz.en || []).length} quiz · EN + PT</p>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button class="btn btn-primary btn-sm" data-action="studio-publish">${t('studio_publish')}</button>
+      <button class="btn btn-glass btn-sm" data-action="studio-discard">${t('studio_discard')}</button>
+    </div>
+  </div>`;
+}
+async function studioGenerate() {
+  if (!S.apiKey) { toast(t('studio_need_key'), 'ℹ️'); return; }
+  const text = ($('#stText').value || '').trim();
+  if (text.length < 40) { $('#stText').focus(); return; }
+  const media = parseVideoLink(($('#stVideo').value || '').trim());
+  const btn = $('#stGen'); btn.disabled = true;
+  $('#stStatus').innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:20px;height:20px;"></span> ${t('studio_generating')}</div>`;
+  try {
+    const j = await generateCourseDraft(($('#stTitle').value || '').trim(), text);
+    studioDraft = draftToCourse(j, media);
+    $('#stStatus').innerHTML = '';
+    $('#stDraft').innerHTML = studioDraftHTML(studioDraft);
+  } catch (e) {
+    $('#stStatus').innerHTML = `<div class="auth-err on" style="margin-top:10px;">${t('studio_failed')}</div>`;
+  }
+  btn.disabled = false;
+}
+function studioPublish() {
+  if (!studioDraft) return;
+  if (!(window.EdenCloud && EdenCloud.saveCourse)) { toast(_lang() === 'pt' ? 'Precisa de estar online e com sessão iniciada' : 'You need to be online and signed in', '⚠️'); return; }
+  const c = studioDraft;
+  EdenCloud.saveCourse(c).then(() => {
+    studioDraft = null;
+    EdenApp.applyCustomCourses(null, c);   /* optimistic add */
+    toast(t('studio_published'), '🌿');
+    render();
+  }).catch(() => toast(t('studio_failed'), '⚠️'));
+}
+
 /* ---------- admin console ---------- */
 let uploadedDrafts = [];
 function renderAdmin() {
@@ -589,12 +676,23 @@ function renderAdmin() {
     </div>
 
     <div class="admin-section">
-      <h2>Content manager</h2>
-      <p class="sect-sub">Drop a video — EdenRise AI transcribes it, splits it into modules, and drafts a quiz.</p>
-      <div class="dropzone" data-action="upload" id="dropzone">
-        <div class="dz-icon">📤</div>
-        <div class="dz-t">Drop video, slides or SCORM — or click to simulate an upload</div>
-        <div class="dz-s">MP4, MOV, PDF, PPTX · AI builds modules, transcript &amp; quiz automatically</div>
+      <h2>${t('studio_title')}</h2>
+      <p class="sect-sub">${t('studio_sub')}</p>
+      <div class="studio">
+        <input class="auth-input" id="stTitle" placeholder="${t('studio_title_ph')}">
+        <input class="auth-input" id="stVideo" placeholder="${t('studio_video_ph')}">
+        <textarea class="comm-input" id="stText" rows="5" placeholder="${t('studio_text_ph')}"></textarea>
+        <button class="btn btn-primary" data-action="studio-gen" id="stGen">${t('studio_gen')}</button>
+        <div id="stStatus"></div>
+        <div id="stDraft"></div>
+      </div>
+      <div class="admin-section" style="margin-top:8px;padding-top:0;border:none;">
+        <h2 style="font-size:17px;">${t('studio_custom')}</h2>
+        <div id="customList">${CATALOG.filter(x => x.custom).map(x => `
+          <div class="content-row"><span class="ci t-grad-${x.grad}">${svgIcon(x.icon)}</span>
+          <div class="ct"><b>${ctitle(x)}</b><span>${tcat(x.cat)} · ${x.modules.length} ${t('modules')}</span></div>
+          <button class="btn btn-glass btn-sm" data-action="studio-del" data-id="${x.id}">✕ ${t('comm_delete')}</button></div>`).join('') || `<p class="empty-note" style="text-align:left;padding:8px 0;">—</p>`}
+        </div>
       </div>
       ${content}
     </div>
@@ -688,6 +786,58 @@ function renderProgress() {
       ${pathStepperHTML()}
     </div>
   </div>${footerHTML()}</div>`;
+}
+
+/* ---------- real streak — counts actual learning days ---------- */
+function bumpStreak() {
+  const today = new Date().toDateString();
+  if (S.lastActiveDay === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  S.streak = (S.lastActiveDay === yesterday) ? (S.streak || 0) + 1 : 1;
+  S.lastActiveDay = today;
+  checkBadges(true);
+}
+
+/* ---------- daily drop — one 30-second question a day (Axonify pattern) ---------- */
+function courseQuizFor(c) {
+  const lang = _lang() === 'pt' ? 'pt' : 'en';
+  if (COURSE_QUIZ[c.id]) return COURSE_QUIZ[c.id][lang] || COURSE_QUIZ[c.id].en;
+  if (c.quiz) return (c.quiz[lang] || c.quiz.en || c.quiz);
+  return QUIZ_BANK[c.cat] || QUIZ_BANK._default;
+}
+function dailyQuestion() {
+  const dayKey = new Date().toISOString().slice(0, 10);
+  if (S.daily && S.daily.date === dayKey) return { answered: true, correct: S.daily.correct, dayKey };
+  const ids = [...new Set([...(S.path || []), ...Object.keys(S.progress || {})])]
+    .filter(id => courseById(id) && coursePct(id) > 0);
+  if (!ids.length) return null;
+  const seed = parseInt(dayKey.replace(/-/g, ''), 10);
+  const c = courseById(ids[seed % ids.length]);
+  const qs = courseQuizFor(c);
+  return { c, q: qs[seed % qs.length], dayKey };
+}
+function dailyDropHTML() {
+  const d = dailyQuestion();
+  if (!d) return '';
+  if (d.answered) return `<section class="daily done"><div class="daily-head"><span class="daily-ic">🌱</span><div><b>${t('daily_title')}</b><span class="daily-sub">${d.correct ? t('daily_correct') : t('daily_wrong')} · ${t('daily_tomorrow')}</span></div><span class="daily-streak">🔥 ${S.streak || 0} ${t('daily_streak')}</span></div></section>`;
+  return `<section class="daily" id="dailyDrop">
+    <div class="daily-head"><span class="daily-ic">🌱</span><div><b>${t('daily_title')}</b><span class="daily-sub">${t('daily_sub')} · ${t('daily_from')} ${ctitle(d.c)}</span></div><span class="daily-streak">🔥 ${S.streak || 0} ${t('daily_streak')}</span></div>
+    <div class="daily-q">${d.q.q}</div>
+    <div class="daily-opts">${d.q.opts.map((o, i) => `<button class="daily-opt" data-action="daily-answer" data-opt="${i}" data-a="${d.q.a}">${o}</button>`).join('')}</div>
+  </section>`;
+}
+function answerDaily(el) {
+  const chosen = +el.dataset.opt, correct = chosen === +el.dataset.a;
+  S.daily = { date: new Date().toISOString().slice(0, 10), correct };
+  bumpStreak();
+  if (correct) awardXp(10, 'daily question');
+  save();
+  const box = $('#dailyDrop');
+  if (box) {
+    box.querySelectorAll('.daily-opt').forEach(b => { b.disabled = true; if (+b.dataset.opt === +b.dataset.a) b.classList.add('right'); });
+    el.classList.add(correct ? 'right' : 'wrong');
+    setTimeout(() => { const wrap = document.createElement('div'); wrap.innerHTML = dailyDropHTML(); const el2 = $('#dailyDrop'); if (el2 && wrap.firstElementChild) el2.replaceWith(wrap.firstElementChild); }, 1400);
+  }
 }
 
 /* ================= Nudges & notifications ================= */
@@ -1153,7 +1303,7 @@ videoEl.addEventListener('error', () => {
   if (!playerEl.classList.contains('open')) return;
   if (playing) {
     const media = modMedia(courseById(playing.courseId), playing.mod);
-    if (media && (media.type === 'vimeo' || media.type === 'soon')) return; /* not using the <video> element */
+    if (media && (media.type === 'vimeo' || media.type === 'youtube' || media.type === 'soon')) return; /* not using the <video> element */
     startSim(courseById(playing.courseId), playing.mod);
   } else startSim({ icon: '🔴', modules: [$('#playerTitle').textContent] }, 0);
 });
@@ -1179,6 +1329,10 @@ function openPlayer(courseId, mod) {
     soonStage.classList.add('on');
     $('#soonTitle').textContent = t('coming_soon');
     const ss = $('#soonStage .soon-sub'); if (ss) ss.textContent = t('soon_sub');
+  } else if (media && media.type === 'youtube') {
+    videoEl.style.display = 'none';
+    vimeoWrap.classList.add('on');
+    vimeoWrap.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${media.id}?autoplay=1&rel=0" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${cmods(c)[mod]}"></iframe>`;
   } else if (media && media.type === 'vimeo') {
     videoEl.style.display = 'none';
     vimeoWrap.classList.add('on');
@@ -1259,7 +1413,7 @@ videoEl.addEventListener('ended', () => { if (playing) completeModule(playing.co
 
 /* "what you take with you" — 3 key learnings shown at each module's end (peak-end moment) */
 function takeawaysFor(c, mod) {
-  const tw = TAKEAWAYS[c.id];
+  const tw = TAKEAWAYS[c.id] || c.takeaways;
   const lang = _lang() === 'pt' ? 'pt' : 'en';
   if (tw && tw[lang] && tw[lang][mod]) return tw[lang][mod];
   const m = cmods(c)[mod] || ctitle(c);
@@ -1300,6 +1454,7 @@ function completeModule(courseId, mod) {
   const c = courseById(courseId);
   const p = S.progress[courseId] || (S.progress[courseId] = { mod: 0, pct: 0 });
   if (S.review[courseId] === mod) { delete S.review[courseId]; toast('Review module cleared — nice recovery', '↺'); }
+  bumpStreak();
   if (mod >= c.modules.length - 1) {
     p.done = true; p.pct = 100; delete p.mod;
     p.doneAt = p.doneAt || Date.now();   /* spaced-repetition anchor */
@@ -1353,8 +1508,8 @@ function startQuiz(c, qs, ai) {
 function openQuiz(courseId) {
   const c = courseById(courseId) || courseById('leading-data');
   const lang = _lang() === 'pt' ? 'pt' : 'en';
-  const cq = COURSE_QUIZ[c.id];
-  if (cq) { startQuiz(c, cq[lang] || cq.en, false); return; }        /* real content */
+  const cq = COURSE_QUIZ[c.id] || c.quiz;
+  if (cq) { startQuiz(c, cq[lang] || cq.en || cq, false); return; }   /* real content (incl. studio courses) */
   const fallback = () => startQuiz(c, QUIZ_BANK[c.cat] || QUIZ_BANK._default, false);
   if (S.apiKey) {                                                     /* AI writes from the course */
     $('#quizModal').classList.add('open');
@@ -1716,6 +1871,18 @@ document.addEventListener('click', e => {
     case 'ai-missing': setTutorOpen(true); botSay(t('missing_prompt'), 400); break;
     case 'take-go': resolveTakeaways(); break;
     case 'take-quiz': resolveTakeaways(true); break;
+    case 'daily-answer': answerDaily(el); break;
+    case 'studio-gen': studioGenerate(); break;
+    case 'studio-publish': studioPublish(); break;
+    case 'studio-discard': studioDraft = null; $('#stDraft').innerHTML = ''; break;
+    case 'studio-del': {
+      if (!confirm(t('studio_delete_confirm'))) break;
+      if (window.EdenCloud && EdenCloud.deleteCourse) EdenCloud.deleteCourse(id).then(() => {
+        const i = CATALOG.findIndex(x => x.id === id && x.custom); if (i >= 0) CATALOG.splice(i, 1);
+        toast(t('comm_deleted'), '－'); render();
+      });
+      break;
+    }
     case 'voice-search': startVoiceSearch(); break;
     case 'save-profile': saveProfile(); break;
     case 'notif-toggle': toggleNotif(el.dataset.ch); break;
@@ -1988,7 +2155,17 @@ window.EdenApp = {
     S.profile = Object.assign({}, S.profile, p); save();   /* merge — keep username/bio set during onboarding */
     const av = $('#avatarBtn'); if (av) { av.textContent = userInitials(); av.title = displayName(); }
   },
-  currentState() { return S; }
+  currentState() { return S; },
+  /* merge team-published (studio) courses into the catalog */
+  applyCustomCourses(list, single) {
+    if (single) { if (!CATALOG.some(x => x.id === single.id)) CATALOG.push(single); }
+    if (Array.isArray(list)) {
+      for (let i = CATALOG.length - 1; i >= 0; i--) if (CATALOG[i].custom) CATALOG.splice(i, 1);
+      list.forEach(c => CATALOG.push(c));
+    }
+    CATALOG.forEach(c => { if (!c.poster && !c.custom) c.poster = 'media/covers/' + c.id + '.jpg'; });
+    render();
+  }
 };
 if (S.profile) EdenApp.applyProfile(S.profile);
 
