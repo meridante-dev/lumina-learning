@@ -32,7 +32,7 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;   /* clips without becoming a scroll container (wheel-safe) */
 }
 ::selection { background: var(--accent); color: #fff; }
 button { font-family: var(--font-body); }
@@ -1310,10 +1310,9 @@ footer .links button:hover { color: var(--text); }
 
 /* ================= NATIVE MOBILE SHELL ================= */
 /* lock horizontal drift + iOS feel (applies everywhere) */
-html { overflow-x: hidden; }
+html { overflow-x: clip; overscroll-behavior-y: none; }
 body {
-  overflow-x: hidden;
-  overscroll-behavior: none;
+  overflow-x: clip;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
   position: relative;

@@ -10,7 +10,8 @@ import {
   sendPasswordResetEmail, sendEmailVerification, deleteUser
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
 import {
-  getFirestore, doc, getDoc, getDocs, setDoc, serverTimestamp,
+  getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  doc, getDoc, getDocs, setDoc, serverTimestamp,
   collection, addDoc, updateDoc, deleteDoc, onSnapshot, query, where,
   increment, arrayUnion, arrayRemove
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
@@ -27,7 +28,10 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+let db;
+try {   /* IndexedDB cache: repeat visits read state instantly, offline included */
+  db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+} catch (e) { db = getFirestore(app); }
 setPersistence(auth, browserLocalPersistence).catch(() => {});
 
 const KEY = 'edenrise-state-v2';
@@ -72,30 +76,7 @@ function mergeStates(cloud, local) {
   if (local.profile && local.profile.notify) m.profile.notify = Object.assign({}, local.profile.notify, (cloud.profile || {}).notify);
   return m;
 }
-async function pullState(uid) {
-  const snap = await getDoc(doc(db, 'users', uid));
-  if (snap.exists() && snap.data().state) {
-    localStorage.setItem(KEY, JSON.stringify(mergeStates(snap.data().state, localState())));
-    return true;
-  }
-  return false;
-}
 let pushTimer = null;
-async function ensureProfile(user) {
-  const ref = doc(db, 'users', user.uid);
-  const snap = await getDoc(ref);
-  const profile = {
-    uid: user.uid,
-    email: user.email || '',
-    name: user.displayName || (user.email ? user.email.split('@')[0] : 'Learner'),
-    photo: user.photoURL || '',
-    provider: (user.providerData[0] && user.providerData[0].providerId) || 'password'
-  };
-  const payload = { profile, updatedAt: serverTimestamp() };
-  if (!snap.exists()) { payload.state = localState(); payload.createdAt = serverTimestamp(); }  // seed with their demo state
-  await setDoc(ref, payload, { merge: true });
-  return profile;
-}
 function stampProfileLocal(profile) {
   const s = localState(); s.profile = profile; localStorage.setItem(KEY, JSON.stringify(s));
 }
@@ -266,17 +247,29 @@ async function loadOrgConfig() {
 onAuthStateChanged(auth, async user => {
   if (user) {
     localStorage.setItem(MODE, 'firebase');
-    setBusy(true);
+    /* enter IMMEDIATELY — sync happens behind the app, not in front of the user */
+    hideGate(); setBusy(false); showErr('');
+    const profile = {
+      uid: user.uid, email: user.email || '',
+      name: user.displayName || (user.email ? user.email.split('@')[0] : 'Learner'),
+      photo: user.photoURL || '',
+      provider: (user.providerData[0] && user.providerData[0].providerId) || 'password'
+    };
+    stampProfileLocal(profile);
+    if (window.EdenApp) window.EdenApp.applyProfile(profile);
     try {
-      const profile = await ensureProfile(user);
-      await pullState(user.uid);
-      loadOrgConfig();
-      stampProfileLocal(profile);
+      /* ONE read for state+profile, org config in parallel (both instant from cache on repeat visits) */
+      const [snap] = await Promise.all([getDoc(doc(db, 'users', user.uid)), loadOrgConfig()]);
+      const data = snap.exists() ? snap.data() : null;
+      if (data && data.state) localStorage.setItem(KEY, JSON.stringify(mergeStates(data.state, localState())));
       if (window.EdenApp) { window.EdenApp.reloadState(); window.EdenApp.applyProfile(profile); }
+      /* the profile write is bookkeeping — deferred so it never blocks entry */
+      setTimeout(() => {
+        const payload = { profile, updatedAt: serverTimestamp() };
+        if (!data) { payload.state = localState(); payload.createdAt = serverTimestamp(); }
+        setDoc(doc(db, 'users', user.uid), payload, { merge: true }).catch(() => {});
+      }, 400);
     } catch (e) { console.error('[auth] sync failed', e); }
-    setBusy(false);
-    showErr('');
-    hideGate();
   } else {
     if (localStorage.getItem(MODE) === 'guest') { hideGate(); if (window.EdenApp) window.EdenApp.maybeOnboard(); }
     else showGate();
