@@ -82,7 +82,10 @@ function seedXp() {
   xp += (S.quizzesPassed || 0) * XP.quiz;
   return xp;
 }
+const weekKey = () => { const d = new Date(); const day = (d.getDay() + 6) % 7; d.setDate(d.getDate() - day); return d.toISOString().slice(0, 10); };
+function touchWeekXp() { const wk = weekKey(); if (S.weekStart !== wk) { S.weekStart = wk; S.weekBaseXp = S.xp || 0; } }
 function awardXp(n, reason) {
+  touchWeekXp();
   const before = levelFor(S.xp).idx;
   S.xp += n;
   const after = levelFor(S.xp).idx;
@@ -123,10 +126,15 @@ function checkBadges(silent) {
 let boardCache = null;   /* real members, from the leaderboard collection */
 let boardScope = 'all';
 function leaderboard() {
-  const meRow = { uid: myUid(), name: displayName(), initials: userInitials(), grad: 3, xp: S.xp || 0, streak: S.streak || 0, me: true, dept: (S.profile && S.profile.dept) || null };
+  touchWeekXp();
+  const wk = weekKey();
+  const weekly = r => (r.weekStart === wk ? Math.max(0, (r.xp || 0) - (r.weekBaseXp || 0)) : 0);
+  const meRow = { uid: myUid(), name: displayName(), initials: userInitials(), grad: 3, xp: S.xp || 0, streak: S.streak || 0, me: true, dept: (S.profile && S.profile.dept) || null, weekStart: S.weekStart, weekBaseXp: S.weekBaseXp || 0 };
   let others = (boardCache || []).filter(r => r.uid && r.uid !== meRow.uid).map(r => Object.assign({ grad: 3 }, r, { me: false }));
   if (boardScope === 'dept' && meRow.dept) others = others.filter(r => r.dept === meRow.dept);
-  return [meRow, ...others].sort((a, b) => b.xp - a.xp);
+  let rows = [meRow, ...others];
+  if (boardScope === 'week') rows = rows.map(r => Object.assign({}, r, { xp: weekly(r) }));
+  return rows.sort((a, b) => b.xp - a.xp);
 }
 function initBoard(retries) {
   if (!(window.EdenCloud && EdenCloud.listBoard)) {
@@ -272,6 +280,7 @@ function renderHome() {
   ${dailyDropHTML()}
   ${assignmentCardsHTML()}
   ${askBarHTML()}
+  ${digestsSectionHTML()}
   ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
   ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
   <section class="path-banner">
@@ -565,7 +574,7 @@ function memberRow(s) {
 }
 function paintCockpit() {
   if (!adminMembers) return;
-  const sums = adminMembers.map(memberSummary).sort((a, b) => (a.atRisk === b.atRisk ? a.pathPct - b.pathPct : (a.atRisk ? -1 : 1)));
+  const sums = filteredMembers().map(memberSummary).sort((a, b) => (a.atRisk === b.atRisk ? a.pathPct - b.pathPct : (a.atRisk ? -1 : 1)));
   const n = sums.length;
   const avg = n ? Math.round(sums.reduce((a, b) => a + b.pathPct, 0) / n) : 0;
   const active = sums.filter(s => s.days != null && s.days <= 7).length;
@@ -626,7 +635,8 @@ const slugify = s => (s || 'course').toLowerCase().normalize('NFD').replace(/[̀
 async function generateCourseDraft(title, text) {
   const cats = [...new Set(CATALOG.filter(x => !x.custom).map(x => x.cat))];
   const icons = Object.keys(ICONS).join(', ');
-  const raw = await llmComplete({ maxTokens: 4000,
+  const heavy = S.aiModelHeavy || (window.EdenOrg && window.EdenOrg.aiModelHeavy) || '';
+  const raw = await llmComplete({ maxTokens: 4000, model: heavy || undefined,
       system: `You are the course architect for EdenRise Academy (regenerative-living school, Baixo Alentejo, Portugal; warm, grounded, zero corporate jargon). From lesson material, produce ONE course as raw JSON only (no fences): {"title":str,"title_pt":str,"hook":str,"hook_pt":str,"hookSub":str,"hookSub_pt":str,"desc":str(1-2 sentences),"desc_pt":str,"cat":one of [${cats.join(' | ')}],"icon":one of [${icons}],"modules":[3-5 str],"modules_pt":[same length],"takeaways":[per module, array of exactly 3 str],"takeaways_pt":[same shape],"quiz":[3 of {"q":str,"opts":[4 str],"a":0-3}],"quiz_pt":[same shape]}. Portuguese = European Portuguese. Hooks are short invitations (MasterClass style). Takeaways are what a learner keeps. Quiz tests understanding of THIS material.`,
       messages: [{ role: 'user', content: `Working title: ${title || '(none)'}\n\nLesson material:\n${text.slice(0, 14000)}` }]
   });
@@ -689,6 +699,87 @@ function studioPublish() {
     toast(t('studio_published'), '🌿');
     render();
   }).catch(() => toast(t('studio_failed'), '⚠️'));
+}
+
+/* ================= Department Digests — the silo-breaker, on the platform ================= */
+let digestsCache = [];
+function digestsSectionHTML() {
+  if (!digestsCache.length) return '';
+  const latest = digestsCache.slice(0, 4);
+  return `<section class="page-pad" style="padding-top:0;">
+    <div class="rail-head" style="margin:8px 0 12px;"><h2>📺 ${t('dig_h')}</h2><span class="hint">${t('dig_sub')}</span></div>
+    <div class="dig-grid">${latest.map(d => `
+      <div class="dig-card" data-action="dig-open" data-id="${d.id}" role="button" tabindex="0">
+        <div class="dig-top t-grad-${d.grad || 5}">${d.media ? '<span class="pe-play">▶</span>' : '📰'}<span class="dig-week">${esc(d.week || '')}</span></div>
+        <div class="dig-body"><b>${esc(d.title)}</b><span>${tdept(d.dept) || esc(d.dept || '')}</span></div>
+      </div>`).join('')}</div>
+  </section>`;
+}
+function openDigest(id) {
+  const d = digestsCache.find(x => x.id === id); if (!d) return;
+  if (!$('#digModal')) {
+    const el = document.createElement('div');
+    el.className = 'take-overlay'; el.id = 'digModal';
+    el.innerHTML = `<div class="take-card dig-modal"><button class="modal-x" data-action="dig-close" aria-label="Close">✕</button><div id="digBody"></div></div>`;
+    document.body.appendChild(el);
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+  }
+  const m = d.media;
+  const video = m ? (m.type === 'vimeo' ? `<div class="post-embed-live"><iframe src="https://player.vimeo.com/video/${m.id}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`
+    : m.type === 'youtube' ? `<div class="post-embed-live"><iframe src="https://www.youtube-nocookie.com/embed/${m.id}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`
+    : m.type === 'mp4' ? `<video controls playsinline style="width:100%;border-radius:12px;" src="${esc(m.src)}"></video>` : '') : '';
+  $('#digBody').innerHTML = `
+    <div class="ob-eyebrow">📺 ${t('dig_h')} · ${tdept(d.dept) || esc(d.dept || '')} · ${esc(d.week || '')}</div>
+    <h3 style="font-family:var(--font-display);font-size:23px;margin:8px 0 12px;">${esc(d.title)}</h3>
+    ${video}
+    <div class="dig-narrative">${esc(d.body || '').split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('')}</div>`;
+  $('#digModal').classList.add('open');
+}
+/* Studio → Digests tab */
+function adminDigestsHTML() {
+  const rows = digestsCache.map(d => `
+    <div class="content-row">
+      <span class="ci t-grad-${d.grad || 5}">${svgIcon('sun')}</span>
+      <div class="ct"><b>${esc(d.title)}</b><span>${tdept(d.dept) || esc(d.dept || '')} · ${esc(d.week || '')}${d.media ? ' · ▶ video' : ' · script only'}</span></div>
+      <button class="btn btn-glass btn-sm" data-action="dig-del" data-id="${d.id}">✕</button>
+    </div>`).join('');
+  return `<div class="admin-section">
+    <h2>Publish a digest</h2>
+    <p class="sect-sub">The Monday routine drafts the script to your inbox — paste the narrative here (and the video link once your editor delivers). It appears on everyone's home instantly.</p>
+    <div class="studio">
+      <div class="ce-two">
+        <div class="field"><label>Department</label><select id="dgDept">${DEPTS.map(d => `<option value="${d.key}">${d.en}</option>`).join('')}</select></div>
+        <div class="field"><label>Week label</label><input class="auth-input" id="dgWeek" placeholder="Week 27 · Jun 30 – Jul 6"></div>
+      </div>
+      <input class="auth-input" id="dgTitle" maxlength="90" placeholder="Title — e.g. The week the land drank">
+      <input class="auth-input" id="dgVideo" placeholder="Video link — Vimeo / YouTube / .mp4 (optional, add later when the editor delivers)">
+      <textarea class="comm-input" id="dgBody" rows="5" placeholder="The narrative — paragraphs from the Monday digest email"></textarea>
+      <button class="btn btn-primary" data-action="dig-publish">Publish digest 📺</button>
+    </div>
+  </div>
+  <div class="admin-section">
+    <h2>Published digests</h2>
+    ${rows || `<p class="empty-note" style="text-align:left;padding:8px 0;">Nothing yet — the first Monday digest will change that.</p>`}
+  </div>`;
+}
+function digPublish() {
+  const title = ($('#dgTitle').value || '').trim();
+  const body = ($('#dgBody').value || '').trim();
+  if (!title || !body) { toast('A title and the narrative are needed', 'ℹ️'); return; }
+  if (!(window.EdenCloud && EdenCloud.saveDigest)) { toast('You need to be online and signed in', '⚠️'); return; }
+  const dept = $('#dgDept').value;
+  const d = {
+    id: slugify(($('#dgWeek').value || 'w') + '-' + dept + '-' + title).slice(0, 50),
+    dept, week: ($('#dgWeek').value || '').trim(), title, body,
+    media: parseVideoLink(($('#dgVideo').value || '').trim()),
+    grad: 1 + (dept.length + title.length) % 8, at: Date.now()
+  };
+  const clean = JSON.parse(JSON.stringify(d));
+  EdenCloud.saveDigest(clean).then(() => {
+    digestsCache = [clean, ...digestsCache.filter(x => x.id !== clean.id)];
+    $('#dgTitle').value = ''; $('#dgBody').value = ''; $('#dgVideo').value = '';
+    toast('Digest published to everyone 📺', '🌿'); render();
+  }).catch(() => toast('Could not publish — are the Firestore rules published?', '⚠️'));
 }
 
 /* ================= First-run product tour ================= */
@@ -902,7 +993,7 @@ function skillHeatmapHTML() {
     <p class="sect-sub">Where the team is strong, and where the gaps are — completion-weighted per skill.</p>
     <div class="heat-scroll"><table class="heat-table">
       <thead><tr><th></th>${SKILLS.map(s => `<th>${s.en}</th>`).join('')}</tr></thead>
-      <tbody>${adminMembers.map(m => `<tr><td>${esc((m.profile && m.profile.name) || 'Learner')}</td>
+      <tbody>${(filteredMembers() || []).map(m => `<tr><td>${esc((m.profile && m.profile.name) || 'Learner')}</td>
         ${memberSkillScores(m.state).map(v => `<td><span class="heat ${heat(v)}" title="${v}%">${v || ''}</span></td>`).join('')}</tr>`).join('')}
       </tbody>
     </table></div></div>`;
@@ -921,7 +1012,7 @@ function complianceHTML() {
   const courses = CATALOG.filter(c => c.recertMonths);
   if (!courses.length) return '';
   const rows = courses.map(c => {
-    const per = adminMembers.map(m => {
+    const per = filteredMembers().map(m => {
       const p = (m.state.progress || {})[c.id];
       if (!p || !p.done || !p.doneAt) return null;
       const days = Math.ceil((p.doneAt + c.recertMonths * 2629800000 - Date.now()) / 86400000);
@@ -1220,6 +1311,13 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target && e.target.id === 'askInput') openAsk(e.target.value);
 });
 document.addEventListener('change', e => {
+  if (e.target && e.target.id === 'ckDept') {
+    cockpitDept = e.target.value;
+    paintCockpit(); paintTrends(); paintAsgList();
+    const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML();
+    const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML();
+    return;
+  }
   if (e.target && e.target.id === 'misPhoto' && e.target.files && e.target.files[0]) {
     compressPhoto(e.target.files[0], data => {
       misPhotoData = data;
@@ -1384,6 +1482,8 @@ function icsForSession(s) {
 
 /* ---------- admin console — EdenRise Studio ---------- */
 let adminTab = 'cockpit';
+let cockpitDept = '';
+const filteredMembers = () => !adminMembers ? null : (cockpitDept ? adminMembers.filter(m => (m.profile && m.profile.dept) === cockpitDept) : adminMembers);
 let editingCourse = null;   /* working copy inside the course editor */
 let liveDraft = null;       /* live schedule being edited */
 const attr = s => esc(String(s == null ? '' : s)).replace(/"/g, '&quot;');
@@ -1430,7 +1530,7 @@ function paintTrends() {
   /* team minutes + completions per week, last 4 weeks */
   const now = Date.now(), week = 6048e5;
   const mins = [0, 0, 0, 0], comps = [0, 0, 0, 0];
-  adminMembers.forEach(m => {
+  filteredMembers().forEach(m => {
     Object.entries(m.state.mins || {}).forEach(([day, v]) => {
       const age = Math.floor((now - new Date(day).getTime()) / week);
       if (age >= 0 && age < 4) mins[3 - age] += v;
@@ -1446,7 +1546,7 @@ function paintTrends() {
     <div class="chart-card"><h3>Courses completed · last 4 weeks</h3><div class="bars sm">${bars(comps)}</div></div>`;
 }
 function studioTabsHTML() {
-  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['broadcasts', 'Broadcasts'], ['live', 'Live sessions'], ['settings', 'Settings']];
+  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['broadcasts', 'Broadcasts'], ['digests', 'Digests'], ['live', 'Live sessions'], ['settings', 'Settings']];
   return `<div class="comm-pills studio-tabs">${tabs.map(([id, label]) =>
     `<button class="ch-item ${adminTab === id ? 'active' : ''}" data-action="admin-tab" data-tab="${id}"><span>${label}</span></button>`).join('')}</div>`;
 }
@@ -1467,7 +1567,10 @@ function adminCockpitHTML() {
     <div class="admin-section">
       <div class="cockpit-head">
         <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
-        <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="ckDept" class="ck-dept"><option value="">All departments</option>${DEPTS.map(d => `<option value="${d.key}" ${cockpitDept === d.key ? 'selected' : ''}>${d.en}</option>`).join('')}</select>
+          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button>
+        </div>
       </div>
       <div class="team-table"><table>
         <thead><tr><th>Member</th><th>Path progress</th><th></th><th>Level</th><th>Streak</th><th>Last active</th><th>Status</th><th></th></tr></thead>
@@ -1786,17 +1889,31 @@ function adminSettingsHTML() {
       <button class="btn btn-glass btn-sm" data-action="seed-demo">🌿 Seed demo content</button>
     </div>
     <div class="org-key" style="margin-top:14px;">
-      <div class="notif-info"><b>${t('orgkey_title')}</b><span>${t('orgkey_sub')}</span></div>
-      <div style="display:flex;gap:8px;flex:1;min-width:280px;">
-        <input class="auth-input" id="orgKeyInput" type="password" placeholder="AIza… / sk-ant-…" value="${attr((window.EdenOrg && window.EdenOrg.aiKey) || '')}" style="flex:1;">
-        <button class="btn btn-primary btn-sm" data-action="orgkey-save">${t('save')}</button>
+      <div class="notif-info"><b>${t('orgkey_title')}</b><span>${t('orgkey_sub')} Key prefix picks the provider: AIza=Gemini · sk-ant=Claude · sk-or=OpenRouter · gsk_=Groq · sk-=OpenAI/DeepSeek.</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1;min-width:280px;">
+        <input class="auth-input" id="orgKeyInput" type="password" placeholder="AIza… / sk-ant-… / sk-or-… / gsk_…" value="${attr((window.EdenOrg && window.EdenOrg.aiKey) || '')}">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input class="auth-input" id="orgModelInput" list="modelSuggest" placeholder="Model — e.g. gemini-3-flash-preview (blank = provider default)" value="${attr((window.EdenOrg && window.EdenOrg.aiModel) || '')}" style="flex:1;min-width:220px;">
+          <input class="auth-input" id="orgModelHeavy" list="modelSuggest" placeholder="Course-drafting model (optional, bigger)" value="${attr((window.EdenOrg && window.EdenOrg.aiModelHeavy) || '')}" style="flex:1;min-width:220px;">
+        </div>
+        <datalist id="modelSuggest">
+          <option value="gemini-3-flash-preview">Free tier · best pt-PT alignment (research: 99.8%)</option>
+          <option value="gemini-3.5-flash">Free tier · newest Flash</option>
+          <option value="gemini-2.5-flash">Free tier · current default, proven</option>
+          <option value="gemini-3.1-pro-preview">Paid · Portuguese leader, best for course drafting</option>
+          <option value="claude-haiku-4-5">Paid · fast, strong instruction-following</option>
+          <option value="claude-sonnet-4-6">Paid · workhorse quality</option>
+          <option value="gpt-5-mini">Paid · OpenAI mid-tier</option>
+          <option value="deepseek-chat">Paid · cheapest capable (China-hosted — GDPR note)</option>
+        </datalist>
+        <button class="btn btn-primary btn-sm" data-action="orgkey-save" style="align-self:flex-start;">${t('save')}</button>
       </div>
     </div>
   </div>`;
 }
 
 function renderAdmin() {
-  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, broadcasts: adminBroadcastsHTML, live: adminLiveHTML, settings: adminSettingsHTML };
+  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, broadcasts: adminBroadcastsHTML, digests: adminDigestsHTML, live: adminLiveHTML, settings: adminSettingsHTML };
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">EdenRise Studio</h1>
     <p class="page-sub">The back office — people, content, broadcasts and the live schedule in one place.</p>
@@ -1866,10 +1983,11 @@ function renderProgress() {
     <div class="admin-section">
       <h2>${t('leaders_board')}</h2>
       <p class="sect-sub">${t('board_sub')}</p>
-      ${(S.profile && S.profile.dept) ? `<div class="board-scope">
+      <div class="board-scope">
         <button class="rx ${boardScope === 'all' ? 'on' : ''}" data-action="board-scope" data-v="all">${t('board_all')}</button>
-        <button class="rx ${boardScope === 'dept' ? 'on' : ''}" data-action="board-scope" data-v="dept">${t('board_dept')} · ${tdept(S.profile.dept)}</button>
-      </div>` : ''}
+        <button class="rx ${boardScope === 'week' ? 'on' : ''}" data-action="board-scope" data-v="week">${t('board_week')}</button>
+        ${(S.profile && S.profile.dept) ? `<button class="rx ${boardScope === 'dept' ? 'on' : ''}" data-action="board-scope" data-v="dept">${t('board_dept')} · ${tdept(S.profile.dept)}</button>` : ''}
+      </div>
       ${nudge}
       <div class="board">
         ${board.map((r, i) => `
@@ -3011,10 +3129,27 @@ ${_lang() === 'pt' ? 'IMPORTANT: Respond in European Portuguese (português de P
 /* provider-agnostic completion — Claude (sk-ant-…) or free-tier Gemini (AIza…) */
 const aiKey = () => S.apiKey || (window.EdenOrg && window.EdenOrg.aiKey) || '';
 const llmProvider = () => aiKey().startsWith('AIza') ? 'gemini' : 'anthropic';
-async function llmComplete({ system, messages, maxTokens }) {
-  if (llmProvider() === 'gemini') {
-    const model = 'gemini-2.5-flash';
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${aiKey()}`, {
+function aiModel() { return S.aiModel || (window.EdenOrg && window.EdenOrg.aiModel) || ''; }
+function llmProviderOf(key, model) {
+  if (!key) return null;
+  if (key.startsWith('AIza')) return 'gemini';
+  if (key.startsWith('sk-ant')) return 'anthropic';
+  if (key.startsWith('sk-or-')) return 'openrouter';
+  if (key.startsWith('gsk_')) return 'groq';
+  if ((model || '').startsWith('deepseek')) return 'deepseek';
+  if ((model || '').startsWith('mistral') || (model || '').startsWith('magistral')) return 'mistral';
+  return 'openai';
+}
+const LLM_DEFAULTS = { gemini: 'gemini-2.5-flash', anthropic: 'claude-sonnet-4-6', openrouter: 'google/gemini-2.5-flash', groq: 'llama-3.3-70b-versatile', deepseek: 'deepseek-chat', mistral: 'mistral-small-latest', openai: 'gpt-5-mini' };
+async function llmComplete({ system, messages, maxTokens, model }) {
+  /* pt-PT drift guard (P3B3, 2026): models slide toward pt-BR over turns — re-assert on every call */
+  if (/portugu/i.test(system || '') && _lang() === 'pt') system += '\nIMPORTANTE: responde SEMPRE em português europeu (pt-PT) — nunca em português do Brasil. Evita "você", gerúndios contínuos e léxico brasileiro, mesmo em conversas longas.';
+  const key = aiKey();
+  const mdl = model || aiModel();
+  const prov = llmProviderOf(key, mdl);
+  const useModel = mdl || LLM_DEFAULTS[prov];
+  if (prov === 'gemini') {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${useModel}:generateContent?key=${key}`, {
       method: 'POST', headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         system_instruction: { parts: [{ text: system }] },
@@ -3026,14 +3161,32 @@ async function llmComplete({ system, messages, maxTokens }) {
     const data = await res.json();
     return (((data.candidates || [])[0] || {}).content || { parts: [] }).parts.map(p => p.text || '').join('') || '…';
   }
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  if (prov === 'anthropic') {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: useModel, max_tokens: maxTokens, system, messages })
+    });
+    if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); }
+    const data = await res.json();
+    return data.content.filter(b => b.type === 'text').map(b => b.text).join('\n') || '…';
+  }
+  /* OpenAI-compatible chat/completions: OpenRouter, Groq, DeepSeek, Mistral, OpenAI */
+  const base = prov === 'openrouter' ? 'https://openrouter.ai/api/v1'
+    : prov === 'groq' ? 'https://api.groq.com/openai/v1'
+    : prov === 'deepseek' ? 'https://api.deepseek.com/v1'
+    : prov === 'mistral' ? 'https://api.mistral.ai/v1'
+    : 'https://api.openai.com/v1';
+  const body = { model: useModel, messages: [{ role: 'system', content: system }, ...messages] };
+  if (prov === 'openai') body.max_completion_tokens = maxTokens; else body.max_tokens = maxTokens;
+  const res = await fetch(base + '/chat/completions', {
     method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-api-key': aiKey(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-    body: JSON.stringify({ model: S.aiModel || 'claude-opus-4-8', max_tokens: maxTokens, system, messages })
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + key },
+    body: JSON.stringify(body)
   });
   if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error((err.error && err.error.message) || 'HTTP ' + res.status); }
   const data = await res.json();
-  return data.content.filter(b => b.type === 'text').map(b => b.text).join('\n') || '…';
+  return (((data.choices || [])[0] || {}).message || {}).content || '…';
 }
 async function askClaude(text) {
   tutorHistory.push({ role: 'user', content: text });
@@ -3176,9 +3329,11 @@ document.addEventListener('click', e => {
     case 'daily-answer': answerDaily(el); break;
     case 'orgkey-save': {
       const k = ($('#orgKeyInput').value || '').trim();
+      const mdl = ($('#orgModelInput') && $('#orgModelInput').value || '').trim();
+      const mdlH = ($('#orgModelHeavy') && $('#orgModelHeavy').value || '').trim();
       if (!(window.EdenCloud && EdenCloud.saveOrgConfig)) { toast(t('mail_failed'), '⚠️'); break; }
-      EdenCloud.saveOrgConfig({ aiKey: k }).then(() => {
-        window.EdenOrg = Object.assign({}, window.EdenOrg, { aiKey: k });
+      EdenCloud.saveOrgConfig({ aiKey: k, aiModel: mdl, aiModelHeavy: mdlH }).then(() => {
+        window.EdenOrg = Object.assign({}, window.EdenOrg, { aiKey: k, aiModel: mdl, aiModelHeavy: mdlH });
         syncTutorStatus();
         toast(t('orgkey_saved'), '🌿');
       }).catch(() => toast(t('mail_failed'), '⚠️'));
@@ -3240,6 +3395,14 @@ document.addEventListener('click', e => {
     case 'open-journey': location.hash = '#/journey/' + id; break;
     case 'jour-cert': downloadJourneyCert(id); break;
     case 'ai-digest': generateCockpitDigest(); break;
+    case 'dig-open': openDigest(id); break;
+    case 'dig-close': $('#digModal').classList.remove('open'); break;
+    case 'dig-publish': digPublish(); break;
+    case 'dig-del': {
+      if (!confirm('Delete this digest for everyone?')) break;
+      EdenCloud.deleteDigest(id).then(() => { digestsCache = digestsCache.filter(x => x.id !== id); toast(t('comm_deleted'), '－'); render(); });
+      break;
+    }
     case 'tour-next': tourShow(tourIdx + 1); break;
     case 'tour-back': tourShow(tourIdx - 1); break;
     case 'tour-end': endTour(); break;
@@ -3396,8 +3559,10 @@ addEventListener('keydown', e => {
 /* tutor settings */
 function syncTutorStatus() {
   const orgOnly = !S.apiKey && aiKey();
+  const prov = llmProviderOf(aiKey(), aiModel());
+  const label = { gemini: 'Gemini', anthropic: 'Claude', openrouter: 'OpenRouter', groq: 'Groq', deepseek: 'DeepSeek', mistral: 'Mistral', openai: 'OpenAI' }[prov] || 'AI';
   $('#tutorStatus').textContent = aiKey()
-    ? (llmProvider() === 'gemini' ? `● Live · Gemini 2.5 Flash${orgOnly ? ' · team key' : ' (free tier)'}` : `● Live · ${(S.aiModel || 'claude-opus-4-8').replace('claude-', 'Claude ').replace(/-/g, ' ')}${orgOnly ? ' · team key' : ''}`)
+    ? `● Live · ${aiModel() || label + ' · ' + (LLM_DEFAULTS[prov] || '')}${orgOnly ? ' · team key' : ''}`
     : '● Demo mode · scripted replies';
 }
 $('#tutorSettingsBtn').addEventListener('click', () => {
@@ -3568,7 +3733,8 @@ window.EdenApp = {
     render();
   },
   /* studio meta from Firestore (live-sessions schedule etc.) */
-  applyMeta(meta) { studioMeta = meta || null; render(); }
+  applyMeta(meta) { studioMeta = meta || null; render(); },
+  applyDigests(list) { digestsCache = list || []; render(); }
 };
 if (S.profile) EdenApp.applyProfile(S.profile);
 

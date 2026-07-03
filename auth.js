@@ -101,6 +101,7 @@ window.EdenCloud = {
       initials: name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER',
       xp: st.xp || 0, streak: st.streak || 0, level: st.xp != null ? st.xp : 0,
       joinedAt: p.joinedAt || null, dept: p.dept || null,
+      weekStart: st.weekStart || null, weekBaseXp: st.weekBaseXp || 0,
       lastSeen: serverTimestamp(), updatedAt: serverTimestamp()
     }, { merge: true }).catch(() => {});
   },
@@ -147,13 +148,24 @@ window.EdenCloud = {
   },
   async listCourses() {
     const snap = await getDocs(collection(db, 'courses'));
-    const out = { courses: [], meta: null };
+    const out = { courses: [], meta: null, digests: [] };
     snap.docs.forEach(d => {
       const x = d.data();
       if (d.id === '__meta') out.meta = x.meta || null;
+      else if (x.digest) out.digests.push(x.digest);
       else if (x.course) out.courses.push(x.course);
     });
+    out.digests.sort((a, b) => (b.at || 0) - (a.at || 0));
     return out;
+  },
+  /* department digests — published into the same public collection */
+  async saveDigest(d) {
+    const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
+    await setDoc(doc(db, 'courses', 'digest-' + d.id), { digest: d, authorUid: u.uid, createdAt: serverTimestamp() });
+  },
+  async deleteDigest(id) {
+    if (!auth.currentUser) return;
+    await deleteDoc(doc(db, 'courses', 'digest-' + id));
   },
   /* studio meta (live sessions schedule, …) — lives in the public courses collection
      so guests can read it and ONLY admins can write it, with the existing rules */
@@ -294,9 +306,10 @@ window.EdenMissions = {
 
 /* load team-published courses + studio meta for everyone (guests included) */
 (function loadCustomCourses(tries) {
-  window.EdenCloud.listCourses().then(({ courses, meta }) => {
+  window.EdenCloud.listCourses().then(({ courses, meta, digests }) => {
     if (!window.EdenApp) return;
     if (meta && window.EdenApp.applyMeta) window.EdenApp.applyMeta(meta);
+    if (digests && digests.length && window.EdenApp.applyDigests) window.EdenApp.applyDigests(digests);
     if (courses.length) window.EdenApp.applyCustomCourses(courses);
   }).catch(() => { if ((tries || 0) < 3) setTimeout(() => loadCustomCourses((tries || 0) + 1), 4000); });
 })(0);
