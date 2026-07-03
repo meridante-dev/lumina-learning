@@ -981,35 +981,97 @@ function timeAgo(ts) {
   const d = Math.floor(h / 24); if (d < 7) return d + 'd';
   return new Date(v).toLocaleDateString();
 }
-function channelListHTML() {
-  const item = (id, cls) => {
+function channelPillsHTML() {
+  const pill = id => {
     const m = channelMeta(id);
     return `<button class="ch-item ${id === commChannel ? 'active' : ''}" data-action="comm-channel" data-ch="${id}">${svgIcon(m.icon)}<span>${m.label}</span></button>`;
   };
-  const paths = S.path.map(id => courseById(id)).filter(Boolean).map(c => item(c.id)).join('');
-  return `
-    <div class="ch-group-label">${t('comm_channels')}</div>
-    ${COMMUNITY_CHANNELS.map(c => item(c.id)).join('')}
-    <div class="ch-group-label">${t('comm_paths')}</div>
-    ${paths}`;
+  const paths = S.path.map(id => courseById(id)).filter(Boolean).map(c => pill(c.id)).join('');
+  return `<div class="comm-pills">${COMMUNITY_CHANNELS.map(c => pill(c.id)).join('')}${paths}
+    <button class="ch-item ${commChannel === '__members' ? 'active' : ''}" data-action="comm-channel" data-ch="__members">${svgIcon('people')}<span>${t('comm_members')}</span></button>
+  </div>`;
 }
-const mentions = html => html.replace(/(^|[\s>])@([a-z0-9][a-z0-9_.-]{1,24})/gi, '$1<span class="mention">@$2</span>');
+const isOnline = m => Date.now() - tsMillis(m.lastSeen) < 150000;
+function memberDot(m) { return `<span class="m-ava ${isOnline(m) ? 'online' : ''}" data-action="member-card" data-uid="${m.uid}" title="${esc(m.name || '')}">${esc(m.initials || 'ER')}</span>`; }
+function sidebarHTML() {
+  const board = (boardCache || []).slice().sort((x, y) => (y.xp || 0) - (x.xp || 0));
+  const online = (boardCache || []).filter(isOnline);
+  const newest = (boardCache || []).filter(m => m.joinedAt).sort((x, y) => tsMillis(y.joinedAt) - tsMillis(x.joinedAt)).slice(0, 3);
+  const live = LIVE_SESSIONS[0];
+  return `<aside class="comm-pulse">
+    <div class="pulse-card">
+      <h4>🏆 ${t('comm_top')}</h4>
+      ${board.length ? board.slice(0, 5).map((m, i) => `<div class="pulse-row" data-action="member-card" data-uid="${m.uid}"><span class="pr-n">${i + 1}</span>${memberDot(m)}<span class="pr-name">${esc((m.name || '').split(' ')[0])}</span><span class="pr-xp">${m.xp || 0} XP</span></div>`).join('') : `<p class="pulse-empty">${t('comm_no_members')}</p>`}
+    </div>
+    ${online.length ? `<div class="pulse-card"><h4>🟢 ${t('comm_online')}</h4><div class="pulse-avas">${online.slice(0, 8).map(memberDot).join('')}</div></div>` : ''}
+    ${newest.length ? `<div class="pulse-card"><h4>🌱 ${t('comm_newest')}</h4>${newest.map(m => `<div class="pulse-row" data-action="member-card" data-uid="${m.uid}">${memberDot(m)}<span class="pr-name">${esc(m.name || '')}</span></div>`).join('')}</div>` : ''}
+    ${live ? `<div class="pulse-card"><h4>📅 ${t('comm_next_live')}</h4><div class="pulse-live" data-action="goto" data-route="#/live"><b>${esc(live.title)}</b><span>${live.live ? '🔴 LIVE' : esc(live.when)}</span></div></div>` : ''}
+    <button class="link-quiet" data-action="comm-channel" data-ch="__members" style="padding:4px 6px;">${t('comm_all_members')}</button>
+  </aside>`;
+}
+function membersDirHTML() {
+  const list = (boardCache || []).slice().sort((x, y) => (isOnline(y) - isOnline(x)) || (y.xp || 0) - (x.xp || 0));
+  if (!list.length) return `<div class="empty-note">${t('comm_no_members')}</div>`;
+  return `<div class="members-grid">${list.map(m => `
+    <div class="member-tile" data-action="member-card" data-uid="${m.uid}">
+      ${memberDot(m)}
+      <div class="mt-info"><b>${esc(m.name || 'Learner')}</b>${m.username ? `<span class="post-handle">@${esc(m.username)}</span>` : ''}
+      <span class="mt-meta">${levelFor(m.xp || 0) ? tlevel(levelFor(m.xp || 0).idx) : ''} · ${m.xp || 0} XP · 🔥${m.streak || 0}</span></div>
+      ${isOnline(m) ? `<span class="mt-on">● ${t('comm_online')}</span>` : ''}
+    </div>`).join('')}</div>`;
+}
+const mentions = html => html.replace(/(^|[\s>])@([a-z0-9][a-z0-9_.-]{1,24})/gi, '$1<span class="mention" data-action="member-card" data-handle="$2">@$2</span>');
 const canModerate = p => { const me = myUid(); return !!me && (p.authorUid === me || isAdmin()); };
+const tsMillis = ts => ts && ts.toMillis ? ts.toMillis() : (ts && ts.seconds ? ts.seconds * 1000 : (typeof ts === 'number' ? ts : 0));
+/* smart embeds: image URLs render, YouTube/Vimeo become playable, links clickable */
+function richBody(text) {
+  let h = esc(text || '');
+  h = h.replace(/(https?:\/\/[^\s<]+\.(?:png|jpe?g|gif|webp)(?:\?[^\s<]*)?)/gi, '\n<img class="post-img" loading="lazy" src="$1">\n');
+  h = h.replace(/(?:https?:\/\/)(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{6,})[^\s<]*/gi, '\n<div class="post-embed" data-action="embed-play" data-embed="yt:$1"><span class="pe-play">\u25b6</span><span>YouTube</span></div>\n');
+  h = h.replace(/(?:https?:\/\/)(?:www\.)?vimeo\.com\/(\d+)[^\s<]*/gi, '\n<div class="post-embed" data-action="embed-play" data-embed="vm:$1"><span class="pe-play">\u25b6</span><span>Vimeo</span></div>\n');
+  h = h.replace(/(^|[\s])(https?:\/\/[^\s<]+)/g, '$1<a href="$2" target="_blank" rel="noopener" class="post-link">$2</a>');
+  return mentions(h).replace(/\n/g, '<br>');
+}
+const REACTS = ['\ud83c\udf31', '\ud83d\udd25', '\ud83d\ude4c', '\ud83d\udca1'];
+function reactionRowHTML(p) {
+  const me = myUid();
+  const rx = p.reactions || {};
+  const chips = REACTS.filter(e => (rx[e] || []).length).map(e =>
+    `<button class="rx ${me && rx[e].includes(me) ? 'on' : ''}" data-action="comm-react" data-id="${p.id}" data-emoji="${e}">${e} ${rx[e].length}</button>`).join('');
+  return chips + `<span class="rx-add" data-action="comm-react-pick" data-id="${p.id}">\u263a+<span class="rx-picker">${REACTS.map(e => `<button class="rx-opt" data-action="comm-react" data-id="${p.id}" data-emoji="${e}">${e}</button>`).join('')}</span></span>`;
+}
+function pollHTML(p) {
+  if (!p.poll || !Array.isArray(p.poll.options)) return '';
+  const votes = p.poll.votes || {};
+  const me = myUid();
+  const counts = p.poll.options.map((_, i) => Object.values(votes).filter(v => v === i).length);
+  const total = counts.reduce((x, y) => x + y, 0) || 0;
+  return `<div class="poll">${p.poll.options.map((opt, i) => {
+    const pct = total ? Math.round(counts[i] / total * 100) : 0;
+    const mine = me && votes[me] === i;
+    return `<button class="poll-opt ${mine ? 'mine' : ''}" data-action="comm-vote" data-id="${p.id}" data-opt="${i}">
+      <span class="poll-bar" style="width:${pct}%"></span>
+      <span class="poll-label">${esc(opt)}</span><span class="poll-pct">${pct}%</span>
+    </button>`;
+  }).join('')}<div class="poll-total">${total} ${t('comm_poll_votes')}</div></div>`;
+}
 function postCardHTML(p) {
   const liked = p.likedBy && myUid() && p.likedBy.includes(myUid());
   const isDisc = p.kind === 'discussion' && p.title;
   const rc = p.replyCount || 0;
   return `<article class="post ${isDisc ? 'is-disc' : ''} ${p.pinned ? 'pinned' : ''}"${isDisc ? ` data-action="comm-open" data-id="${p.id}"` : ''}>
-    <div class="post-av">${esc(p.authorInitials || 'ER')}</div>
+    <div class="post-av" data-action="member-card" data-handle="${esc(p.authorHandle || '')}">${esc(p.authorInitials || 'ER')}</div>
     <div class="post-main">
-      <div class="post-head">${p.pinned ? `<span class="pin-badge">📌 ${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">· ${timeAgo(p.createdAt)}</span></div>
+      <div class="post-head">${p.pinned ? `<span class="pin-badge">\ud83d\udccc ${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle" data-action="member-card" data-handle="${esc(p.authorHandle)}">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">\u00b7 ${timeAgo(p.createdAt)}</span></div>
       ${isDisc ? `<div class="post-title">${esc(p.title)}</div>` : ''}
-      <div class="post-body">${mentions(esc(p.body || '').replace(/\n/g, '<br>'))}</div>
+      <div class="post-body">${richBody(p.body)}</div>
+      ${pollHTML(p)}
       <div class="post-foot">
-        <button class="post-act ${liked ? 'liked' : ''}" data-action="comm-like" data-id="${p.id}">♥ <span>${p.likes || 0}</span></button>
-        ${isDisc ? `<span class="post-act soft">💬 ${rc} ${rc === 1 ? t('comm_reply_one') : t('comm_replies')}</span>` : ''}
-        ${isAdmin() ? `<button class="post-act" data-action="comm-pin" data-id="${p.id}">📌 ${p.pinned ? t('comm_unpin') : t('comm_pin')}</button>` : ''}
-        ${canModerate(p) ? `<button class="post-act danger" data-action="comm-del" data-id="${p.id}">✕ ${t('comm_delete')}</button>` : ''}
+        <button class="post-act ${liked ? 'liked' : ''}" data-action="comm-like" data-id="${p.id}">\u2665 <span>${p.likes || 0}</span></button>
+        ${reactionRowHTML(p)}
+        ${isDisc ? `<span class="post-act soft">\ud83d\udcac ${rc} ${rc === 1 ? t('comm_reply_one') : t('comm_replies')}</span>` : ''}
+        ${isAdmin() ? `<button class="post-act" data-action="comm-pin" data-id="${p.id}">\ud83d\udccc ${p.pinned ? t('comm_unpin') : t('comm_pin')}</button>` : ''}
+        ${canModerate(p) ? `<button class="post-act danger" data-action="comm-del" data-id="${p.id}">\u2715 ${t('comm_delete')}</button>` : ''}
       </div>
     </div>
   </article>`;
@@ -1017,19 +1079,19 @@ function postCardHTML(p) {
 function replyHTML(r, postId) {
   const liked = r.likedBy && myUid() && r.likedBy.includes(myUid());
   return `<div class="reply">
-    <div class="post-av sm">${esc(r.authorInitials || 'ER')}</div>
+    <div class="post-av sm" data-action="member-card" data-handle="${esc(r.authorHandle || '')}">${esc(r.authorInitials || 'ER')}</div>
     <div class="post-main">
-      <div class="post-head"><b>${esc(r.authorName || 'Learner')}</b>${r.authorHandle ? `<span class="post-handle">@${esc(r.authorHandle)}</span>` : ''}<span class="post-time">· ${timeAgo(r.createdAt)}</span></div>
-      <div class="post-body">${mentions(esc(r.body || '').replace(/\n/g, '<br>'))}</div>
+      <div class="post-head"><b>${esc(r.authorName || 'Learner')}</b>${r.authorHandle ? `<span class="post-handle" data-action="member-card" data-handle="${esc(r.authorHandle)}">@${esc(r.authorHandle)}</span>` : ''}<span class="post-time">\u00b7 ${timeAgo(r.createdAt)}</span></div>
+      <div class="post-body">${richBody(r.body)}</div>
       <div class="post-foot">
-        <button class="post-act sm ${liked ? 'liked' : ''}" data-action="comm-rlike" data-id="${postId}" data-rid="${r.id}">♥ <span>${r.likes || 0}</span></button>
-        ${canModerate(r) ? `<button class="post-act sm danger" data-action="comm-rdel" data-id="${postId}" data-rid="${r.id}">✕ ${t('comm_delete')}</button>` : ''}
+        <button class="post-act sm ${liked ? 'liked' : ''}" data-action="comm-rlike" data-id="${postId}" data-rid="${r.id}">\u2665 <span>${r.likes || 0}</span></button>
+        ${canModerate(r) ? `<button class="post-act sm danger" data-action="comm-rdel" data-id="${postId}" data-rid="${r.id}">\u2715 ${t('comm_delete')}</button>` : ''}
       </div>
     </div>
   </div>`;
 }
 function composerHTML(isReply) {
-  if (!forumCanPost()) return `<div class="comm-signin"><span>🌱 ${t('comm_signin_post')}</span><button class="btn btn-primary btn-sm" data-action="show-login">${t('prof_signin')}</button></div>`;
+  if (!forumCanPost()) return `<div class="comm-signin"><span>\ud83c\udf31 ${t('comm_signin_post')}</span><button class="btn btn-primary btn-sm" data-action="show-login">${t('prof_signin')}</button></div>`;
   const me = EdenForum.me();
   if (isReply) {
     return `<div class="composer reply-composer">
@@ -1045,14 +1107,20 @@ function composerHTML(isReply) {
     <div class="composer-body">
       <input id="commTitle" class="comm-input title" maxlength="120" placeholder="${t('comm_title_ph')}">
       <textarea id="commBody" class="comm-input" rows="2" placeholder="${t('comm_body_ph')}"></textarea>
-      <div class="composer-foot"><span class="composer-hint">${t('comm_new')}</span><button class="btn btn-primary btn-sm" data-action="comm-post">${t('comm_post')}</button></div>
+      <div id="pollBuilder" class="poll-builder" style="display:none;">
+        <input class="comm-input" maxlength="60" placeholder="${t('comm_poll_opt')} 1">
+        <input class="comm-input" maxlength="60" placeholder="${t('comm_poll_opt')} 2">
+        <input class="comm-input" maxlength="60" placeholder="${t('comm_poll_opt')} 3 (optional)">
+      </div>
+      <div class="composer-foot"><button class="link-quiet" style="padding:0;" data-action="comm-poll-toggle">${t('comm_add_poll')}</button><span style="flex:1"></span><button class="btn btn-primary btn-sm" data-action="comm-post">${t('comm_post')}</button></div>
     </div>
   </div>`;
 }
 function renderCommunity() {
-  const m = channelMeta(commChannel);
   let main;
-  if (commThread) {
+  if (commChannel === '__members') {
+    main = `<div class="comm-main"><div class="comm-head"><span class="comm-ch-ic">${svgIcon('people')}</span><div><h2>${t('comm_members')}</h2><span class="comm-ch-sub">${t('comm_title')}</span></div></div>${membersDirHTML()}</div>`;
+  } else if (commThread) {
     const p = commPosts.find(x => x.id === commThread) || {};
     main = `<div class="comm-main">
       <button class="comm-back" data-action="comm-back">← ${t('comm_back')}</button>
@@ -1062,7 +1130,6 @@ function renderCommunity() {
     </div>`;
   } else {
     main = `<div class="comm-main">
-      <div class="comm-head"><span class="comm-ch-ic">${svgIcon(m.icon)}</span><div><h2>${m.label}</h2><span class="comm-ch-sub">${t('comm_title')}</span></div></div>
       ${composerHTML(false)}
       <div class="comm-feed" id="commFeed">${'<div class="post skel-post"><div class="skel av"></div><div style="flex:1"><div class="skel" style="width:38%"></div><div class="skel" style="width:82%;margin-top:8px"></div></div></div>'.repeat(3)}</div>
     </div>`;
@@ -1070,11 +1137,31 @@ function renderCommunity() {
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">${t('comm_title')}</h1>
     <p class="page-sub">${t('comm_sub')}</p>
-    <div class="comm-wrap">
-      <aside class="comm-side">${channelListHTML()}</aside>
+    ${channelPillsHTML()}
+    <div class="comm-wrap2">
       ${main}
+      ${sidebarHTML()}
     </div>
   </div></div>`;
+}
+function showMemberCard(el) {
+  document.querySelectorAll('.member-card-pop').forEach(x => x.remove());
+  const uid = el.dataset.uid, handle = (el.dataset.handle || '').toLowerCase();
+  const m = (boardCache || []).find(x => (uid && x.uid === uid) || (handle && (x.username || '').toLowerCase() === handle));
+  if (!m) return;
+  const lv = levelFor(m.xp || 0);
+  const card = document.createElement('div');
+  card.className = 'member-card-pop';
+  card.innerHTML = `<div class="mc-head"><span class="m-ava lg ${isOnline(m) ? 'online' : ''}">${esc(m.initials || 'ER')}</span>
+    <div><b>${esc(m.name || 'Learner')}</b>${m.username ? `<span class="post-handle">@${esc(m.username)}</span>` : ''}</div></div>
+    <div class="mc-stats"><span>${tlevel(lv.idx)} · Lv ${lv.idx + 1}</span><span>${m.xp || 0} XP</span><span>🔥 ${m.streak || 0}</span></div>
+    ${m.joinedAt ? `<div class="mc-since">${t('comm_member_since')} ${new Date(tsMillis(m.joinedAt)).toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { month: 'long', year: 'numeric' })}</div>` : ''}
+    ${isOnline(m) ? `<div class="mc-on">● ${t('comm_online')}</div>` : ''}`;
+  document.body.appendChild(card);
+  const r = el.getBoundingClientRect();
+  card.style.left = Math.min(innerWidth - 250, Math.max(10, r.left)) + 'px';
+  card.style.top = Math.min(innerHeight - 170, r.bottom + 8) + 'px';
+  setTimeout(() => document.addEventListener('click', function h(e) { if (!card.contains(e.target)) { card.remove(); document.removeEventListener('click', h); } }), 50);
 }
 function teardownCommunity() { if (commUnsub) { commUnsub(); commUnsub = null; } if (commThreadUnsub) { commThreadUnsub(); commThreadUnsub = null; } }
 function paintFeed() { const f = $('#commFeed'); if (!f) return; const ordered = [...commPosts].sort((a, b) => (!!b.pinned) - (!!a.pinned)); f.innerHTML = ordered.length ? ordered.map(postCardHTML).join('') : `<div class="empty-note">${t('comm_empty')}</div>`; makeFocusable(f); }
@@ -1082,6 +1169,7 @@ function paintThreadHead() { const h = $('#commThreadHead'); if (!h) return; con
 function paintReplies() { const r = $('#commReplies'); if (!r) return; r.innerHTML = commReplies.length ? commReplies.map(x => replyHTML(x, commThread)).join('') : `<div class="empty-note">${t('comm_empty_replies')}</div>`; makeFocusable(r); }
 function initCommunity(retries) {
   teardownCommunity();
+  if (commChannel === '__members') return;
   if (!window.EdenForum) {
     /* auth.js loads as a deferred module — it may not be ready at first paint. Poll briefly. */
     if ((retries || 0) < 24 && location.hash.indexOf('#/community') === 0) { setTimeout(() => initCommunity((retries || 0) + 1), 250); return; }
@@ -1100,7 +1188,13 @@ function submitPost() {
   const title = ($('#commTitle') && $('#commTitle').value || '').trim();
   const body = ($('#commBody') && $('#commBody').value || '').trim();
   if (!body) return;
-  EdenForum.createPost({ channel: commChannel, kind: title ? 'discussion' : 'message', title, body })
+  let poll = null;
+  const pb = $('#pollBuilder');
+  if (pb && pb.style.display !== 'none') {
+    const opts = [...pb.querySelectorAll('input')].map(i => i.value.trim()).filter(Boolean);
+    if (opts.length >= 2) poll = { options: opts.slice(0, 4), votes: {} };
+  }
+  EdenForum.createPost({ channel: commChannel, kind: title ? 'discussion' : 'message', title, body, poll })
     .then(() => { if ($('#commTitle')) $('#commTitle').value = ''; if ($('#commBody')) $('#commBody').value = ''; toast(t('comm_posted'), '🌿'); })
     .catch(() => toast(_lang() === 'pt' ? 'Não foi possível publicar' : 'Could not post', '⚠️'));
 }
@@ -1234,6 +1328,7 @@ function render() {
   if (route === 'community') initCommunity();
   if (route === 'admin' && isAdmin()) initAdmin();
   if (route === 'progress' && boardCache === null) initBoard();
+  if (route === 'community') initBoard();
   window.scrollTo({ top: 0, behavior: 'instant' });
   const libInput = $('#libSearch');
   if (libInput) {
@@ -2030,6 +2125,29 @@ document.addEventListener('click', e => {
       const liked = rep && rep.likedBy && rep.likedBy.includes(myUid());
       EdenForum.toggleReplyLike(id, el.dataset.rid, liked); break;
     }
+    case 'comm-react': {
+      if (!forumCanPost()) { showLoginGate(); break; }
+      const post = commPosts.find(x => x.id === id);
+      const on = !(post && post.reactions && post.reactions[el.dataset.emoji] && post.reactions[el.dataset.emoji].includes(myUid()));
+      EdenForum.react(id, el.dataset.emoji, on);
+      break;
+    }
+    case 'comm-react-pick': el.classList.toggle('open'); break;
+    case 'comm-vote': {
+      if (!forumCanPost()) { showLoginGate(); break; }
+      EdenForum.vote(id, +el.dataset.opt);
+      break;
+    }
+    case 'comm-poll-toggle': { const pb = $('#pollBuilder'); if (pb) pb.style.display = pb.style.display === 'none' ? '' : 'none'; break; }
+    case 'member-card': showMemberCard(el); break;
+    case 'embed-play': {
+      const [kind, vid] = el.dataset.embed.split(':');
+      const src = kind === 'yt' ? `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1` : `https://player.vimeo.com/video/${vid}?autoplay=1`;
+      const wrap = document.createElement('div'); wrap.className = 'post-embed-live';
+      wrap.innerHTML = `<iframe src="${src}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>`;
+      el.replaceWith(wrap);
+      break;
+    }
     case 'comm-pin': {
       const post = commPosts.find(x => x.id === id);
       if (post && window.EdenForum) EdenForum.togglePin(id, !!post.pinned);
@@ -2315,6 +2433,15 @@ if (S.profile) EdenApp.applyProfile(S.profile);
   addEventListener('resize', apply, { passive: true });
   h.classList.add('dpr-' + Math.min(3, Math.round(devicePixelRatio || 1)));
 })();
+
+/* presence heartbeat — the green dots. One tiny write a minute while active */
+setInterval(() => {
+  if (document.visibilityState !== 'visible') return;
+  if (window.EdenCloud && EdenCloud.heartbeat) EdenCloud.heartbeat();
+}, 60000);
+setTimeout(() => { if (window.EdenCloud && EdenCloud.heartbeat) EdenCloud.heartbeat(); }, 4000);
+/* stamp joinedAt once — powers "new in the community" */
+if (S.profile && S.profile.uid && !S.profile.joinedAt) { S.profile.joinedAt = Date.now(); save(); }
 
 /* ---------- resilience: offline awareness + sync flush ---------- */
 addEventListener('offline', () => toast(t('offline_note'), '📴'));

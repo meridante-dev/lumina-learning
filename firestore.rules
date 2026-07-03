@@ -46,7 +46,7 @@ service cloud.firestore {
       allow update: if request.auth != null && (
                        resource.data.authorUid == request.auth.uid
                        || request.resource.data.diff(resource.data).affectedKeys()
-                            .hasOnly(['likes', 'likedBy', 'replyCount', 'lastActivity'])
+                            .hasOnly(['likes', 'likedBy', 'replyCount', 'lastActivity', 'reactions', 'poll'])
                        || (isAdmin() && request.resource.data.diff(resource.data)
                             .affectedKeys().hasOnly(['pinned']))
                     );
@@ -60,7 +60,7 @@ service cloud.firestore {
         allow update: if request.auth != null && (
                          resource.data.authorUid == request.auth.uid
                          || request.resource.data.diff(resource.data).affectedKeys()
-                              .hasOnly(['likes', 'likedBy'])
+                              .hasOnly(['likes', 'likedBy', 'reactions'])
                       );
         allow delete: if request.auth != null
                       && (resource.data.authorUid == request.auth.uid || isAdmin());

@@ -99,12 +99,18 @@ window.EdenCloud = {
     setDoc(doc(db, 'leaderboard', u.uid), {
       name, username: p.username || '',
       initials: name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER',
-      xp: st.xp || 0, streak: st.streak || 0, updatedAt: serverTimestamp()
+      xp: st.xp || 0, streak: st.streak || 0, level: st.xp != null ? st.xp : 0,
+      joinedAt: p.joinedAt || null,
+      lastSeen: serverTimestamp(), updatedAt: serverTimestamp()
     }, { merge: true }).catch(() => {});
   },
   async saveOrgConfig(cfg) {
     if (!auth.currentUser) throw new Error('not-signed-in');
     await setDoc(doc(db, 'config', 'org'), cfg, { merge: true });
+  },
+  heartbeat() {
+    const u = auth.currentUser; if (!u) return;
+    setDoc(doc(db, 'leaderboard', u.uid), { lastSeen: serverTimestamp() }, { merge: true }).catch(() => {});
   },
   async listBoard() {
     const snap = await getDocs(collection(db, 'leaderboard'));
@@ -211,6 +217,14 @@ window.EdenForum = {
       likes: increment(liked ? -1 : 1),
       likedBy: liked ? arrayRemove(u.uid) : arrayUnion(u.uid)
     }).catch(() => {});
+  },
+  async react(postId, emoji, on) {
+    const u = auth.currentUser; if (!u) return;
+    await updateDoc(doc(db, 'forum_posts', postId), { ['reactions.' + emoji]: on ? arrayUnion(u.uid) : arrayRemove(u.uid) }).catch(() => {});
+  },
+  async vote(postId, optionIndex) {
+    const u = auth.currentUser; if (!u) return;
+    await updateDoc(doc(db, 'forum_posts', postId), { ['poll.votes.' + u.uid]: optionIndex }).catch(() => {});
   },
   async remove(postId) {
     if (!auth.currentUser) return;
