@@ -132,7 +132,7 @@ const CATALOG = [
     modules: ['A healing garden', 'Harvesting at the right time', 'Drying & storing herbs', 'Teas, tinctures & infusions', 'Salves & balms', 'Your home apothecary']
   },
   {
-    id: 'fire-safety', title: 'Fire Safety on the Land', cat: 'Stewardship', grad: 4, icon: 'fire',
+    id: 'fire-safety', title: 'Fire Safety on the Land', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12,
     level: 'All levels', rating: 4.6, learners: 540, required: true, due: 'Due in 3 days',
     desc: 'The Alentejo summer asks for respect. Defensible space, safe burning windows, equipment and what to do in the first sixty seconds of a wildfire.',
     modules: ['The 2026 fire season', 'Defensible space around buildings', 'Safe burning windows', 'Tools & water on hand', 'Reading wind & terrain', 'The first 60 seconds', 'Reporting & evacuation', 'Land-clearing the right way', 'Certification check']
@@ -383,7 +383,13 @@ const UI = {
     mis_h:'Field Mission', mis_sub:'Take what you learned onto the land — photo proof earns real XP.', mis_note_ph:'What did you notice? What did you do?', mis_photo:'Add photo proof', mis_submit:'Submit for review', mis_pending:'Submitted — awaiting review 🌾', mis_approved:'Mission approved!', mis_claim:'Claim', mis_declined:'Not approved this time — read the brief again and resubmit.', mis_done:'Mission complete', mis_signin:'Sign in to take on field missions',
     coach_h:'Practice arena', coach_sub:'A safe place to practice the hard conversation — with an AI playing the other side.', coach_goal:'Your goal', coach_start:'Start the conversation', coach_end:'End & get feedback', coach_again:'Practice again', coach_ph:'Your reply…', coach_score:'Your feedback', coach_thinking:'…',
     rate_h:'How was this course?', rate_thanks:'Thank you — this helps us grow the library.',
-    res_h:'Resources', cal_add:'Add to calendar', comm_pin:'Pin', comm_unpin:'Unpin', comm_delete:'Delete', comm_confirm_del:'Delete this post for everyone?', comm_confirm_del_reply:'Delete this reply?', comm_deleted:'Deleted', comm_privacy:'Your progress is stored in your EdenRise account (Firestore, EU) and only you — and EdenRise admins — can see it. Turn nudges on or off anytime in your profile.',
+    res_h:'Resources', cal_add:'Add to calendar',
+    ask_h:'Ask the Academy', ask_sub:'Any question about the land — answered from your team\u2019s own courses.', ask_ph:'e.g. How do I slow erosion on the slope path?', ask_go:'Ask', ask_refs:'Learn more in', ask_thinking:'Reading the library…', ask_fail:'Could not answer right now — try again.',
+    skills_h:'Skills', skills_sub:'What your learning is building — course by course.',
+    comp_expired:'Certification expired', comp_expiring:'Expires soon', comp_renew:'Renew', nudge_recert_t:'Time to recertify', nudge_recert_b:'Your {course} certification {when} — a quick rewatch renews it.',
+    jour_h:'Journeys', jour_sub:'Structured paths with milestones, field missions and a capstone.', jour_stage:'Stage', jour_mission_tag:'+ field mission', jour_capstone:'Capstone', jour_done:'Journey complete', jour_cert:'Journey certificate', jour_progress:'complete', jour_start:'Begin the journey', jour_continue:'Continue the journey',
+    flash_h:'Review deck', flash_sub:'Five quick cards from what you\u2019ve learned — keep it fresh.', flash_flip:'Tap to flip', flash_next:'Next', flash_got:'Got it', flash_done:'Deck done — see you tomorrow 🌱', flash_empty:'Finish a course to build your review deck.', flash_open:'Review 5 cards',
+    board_all:'Everyone', board_dept:'My department', live_attended:'Attendance counted — enjoy the session!', comm_pin:'Pin', comm_unpin:'Unpin', comm_delete:'Delete', comm_confirm_del:'Delete this post for everyone?', comm_confirm_del_reply:'Delete this reply?', comm_deleted:'Deleted', comm_privacy:'Your progress is stored in your EdenRise account (Firestore, EU) and only you — and EdenRise admins — can see it. Turn nudges on or off anytime in your profile.',
     take_title:'What you take with you', take_sub:'Three things worth keeping from this module.', take_continue:'Keep going →', take_done:'Finish course 🎉',
     match_goal:'For your goal', missing_ask:'Not seeing what you need? Tell the AI →', missing_prompt:'Tell me what you’re looking for — a topic, a problem on the land, a skill — and I’ll find it or flag it for the EdenRise team to add. Your path only gets smarter when you push back on it.',
     assigned_tag:'Assigned', chosen_tag:'Your pick',
@@ -443,7 +449,13 @@ const UI = {
     mis_h:'Missão de Campo', mis_sub:'Leve o que aprendeu para o terreno — a prova fotográfica vale XP real.', mis_note_ph:'O que reparou? O que fez?', mis_photo:'Adicionar foto', mis_submit:'Submeter para revisão', mis_pending:'Submetido — em revisão 🌾', mis_approved:'Missão aprovada!', mis_claim:'Reclamar', mis_declined:'Não aprovada desta vez — releia o guião e volte a submeter.', mis_done:'Missão concluída', mis_signin:'Inicie sessão para aceitar missões de campo',
     coach_h:'Arena de prática', coach_sub:'Um lugar seguro para praticar a conversa difícil — com uma IA do outro lado.', coach_goal:'O seu objetivo', coach_start:'Começar a conversa', coach_end:'Terminar e receber feedback', coach_again:'Praticar de novo', coach_ph:'A sua resposta…', coach_score:'O seu feedback', coach_thinking:'…',
     rate_h:'Como foi este curso?', rate_thanks:'Obrigado — isto ajuda-nos a fazer crescer a biblioteca.',
-    res_h:'Recursos', cal_add:'Adicionar ao calendário', comm_pin:'Fixar', comm_unpin:'Soltar', comm_delete:'Eliminar', comm_confirm_del:'Eliminar esta publicação para todos?', comm_confirm_del_reply:'Eliminar esta resposta?', comm_deleted:'Eliminado', comm_privacy:'O seu progresso é guardado na sua conta EdenRise (Firestore, UE) e só você — e os administradores da EdenRise — o podem ver. Ative ou desative os lembretes no seu perfil quando quiser.',
+    res_h:'Recursos', cal_add:'Adicionar ao calendário',
+    ask_h:'Pergunte à Academia', ask_sub:'Qualquer pergunta sobre a terra — respondida a partir dos cursos da equipa.', ask_ph:'ex.: Como travo a erosão no caminho da encosta?', ask_go:'Perguntar', ask_refs:'Aprenda mais em', ask_thinking:'A ler a biblioteca…', ask_fail:'Não foi possível responder — tente de novo.',
+    skills_h:'Competências', skills_sub:'O que a sua aprendizagem está a construir — curso a curso.',
+    comp_expired:'Certificação expirada', comp_expiring:'Expira em breve', comp_renew:'Renovar', nudge_recert_t:'Hora de recertificar', nudge_recert_b:'A sua certificação de {course} {when} — uma revisão rápida renova-a.',
+    jour_h:'Jornadas', jour_sub:'Percursos estruturados com marcos, missões de campo e um projeto final.', jour_stage:'Etapa', jour_mission_tag:'+ missão de campo', jour_capstone:'Projeto final', jour_done:'Jornada concluída', jour_cert:'Certificado da jornada', jour_progress:'concluída', jour_start:'Começar a jornada', jour_continue:'Continuar a jornada',
+    flash_h:'Baralho de revisão', flash_sub:'Cinco cartas rápidas do que aprendeu — mantenha fresco.', flash_flip:'Toque para virar', flash_next:'Seguinte', flash_got:'Já sei', flash_done:'Baralho feito — até amanhã 🌱', flash_empty:'Termine um curso para criar o seu baralho.', flash_open:'Rever 5 cartas',
+    board_all:'Todos', board_dept:'O meu departamento', live_attended:'Presença registada — boa sessão!', comm_pin:'Fixar', comm_unpin:'Soltar', comm_delete:'Eliminar', comm_confirm_del:'Eliminar esta publicação para todos?', comm_confirm_del_reply:'Eliminar esta resposta?', comm_deleted:'Eliminado', comm_privacy:'O seu progresso é guardado na sua conta EdenRise (Firestore, UE) e só você — e os administradores da EdenRise — o podem ver. Ative ou desative os lembretes no seu perfil quando quiser.',
     take_title:'O que leva consigo', take_sub:'Três coisas a guardar deste módulo.', take_continue:'Continuar →', take_done:'Terminar curso 🎉',
     match_goal:'Para o seu objetivo', missing_ask:'Não encontra o que precisa? Diga à IA →', missing_prompt:'Diga-me o que procura — um tema, um problema na terra, uma competência — e eu encontro-o ou sinalizo-o à equipa EdenRise para o criar. O seu percurso só fica mais inteligente quando o desafia.',
     assigned_tag:'Atribuído', chosen_tag:'Escolha sua',
@@ -591,3 +603,58 @@ const ROLEPLAY = {
   }
 };
 const roleplayFor = id => { const r = ROLEPLAY[id]; return r ? (_lang() === 'pt' ? r.pt : r.en) : null; };
+
+/* ================= Deep-build pack: skills, journeys ================= */
+const SKILLS = [
+  { key: 'soil', en: 'Soil literacy', pt: 'Literacia do solo' },
+  { key: 'water', en: 'Water design', pt: 'Desenho de água' },
+  { key: 'food', en: 'Food & forest', pt: 'Alimento e floresta' },
+  { key: 'nature', en: 'Nature connection', pt: 'Ligação à natureza' },
+  { key: 'craft', en: 'Craft & building', pt: 'Ofício e construção' },
+  { key: 'wellbeing', en: 'Wellbeing', pt: 'Bem-estar' },
+  { key: 'community', en: 'Community', pt: 'Comunidade' },
+  { key: 'leadership', en: 'Leadership', pt: 'Liderança' },
+  { key: 'safety', en: 'Land safety', pt: 'Segurança no terreno' }
+];
+const tskill = k => { const s = SKILLS.find(x => x.key === k); return s ? (_lang() === 'pt' ? s.pt : s.en) : k; };
+const CAT_SKILL = { 'Land & Soil': 'soil', 'Water & Climate': 'water', 'Food & Forest': 'food', 'Nature Connection': 'nature', 'Craft & Hands': 'craft', 'Wellbeing': 'wellbeing', 'Community': 'community', 'Leadership': 'leadership', 'Stewardship': 'nature' };
+const COURSE_SKILLS = {
+  'land-team-journey': ['leadership', 'community'],
+  'fire-safety': ['safety'],
+  'capstone-land': ['soil', 'water', 'food'],
+  'rainwater': ['water', 'craft'],
+  'natural-building': ['craft'],
+  'community-land': ['community', 'leadership'],
+  'ethics': ['community'],
+  'regen-design': ['soil', 'water'],
+  'rewilding': ['nature', 'food'],
+  'herbal': ['wellbeing', 'nature']
+};
+const skillsOf = c => COURSE_SKILLS[c.id] || [CAT_SKILL[c.cat] || 'nature'];
+
+/* Journeys — structured milestone paths with a capstone */
+const JOURNEYS = [
+  {
+    id: 'land-steward', icon: 'mountain', grad: 7, xp: 300,
+    en: { title: 'The Land Steward Journey', desc: 'From reading the land to a full land plan — the complete formation, proven on the ground.' },
+    pt: { title: 'A Jornada do Guardião da Terra', desc: 'De ler a terra a um plano completo — a formação inteira, provada no terreno.' },
+    stages: [
+      { course: 'land-literacy' },
+      { course: 'living-soil', mission: true },
+      { course: 'water-cycles', mission: true },
+      { course: 'agroforestry' },
+      { course: 'capstone-land', capstone: true }
+    ]
+  },
+  {
+    id: 'grounded-leader', icon: 'compass', grad: 4, xp: 250,
+    en: { title: 'The Grounded Leader', desc: 'Lead a land team the EdenRise way — above the line, in community, with roots.' },
+    pt: { title: 'O Líder Enraizado', desc: 'Liderar uma equipa de terra à maneira EdenRise — acima da linha, em comunidade, com raízes.' },
+    stages: [
+      { course: 'land-team-journey', mission: true },
+      { course: 'ethics' },
+      { course: 'community-land', capstone: true }
+    ]
+  }
+];
+const tjour = (j, k) => (_lang() === 'pt' ? j.pt : j.en)[k];

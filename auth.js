@@ -100,7 +100,7 @@ window.EdenCloud = {
       name, username: p.username || '',
       initials: name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER',
       xp: st.xp || 0, streak: st.streak || 0, level: st.xp != null ? st.xp : 0,
-      joinedAt: p.joinedAt || null,
+      joinedAt: p.joinedAt || null, dept: p.dept || null,
       lastSeen: serverTimestamp(), updatedAt: serverTimestamp()
     }, { merge: true }).catch(() => {});
   },

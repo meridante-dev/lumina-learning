@@ -121,9 +121,11 @@ function checkBadges(silent) {
   if (earned.length) { save(); if (!silent) earned.forEach((b, i) => setTimeout(() => toast(`Badge earned — ${b.title} 🏅`, '🏅'), 500 + i * 900)); }
 }
 let boardCache = null;   /* real members, from the leaderboard collection */
+let boardScope = 'all';
 function leaderboard() {
-  const meRow = { uid: myUid(), name: displayName(), initials: userInitials(), grad: 3, xp: S.xp || 0, streak: S.streak || 0, me: true };
-  const others = (boardCache || []).filter(r => r.uid && r.uid !== meRow.uid).map(r => Object.assign({ grad: 3 }, r, { me: false }));
+  const meRow = { uid: myUid(), name: displayName(), initials: userInitials(), grad: 3, xp: S.xp || 0, streak: S.streak || 0, me: true, dept: (S.profile && S.profile.dept) || null };
+  let others = (boardCache || []).filter(r => r.uid && r.uid !== meRow.uid).map(r => Object.assign({ grad: 3 }, r, { me: false }));
+  if (boardScope === 'dept' && meRow.dept) others = others.filter(r => r.dept === meRow.dept);
   return [meRow, ...others].sort((a, b) => b.xp - a.xp);
 }
 function initBoard(retries) {
@@ -213,7 +215,7 @@ function pathStepperHTML() {
 
 /* ---------- pages ---------- */
 function renderHome() {
-  const featured = courseById(S.path.find(x => !isDone(x)) || 'leading-data') || courseById('leading-data');
+  const featured = courseById(S.path.find(x => !isDone(x))) || CATALOG.find(c => !isDone(c.id)) || CATALOG[0];
   const fp = prog(featured.id);
   const continuing = CATALOG.filter(c => coursePct(c.id) > 0 && !isDone(c.id));
   const adminAssigned = S.assignments
@@ -269,6 +271,7 @@ function renderHome() {
   <div class="hero-divider" aria-hidden="true"></div>
   ${dailyDropHTML()}
   ${assignmentCardsHTML()}
+  ${askBarHTML()}
   ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
   ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
   <section class="path-banner">
@@ -330,8 +333,9 @@ function renderPaths() {
     </div>
     ${pathStepperHTML()}
   </section>
+  <div class="page-pad" style="padding-top:26px;">${journeysSectionHTML()}</div>
   ${railHTML('Courses in this path', 'In AI-planned order', S.path.map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
-  ${railHTML('Suggested next paths', 'Based on your goal & org needs', ['new-manager', 'prompt-eng', 'ai-agents', 'systems'].map(id => cardHTML(courseById(id))))}
+  ${railHTML('Suggested next paths', 'Based on your goal & org needs', ['regen-design', 'capstone-land', 'community-land', 'seasonal-rhythm'].map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
   ${footerHTML()}</div>`;
 }
 
@@ -454,7 +458,7 @@ function renderCourse(id) {
             <button class="btn btn-glass" data-action="toggle-path" data-id="${id}">${inPath(id) ? t('in_my_path') : t('my_path')}</button>
           </div>
           ${coursePct(id) > 0 && !isDone(id) ? `<div class="hero-progress"><div class="track"><div class="fill" style="width:${coursePct(id)}%"></div></div><span>${coursePct(id)}% ${t('complete')}</span></div>` : ''}
-          ${isDone(id) ? `<div class="hero-progress"><span class="due ok" style="margin:0;">✓ ${t('completed')}${p.score ? ' · ' + t('scored') + ' ' + p.score + '%' : ''}</span></div>` : ''}
+          ${isDone(id) ? (() => { const rs = recertState(c); return `<div class="hero-progress"><span class="due ${rs && rs.st !== 'ok' ? '' : 'ok'}" style="margin:0;">${rs && rs.st === 'expired' ? '🛡 ' + t('comp_expired') + ' — ' + t('comp_renew').toLowerCase() : rs && rs.st === 'expiring' ? '🛡 ' + t('comp_expiring') + ' (' + rs.days + 'd)' : '✓ ' + t('completed') + (p.score ? ' · ' + t('scored') + ' ' + p.score + '%' : '')}</span></div>`; })() : ''}
         </div>
       </div>
     </div>
@@ -591,7 +595,7 @@ function initAdmin(retries) {
   if (adminTab !== 'cockpit') return;
   if (window.EdenMissions) EdenMissions.listPending().then(paintMissions).catch(() => paintMissions([]));
   const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="8"><div class="skel"></div></td></tr>`).join('');
-  EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); paintTrends(); paintAsgList(); }).catch(err => {
+  EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); paintTrends(); paintAsgList(); const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML(); const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML(); }).catch(err => {
     console.error('[cockpit]', err);
     const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="8" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
   });
@@ -684,6 +688,287 @@ function studioPublish() {
     toast(t('studio_published'), '🌿');
     render();
   }).catch(() => toast(t('studio_failed'), '⚠️'));
+}
+
+/* ================= Ask the Academy — AI answers from your own library ================= */
+function libraryContext() {
+  return CATALOG.map(c => {
+    const tk = (c.takeaways && (c.takeaways.en || [])) || (typeof TAKEAWAYS !== 'undefined' && TAKEAWAYS[c.id]) || [];
+    return `[${c.id}] ${c.title} (${c.cat}) — ${c.desc} Modules: ${c.modules.join('; ')}.${tk.length ? ' Key ideas: ' + [].concat(...tk).slice(0, 6).join(' | ') : ''}`;
+  }).join('\n');
+}
+function ensureAskModal() {
+  if ($('#askModal')) return;
+  const el = document.createElement('div');
+  el.className = 'take-overlay'; el.id = 'askModal';
+  el.innerHTML = `<div class="take-card ask-card">
+    <button class="modal-x" data-action="ask-close" aria-label="Close">✕</button>
+    <div class="ob-eyebrow">✦ ${t('ask_h')}</div>
+    <h3 id="askQ" style="font-family:var(--font-display);font-size:22px;margin:8px 0 10px;"></h3>
+    <div id="askBody"></div>
+  </div>`;
+  document.body.appendChild(el);
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+}
+async function openAsk(q) {
+  q = (q || '').trim(); if (!q) return;
+  if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
+  ensureAskModal();
+  $('#askQ').textContent = q;
+  $('#askBody').innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:20px;height:20px;"></span> ${t('ask_thinking')}</div>`;
+  $('#askModal').classList.add('open');
+  try {
+    const raw = await llmComplete({ maxTokens: 700,
+      system: `You are the EdenRise Academy guide (regenerative-living school, Baixo Alentejo, Portugal). Answer the member's question warmly and practically, grounded ONLY in the course library below. Reply as raw JSON: {"answer":str(2-4 sentences, concrete),"refs":[{"courseId":str(an id from the library),"why":str(short)}]} — 1-3 refs, best first. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}\n\nLIBRARY:\n${libraryContext()}`,
+      messages: [{ role: 'user', content: q }] });
+    const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
+    const refs = (j.refs || []).map(r => ({ r, c: courseById(r.courseId) })).filter(x => x.c);
+    $('#askBody').innerHTML = `<p class="ask-answer">${esc(j.answer || '')}</p>
+      ${refs.length ? `<div class="ob-eyebrow" style="margin-top:16px;">${t('ask_refs')}</div>
+      <div class="ask-refs">${refs.map(({ r, c }) => `
+        <div class="ask-ref" data-action="ask-ref" data-id="${c.id}" role="button" tabindex="0">
+          <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
+          <div class="ct"><b>${esc(ctitle(c))}</b><span>${esc(r.why || tcat(c.cat))}</span></div>
+          <span class="ask-go">→</span>
+        </div>`).join('')}</div>` : ''}`;
+  } catch (e) {
+    $('#askBody').innerHTML = `<div class="auth-err on">${t('ask_fail')}</div>`;
+  }
+}
+function askBarHTML() {
+  if (!aiKey()) return '';
+  return `<section class="page-pad" style="padding-top:0;"><div class="ask-bar">
+    <div class="ask-ic">✦</div>
+    <div class="ask-main"><b>${t('ask_h')}</b><span>${t('ask_sub')}</span>
+      <div class="ask-row"><input class="auth-input" id="askInput" placeholder="${t('ask_ph')}"><button class="btn btn-primary btn-sm" data-action="ask-go">${t('ask_go')}</button></div>
+    </div>
+  </div></section>`;
+}
+
+/* ================= Skills — what the learning is building ================= */
+function skillScores() {
+  return SKILLS.map(s => {
+    const tagged = CATALOG.filter(c => skillsOf(c).includes(s.key));
+    if (!tagged.length) return null;
+    const touched = tagged.filter(c => coursePct(c.id) > 0);
+    const score = Math.round(tagged.reduce((a, c) => a + coursePct(c.id), 0) / tagged.length);
+    return { key: s.key, score, touched: touched.length, total: tagged.length };
+  }).filter(Boolean);
+}
+function skillsSectionHTML() {
+  const rows = skillScores().filter(s => s.touched > 0);
+  if (!rows.length) return '';
+  return `<div class="admin-section"><h2>${t('skills_h')}</h2><p class="sect-sub">${t('skills_sub')}</p>
+    <div class="skill-list">${rows.sort((a, b) => b.score - a.score).map(s => `
+      <div class="skill-row"><span class="sk-name">${tskill(s.key)}</span>
+        <div class="track"><div class="fill" style="width:${s.score}%"></div></div>
+        <span class="sk-pct">${s.score}%</span></div>`).join('')}</div>
+  </div>`;
+}
+function memberSkillScores(state) {
+  const pct = id => { const p = (state.progress || {})[id]; return p ? (p.done ? 100 : (p.pct || 0)) : 0; };
+  return SKILLS.map(s => {
+    const tagged = CATALOG.filter(c => skillsOf(c).includes(s.key));
+    return tagged.length ? Math.round(tagged.reduce((a, c) => a + pct(c.id), 0) / tagged.length) : 0;
+  });
+}
+function skillHeatmapHTML() {
+  if (!adminMembers || !adminMembers.length) return '';
+  const heat = v => v >= 60 ? 'h3' : v >= 30 ? 'h2' : v > 0 ? 'h1' : 'h0';
+  return `<div class="admin-section"><h2>🧭 Team skills heatmap</h2>
+    <p class="sect-sub">Where the team is strong, and where the gaps are — completion-weighted per skill.</p>
+    <div class="heat-scroll"><table class="heat-table">
+      <thead><tr><th></th>${SKILLS.map(s => `<th>${s.en}</th>`).join('')}</tr></thead>
+      <tbody>${adminMembers.map(m => `<tr><td>${esc((m.profile && m.profile.name) || 'Learner')}</td>
+        ${memberSkillScores(m.state).map(v => `<td><span class="heat ${heat(v)}" title="${v}%">${v || ''}</span></td>`).join('')}</tr>`).join('')}
+      </tbody>
+    </table></div></div>`;
+}
+
+/* ================= Compliance — certifications that stay alive ================= */
+function recertState(c) {
+  if (!c.recertMonths) return null;
+  const p = prog(c.id); if (!p || !p.done || !p.doneAt) return null;
+  const expiry = p.doneAt + c.recertMonths * 2629800000;
+  const days = Math.ceil((expiry - Date.now()) / 86400000);
+  return days < 0 ? { st: 'expired', days } : days <= 30 ? { st: 'expiring', days } : { st: 'ok', days };
+}
+function complianceHTML() {
+  if (!adminMembers) return '';
+  const courses = CATALOG.filter(c => c.recertMonths);
+  if (!courses.length) return '';
+  const rows = courses.map(c => {
+    const per = adminMembers.map(m => {
+      const p = (m.state.progress || {})[c.id];
+      if (!p || !p.done || !p.doneAt) return null;
+      const days = Math.ceil((p.doneAt + c.recertMonths * 2629800000 - Date.now()) / 86400000);
+      return { name: (m.profile && m.profile.name) || 'Learner', days };
+    }).filter(Boolean);
+    const expired = per.filter(x => x.days < 0), expiring = per.filter(x => x.days >= 0 && x.days <= 30);
+    return `<div class="content-row"><span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
+      <div class="ct"><b>${esc(c.title)}</b><span>renews every ${c.recertMonths}mo · ${per.length} certified${expired.length ? ` · <em class="asg-over">${expired.length} expired (${expired.map(x => x.name.split(' ')[0]).join(', ')})</em>` : ''}${expiring.length ? ` · ${expiring.length} expiring soon` : ''}</span></div>
+      <span class="pub-chip ${expired.length ? 'draft' : 'live'}">${expired.length ? 'ACTION' : 'OK'}</span></div>`;
+  }).join('');
+  return `<div class="admin-section"><h2>🛡 Compliance</h2>
+    <p class="sect-sub">Recurring certifications — who's current, who needs a renewal nudge.</p>${rows}</div>`;
+}
+
+/* ================= AI Cockpit digest ================= */
+async function generateCockpitDigest() {
+  if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
+  if (!adminMembers) { toast('Members are still loading', 'ℹ️'); return; }
+  const el = $('#aiDigest');
+  el.innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:20px;height:20px;"></span> Reading the team's week…</div>`;
+  const sums = adminMembers.map(memberSummary);
+  const data = sums.map(s => `${s.name} (${(adminMembers.find(m => memberSummary(m).name === s.name) || { profile: {} }).profile.dept || 'no dept'}): ${s.pathPct}% path, streak ${s.streak}d, last active ${s.days == null ? 'never' : s.days + 'd ago'}, ${s.atRisk ? 'AT RISK' : 'on track'}`).join('\n');
+  const asgs = activeAssignments().map(a => `${(courseById(a.courseId) || {}).title} → ${a.team}${a.due ? ' due ' + a.due : ''} (${assignmentTrack(a) || 'no data'})`).join('\n') || 'none';
+  try {
+    const raw = await llmComplete({ maxTokens: 700,
+      system: `You are the learning lead's chief of staff at EdenRise Academy. From the member data, write a short leadership digest as raw JSON: {"headline":str(one warm, true sentence about the week),"wins":[1-2 str],"attention":[1-2 str naming specific people kindly],"action":str(ONE concrete recommendation for this week)}. Honest, specific, zero corporate filler.`,
+      messages: [{ role: 'user', content: `MEMBERS:\n${data}\n\nASSIGNMENTS:\n${asgs}` }] });
+    const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
+    el.innerHTML = `<div class="digest-card">
+      <div class="ob-eyebrow">✦ This week</div>
+      <h3>${esc(j.headline || '')}</h3>
+      ${(j.wins || []).map(w => `<p class="dg-row">🌿 ${esc(w)}</p>`).join('')}
+      ${(j.attention || []).map(w => `<p class="dg-row">👀 ${esc(w)}</p>`).join('')}
+      <p class="dg-action"><b>→</b> ${esc(j.action || '')}</p>
+    </div>`;
+  } catch (e) { el.innerHTML = `<div class="auth-err on">Could not write the digest — try again.</div>`; }
+}
+
+/* ================= Journeys — milestone paths with a capstone ================= */
+function journeyStageDone(st) {
+  if (!isDone(st.course)) return false;
+  if (st.mission) {
+    const m = missionState(st.course);
+    return !!(m && m.status === 'approved' && m.claimed);
+  }
+  return true;
+}
+function journeyProgress(j) {
+  const done = j.stages.filter(journeyStageDone).length;
+  return { done, total: j.stages.length, pct: Math.round(done / j.stages.length * 100) };
+}
+function journeyCardHTML(j) {
+  const pr = journeyProgress(j);
+  return `<div class="jour-card" data-action="open-journey" data-id="${j.id}" role="button" tabindex="0">
+    <span class="ci lg t-grad-${j.grad}">${svgIcon(j.icon)}</span>
+    <div class="ct"><b>${esc(tjour(j, 'title'))}</b><span>${esc(tjour(j, 'desc'))}</span>
+      <div class="jour-meta">${j.stages.length} ${t('jour_stage').toLowerCase()}s · +${j.xp} XP · 🎓</div></div>
+    <div class="jour-ring" style="background:conic-gradient(var(--accent) ${pr.pct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${pr.pct}%</span></div>
+  </div>`;
+}
+function journeysSectionHTML() {
+  return `<div class="admin-section" style="border:none;padding-top:0;">
+    <h2>${t('jour_h')}</h2><p class="sect-sub">${t('jour_sub')}</p>
+    ${JOURNEYS.map(journeyCardHTML).join('')}
+  </div>`;
+}
+function renderJourney(id) {
+  const j = JOURNEYS.find(x => x.id === id);
+  if (!j) { location.hash = '#/paths'; return ''; }
+  if (myMissions === null && S.profile && S.profile.uid && window.EdenMissions) { myMissions = []; loadMyMissions(); }
+  const pr = journeyProgress(j);
+  const complete = pr.done === pr.total;
+  if (complete && !(S.journeysDone && S.journeysDone[j.id])) {
+    (S.journeysDone || (S.journeysDone = {}))[j.id] = Date.now(); save();
+    setTimeout(() => awardXp(j.xp, tjour(j, 'title')), 600);
+  }
+  let unlockedNext = true;
+  const stages = j.stages.map((st, i) => {
+    const c = courseById(st.course); if (!c) return '';
+    const done = journeyStageDone(st);
+    const active = !done && unlockedNext;
+    if (!done) unlockedNext = false;
+    const clickable = done || active || isDone(st.course) || coursePct(st.course) > 0;
+    return `<div class="jstage ${done ? 'done' : active || clickable ? 'active' : 'locked'}" ${clickable ? `data-action="open-course" data-id="${c.id}" role="button" tabindex="0"` : ''}>
+      <div class="jnode">${done ? '✓' : i + 1}</div>
+      <div class="jinfo">
+        <span class="jkind">${t('jour_stage')} ${i + 1}${st.capstone ? ` · ${t('jour_capstone')}` : ''}${st.mission ? ` <em>${t('jour_mission_tag')}</em>` : ''}</span>
+        <b>${esc(ctitle(c))}</b>
+        <span class="jsub">${fmtMins(courseMins(c))} · ${coursePct(c.id)}%${st.mission ? ' · 🌾' : ''}</span>
+      </div>
+      ${done ? '' : active ? '<span class="jgo">→</span>' : '<span class="jgo">🔒</span>'}
+    </div>`;
+  }).join('');
+  return `<div class="page"><div class="page-pad">
+    <button class="comm-back" data-action="goto" data-route="#/paths">← ${t('jour_h')}</button>
+    <div class="jour-head">
+      <span class="ci lg t-grad-${j.grad}">${svgIcon(j.icon)}</span>
+      <div><h1 class="page-title" style="margin:0;">${esc(tjour(j, 'title'))}</h1>
+      <p class="page-sub" style="margin:6px 0 0;">${esc(tjour(j, 'desc'))}</p></div>
+    </div>
+    <div class="hero-progress" style="max-width:420px;margin:18px 0 6px;"><div class="track"><div class="fill" style="width:${pr.pct}%"></div></div><span>${pr.done}/${pr.total} · ${pr.pct}% ${t('jour_progress')}</span></div>
+    ${complete ? `<div class="jour-done">🎓 ${t('jour_done')} · +${j.xp} XP <button class="btn btn-glass btn-sm" data-action="jour-cert" data-id="${j.id}">⤓ ${t('jour_cert')}</button></div>` : ''}
+    <div class="jstages">${stages}</div>
+  </div>${footerHTML()}</div>`;
+}
+function downloadJourneyCert(id) {
+  const j = JOURNEYS.find(x => x.id === id); if (!j) return;
+  const key = 'journey-' + id;
+  const doneAt = (S.journeysDone && S.journeysDone[id]) || Date.now();
+  /* borrow the course certificate with a journey identity */
+  const hadProg = S.progress[key];
+  S.progress[key] = { done: true, doneAt };
+  const cv = certCanvas({ id: key, title: tjour(j, 'title'), cat: 'Stewardship', modules: j.stages, moduleDurations: j.stages.map(st => { const c = courseById(st.course); return c ? courseMins(c) : 12; }) });
+  if (hadProg) S.progress[key] = hadProg; else delete S.progress[key];
+  cv.toBlob(b => {
+    const url = URL.createObjectURL(b);
+    const a = document.createElement('a'); a.href = url; a.download = `edenrise-journey-${id}.png`;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    toast(t('jour_cert'), '🎓');
+  }, 'image/png');
+}
+
+/* ================= Flashcards — the review deck ================= */
+let flashDeck = null, flashIdx = 0, flashFlipped = false;
+function buildFlashDeck() {
+  const cards = [];
+  CATALOG.filter(c => isDone(c.id)).forEach(c => {
+    const qz = (c.quiz && (c.quiz[_lang()] || c.quiz.en)) || (typeof COURSE_QUIZ !== 'undefined' && COURSE_QUIZ[c.id] && (COURSE_QUIZ[c.id][_lang()] || COURSE_QUIZ[c.id].en)) || [];
+    qz.forEach(q => cards.push({ front: q.q, back: q.opts[q.a], from: ctitle(c) }));
+  });
+  /* deterministic daily shuffle */
+  const day = new Date().toISOString().slice(0, 10);
+  let seed = [...day].reduce((a, ch) => a + ch.charCodeAt(0), 0);
+  const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+  return cards.sort(() => rnd() - 0.5).slice(0, 5);
+}
+function flashCardHTML() {
+  const c = flashDeck[flashIdx];
+  return `<div class="flash-count">${flashIdx + 1} / ${flashDeck.length}</div>
+    <div class="flash-card ${flashFlipped ? 'flipped' : ''}" data-action="flash-flip" role="button" tabindex="0">
+      <div class="flash-face">${esc(flashFlipped ? c.back : c.front)}</div>
+      <span class="flash-hint">${flashFlipped ? esc(c.from) : t('flash_flip')}</span>
+    </div>
+    <div class="flash-foot">${flashFlipped ? `<button class="btn btn-primary btn-sm" data-action="flash-next">${flashIdx + 1 >= flashDeck.length ? t('flash_got') : t('flash_next')} →</button>` : ''}</div>`;
+}
+function openFlash() {
+  flashDeck = buildFlashDeck();
+  if (!flashDeck.length) { toast(t('flash_empty'), 'ℹ️'); return; }
+  flashIdx = 0; flashFlipped = false;
+  if (!$('#flashModal')) {
+    const el = document.createElement('div');
+    el.className = 'take-overlay'; el.id = 'flashModal';
+    el.innerHTML = `<div class="take-card flash-wrap"><button class="modal-x" data-action="flash-close" aria-label="Close">✕</button>
+      <div class="ob-eyebrow">🃏 ${t('flash_h')}</div><div id="flashBody"></div></div>`;
+    document.body.appendChild(el);
+    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+  }
+  $('#flashBody').innerHTML = flashCardHTML();
+  $('#flashModal').classList.add('open');
+}
+function flashNext() {
+  if (flashIdx + 1 >= flashDeck.length) {
+    $('#flashModal').classList.remove('open');
+    const day = new Date().toISOString().slice(0, 10);
+    if (S.flashDay !== day) { S.flashDay = day; save(); awardXp(10, t('flash_h')); }
+    else toast(t('flash_done'), '🌱');
+    return;
+  }
+  flashIdx++; flashFlipped = false;
+  $('#flashBody').innerHTML = flashCardHTML();
 }
 
 /* ================= Certificates — a moment you can hold ================= */
@@ -808,6 +1093,9 @@ function compressPhoto(file, cb) {
   };
   img.src = URL.createObjectURL(file);
 }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target && e.target.id === 'askInput') openAsk(e.target.value);
+});
 document.addEventListener('change', e => {
   if (e.target && e.target.id === 'misPhoto' && e.target.files && e.target.files[0]) {
     compressPhoto(e.target.files[0], data => {
@@ -1063,7 +1351,10 @@ function adminCockpitHTML() {
         <tbody id="cockpitRoster"><tr><td colspan="8" class="empty-note">Loading members…</td></tr></tbody>
       </table></div>
       <div class="two-col" id="cockpitTrends" style="margin-top:18px;"></div>
+      <div style="margin-top:18px;"><button class="btn btn-glass btn-sm" data-action="ai-digest">✦ AI weekly digest</button><div id="aiDigest"></div></div>
     </div>
+    <div id="cockpitHeat"></div>
+    <div id="cockpitComp"></div>
     <div class="admin-section">
       <h2>🌾 Field Missions review</h2>
       <p class="sect-sub">Members' real-world proof, waiting for your eyes. Approve to release their XP.</p>
@@ -1145,7 +1436,8 @@ function openCourseEditor(id) {
       mins: (c.moduleDurations && c.moduleDurations[i]) || 12
     })),
     resourcesRaw: (c.resources || []).map(r => `${r.label} | ${r.url}`).join('\n'),
-    sequential: !!c.sequential
+    sequential: !!c.sequential,
+    recertMonths: c.recertMonths || 0
   };
   adminTab = 'content';
   render();
@@ -1190,7 +1482,8 @@ function courseEditorHTML() {
     </div>
     <div class="ce-two">
       <div class="field"><label>Resources — one per line: Label | https://url</label><textarea class="comm-input" rows="2" data-ce="resourcesRaw" placeholder="Soil worksheet | https://…">${esc(e.resourcesRaw)}</textarea></div>
-      <div class="field" style="display:flex;align-items:flex-end;padding-bottom:6px;"><label class="lv-check" style="margin:0;"><input type="checkbox" id="ceSeq" ${e.sequential ? 'checked' : ''}> 🔒 Sequential — modules unlock in order</label></div>
+      <div class="field" style="display:flex;align-items:flex-end;gap:18px;padding-bottom:6px;flex-wrap:wrap;"><label class="lv-check" style="margin:0;"><input type="checkbox" id="ceSeq" ${e.sequential ? 'checked' : ''}> 🔒 Sequential — modules unlock in order</label>
+      <label class="lv-check" style="margin:0;">🛡 Recertify every <input class="auth-input ce-mins" id="ceRecert" type="number" min="0" max="60" value="${attr(e.recertMonths || '')}" placeholder="0" style="width:64px;padding:6px 8px;"> months</label></div>
     </div>
     <h3 class="ce-h3">Modules <span class="sect-sub" style="display:inline;font-weight:400;">— paste a Vimeo or YouTube link and the player wires it automatically</span></h3>
     <div id="ceMods">${modRows}</div>
@@ -1237,6 +1530,7 @@ function ceSave() {
     return /^https?:\/\//.test(url) ? { label: (m.length > 1 ? m[0] : url).trim(), url } : null;
   }).filter(Boolean);
   out.sequential = !!($('#ceSeq') && $('#ceSeq').checked);
+  out.recertMonths = Math.max(0, +($('#ceRecert') && $('#ceRecert').value) || 0) || null;
   if (!out.custom) out.edited = true;
   const clean = JSON.parse(JSON.stringify(out));   /* Firestore rejects undefined values */
   EdenCloud.saveCourse(clean).then(() => {
@@ -1424,7 +1718,10 @@ function renderProgress() {
       </div>
     </div>
 
+    ${skillsSectionHTML()}
     ${certsSectionHTML()}
+    <div class="admin-section"><h2>🃏 ${t('flash_h')}</h2><p class="sect-sub">${t('flash_sub')}</p>
+      <button class="btn btn-glass btn-sm" data-action="flash-open">${t('flash_open')}</button></div>
 
     <div class="admin-section">
       <h2>${t('badges_h')}</h2>
@@ -1442,6 +1739,10 @@ function renderProgress() {
     <div class="admin-section">
       <h2>${t('leaders_board')}</h2>
       <p class="sect-sub">${t('board_sub')}</p>
+      ${(S.profile && S.profile.dept) ? `<div class="board-scope">
+        <button class="rx ${boardScope === 'all' ? 'on' : ''}" data-action="board-scope" data-v="all">${t('board_all')}</button>
+        <button class="rx ${boardScope === 'dept' ? 'on' : ''}" data-action="board-scope" data-v="dept">${t('board_dept')} · ${tdept(S.profile.dept)}</button>
+      </div>` : ''}
       ${nudge}
       <div class="board">
         ${board.map((r, i) => `
@@ -1544,6 +1845,10 @@ function computeNudges() {
     .map(([id, p]) => ({ id, days: Math.floor((Date.now() - p.doneAt) / 86400000) }))
     .filter(x => inWindow(x.days))
     .sort((a, b) => a.days - b.days)[0];
+  CATALOG.filter(c => c.recertMonths).forEach(c => {
+    const rs = recertState(c);
+    if (rs && rs.st !== 'ok') out.push({ id: 'recert-' + c.id, icon: '🛡', title: t('nudge_recert_t'), body: t('nudge_recert_b').replace('{course}', ctitle(c)).replace('{when}', rs.st === 'expired' ? t('comp_expired').toLowerCase() : t('comp_expiring').toLowerCase()), route: '#/course/' + c.id });
+  });
   if (refresh) out.push({ id: 'refresh', icon: '🌱', title: t('nudge_refresh_t'), body: t('nudge_refresh_b').replace('{course}', ctitle(courseById(refresh.id))).replace('{n}', refresh.days), route: '#/course/' + refresh.id });
   return out.slice(0, 5);
 }
@@ -1974,7 +2279,7 @@ function render() {
   $$('.nav-links a, .mobile-drawer a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#/${route}`));
   syncChrome();
   if (route !== 'community') teardownCommunity();
-  $('#app').innerHTML = route === 'course' ? renderCourse(param) : (routes[route] || renderHome)();
+  $('#app').innerHTML = route === 'course' ? renderCourse(param) : route === 'journey' ? renderJourney(param) : (routes[route] || renderHome)();
   makeFocusable($('#app'));
   lazyBackgrounds();
   if (route === 'community') initCommunity();
@@ -2718,6 +3023,7 @@ document.addEventListener('click', e => {
       save(); break;
     case 'join-live': {
       toast('Joining the live studio…', '🔴');
+      if (!(S.attended || (S.attended = [])).includes(id)) { S.attended.push(id); save(); setTimeout(() => awardXp(15, t('live_attended')), 1200); }
       const s = liveList().find(x => x.id === id);
       setTimeout(() => {
         playing = null;
@@ -2795,6 +3101,17 @@ document.addEventListener('click', e => {
     }
     case 'cal-ics': { const s = liveList().find(x => x.id === id); if (s) icsForSession(s); break; }
     case 'seq-locked': toast(t('mod_locked'), '🔒'); break;
+    case 'ask-go': openAsk($('#askInput') && $('#askInput').value); break;
+    case 'ask-close': $('#askModal').classList.remove('open'); break;
+    case 'ask-ref': $('#askModal').classList.remove('open'); location.hash = '#/course/' + id; break;
+    case 'board-scope': boardScope = el.dataset.v; render(); break;
+    case 'flash-open': openFlash(); break;
+    case 'flash-flip': flashFlipped = !flashFlipped; $('#flashBody').innerHTML = flashCardHTML(); break;
+    case 'flash-next': flashNext(); break;
+    case 'flash-close': $('#flashModal').classList.remove('open'); break;
+    case 'open-journey': location.hash = '#/journey/' + id; break;
+    case 'jour-cert': downloadJourneyCert(id); break;
+    case 'ai-digest': generateCockpitDigest(); break;
     case 'voice-search': startVoiceSearch(); break;
     case 'save-profile': saveProfile(); break;
     case 'gdpr-export': exportMyData(); break;

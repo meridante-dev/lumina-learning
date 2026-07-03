@@ -1935,3 +1935,85 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .res-row:hover { color: var(--accent); }
 .bars.sm { height: 110px; }
 .bars .bl { font-size: 10px; color: var(--text-faint); }
+
+/* ================= Deep-build pack ================= */
+/* ask the academy */
+.ask-bar { display: flex; gap: 16px; background: linear-gradient(120deg, rgba(200,164,93,.08), rgba(166,195,165,.05)); border: 1px solid rgba(200,164,93,.3); border-radius: 18px; padding: 20px 22px; margin: 10px 0; }
+.ask-ic { font-size: 22px; color: var(--accent); }
+.ask-main { flex: 1; min-width: 0; }
+.ask-main b { font-family: var(--font-display); font-size: 18px; }
+.ask-main > span { display: block; font-size: 12.5px; color: var(--text-dim); margin: 3px 0 10px; }
+.ask-row { display: flex; gap: 8px; }
+.ask-row input { flex: 1; }
+.ask-card { max-width: 560px; width: min(560px, 92vw); }
+.ask-answer { font-size: 15px; line-height: 1.65; color: var(--text); }
+.ask-refs { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.ask-ref { display: flex; align-items: center; gap: 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; cursor: pointer; transition: border-color .15s; }
+.ask-ref:hover { border-color: var(--accent); }
+.ask-ref .ct { flex: 1; min-width: 0; }
+.ask-ref .ct b { display: block; font-size: 13.5px; }
+.ask-ref .ct span { font-size: 11.5px; color: var(--text-faint); }
+.ask-go { color: var(--accent); }
+
+/* skills */
+.skill-list { display: flex; flex-direction: column; gap: 10px; max-width: 520px; }
+.skill-row { display: grid; grid-template-columns: 150px 1fr 42px; align-items: center; gap: 12px; }
+.sk-name { font-size: 13px; color: var(--text-dim); }
+.sk-pct { font-size: 12px; color: var(--accent); font-weight: 700; text-align: right; }
+.heat-scroll { overflow-x: auto; }
+.heat-table { border-collapse: collapse; font-size: 12px; min-width: 640px; }
+.heat-table th { font-size: 10px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-faint); padding: 6px 8px; text-align: center; font-weight: 700; }
+.heat-table td { padding: 4px 8px; text-align: center; }
+.heat-table td:first-child { text-align: left; white-space: nowrap; color: var(--text-dim); }
+.heat { display: inline-grid; place-items: center; width: 34px; height: 26px; border-radius: 7px; font-weight: 700; font-size: 11px; }
+.heat.h0 { background: var(--surface-2); color: var(--text-faint); }
+.heat.h1 { background: rgba(200,164,93,.12); color: var(--accent); }
+.heat.h2 { background: rgba(200,164,93,.3); color: #f0dcb4; }
+.heat.h3 { background: rgba(166,195,165,.35); color: #dcefdb; }
+
+/* digest */
+.digest-card { background: var(--surface-2); border: 1px solid rgba(200,164,93,.3); border-radius: 14px; padding: 18px 20px; margin-top: 12px; max-width: 640px; }
+.digest-card h3 { font-family: var(--font-display); font-size: 19px; margin: 6px 0 10px; }
+.dg-row { font-size: 13.5px; color: var(--text-dim); padding: 4px 0; line-height: 1.5; }
+.dg-action { font-size: 13.5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+
+/* journeys */
+.jour-card { display: flex; align-items: center; gap: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; margin: 10px 0; cursor: pointer; transition: border-color .15s, transform .15s; }
+.jour-card:hover { border-color: rgba(200,164,93,.5); transform: translateY(-1px); }
+.jour-card .ct { flex: 1; min-width: 0; }
+.jour-card .ct b { display: block; font-family: var(--font-display); font-size: 19px; }
+.jour-card .ct > span { font-size: 13px; color: var(--text-dim); }
+.jour-meta { font-size: 11.5px; color: var(--text-faint); margin-top: 5px; }
+.ci.lg { width: 52px; height: 52px; border-radius: 16px; font-size: 22px; }
+.jour-ring { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; }
+.jour-ring span { width: 42px; height: 42px; border-radius: 50%; background: var(--bg); display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--accent); }
+.jour-head { display: flex; gap: 18px; align-items: center; margin-top: 14px; }
+.jour-done { display: inline-flex; align-items: center; gap: 12px; background: rgba(166,195,165,.12); border: 1px solid rgba(166,195,165,.35); border-radius: 12px; padding: 10px 16px; font-size: 13.5px; font-weight: 600; margin: 8px 0; }
+.jstages { margin: 22px 0; display: flex; flex-direction: column; }
+.jstage { display: flex; align-items: center; gap: 16px; padding: 16px 12px; border-left: 2px solid var(--line); margin-left: 16px; position: relative; }
+.jstage.done { border-left-color: var(--accent-2); }
+.jstage.active { border-left-color: var(--accent); cursor: pointer; }
+.jstage.done { cursor: pointer; }
+.jstage.locked { opacity: .5; }
+.jnode { position: absolute; left: -17px; width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--line); display: grid; place-items: center; font-size: 13px; font-weight: 700; }
+.jstage.done .jnode { background: rgba(166,195,165,.2); border-color: var(--accent-2); color: var(--accent-2); }
+.jstage.active .jnode { border-color: var(--accent); color: var(--accent); }
+.jinfo { margin-left: 28px; flex: 1; min-width: 0; }
+.jkind { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--text-faint); font-weight: 700; }
+.jkind em { color: var(--accent); font-style: normal; }
+.jinfo b { display: block; font-size: 15.5px; margin: 3px 0; }
+.jsub { font-size: 12px; color: var(--text-faint); }
+.jgo { color: var(--accent); font-size: 15px; }
+
+/* flashcards */
+.flash-wrap { max-width: 440px; width: min(440px, 92vw); text-align: center; }
+.flash-count { font-size: 11.5px; color: var(--text-faint); font-weight: 700; letter-spacing: .06em; margin: 10px 0; }
+.flash-card { background: var(--surface-2); border: 1px solid rgba(200,164,93,.35); border-radius: 18px; min-height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 26px; cursor: pointer; transition: transform .15s; }
+.flash-card:hover { transform: translateY(-2px); }
+.flash-card.flipped { background: rgba(166,195,165,.1); border-color: rgba(166,195,165,.4); }
+.flash-face { font-family: var(--font-display); font-size: 19px; line-height: 1.45; }
+.flash-hint { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+.flash-foot { min-height: 46px; display: grid; place-items: center; margin-top: 12px; }
+
+/* board scope */
+.board-scope { display: flex; gap: 8px; margin-bottom: 12px; }
