@@ -1837,3 +1837,29 @@ html.os-android body { text-rendering: optimizeLegibility; }
   .pulse-card { min-width: 210px; flex-shrink: 0; }
   .comm-pulse .link-quiet { display: none; }
 }
+
+/* ================= EdenRise Studio (admin) ================= */
+.studio-tabs { margin: 22px 0 4px; }
+.pub-chip.edited { background: rgba(200,164,93,.12); color: var(--accent); border: 1px solid rgba(200,164,93,.3); }
+.content-table { display: flex; flex-direction: column; }
+.ce-editor .field { margin: 0; }
+.ce-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.ce-h3 { font-size: 15px; margin: 22px 0 10px; font-weight: 650; }
+.ce-mod { display: flex; align-items: flex-start; gap: 10px; padding: 12px 0; border-top: 1px solid var(--line); }
+.ce-mod-n { width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); color: var(--text-faint); font-size: 11.5px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; margin-top: 8px; }
+.ce-mod-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ce-mod-grid input[data-cm="video"] { grid-column: 1 / 2; }
+.ce-mins { max-width: 90px; }
+.ce-actions { display: flex; gap: 10px; align-items: center; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); flex-wrap: wrap; }
+.btn.danger { color: #d99; border-color: rgba(221,153,153,.3); }
+.lv-row { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+.lv-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.lv-check { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--text-dim); white-space: nowrap; margin-top: 9px; cursor: pointer; }
+.lv-check input { accent-color: var(--accent); }
+.off-badge { background: linear-gradient(120deg, rgba(200,164,93,.18), rgba(200,164,93,.08)); border: 1px solid rgba(200,164,93,.4); color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; }
+@media (max-width: 760px) {
+  .ce-two, .ce-mod-grid, .lv-grid { grid-template-columns: 1fr; }
+  .lv-row, .ce-mod { flex-wrap: wrap; }
+}
+.ce-editor .field label { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--text-faint); margin: 0 0 7px; }
+.ce-editor select, #bcChannel { width: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; color: var(--text); font-family: var(--font-body); font-size: 14px; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a6c3a5' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }

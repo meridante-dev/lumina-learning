@@ -147,7 +147,19 @@ window.EdenCloud = {
   },
   async listCourses() {
     const snap = await getDocs(collection(db, 'courses'));
-    return snap.docs.map(d => d.data().course).filter(Boolean);
+    const out = { courses: [], meta: null };
+    snap.docs.forEach(d => {
+      const x = d.data();
+      if (d.id === '__meta') out.meta = x.meta || null;
+      else if (x.course) out.courses.push(x.course);
+    });
+    return out;
+  },
+  /* studio meta (live sessions schedule, …) — lives in the public courses collection
+     so guests can read it and ONLY admins can write it, with the existing rules */
+  async saveMeta(meta) {
+    const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
+    await setDoc(doc(db, 'courses', '__meta'), { meta, authorUid: u.uid, updatedAt: serverTimestamp() });
   },
   // admin-only (enforced by Firestore rules): read every member's profile + state
   async listMembers() {
@@ -189,13 +201,20 @@ window.EdenForum = {
       cb(replies);
     }, err => { console.error('[forum] thread sub', err); cb([]); });
   },
-  async createPost({ channel, kind, title, body }) {
+  async createPost({ channel, kind, title, body, poll, official, pinned }) {
     if (!auth.currentUser) throw new Error('not-signed-in');
     return addDoc(collection(db, 'forum_posts'), Object.assign({
       channel, kind: kind || 'message', title: title || '', body,
       createdAt: serverTimestamp(), lastActivity: serverTimestamp(),
       replyCount: 0, likes: 0, likedBy: []
-    }, authorStub()));
+    }, poll ? { poll } : {}, official ? { official: true } : {}, pinned ? { pinned: true } : {}, authorStub()));
+  },
+  /* all official broadcasts across channels (equality-only where — no index needed) */
+  async listOfficial() {
+    const snap = await getDocs(query(collection(db, 'forum_posts'), where('official', '==', true)));
+    const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+    posts.sort((a, b) => (ms(b.createdAt) || 0) - (ms(a.createdAt) || 0));
+    return posts;
   },
   async addReply(postId, body) {
     if (!auth.currentUser) throw new Error('not-signed-in');
@@ -243,10 +262,12 @@ window.EdenForum = {
 };
 function ms(ts) { return ts && typeof ts.toMillis === 'function' ? ts.toMillis() : (ts && ts.seconds ? ts.seconds * 1000 : 0); }
 
-/* load team-published courses for everyone (guests included) */
+/* load team-published courses + studio meta for everyone (guests included) */
 (function loadCustomCourses(tries) {
-  window.EdenCloud.listCourses().then(list => {
-    if (list.length && window.EdenApp) window.EdenApp.applyCustomCourses(list);
+  window.EdenCloud.listCourses().then(({ courses, meta }) => {
+    if (!window.EdenApp) return;
+    if (meta && window.EdenApp.applyMeta) window.EdenApp.applyMeta(meta);
+    if (courses.length) window.EdenApp.applyCustomCourses(courses);
   }).catch(() => { if ((tries || 0) < 3) setTimeout(() => loadCustomCourses((tries || 0) + 1), 4000); });
 })(0);
 

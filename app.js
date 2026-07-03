@@ -16,6 +16,10 @@ const isDone = id => !!(prog(id) && prog(id).done);
 const inPath = id => S.path.includes(id);
 const courseMins = c => c.moduleDurations ? c.moduleDurations.reduce((a, b) => a + (b || 12), 0) : c.modules.length * 12;
 const moduleDur = (c, i) => (c.moduleDurations && c.moduleDurations[i]) ? c.moduleDurations[i] + 'm' : '12m';
+/* studio meta (admin-managed, loaded from Firestore courses/__meta) */
+let studioMeta = null;
+const ORIG_COURSES = {};
+const liveList = () => (studioMeta && Array.isArray(studioMeta.live) && studioMeta.live.length) ? studioMeta.live : LIVE_SESSIONS;
 const fmtMins = m => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60 ? (m % 60) + 'm' : ''}`.trim() : `${m}m`;
 const vidFor = (id, mod) => VIDS[(id.length * 7 + mod * 3) % VIDS.length];
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -334,7 +338,7 @@ function renderLive() {
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">${t('live_title')}</h1>
     <p class="page-sub">${t('live_sub')}</p>
-    ${LIVE_SESSIONS.map(s => `
+    ${liveList().map(s => `
       <div class="live-card">
         <div class="live-thumb t-grad-${s.grad}">${svgIcon(s.icon)}${s.live ? '<span class="live-badge">● LIVE</span>' : ''}</div>
         <div class="live-info">
@@ -561,6 +565,11 @@ function initAdmin(retries) {
     const r = $('#cockpitRoster'); if (r) r.innerHTML = `<tr><td colspan="8" class="empty-note">The cockpit needs an internet connection.</td></tr>`;
     return;
   }
+  if (adminTab === 'broadcasts') {
+    if (window.EdenForum && EdenForum.listOfficial) EdenForum.listOfficial().then(paintBroadcasts).catch(() => paintBroadcasts([]));
+    return;
+  }
+  if (adminTab !== 'cockpit') return;
   const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="8"><div class="skel"></div></td></tr>`).join('');
   EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); }).catch(err => {
     console.error('[cockpit]', err);
@@ -657,29 +666,29 @@ function studioPublish() {
   }).catch(() => toast(t('studio_failed'), '⚠️'));
 }
 
-/* ---------- admin console ---------- */
-let uploadedDrafts = [];
-function renderAdmin() {
-  const content = [...uploadedDrafts, ...CATALOG.slice(0, 6)].map(c => `
-    <div class="content-row">
-      <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
-      <div class="ct"><b>${c.title}</b><span>${c.cat} · ${c.modules.length} modules · ${c.learners || 0} learners</span></div>
-      <span class="pub-chip ${c.draft ? 'draft' : 'live'}">${c.draft ? 'DRAFT · AI-built' : 'PUBLISHED'}</span>
-    </div>`).join('');
+/* ---------- admin console — EdenRise Studio ---------- */
+let adminTab = 'cockpit';
+let editingCourse = null;   /* working copy inside the course editor */
+let liveDraft = null;       /* live schedule being edited */
+const attr = s => esc(String(s == null ? '' : s)).replace(/"/g, '&quot;');
+
+function studioTabsHTML() {
+  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['broadcasts', 'Broadcasts'], ['live', 'Live sessions'], ['settings', 'Settings']];
+  return `<div class="comm-pills studio-tabs">${tabs.map(([id, label]) =>
+    `<button class="ch-item ${adminTab === id ? 'active' : ''}" data-action="admin-tab" data-tab="${id}"><span>${label}</span></button>`).join('')}</div>`;
+}
+
+function adminCockpitHTML() {
   const assignments = S.assignments.map((a, i) => {
     const c = courseById(a.courseId);
     return `<div class="assignment-row">📌 <b>${c ? c.title : a.courseId}</b> → ${a.team} · due ${a.due}<button class="ar-x" data-action="unassign" data-idx="${i}" title="Remove">✕</button></div>`;
   }).join('');
-  return `<div class="page"><div class="page-pad">
-    <h1 class="page-title">Leader's Cockpit</h1>
-    <p class="page-sub">EdenRise workspace · live member data from every signed-in learner.</p>
-    <section class="stats" id="cockpitStats" style="margin:28px 0 0;">
+  return `<section class="stats" id="cockpitStats" style="margin:24px 0 0;">
       <div class="stat"><div class="num">—</div><div class="lbl">Members</div></div>
       <div class="stat"><div class="num">—</div><div class="lbl">Avg. completion</div></div>
       <div class="stat"><div class="num">—</div><div class="lbl">Active this week</div></div>
       <div class="stat"><div class="num">—</div><div class="lbl">At risk</div></div>
     </section>
-
     <div class="admin-section">
       <div class="cockpit-head">
         <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
@@ -690,49 +699,300 @@ function renderAdmin() {
         <tbody id="cockpitRoster"><tr><td colspan="8" class="empty-note">Loading members…</td></tr></tbody>
       </table></div>
     </div>
-
-    <div class="admin-section">
-      <h2>${t('studio_title')}</h2>
-      <p class="sect-sub">${t('studio_sub')}</p>
-      <div class="org-key">
-        <div class="notif-info"><b>${t('orgkey_title')}</b><span>${t('orgkey_sub')}</span></div>
-        <div style="display:flex;gap:8px;flex:1;min-width:280px;">
-          <input class="auth-input" id="orgKeyInput" type="password" placeholder="AIza… / sk-ant-…" value="${esc((window.EdenOrg && window.EdenOrg.aiKey) || '')}" style="flex:1;">
-          <button class="btn btn-primary btn-sm" data-action="orgkey-save">${t('save')}</button>
-        </div>
-      </div>
-      <div class="studio">
-        <input class="auth-input" id="stTitle" placeholder="${t('studio_title_ph')}">
-        <input class="auth-input" id="stVideo" placeholder="${t('studio_video_ph')}">
-        <textarea class="comm-input" id="stText" rows="5" placeholder="${t('studio_text_ph')}"></textarea>
-        <button class="btn btn-primary" data-action="studio-gen" id="stGen">${t('studio_gen')}</button>
-        <div id="stStatus"></div>
-        <div id="stDraft"></div>
-      </div>
-      <div class="admin-section" style="margin-top:8px;padding-top:0;border:none;">
-        <h2 style="font-size:17px;">${t('studio_custom')}</h2>
-        <div id="customList">${CATALOG.filter(x => x.custom).map(x => `
-          <div class="content-row"><span class="ci t-grad-${x.grad}">${svgIcon(x.icon)}</span>
-          <div class="ct"><b>${ctitle(x)}</b><span>${tcat(x.cat)} · ${x.modules.length} ${t('modules')}</span></div>
-          <button class="btn btn-glass btn-sm" data-action="studio-del" data-id="${x.id}">✕ ${t('comm_delete')}</button></div>`).join('') || `<p class="empty-note" style="text-align:left;padding:8px 0;">—</p>`}
-        </div>
-      </div>
-      ${content}
-    </div>
-
     <div class="admin-section">
       <h2>Assign learning</h2>
       <p class="sect-sub">Assignments appear on each learner's home with the due date.</p>
       <div class="composer">
         <div class="field"><label>Course</label>
-          <select id="asgCourse">${CATALOG.map(c => `<option value="${c.id}">${c.title}</option>`).join('')}</select></div>
+          <select id="asgCourse">${CATALOG.map(c => `<option value="${c.id}">${esc(c.title)}</option>`).join('')}</select></div>
         <div class="field"><label>Team</label>
-          <select id="asgTeam"><option>Everyone</option><option>Engineering</option><option>Sales</option><option>Support</option><option>Leadership</option></select></div>
-        <div class="field"><label>Due date</label><input id="asgDue" type="date" value="2026-06-30"></div>
+          <select id="asgTeam"><option>Everyone</option><option>Land</option><option>Building</option><option>Hospitality</option><option>Leadership</option></select></div>
+        <div class="field"><label>Due date</label><input id="asgDue" type="date" value="2026-07-31"></div>
         <button class="btn btn-primary" data-action="assign">Assign →</button>
       </div>
       ${assignments}
+    </div>`;
+}
+
+/* ----- Content: every course, editable ----- */
+function courseStatus(c) { return c.custom ? ['draft', 'Team'] : c.edited ? ['edited', 'Edited'] : ['live', 'Catalog']; }
+function adminContentHTML() {
+  if (editingCourse) return courseEditorHTML();
+  const rows = CATALOG.map(c => {
+    const [cls, label] = courseStatus(c);
+    return `<div class="content-row">
+      <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
+      <div class="ct"><b>${esc(ctitle(c))}</b><span>${tcat(c.cat)} · ${c.modules.length} ${t('modules')} · ${fmtMins(courseMins(c))}</span></div>
+      <span class="pub-chip ${cls}">${label}</span>
+      <button class="btn btn-glass btn-sm" data-action="ce-open" data-id="${c.id}">✎ Edit</button>
+    </div>`;
+  }).join('');
+  return `<div class="admin-section">
+    <h2>All courses</h2>
+    <p class="sect-sub">Everything on the platform. Edit copy, modules and videos in both languages — changes publish to the whole team instantly.</p>
+    <div class="content-table">${rows}</div>
+  </div>
+  <div class="admin-section">
+    <h2>${t('studio_title')}</h2>
+    <p class="sect-sub">${t('studio_sub')}</p>
+    <div class="studio">
+      <input class="auth-input" id="stTitle" placeholder="${t('studio_title_ph')}">
+      <input class="auth-input" id="stVideo" placeholder="${t('studio_video_ph')}">
+      <textarea class="comm-input" id="stText" rows="5" placeholder="${t('studio_text_ph')}"></textarea>
+      <button class="btn btn-primary" data-action="studio-gen" id="stGen">${t('studio_gen')}</button>
+      <div id="stStatus"></div>
+      <div id="stDraft"></div>
     </div>
+  </div>`;
+}
+function videoUrlOf(m) {
+  if (!m) return '';
+  if (m.type === 'vimeo') return 'https://vimeo.com/' + m.id;
+  if (m.type === 'youtube') return 'https://www.youtube.com/watch?v=' + m.id;
+  if (m.type === 'mp4') return m.src;
+  return '';
+}
+function openCourseEditor(id) {
+  const c = courseById(id); if (!c) return;
+  const pt = (c.pt || COURSE_PT[id] || {});
+  const hooks = c.hook != null ? [c.hook, c.hookSub || ''] : (COURSE_HOOKS[id] || ['', '']);
+  const hooksPt = pt.hook != null ? [pt.hook, pt.hookSub || ''] : (COURSE_HOOKS_PT[id] || ['', '']);
+  const ptMods = pt.modules || [];
+  editingCourse = {
+    id, custom: !!c.custom, cat: c.cat, level: c.level || 'All levels',
+    title: c.title, title_pt: pt.title || '',
+    hook: hooks[0] || '', hookSub: hooks[1] || '', hook_pt: hooksPt[0] || '', hookSub_pt: hooksPt[1] || '',
+    desc: c.desc || '', desc_pt: pt.desc || '',
+    mods: c.modules.map((m, i) => ({
+      en: m, pt: ptMods[i] || '',
+      video: videoUrlOf(modMedia(c, i)),
+      mins: (c.moduleDurations && c.moduleDurations[i]) || 12
+    }))
+  };
+  adminTab = 'content';
+  render();
+}
+function ceFieldPair(label, key, ph) {
+  const e = editingCourse;
+  return `<div class="ce-two">
+    <div class="field"><label>${label} · EN</label><input class="auth-input" data-ce="${key}" value="${attr(e[key])}" placeholder="${ph || ''}"></div>
+    <div class="field"><label>${label} · PT</label><input class="auth-input" data-ce="${key}_pt" value="${attr(e[key + '_pt'])}" placeholder="${ph || ''}"></div>
+  </div>`;
+}
+function courseEditorHTML() {
+  const e = editingCourse;
+  const cats = [...new Set(CATALOG.filter(x => !x.custom).map(x => x.cat))];
+  const levels = ['Beginner', 'Intermediate', 'Advanced', 'All levels'];
+  const modRows = e.mods.map((m, i) => `
+    <div class="ce-mod" data-idx="${i}">
+      <span class="ce-mod-n">${i + 1}</span>
+      <div class="ce-mod-grid">
+        <input class="auth-input" data-cm="en" value="${attr(m.en)}" placeholder="Module title · EN">
+        <input class="auth-input" data-cm="pt" value="${attr(m.pt)}" placeholder="Título do módulo · PT">
+        <input class="auth-input" data-cm="video" value="${attr(m.video)}" placeholder="Video link — Vimeo / YouTube / .mp4 (optional)">
+        <input class="auth-input ce-mins" data-cm="mins" type="number" min="1" max="180" value="${attr(m.mins)}" title="Minutes">
+      </div>
+      <button class="btn btn-glass btn-sm" data-action="ce-mod-del" data-idx="${i}" title="Remove module">✕</button>
+    </div>`).join('');
+  return `<div class="admin-section ce-editor">
+    <div class="cockpit-head">
+      <div><h2>✎ ${esc(e.title || 'New course')}</h2><p class="sect-sub">${e.custom ? 'Team-published course' : 'Catalog course — your edit becomes the live version; you can always revert.'}</p></div>
+      <button class="btn btn-glass btn-sm" data-action="ce-cancel">← All courses</button>
+    </div>
+    ${ceFieldPair('Title', 'title')}
+    ${ceFieldPair('Hook — the one-line invitation', 'hook')}
+    ${ceFieldPair('Hook subtitle', 'hookSub')}
+    <div class="ce-two">
+      <div class="field"><label>Description · EN</label><textarea class="comm-input" rows="2" data-ce="desc">${esc(e.desc)}</textarea></div>
+      <div class="field"><label>Description · PT</label><textarea class="comm-input" rows="2" data-ce="desc_pt">${esc(e.desc_pt)}</textarea></div>
+    </div>
+    <div class="ce-two">
+      <div class="field"><label>Category</label><select data-ce="cat">${cats.map(x => `<option ${x === e.cat ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+      <div class="field"><label>Level</label><select data-ce="level">${levels.map(x => `<option ${x === e.level ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+    </div>
+    <h3 class="ce-h3">Modules <span class="sect-sub" style="display:inline;font-weight:400;">— paste a Vimeo or YouTube link and the player wires it automatically</span></h3>
+    <div id="ceMods">${modRows}</div>
+    <button class="btn btn-glass btn-sm" data-action="ce-mod-add" style="margin-top:10px;">+ Add module</button>
+    <div class="ce-actions">
+      <button class="btn btn-primary" data-action="ce-save">Save & publish</button>
+      <button class="btn btn-glass" data-action="ce-cancel">Cancel</button>
+      <span style="flex:1"></span>
+      ${!e.custom && (courseById(e.id) || {}).edited ? `<button class="btn btn-glass" data-action="ce-revert">↺ Revert to original</button>` : ''}
+      ${e.custom ? `<button class="btn btn-glass danger" data-action="studio-del" data-id="${e.id}">✕ Delete course</button>` : ''}
+    </div>
+  </div>`;
+}
+function readEditorDOM() {
+  const e = editingCourse; if (!e) return;
+  document.querySelectorAll('[data-ce]').forEach(el => { e[el.dataset.ce] = el.value; });
+  e.mods = [...document.querySelectorAll('.ce-mod')].map(row => {
+    const v = k => (row.querySelector(`[data-cm="${k}"]`) || {}).value || '';
+    return { en: v('en'), pt: v('pt'), video: v('video'), mins: +v('mins') || 12 };
+  });
+}
+function ceSave() {
+  readEditorDOM();
+  const e = editingCourse;
+  const mods = e.mods.filter(m => m.en.trim());
+  if (!e.title.trim() || !mods.length) { toast('A title and at least one module are needed', 'ℹ️'); return; }
+  if (!(window.EdenCloud && EdenCloud.saveCourse)) { toast('You need to be online and signed in', '⚠️'); return; }
+  const base = (ORIG_COURSES[e.id] && ORIG_COURSES[e.id].c) || courseById(e.id) || {};
+  const media = mods.map(m => parseVideoLink(m.video.trim()));
+  const out = Object.assign({}, base, {
+    id: e.id, title: e.title.trim(), cat: e.cat, level: e.level,
+    hook: e.hook.trim(), hookSub: e.hookSub.trim(), desc: e.desc.trim(),
+    modules: mods.map(m => m.en.trim()),
+    moduleMedia: media.some(Boolean) ? media : null,
+    moduleDurations: mods.map(m => m.mins),
+    pt: {
+      title: e.title_pt.trim() || e.title.trim(), desc: e.desc_pt.trim() || e.desc.trim(),
+      modules: mods.map(m => m.pt.trim() || m.en.trim()),
+      hook: e.hook_pt.trim() || e.hook.trim(), hookSub: e.hookSub_pt.trim() || e.hookSub.trim()
+    }
+  });
+  if (!out.custom) out.edited = true;
+  const clean = JSON.parse(JSON.stringify(out));   /* Firestore rejects undefined values */
+  EdenCloud.saveCourse(clean).then(() => {
+    EdenApp.applyCustomCourses(null, clean);
+    editingCourse = null;
+    toast('Course published to the whole team', '🌿');
+    render();
+  }).catch(err => { console.error('[studio]', err); toast('Could not save — are the Firestore rules published?', '⚠️'); });
+}
+function ceRevert() {
+  const e = editingCourse; if (!e) return;
+  if (!confirm('Revert this course to the original catalog version?')) return;
+  EdenCloud.deleteCourse(e.id).then(() => {
+    const o = ORIG_COURSES[e.id];
+    if (o) {
+      const i = CATALOG.findIndex(x => x.id === e.id); if (i >= 0) CATALOG[i] = o.c;
+      if (o.hooks) COURSE_HOOKS[e.id] = o.hooks; if (o.hooksPt) COURSE_HOOKS_PT[e.id] = o.hooksPt;
+      if (o.pt) COURSE_PT[e.id] = o.pt; else delete COURSE_PT[e.id];
+    }
+    editingCourse = null;
+    toast('Reverted to the original', '↺'); render();
+  }).catch(() => toast('Could not revert', '⚠️'));
+}
+
+/* ----- Broadcasts: official posts into the community ----- */
+function adminBroadcastsHTML() {
+  const commOpts = COMMUNITY_CHANNELS.map(c => `<option value="${c.id}">${t(c.key)}</option>`).join('');
+  const courseOpts = CATALOG.map(c => `<option value="${c.id}">${esc(ctitle(c))}</option>`).join('');
+  return `<div class="admin-section">
+    <h2>New broadcast</h2>
+    <p class="sect-sub">Posts as an official EdenRise announcement in the community — gold badge, optionally pinned to the top of its channel.</p>
+    <div class="studio">
+      <div class="ce-two">
+        <div class="field"><label>Channel</label><select id="bcChannel">
+          <optgroup label="Community">${commOpts}</optgroup>
+          <optgroup label="Course channels">${courseOpts}</optgroup>
+        </select></div>
+        <div class="field" style="display:flex;align-items:flex-end;"><label class="lv-check"><input type="checkbox" id="bcPin" checked> 📌 Pin to top</label></div>
+      </div>
+      <input class="auth-input" id="bcTitle" maxlength="120" placeholder="Title (optional — makes it a discussion)">
+      <textarea class="comm-input" id="bcBody" rows="3" placeholder="The announcement… links to images or videos embed automatically"></textarea>
+      <button class="btn btn-primary" data-action="bc-send">Broadcast 📣</button>
+    </div>
+  </div>
+  <div class="admin-section">
+    <h2>Past broadcasts</h2>
+    <div id="bcList"><div class="skel" style="height:44px;"></div></div>
+  </div>`;
+}
+function paintBroadcasts(posts) {
+  const el = $('#bcList'); if (!el) return;
+  el.innerHTML = posts.length ? posts.map(p => `
+    <div class="content-row">
+      <span class="ci t-grad-2">${svgIcon('sun')}</span>
+      <div class="ct"><b>${esc(p.title || (p.body || '').slice(0, 60))}</b><span>${esc(channelMeta(p.channel).label)} · ${timeAgo(p.createdAt)}${p.pinned ? ' · 📌' : ''}</span></div>
+      <button class="btn btn-glass btn-sm" data-action="bc-del" data-id="${p.id}">✕</button>
+    </div>`).join('') : `<p class="empty-note" style="text-align:left;padding:8px 0;">No broadcasts yet — your first announcement will appear here.</p>`;
+}
+function bcSend() {
+  const title = ($('#bcTitle') && $('#bcTitle').value || '').trim();
+  const body = ($('#bcBody') && $('#bcBody').value || '').trim();
+  if (!body) { if ($('#bcBody')) $('#bcBody').focus(); return; }
+  if (!(window.EdenForum && EdenForum.canPost())) { toast('Sign in first', '⚠️'); return; }
+  EdenForum.createPost({
+    channel: $('#bcChannel').value, kind: title ? 'discussion' : 'message',
+    title, body, official: true, pinned: $('#bcPin').checked
+  }).then(() => {
+    $('#bcTitle').value = ''; $('#bcBody').value = '';
+    toast('Broadcast published', '📣'); initAdmin();
+  }).catch(() => toast('Could not post — are the Firestore rules published?', '⚠️'));
+}
+
+/* ----- Live sessions manager ----- */
+function adminLiveHTML() {
+  if (!liveDraft) liveDraft = liveList().map(s => Object.assign({}, s));
+  const rows = liveDraft.map((s, i) => `
+    <div class="lv-row" data-idx="${i}">
+      <div class="lv-grid">
+        <input class="auth-input" data-lv="title" value="${attr(s.title)}" placeholder="Session title">
+        <input class="auth-input" data-lv="host" value="${attr(s.host)}" placeholder="Host — Name · Role">
+        <input class="auth-input" data-lv="when" value="${attr(s.when)}" placeholder="When — e.g. Fri 14:00 WET">
+        <input class="auth-input" data-lv="desc" value="${attr(s.desc)}" placeholder="One-line description">
+      </div>
+      <label class="lv-check"><input type="checkbox" data-lv="live" ${s.live ? 'checked' : ''}> 🔴 LIVE now</label>
+      <button class="btn btn-glass btn-sm" data-action="lv-del" data-idx="${i}" title="Remove">✕</button>
+    </div>`).join('');
+  return `<div class="admin-section">
+    <h2>Live schedule</h2>
+    <p class="sect-sub">What members see on the Live page and in the community sidebar. Save publishes instantly to everyone — guests included.</p>
+    <div id="lvRows">${rows || `<p class="empty-note" style="text-align:left;">No sessions scheduled.</p>`}</div>
+    <div class="ce-actions">
+      <button class="btn btn-glass btn-sm" data-action="lv-add">+ Add session</button>
+      <span style="flex:1"></span>
+      <button class="btn btn-primary" data-action="lv-save">Save schedule</button>
+    </div>
+  </div>`;
+}
+function readLiveRows() {
+  if (!liveDraft) return;
+  document.querySelectorAll('.lv-row').forEach((row, i) => {
+    if (!liveDraft[i]) return;
+    row.querySelectorAll('[data-lv]').forEach(el => {
+      liveDraft[i][el.dataset.lv] = el.type === 'checkbox' ? el.checked : el.value;
+    });
+  });
+}
+function lvSave() {
+  readLiveRows();
+  const ICON_CYCLE = ['sprout', 'tree', 'drop', 'sun', 'leaf', 'people'];
+  const live = liveDraft.filter(s => (s.title || '').trim()).map((s, i) => ({
+    id: s.id || 'live-' + slugify(s.title), title: s.title.trim(), host: (s.host || '').trim(),
+    when: (s.when || '').trim(), desc: (s.desc || '').trim(), live: !!s.live,
+    viewers: s.viewers || 0, grad: s.grad || (i % 8) + 1, icon: s.icon || ICON_CYCLE[i % ICON_CYCLE.length]
+  }));
+  if (!(window.EdenCloud && EdenCloud.saveMeta)) { toast('You need to be online and signed in', '⚠️'); return; }
+  EdenCloud.saveMeta(Object.assign({}, studioMeta, { live })).then(() => {
+    studioMeta = Object.assign({}, studioMeta, { live });
+    liveDraft = null;
+    toast('Live schedule published', '📅'); render();
+  }).catch(() => toast('Could not save — are the Firestore rules published?', '⚠️'));
+}
+
+/* ----- Settings ----- */
+function adminSettingsHTML() {
+  return `<div class="admin-section">
+    <h2>Team settings</h2>
+    <div class="org-key" style="margin-top:14px;">
+      <div class="notif-info"><b>${t('orgkey_title')}</b><span>${t('orgkey_sub')}</span></div>
+      <div style="display:flex;gap:8px;flex:1;min-width:280px;">
+        <input class="auth-input" id="orgKeyInput" type="password" placeholder="AIza… / sk-ant-…" value="${attr((window.EdenOrg && window.EdenOrg.aiKey) || '')}" style="flex:1;">
+        <button class="btn btn-primary btn-sm" data-action="orgkey-save">${t('save')}</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAdmin() {
+  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, broadcasts: adminBroadcastsHTML, live: adminLiveHTML, settings: adminSettingsHTML };
+  return `<div class="page"><div class="page-pad">
+    <h1 class="page-title">EdenRise Studio</h1>
+    <p class="page-sub">The back office — people, content, broadcasts and the live schedule in one place.</p>
+    ${studioTabsHTML()}
+    ${(bodies[adminTab] || adminCockpitHTML)()}
   </div>${footerHTML()}</div>`;
 }
 
@@ -997,7 +1257,7 @@ function sidebarHTML() {
   const board = (boardCache || []).slice().sort((x, y) => (y.xp || 0) - (x.xp || 0));
   const online = (boardCache || []).filter(isOnline);
   const newest = (boardCache || []).filter(m => m.joinedAt).sort((x, y) => tsMillis(y.joinedAt) - tsMillis(x.joinedAt)).slice(0, 3);
-  const live = LIVE_SESSIONS[0];
+  const live = liveList()[0];
   return `<aside class="comm-pulse">
     <div class="pulse-card">
       <h4>🏆 ${t('comm_top')}</h4>
@@ -1062,7 +1322,7 @@ function postCardHTML(p) {
   return `<article class="post ${isDisc ? 'is-disc' : ''} ${p.pinned ? 'pinned' : ''}"${isDisc ? ` data-action="comm-open" data-id="${p.id}"` : ''}>
     <div class="post-av" data-action="member-card" data-handle="${esc(p.authorHandle || '')}">${esc(p.authorInitials || 'ER')}</div>
     <div class="post-main">
-      <div class="post-head">${p.pinned ? `<span class="pin-badge">\ud83d\udccc ${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle" data-action="member-card" data-handle="${esc(p.authorHandle)}">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">\u00b7 ${timeAgo(p.createdAt)}</span></div>
+      <div class="post-head">${p.official ? `<span class="off-badge">✦ EdenRise · ${t('comm_official')}</span>` : ''}${p.pinned ? `<span class="pin-badge">\ud83d\udccc ${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle" data-action="member-card" data-handle="${esc(p.authorHandle)}">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">\u00b7 ${timeAgo(p.createdAt)}</span></div>
       ${isDisc ? `<div class="post-title">${esc(p.title)}</div>` : ''}
       <div class="post-body">${richBody(p.body)}</div>
       ${pollHTML(p)}
@@ -2060,7 +2320,7 @@ document.addEventListener('click', e => {
       save(); break;
     case 'join-live': {
       toast('Joining the live studio…', '🔴');
-      const s = LIVE_SESSIONS.find(x => x.id === id);
+      const s = liveList().find(x => x.id === id);
       setTimeout(() => {
         playing = null;
         videoEl.src = VIDS[7];
@@ -2099,10 +2359,27 @@ document.addEventListener('click', e => {
       if (!confirm(t('studio_delete_confirm'))) break;
       if (window.EdenCloud && EdenCloud.deleteCourse) EdenCloud.deleteCourse(id).then(() => {
         const i = CATALOG.findIndex(x => x.id === id && x.custom); if (i >= 0) CATALOG.splice(i, 1);
+        editingCourse = null;
         toast(t('comm_deleted'), '－'); render();
       });
       break;
     }
+    case 'admin-tab': adminTab = el.dataset.tab; editingCourse = null; liveDraft = null; render(); initAdmin(); break;
+    case 'ce-open': openCourseEditor(id); break;
+    case 'ce-cancel': editingCourse = null; render(); break;
+    case 'ce-save': ceSave(); break;
+    case 'ce-revert': ceRevert(); break;
+    case 'ce-mod-add': readEditorDOM(); editingCourse.mods.push({ en: '', pt: '', video: '', mins: 12 }); render(); break;
+    case 'ce-mod-del': readEditorDOM(); editingCourse.mods.splice(+el.dataset.idx, 1); render(); break;
+    case 'bc-send': bcSend(); break;
+    case 'bc-del': {
+      if (!confirm('Delete this broadcast?')) break;
+      EdenForum.remove(id).then(() => { toast(t('comm_deleted'), '－'); initAdmin(); });
+      break;
+    }
+    case 'lv-add': readLiveRows(); liveDraft.push({ title: '', host: '', when: '', desc: '', live: false }); render(); break;
+    case 'lv-del': readLiveRows(); liveDraft.splice(+el.dataset.idx, 1); render(); break;
+    case 'lv-save': lvSave(); break;
     case 'voice-search': startVoiceSearch(); break;
     case 'save-profile': saveProfile(); break;
     case 'gdpr-export': exportMyData(); break;
@@ -2181,23 +2458,6 @@ document.addEventListener('click', e => {
       break;
     }
     case 'unassign': S.assignments.splice(+el.dataset.idx, 1); save(); render(); toast('Assignment removed', '－'); break;
-    case 'upload': {
-      const dz = $('#dropzone');
-      if (dz.dataset.busy) break;
-      dz.dataset.busy = '1';
-      dz.innerHTML = `<div class="dz-icon">✦</div><div class="dz-t">AI processing “leadership_offsite_keynote.mp4”…</div><div class="dz-s" id="dzStep">Transcribing audio</div><div class="track"><div class="fill" id="dzFill" style="width:5%"></div></div>`;
-      const steps = ['Transcribing audio', 'Detecting chapter breaks', 'Drafting 6 modules', 'Writing quiz questions', 'Generating thumbnail'];
-      let i = 0;
-      const iv = setInterval(() => {
-        i++;
-        if (i < steps.length) { $('#dzStep').textContent = steps[i]; $('#dzFill').style.width = (5 + i * 22) + '%'; return; }
-        clearInterval(iv);
-        uploadedDrafts.unshift({ id: 'draft-' + uploadedDrafts.length, title: 'Leadership Offsite Keynote', cat: 'Leadership', grad: 3, icon: '🎬', modules: ['Opening: the year ahead', 'Strategy deep-dive', 'Org changes', 'Customer stories', 'Q&A highlights', 'Closing & commitments'], draft: true, learners: 0 });
-        render();
-        toast('AI built 6 modules + a quiz from your video — review the draft', '🎬');
-      }, 800);
-      break;
-    }
     case 'reset-demo': localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); break;
   }
 });
@@ -2404,16 +2664,41 @@ window.EdenApp = {
     const av = $('#avatarBtn'); if (av) { av.textContent = userInitials(); av.title = displayName(); }
   },
   currentState() { return S; },
-  /* merge team-published (studio) courses into the catalog */
+  /* merge team-published (studio) courses into the catalog.
+     Cloud docs with a catalog id REPLACE that entry (admin edits); the original
+     is kept in ORIG_COURSES so "Revert" can restore it without a reload. */
   applyCustomCourses(list, single) {
-    if (single) { if (!CATALOG.some(x => x.id === single.id)) CATALOG.push(single); }
+    const put = c => {
+      const i = CATALOG.findIndex(x => x.id === c.id);
+      if (i >= 0) {
+        if (!CATALOG[i].custom && !CATALOG[i].edited) ORIG_COURSES[c.id] = { c: CATALOG[i], hooks: COURSE_HOOKS[c.id], hooksPt: COURSE_HOOKS_PT[c.id], pt: COURSE_PT[c.id] };
+        CATALOG[i] = c;
+      } else CATALOG.push(c);
+      if (c.edited) {   /* an edited catalog course must beat the static i18n/hook maps */
+        if (c.hook != null) COURSE_HOOKS[c.id] = [c.hook, c.hookSub || ''];
+        if (c.pt) { COURSE_PT[c.id] = c.pt; if (c.pt.hook != null) COURSE_HOOKS_PT[c.id] = [c.pt.hook, c.pt.hookSub || '']; }
+      }
+    };
+    const restore = id => {
+      const o = ORIG_COURSES[id]; if (!o) return null;
+      if (o.hooks) COURSE_HOOKS[id] = o.hooks;
+      if (o.hooksPt) COURSE_HOOKS_PT[id] = o.hooksPt;
+      if (o.pt) COURSE_PT[id] = o.pt; else delete COURSE_PT[id];
+      return o.c;
+    };
+    if (single) put(single);
     if (Array.isArray(list)) {
-      for (let i = CATALOG.length - 1; i >= 0; i--) if (CATALOG[i].custom) CATALOG.splice(i, 1);
-      list.forEach(c => CATALOG.push(c));
+      for (let i = CATALOG.length - 1; i >= 0; i--) {
+        if (CATALOG[i].custom) CATALOG.splice(i, 1);
+        else if (CATALOG[i].edited) { const orig = restore(CATALOG[i].id); if (orig) CATALOG[i] = orig; }
+      }
+      list.forEach(put);
     }
     CATALOG.forEach(c => { if (!c.poster && !c.custom) c.poster = 'media/covers/' + c.id + '.jpg'; });
     render();
-  }
+  },
+  /* studio meta from Firestore (live-sessions schedule etc.) */
+  applyMeta(meta) { studioMeta = meta || null; render(); }
 };
 if (S.profile) EdenApp.applyProfile(S.profile);
 
