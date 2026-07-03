@@ -480,6 +480,7 @@ const footerHTML = () => `
   <div class="links">
     <button data-action="goto" data-route="#/admin" data-admin>Admin console</button>
     <button data-action="ai-open">Help</button>
+    <button data-action="tour-start">${t('tour_replay')}</button>
     <button data-action="privacy-note">Privacy</button>
     <button data-action="reset-demo">Reset demo</button>
   </div>
@@ -688,6 +689,128 @@ function studioPublish() {
     toast(t('studio_published'), '🌿');
     render();
   }).catch(() => toast(t('studio_failed'), '⚠️'));
+}
+
+/* ================= First-run product tour ================= */
+let tourList = null, tourIdx = 0;
+function tourSteps() {
+  const visible = sel => { const el = document.querySelector(sel); return el && el.getBoundingClientRect().width > 0 ? el : null; };
+  const steps = [
+    { sel: null, title: t('tour_welcome_t'), body: t('tour_welcome_b') },
+    { sel: '.hero-actions', title: t('tour_path_t'), body: t('tour_path_b') },
+    { sel: '.ask-bar', title: t('tour_ask_t'), body: t('tour_ask_b') },
+    { sel: '.nav-links a[href="#/community"], .tabbar a[href="#/community"]', title: t('tour_comm_t'), body: t('tour_comm_b') },
+    { sel: '.nav-links a[href="#/progress"], .tabbar a[href="#/progress"]', title: t('tour_prog_t'), body: t('tour_prog_b') },
+    { sel: '#bellBtn', title: t('tour_bell_t'), body: t('tour_bell_b') },
+    { sel: null, title: t('tour_done_t'), body: t('tour_done_b') }
+  ];
+  return steps.filter(s => !s.sel || visible(s.sel));
+}
+function startTour() {
+  tourList = tourSteps(); tourIdx = 0;
+  if ($('#tourOv')) $('#tourOv').remove();
+  const ov = document.createElement('div');
+  ov.id = 'tourOv';
+  ov.innerHTML = `<div class="tour-ring" id="tourRing"></div><div class="tour-card" id="tourCard"></div>`;
+  document.body.appendChild(ov);
+  tourShow(0);
+}
+function tourShow(i) {
+  tourIdx = Math.max(0, Math.min(tourList.length - 1, i));
+  const st = tourList[tourIdx];
+  const ring = $('#tourRing'), card = $('#tourCard');
+  const el = st.sel ? document.querySelector(st.sel.split(',').map(s => s.trim()).find(s => { const e = document.querySelector(s); return e && e.getBoundingClientRect().width > 0; }) || st.sel) : null;
+  const last = tourIdx === tourList.length - 1;
+  card.innerHTML = `
+    <div class="tour-step">${tourIdx + 1} / ${tourList.length}</div>
+    <b>${st.title}</b><p>${st.body}</p>
+    <div class="tour-btns">
+      ${tourIdx > 0 ? `<button class="link-quiet" data-action="tour-back">← ${t('tour_back')}</button>` : `<button class="link-quiet" data-action="tour-end">${t('tour_skip')}</button>`}
+      <span style="flex:1"></span>
+      <button class="btn btn-primary btn-sm" data-action="${last ? 'tour-end' : 'tour-next'}">${last ? t('tour_finish') : t('tour_next')} ${last ? '🌱' : '→'}</button>
+    </div>`;
+  if (el) {
+    el.scrollIntoView({ block: 'center', behavior: 'instant' });
+    const r = el.getBoundingClientRect();
+    ring.style.display = 'block'; ring.style.borderWidth = '2px';
+    ring.style.left = (r.left - 8) + 'px'; ring.style.top = (r.top - 8) + 'px';
+    ring.style.width = (r.width + 16) + 'px'; ring.style.height = (r.height + 16) + 'px';
+    const below = r.bottom + 190 < innerHeight;
+    card.style.left = Math.min(innerWidth - 320, Math.max(12, r.left)) + 'px';
+    card.style.top = (below ? r.bottom + 18 : Math.max(12, r.top - 205)) + 'px';
+    card.style.transform = 'none';
+  } else {
+    /* no target — collapse the ring to a dot so its shadow still dims the page */
+    ring.style.display = 'block'; ring.style.borderWidth = '0';
+    ring.style.left = '50vw'; ring.style.top = '46vh'; ring.style.width = '0'; ring.style.height = '0';
+    card.style.left = 'calc(50% - min(155px, 50vw - 12px))'; card.style.top = '40%'; card.style.transform = 'none';
+  }
+}
+function endTour() {
+  const ov = $('#tourOv'); if (ov) ov.remove();
+  S.tourDone = true; save();
+}
+function maybeTour() {
+  if (window.__tourShown || !S.onboarded || S.tourDone) return;
+  if ((location.hash || '#/home').indexOf('#/home') !== 0 && location.hash !== '') return;
+  window.__tourShown = true;
+  setTimeout(startTour, 1400);
+}
+
+/* ================= PWA install nudge ================= */
+let pwaEvt = null;
+addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); pwaEvt = e;
+  maybePwaBar();
+});
+function pwaBarHTML(ios) {
+  return `<div class="pwa-bar" id="pwaBar">
+    <span class="pwa-ic">🌱</span>
+    <div class="pwa-txt"><b>${t('pwa_t')}</b><span>${ios ? t('pwa_ios') : t('pwa_b')}</span></div>
+    ${ios ? '' : `<button class="btn btn-primary btn-sm" data-action="pwa-install">${t('pwa_btn')}</button>`}
+    <button class="modal-x" style="position:static;" data-action="pwa-dismiss" aria-label="Dismiss">✕</button>
+  </div>`;
+}
+function maybePwaBar(ios) {
+  if (localStorage.getItem('eden-pwa-nudged') || $('#pwaBar')) return;
+  if (!S.onboarded) return;
+  setTimeout(() => {
+    if ($('#pwaBar')) return;
+    const w = document.createElement('div'); w.innerHTML = pwaBarHTML(!!ios);
+    document.body.appendChild(w.firstElementChild);
+  }, 3000);
+}
+/* iOS has no beforeinstallprompt — show the hint on a return visit */
+(function iosPwaHint() {
+  try {
+    const ua = navigator.userAgent, ios = /iphone|ipad|ipod/i.test(ua);
+    const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+    const visits = +(localStorage.getItem('eden-visits') || 0) + 1;
+    localStorage.setItem('eden-visits', visits);
+    if (ios && !standalone && visits >= 2) setTimeout(() => maybePwaBar(true), 2000);
+  } catch (e) {}
+})();
+
+/* ================= Demo seeding — make the pitch demo feel inhabited ================= */
+async function seedDemo() {
+  if (!confirm('Seed demo content? This creates real community posts, two live sessions and one assignment (as you).')) return;
+  if (!(window.EdenForum && EdenForum.canPost() && window.EdenCloud)) { toast('Sign in first', '⚠️'); return; }
+  const day = 86400000, next = n => { const d = new Date(Date.now() + n * day); d.setHours(16, 0, 0, 0); return d; };
+  const iso = d => d.toISOString().slice(0, 16);
+  const fmtDay = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' }) + ' · 16:00';
+  try {
+    await EdenForum.createPost({ channel: 'intro', kind: 'discussion', title: 'Welcome to the EdenRise Academy community 🌱', body: 'This is where we learn together — ask anything, share what the land is teaching you, and celebrate each other\u2019s wins. Warm welcome from the whole team!', official: true, pinned: true });
+    await EdenForum.createPost({ channel: 'wins', kind: 'message', body: 'First compost pile turned using the layering from the course — look at this heat! https://picsum.photos/seed/edencompost/800/500.jpg' });
+    await EdenForum.createPost({ channel: 'general', kind: 'discussion', title: 'Where should the next work party focus?', body: 'Vote below — we\u2019ll bring tools and lunch either way 🌿', poll: { options: ['The east swales', 'Food forest mulching', 'The nursery beds'], votes: {} } });
+    const live = [
+      { id: 'live-soil-clinic', title: 'Field Hours: Live Soil Clinic', host: 'Marta Oliveira · Head of Regeneration', when: fmtDay(next(4)), date: iso(next(4)), desc: 'Bring a photo or sample of your soil — read live, with the first three things to do.', live: false, viewers: 0, grad: 7, icon: 'sprout' },
+      { id: 'live-founder-ama', title: 'Founder AMA: Why Regeneration', host: 'João Amaral · Founder', when: fmtDay(next(8)), date: iso(next(8)), desc: 'Unfiltered Q&A on building EdenRise and stewarding land in the Baixo Alentejo.', live: false, viewers: 0, grad: 1, icon: 'tree' }
+    ];
+    const assignments = activeAssignments().concat([{ id: 'asg-living-soil-land', courseId: 'living-soil', team: 'land', due: new Date(Date.now() + 14 * day).toISOString().slice(0, 10) }]);
+    await EdenCloud.saveMeta(Object.assign({}, studioMeta, { live, assignments }));
+    studioMeta = Object.assign({}, studioMeta, { live, assignments });
+    toast('Demo content seeded 🌿', '✓'); render();
+  } catch (e) { console.error('[seed]', e); toast('Seeding failed — are the Firestore rules published?', '⚠️'); }
 }
 
 /* ================= Ask the Academy — AI answers from your own library ================= */
@@ -1659,6 +1782,10 @@ function adminSettingsHTML() {
   return `<div class="admin-section">
     <h2>Team settings</h2>
     <div class="org-key" style="margin-top:14px;">
+      <div class="notif-info"><b>Demo content</b><span>Seed a welcome broadcast, a wins post with photo, a poll, two dated live sessions and one assignment — so the platform demos inhabited.</span></div>
+      <button class="btn btn-glass btn-sm" data-action="seed-demo">🌿 Seed demo content</button>
+    </div>
+    <div class="org-key" style="margin-top:14px;">
       <div class="notif-info"><b>${t('orgkey_title')}</b><span>${t('orgkey_sub')}</span></div>
       <div style="display:flex;gap:8px;flex:1;min-width:280px;">
         <input class="auth-input" id="orgKeyInput" type="password" placeholder="AIza… / sk-ant-…" value="${attr((window.EdenOrg && window.EdenOrg.aiKey) || '')}" style="flex:1;">
@@ -2285,6 +2412,7 @@ function render() {
   if (route === 'community') initCommunity();
   if (route === 'admin' && isAdmin()) initAdmin();
   if (route === 'progress' && boardCache === null) initBoard();
+  maybeTour();
   if (route === 'community') initBoard();
   window.scrollTo({ top: 0, behavior: 'instant' });
   const libInput = $('#libSearch');
@@ -3112,6 +3240,13 @@ document.addEventListener('click', e => {
     case 'open-journey': location.hash = '#/journey/' + id; break;
     case 'jour-cert': downloadJourneyCert(id); break;
     case 'ai-digest': generateCockpitDigest(); break;
+    case 'tour-next': tourShow(tourIdx + 1); break;
+    case 'tour-back': tourShow(tourIdx - 1); break;
+    case 'tour-end': endTour(); break;
+    case 'tour-start': S.tourDone = false; location.hash = '#/home'; setTimeout(startTour, 600); break;
+    case 'pwa-install': if (pwaEvt) { pwaEvt.prompt(); pwaEvt = null; } localStorage.setItem('eden-pwa-nudged', '1'); const pb = $('#pwaBar'); if (pb) pb.remove(); break;
+    case 'pwa-dismiss': localStorage.setItem('eden-pwa-nudged', '1'); const pb2 = $('#pwaBar'); if (pb2) pb2.remove(); break;
+    case 'seed-demo': seedDemo(); break;
     case 'voice-search': startVoiceSearch(); break;
     case 'save-profile': saveProfile(); break;
     case 'gdpr-export': exportMyData(); break;
