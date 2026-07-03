@@ -12,6 +12,10 @@
  *  - every email carries an "you chose these — switch off anytime" footer
  */
 var SECRET = '67763609855821fded169452';
+/* Recipient allowlist — the secret ships in a public repo by design (client-only
+   app), so THIS is the real anti-abuse wall: mail only ever goes to the team. */
+var ALLOWED_DOMAINS = ['edenrise.com'];
+var ALLOWED_EXTRA = [];   // add individual member emails here (gmail etc.), lowercase
 var NUDGE_COOLDOWN_DAYS = 7;
 var GLOBAL_DAILY_CAP = 40;
 var FROM_NAME = 'EdenRise Academy';
@@ -25,6 +29,8 @@ function doPost(e) {
     if (['nudge', 'optin'].indexOf(p.kind) < 0) return json({ ok: false, error: 'bad-kind' });
     var to = String(p.to || '').trim().toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) return json({ ok: false, error: 'bad-email' });
+    var dom = to.split('@')[1];
+    if (ALLOWED_DOMAINS.indexOf(dom) < 0 && ALLOWED_EXTRA.indexOf(to) < 0) return json({ ok: false, error: 'not-a-member' });
 
     var props = PropertiesService.getScriptProperties();
     var today = Utilities.formatDate(new Date(), 'UTC', 'yyyy-MM-dd');
