@@ -165,7 +165,7 @@ function cardHTML(c, opts = {}) {
       <button class="icon-btn" data-action="play" data-id="${c.id}" aria-label="Play ${ctitle(c)}" title="Play">▶</button>
       <button class="icon-btn ${inPath(c.id) ? 'in-path' : ''}" data-action="toggle-path" data-id="${c.id}" aria-label="${inPath(c.id) ? 'Remove from your path' : 'Add to your path'}" title="${inPath(c.id) ? 'In your path' : 'Add to path'}">${inPath(c.id) ? '✓' : '＋'}</button>
     </div>
-    <div class="thumb t-grad-${c.grad} ${c.poster ? 'has-poster' : ''}"${c.poster ? ` style="background-image:url('${c.poster}')"` : ''}>${c.poster ? '' : `<span class="big-icon">${svgIcon(c.icon)}</span>`}<div class="chip-row">${chips.join('')}</div></div>
+    <div class="thumb t-grad-${c.grad} ${c.poster ? 'has-poster' : ''}"${c.poster ? ` data-bg="${c.poster}"` : ''}>${c.poster ? '' : `<span class="big-icon">${svgIcon(c.icon)}</span>`}<div class="chip-row">${chips.join('')}</div></div>
     <div class="card-body">
       <h3>${ctitle(c)}</h3>
       <p class="card-hook">${chook(c)}</p>
@@ -1230,6 +1230,7 @@ function render() {
   if (route !== 'community') teardownCommunity();
   $('#app').innerHTML = route === 'course' ? renderCourse(param) : (routes[route] || renderHome)();
   makeFocusable($('#app'));
+  lazyBackgrounds();
   if (route === 'community') initCommunity();
   if (route === 'admin' && isAdmin()) initAdmin();
   if (route === 'progress' && boardCache === null) initBoard();
@@ -1246,6 +1247,24 @@ function render() {
     };
   }
   initMotion();
+}
+/* covers download only as their cards approach the viewport (~1.4MB saved on Library) */
+const loadBg = el => { el.style.backgroundImage = `url('${el.dataset.bg}')`; el.removeAttribute('data-bg'); };
+let ioEverFired = false;
+const bgObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(entries => {
+  ioEverFired = true;
+  entries.forEach(e => { if (e.isIntersecting) { loadBg(e.target); bgObserver.unobserve(e.target); } });
+}, { rootMargin: '400px' }) : null;
+function lazyBackgrounds() {
+  const els = [...document.querySelectorAll('.thumb[data-bg]')];
+  els.slice(0, 8).forEach(loadBg);                 /* above the fold: instant */
+  const rest = els.slice(8);
+  if (!bgObserver) { rest.forEach(loadBg); return; }
+  rest.forEach(el => bgObserver.observe(el));
+  clearTimeout(lazyBackgrounds._t);
+  lazyBackgrounds._t = setTimeout(() => {          /* observer broken? load everything (old behavior) */
+    if (!ioEverFired) document.querySelectorAll('.thumb[data-bg]').forEach(loadBg);
+  }, 2500);
 }
 addEventListener('hashchange', render);
 
@@ -1286,9 +1305,20 @@ const BLOCK_SEL = '.hero-content > *, .hero-side, .pillar, .rail-section, .path-
 function forceVisible() {
   document.querySelectorAll(BLOCK_SEL).forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
 }
+/* GSAP loads on demand — desktop only, never on phones (bandwidth + battery) */
+let motionLibsState = 0; /* 0 none · 1 loading · 2 ready */
+function loadMotionLibs() {
+  if (motionLibsState || innerWidth <= 1024 || reduceMotion) return;
+  motionLibsState = 1;
+  const add = s => new Promise(r => { const el = document.createElement('script'); el.src = s; el.onload = r; el.onerror = r; document.head.appendChild(el); });
+  add('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js')
+    .then(() => add('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'))
+    .then(() => { motionLibsState = 2; initMotion(); });
+}
 function initMotion() {
   const G = window.gsap;
-  if (!G || reduceMotion) { forceVisible(); return; }
+  if (!G) { forceVisible(); loadMotionLibs(); return; }
+  if (reduceMotion) { forceVisible(); return; }
   const ST = window.ScrollTrigger;
   if (ST) { G.registerPlugin(ST); ST.getAll().forEach(t => t.kill()); }
 
