@@ -558,7 +558,8 @@ function memberSummary(m) {
   const xp = st.xp || 0, lvl = levelFor(xp);
   const days = m.updatedAt ? Math.floor((Date.now() - m.updatedAt) / 86400000) : null;
   const atRisk = pathPct < 35 || (days != null && days > 10);
-  return { uid: m.uid, name, initials, email: pf.email || '', username: pf.username || '', role: st.role || pf.role || '', goal: st.goal || '', pathPct, coursesDone, xp, level: lvl.idx + 1, levelName: tlevel(lvl.idx), streak: st.streak || 0, days, atRisk };
+    const _rr = roleReadiness(m.state || {});
+  return { ready: _rr ? _rr.overall : null, uid: m.uid, name, initials, email: pf.email || '', username: pf.username || '', role: st.role || pf.role || '', goal: st.goal || '', pathPct, coursesDone, xp, level: lvl.idx + 1, levelName: tlevel(lvl.idx), streak: st.streak || 0, days, atRisk };
 }
 function memberRow(s) {
   return `<tr>
@@ -566,6 +567,7 @@ function memberRow(s) {
     <td style="min-width:150px;"><div class="track" style="width:100%;"><div class="fill" style="width:${s.pathPct}%"></div></div></td>
     <td>${s.pathPct}%</td>
     <td>Lv ${s.level}</td>
+    <td>${s.ready == null ? '<span style="color:var(--text-faint)">—</span>' : `<span class="sk-pct">${s.ready}%</span>`}</td>
     <td>${s.streak}d</td>
     <td style="color:var(--text-faint);">${s.days == null ? '—' : s.days === 0 ? 'today' : s.days + 'd ago'}</td>
     <td><span class="status-chip ${s.atRisk ? 'risk' : 'ok'}">${s.atRisk ? '⚠ At risk' : '● On track'}</span></td>
@@ -605,7 +607,7 @@ function initAdmin(retries) {
   if (adminTab !== 'cockpit') return;
   if (window.EdenMissions) EdenMissions.listPending().then(paintMissions).catch(() => paintMissions([]));
   const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="8"><div class="skel"></div></td></tr>`).join('');
-  EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); paintTrends(); paintAsgList(); const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML(); const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML(); }).catch(err => {
+  EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); paintTrends(); paintAsgList(); const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML(); const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML(); const iw = $('#intelWrap'); if (iw) iw.outerHTML = intelHTML(); }).catch(err => {
     console.error('[cockpit]', err);
     const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="8" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
   });
@@ -632,12 +634,12 @@ function parseVideoLink(url) {
   return null;
 }
 const slugify = s => (s || 'course').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'course';
-async function generateCourseDraft(title, text) {
+async function generateCourseDraft(title, text, mode) {
   const cats = [...new Set(CATALOG.filter(x => !x.custom).map(x => x.cat))];
   const icons = Object.keys(ICONS).join(', ');
   const heavy = S.aiModelHeavy || (window.EdenOrg && window.EdenOrg.aiModelHeavy) || '';
   const raw = await llmComplete({ maxTokens: 4000, model: heavy || undefined,
-      system: `You are the course architect for EdenRise Academy (regenerative-living school, Baixo Alentejo, Portugal; warm, grounded, zero corporate jargon). From lesson material, produce ONE course as raw JSON only (no fences): {"title":str,"title_pt":str,"hook":str,"hook_pt":str,"hookSub":str,"hookSub_pt":str,"desc":str(1-2 sentences),"desc_pt":str,"cat":one of [${cats.join(' | ')}],"icon":one of [${icons}],"modules":[3-5 str],"modules_pt":[same length],"takeaways":[per module, array of exactly 3 str],"takeaways_pt":[same shape],"quiz":[3 of {"q":str,"opts":[4 str],"a":0-3}],"quiz_pt":[same shape]}. Portuguese = European Portuguese. Hooks are short invitations (MasterClass style). Takeaways are what a learner keeps. Quiz tests understanding of THIS material.`,
+      system: `You are the course architect for EdenRise Academy (regenerative-living school, Baixo Alentejo, Portugal; warm, grounded, zero corporate jargon). From lesson material, produce ONE course as raw JSON only (no fences): {"title":str,"title_pt":str,"hook":str,"hook_pt":str,"hookSub":str,"hookSub_pt":str,"desc":str(1-2 sentences),"desc_pt":str,"cat":one of [${cats.join(' | ')}],"icon":one of [${icons}],"modules":[3-5 str],"modules_pt":[same length],"takeaways":[per module, array of exactly 3 str],"takeaways_pt":[same shape],"quiz":[3 of {"q":str,"opts":[4 str],"a":0-3}],"quiz_pt":[same shape]}. Portuguese = European Portuguese. Hooks are short invitations (MasterClass style). Takeaways are learning OUTCOMES — each starts with an action verb, stating what the learner CAN NOW DO (e.g. "Read a soil profile by colour and smell"). Quiz tests understanding of THIS material.${mode === 'capture' ? ' The source is a RAW EXPERT INTERVIEW or SOP, not a lesson: extract the expert\u2019s methods, rules of thumb, stories and step-by-step procedures; preserve their hard-won specifics (numbers, warnings, sequences) as the heart of each module; discard small talk.' : ''}`,
       messages: [{ role: 'user', content: `Working title: ${title || '(none)'}\n\nLesson material:\n${text.slice(0, 14000)}` }]
   });
   const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
@@ -680,7 +682,7 @@ async function studioGenerate() {
   const btn = $('#stGen'); btn.disabled = true;
   $('#stStatus').innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:20px;height:20px;"></span> ${t('studio_generating')}</div>`;
   try {
-    const j = await generateCourseDraft(($('#stTitle').value || '').trim(), text);
+    const j = await generateCourseDraft(($('#stTitle').value || '').trim(), text, ($('#stMode') && $('#stMode').value) || 'lesson');
     studioDraft = draftToCourse(j, media);
     $('#stStatus').innerHTML = '';
     $('#stDraft').innerHTML = studioDraftHTML(studioDraft);
@@ -924,8 +926,14 @@ function ensureAskModal() {
   document.body.appendChild(el);
   el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
 }
+function logAsk(q, via) {
+  (S.askLog || (S.askLog = [])).push({ q: q.slice(0, 160), via, at: Date.now() });
+  if (S.askLog.length > 50) S.askLog = S.askLog.slice(-50);
+  save();
+}
 async function openAsk(q) {
   q = (q || '').trim(); if (!q) return;
+  logAsk(q, 'ask');
   if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
   ensureAskModal();
   $('#askQ').textContent = q;
@@ -997,6 +1005,44 @@ function skillHeatmapHTML() {
         ${memberSkillScores(m.state).map(v => `<td><span class="heat ${heat(v)}" title="${v}%">${v || ''}</span></td>`).join('')}</tr>`).join('')}
       </tbody>
     </table></div></div>`;
+}
+
+/* ================= Role Readiness — role → skills → gaps → next course ================= */
+function roleReadiness(state) {
+  const role = (state || S).role || ((state || S).profile || {}).role;
+  const prof = ROLE_PROFILES[role];
+  if (!prof) return null;
+  const pctOf = state ? (id => { const p = (state.progress || {})[id]; return p ? (p.done ? 100 : (p.pct || 0)) : 0; }) : (id => coursePct(id));
+  const rows = Object.entries(prof.skills).map(([key, target]) => {
+    const tagged = CATALOG.filter(c => skillsOf(c).includes(key));
+    const score = tagged.length ? Math.round(tagged.reduce((a, c) => a + pctOf(c.id), 0) / tagged.length) : 0;
+    return { key, target, score, ready: Math.min(100, Math.round(score / target * 100)) };
+  });
+  const overall = Math.round(rows.reduce((a, r) => a + r.ready, 0) / rows.length);
+  const gap = rows.slice().sort((a, b) => a.ready - b.ready)[0];
+  return { role, overall, rows, gap };
+}
+function readinessSectionHTML() {
+  const r = roleReadiness();
+  if (!r) return '';
+  const recs = CATALOG.filter(c => skillsOf(c).includes(r.gap.key) && !isDone(c.id)).slice(0, 2);
+  return `<div class="admin-section">
+    <h2>🧭 ${t('ready_h')}</h2><p class="sect-sub">${t('ready_sub')}</p>
+    <div class="ready-wrap">
+      <div class="jour-ring lg" style="background:conic-gradient(var(--accent) ${r.overall * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${r.overall}%</span></div>
+      <div class="ready-rows">${r.rows.sort((a, b) => a.ready - b.ready).map(x => `
+        <div class="skill-row"><span class="sk-name">${tskill(x.key)}</span>
+          <div class="track"><div class="fill" style="width:${x.ready}%"></div></div>
+          <span class="sk-pct">${x.ready}% <em class="sk-target">${t('ready_of')} ${x.target}</em></span></div>`).join('')}</div>
+    </div>
+    ${recs.length ? `<div class="ob-eyebrow" style="margin-top:16px;">${t('ready_gap')}: ${tskill(r.gap.key)} · ${t('ready_rec')}</div>
+    <div class="ask-refs" style="margin-top:8px;">${recs.map(c => `
+      <div class="ask-ref" data-action="open-course" data-id="${c.id}" role="button" tabindex="0">
+        <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
+        <div class="ct"><b>${esc(ctitle(c))}</b><span>${tcat(c.cat)} · ${fmtMins(courseMins(c))}</span></div>
+        <span class="ask-go">→</span>
+      </div>`).join('')}</div>` : ''}
+  </div>`;
 }
 
 /* ================= Compliance — certifications that stay alive ================= */
@@ -1309,6 +1355,7 @@ function compressPhoto(file, cb) {
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target && e.target.id === 'askInput') openAsk(e.target.value);
+  if (e.key === 'Enter' && e.target && e.target.id === 'ckAsk') cockpitAsk();
 });
 document.addEventListener('change', e => {
   if (e.target && e.target.id === 'ckDept') {
@@ -1385,7 +1432,8 @@ function openCoach(courseId) {
 function paintCoach() {
   const el = $('#coachChat'); if (!el || !coach) return;
   el.innerHTML = coach.msgs.map(m => `<div class="coach-msg ${m.role === 'user' ? 'me' : 'them'}">${esc(m.content)}</div>`).join('')
-    + (coach.busy ? `<div class="coach-msg them typing">${t('coach_thinking')}</div>` : '');
+    + (coach.busy ? `<div class="coach-msg them typing">${t('coach_thinking')}</div>` : '')
+    + (coach.err ? `<div class="coach-msg them coach-msg-err">⚠️ ${esc(t('coach_err'))}</div>` : '');
   el.scrollTop = el.scrollHeight;
 }
 async function coachSend() {
@@ -1393,11 +1441,16 @@ async function coachSend() {
   const box = $('#coachBox'); const text = (box.value || '').trim(); if (!text) return;
   box.value = '';
   coach.msgs.push({ role: 'user', content: text });
-  coach.busy = true; paintCoach();
+  coach.busy = true; coach.err = false; paintCoach();
   try {
     const reply = await llmComplete({ maxTokens: 220, system: coach.sc.system, messages: coach.msgs.map(m => ({ role: m.role, content: m.content })) });
     coach.msgs.push({ role: 'assistant', content: reply.trim() });
-  } catch (e) { coach.msgs.push({ role: 'assistant', content: '…' }); }
+  } catch (e) {
+    /* the turn failed — put the message back so nothing is lost, and say so honestly */
+    coach.msgs.pop();
+    box.value = text;
+    coach.err = true;
+  }
   coach.busy = false; paintCoach();
 }
 async function coachFinish() {
@@ -1517,6 +1570,69 @@ function paintMissions(list) {
     </div>`;
   }).join('') : `<p class="empty-note" style="text-align:left;padding:8px 0;">No missions waiting — the queue is clear 🌿</p>`;
 }
+function teamQuestions() {
+  return (filteredMembers() || []).flatMap(m => (m.state.askLog || [])).sort((a, b) => (b.at || 0) - (a.at || 0));
+}
+function intelHTML() {
+  const qs = teamQuestions();
+  return `<div class="admin-section">
+    <h2>💬 What the team is asking</h2>
+    <p class="sect-sub">Every Ask-the-Academy and tutor question, anonymised — the raw signal for what training to build next.</p>
+    ${qs.length ? qs.slice(0, 10).map(x => `<div class="intel-q"><span class="n">${timeAgo({ seconds: (x.at || 0) / 1000 })}</span><span>${esc(x.q)}</span></div>`).join('') : `<p class="empty-note" style="text-align:left;padding:8px 0;">No questions logged yet — they appear as the team uses Ask the Academy and the tutor.</p>`}
+    ${qs.length >= 3 ? `<button class="btn btn-glass btn-sm" data-action="intel-gaps" style="margin-top:12px;">✦ Find content gaps</button><div id="gapResults"></div>` : ''}
+  </div>
+  <div class="admin-section">
+    <h2>✦ Ask the Cockpit</h2>
+    <p class="sect-sub">Your admin assistant — ask anything about the team in plain language: “who’s behind?”, “what should I assign the Land team?”, “who’s ready for leadership?”</p>
+    <div class="cockpit-chat">
+      <div class="coach-chat" id="ckChat" style="display:none;"></div>
+      <div class="coach-input" style="margin-top:10px;">
+        <input class="auth-input" id="ckAsk" placeholder="Ask about your team…">
+        <button class="btn btn-primary btn-sm" data-action="ck-ask">→</button>
+      </div>
+    </div>
+  </div>`;
+}
+async function findContentGaps() {
+  if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
+  const el = $('#gapResults');
+  el.innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:20px;height:20px;"></span> Clustering the team's questions…</div>`;
+  const qs = teamQuestions().slice(0, 40).map(x => x.q).join('\n');
+  const cats = CATALOG.map(c => c.title).join(' | ');
+  try {
+    const raw = await llmComplete({ maxTokens: 700,
+      system: `You are the curriculum strategist for EdenRise Academy. Given real questions members asked, and the existing course list, find what training is MISSING. Reply as raw JSON: {"gaps":[1-3 of {"theme":str,"evidence":str(which questions point here),"course":str(a concrete course title to build)}]}. Only real gaps — if the library covers it, don't invent one.`,
+      messages: [{ role: 'user', content: `QUESTIONS:\n${qs}\n\nEXISTING COURSES: ${cats}` }] });
+    const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
+    el.innerHTML = (j.gaps || []).map(g => `<div class="gap-card">
+      <span class="ci t-grad-4">${svgIcon('seed')}</span>
+      <div class="ct"><b>${esc(g.course)}</b><span>${esc(g.theme)} — ${esc(g.evidence)}</span></div>
+      <button class="btn btn-primary btn-sm" data-action="gap-draft" data-title="${attr(g.course)}">Draft it ✦</button>
+    </div>`).join('') || `<p class="empty-note" style="text-align:left;padding:8px 0;">No real gaps found — the library covers what the team is asking 🌿</p>`;
+  } catch (e) { el.innerHTML = `<div class="auth-err on">Could not analyse — try again.</div>`; }
+}
+let ckHistory = [];
+async function cockpitAsk() {
+  const box = $('#ckAsk'); const q = (box.value || '').trim(); if (!q) return;
+  if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
+  if (!adminMembers) { toast('Members are still loading', 'ℹ️'); return; }
+  box.value = '';
+  const chat = $('#ckChat'); chat.style.display = '';
+  ckHistory.push({ role: 'user', content: q });
+  chat.innerHTML = ckHistory.map(m => `<div class="coach-msg ${m.role === 'user' ? 'me' : 'them'}">${esc(m.content).replace(/\n/g, '<br>')}</div>`).join('') + `<div class="coach-msg them typing">…</div>`;
+  chat.scrollTop = chat.scrollHeight;
+  const sums = filteredMembers().map(memberSummary);
+  const data = sums.map(s => `${s.name} [${(filteredMembers().find(m => (m.profile.name || '') === s.name) || { profile: {} }).profile.dept || '?'}]: path ${s.pathPct}%, ready ${s.ready == null ? '?' : s.ready + '%'}, streak ${s.streak}d, active ${s.days == null ? 'never' : s.days + 'd ago'}, ${s.atRisk ? 'AT RISK' : 'ok'}`).join('\n');
+  const asgs = activeAssignments().map(a => `${(courseById(a.courseId) || {}).title} → ${a.team}${a.due ? ' due ' + a.due : ''}`).join('\n') || 'none';
+  try {
+    const reply = await llmComplete({ maxTokens: 600,
+      system: `You are the EdenRise Academy admin assistant. Answer the leader's questions from the LIVE DATA below — specific names and numbers, warm but direct, max 120 words. If asked what to do, give ONE concrete recommendation. Never invent data.\n\nMEMBERS:\n${data}\n\nASSIGNMENTS:\n${asgs}\n\nCOURSES AVAILABLE: ${CATALOG.map(c => c.title).slice(0, 30).join(' | ')}`,
+      messages: ckHistory.slice(-8) });
+    ckHistory.push({ role: 'assistant', content: reply });
+  } catch (e) { ckHistory.push({ role: 'assistant', content: 'Could not reach the AI — check the team key in Settings.' }); }
+  chat.innerHTML = ckHistory.map(m => `<div class="coach-msg ${m.role === 'user' ? 'me' : 'them'}">${esc(m.content).replace(/\n/g, '<br>')}</div>`).join('');
+  chat.scrollTop = chat.scrollHeight;
+}
 function paintAsgList() {
   const el = $('#asgList'); if (!el) return;
   el.innerHTML = activeAssignments().map((a, i) => {
@@ -1573,7 +1689,7 @@ function adminCockpitHTML() {
         </div>
       </div>
       <div class="team-table"><table>
-        <thead><tr><th>Member</th><th>Path progress</th><th></th><th>Level</th><th>Streak</th><th>Last active</th><th>Status</th><th></th></tr></thead>
+        <thead><tr><th>Member</th><th>Path progress</th><th></th><th>Level</th><th>Role ready</th><th>Streak</th><th>Last active</th><th>Status</th><th></th></tr></thead>
         <tbody id="cockpitRoster"><tr><td colspan="8" class="empty-note">Loading members…</td></tr></tbody>
       </table></div>
       <div class="two-col" id="cockpitTrends" style="margin-top:18px;"></div>
@@ -1586,6 +1702,7 @@ function adminCockpitHTML() {
       <p class="sect-sub">Members' real-world proof, waiting for your eyes. Approve to release their XP.</p>
       <div id="missionQueue"><p class="empty-note" style="text-align:left;padding:8px 0;">Loading…</p></div>
     </div>
+    ${adminMembers ? intelHTML() : '<div id="intelWrap"></div>'}
     <div class="admin-section">
       <h2>Assign learning</h2>
       <p class="sect-sub">Assignments appear on each learner's home with the due date.</p>
@@ -1629,7 +1746,13 @@ function adminContentHTML() {
     <h2>${t('studio_title')}</h2>
     <p class="sect-sub">${t('studio_sub')}</p>
     <div class="studio">
-      <input class="auth-input" id="stTitle" placeholder="${t('studio_title_ph')}">
+      <div class="ce-two">
+        <div class="field"><label>Source type</label><select id="stMode">
+          <option value="lesson">Lesson transcript / script</option>
+          <option value="capture">Expert interview / SOP — knowledge capture</option>
+        </select></div>
+        <div class="field"><label>&nbsp;</label><input class="auth-input" id="stTitle" placeholder="${t('studio_title_ph')}"></div>
+      </div>
       <input class="auth-input" id="stVideo" placeholder="${t('studio_video_ph')}">
       <textarea class="comm-input" id="stText" rows="5" placeholder="${t('studio_text_ph')}"></textarea>
       <button class="btn btn-primary" data-action="studio-gen" id="stGen">${t('studio_gen')}</button>
@@ -1962,6 +2085,7 @@ function renderProgress() {
       </div>
     </div>
 
+    ${readinessSectionHTML()}
     ${skillsSectionHTML()}
     ${certsSectionHTML()}
     <div class="admin-section"><h2>🃏 ${t('flash_h')}</h2><p class="sect-sub">${t('flash_sub')}</p>
@@ -3048,6 +3172,7 @@ function drawPalette(q) {
     `<div class="palette-item" data-pal="course:${c.id}"><span class="pi-icon t-grad-${c.grad}">${svgIcon(c.icon)}</span><div><div>${c.title}</div><div class="pi-meta">${c.cat} · ${fmtMins(courseMins(c))} · ★ ${c.rating}</div></div></div>`).join('');
   if (acts.length) html += `<div class="palette-group">Actions</div>` + acts.map((a, i) =>
     `<div class="palette-item" data-pal="act:${PALETTE_ACTIONS.indexOf(a)}"><span class="pi-icon" style="background:var(--surface-2)">${a.icon}</span><div>${a.t}</div></div>`).join('');
+  if (q && aiKey()) html += `<div class="palette-group">✦</div><div class="palette-item" data-pal="ask:${esc(q)}"><span class="pi-icon" style="background:var(--surface-2)">✦</span><div>${t('ask_more')}“${esc(q)}”</div></div>`;
   $('#palResults').innerHTML = html || `<div class="palette-empty">No matches for “${esc(q)}” — try the AI tutor.</div>`;
   highlightPal();
 }
@@ -3057,8 +3182,10 @@ function highlightPal() {
   if (items[palIdx]) items[palIdx].scrollIntoView({ block: 'nearest' });
 }
 function runPal(el) {
-  const [kind, val] = el.dataset.pal.split(':');
+  const _p = el.dataset.pal, _i = _p.indexOf(':');
+  const kind = _p.slice(0, _i), val = _p.slice(_i + 1);
   closePalette();
+  if (kind === 'ask') { openAsk(val); return; }
   if (kind === 'course') location.hash = '#/course/' + val;
   else PALETTE_ACTIONS[+val].run();
 }
@@ -3189,6 +3316,7 @@ async function llmComplete({ system, messages, maxTokens, model }) {
   return (((data.choices || [])[0] || {}).message || {}).content || '…';
 }
 async function askClaude(text) {
+  logAsk(text, 'tutor');
   tutorHistory.push({ role: 'user', content: text });
   const typing = document.createElement('div');
   typing.className = 'msg bot typing'; typing.innerHTML = '<span></span><span></span><span></span>';
@@ -3398,6 +3526,14 @@ document.addEventListener('click', e => {
     case 'dig-open': openDigest(id); break;
     case 'dig-close': $('#digModal').classList.remove('open'); break;
     case 'dig-publish': digPublish(); break;
+    case 'intel-gaps': findContentGaps(); break;
+    case 'ck-ask': cockpitAsk(); break;
+    case 'gap-draft': {
+      adminTab = 'content'; editingCourse = null; render();
+      setTimeout(() => { const ti = $('#stTitle'); if (ti) { ti.value = el.dataset.title; ti.scrollIntoView({ block: 'center' }); const tx = $('#stText'); if (tx) tx.focus(); } }, 250);
+      toast('Paste the source material and generate ✦', 'ℹ️');
+      break;
+    }
     case 'dig-del': {
       if (!confirm('Delete this digest for everyone?')) break;
       EdenCloud.deleteDigest(id).then(() => { digestsCache = digestsCache.filter(x => x.id !== id); toast(t('comm_deleted'), '－'); render(); });
@@ -3547,7 +3683,12 @@ $('#takeModal').addEventListener('click', e => { if (e.target === $('#takeModal'
 addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
   if (e.key === 'Escape') {
-    if ($('#takeModal').classList.contains('open')) resolveTakeaways();
+    const pop = document.querySelector('.member-card-pop');
+    const openM = ['#coachModal', '#askModal', '#flashModal', '#digModal'].map(s => $(s)).find(m => m && m.classList.contains('open'));
+    if ($('#tourOv')) endTour();
+    else if (pop) pop.remove();
+    else if (openM) openM.classList.remove('open');
+    else if ($('#takeModal').classList.contains('open')) resolveTakeaways();
     else if (mDrawer.classList.contains('open')) setDrawer(false);
     else if ($('#palette').classList.contains('open')) closePalette();
     else if ($('#quizModal').classList.contains('open')) { $('#quizModal').classList.remove('open'); render(); }
