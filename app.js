@@ -721,7 +721,7 @@ function openDigest(id) {
   const d = digestsCache.find(x => x.id === id); if (!d) return;
   if (!$('#digModal')) {
     const el = document.createElement('div');
-    el.className = 'take-overlay'; el.id = 'digModal';
+    el.className = 'take-overlay'; el.id = 'digModal'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true');
     el.innerHTML = `<div class="take-card dig-modal"><button class="modal-x" data-action="dig-close" aria-label="Close">✕</button><div id="digBody"></div></div>`;
     document.body.appendChild(el);
     el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
@@ -804,6 +804,7 @@ function startTour() {
   if ($('#tourOv')) $('#tourOv').remove();
   const ov = document.createElement('div');
   ov.id = 'tourOv';
+  ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', t('tour_done_t'));
   ov.innerHTML = `<div class="tour-ring" id="tourRing"></div><div class="tour-card" id="tourCard"></div>`;
   document.body.appendChild(ov);
   tourShow(0);
@@ -822,6 +823,7 @@ function tourShow(i) {
       <span style="flex:1"></span>
       <button class="btn btn-primary btn-sm" data-action="${last ? 'tour-end' : 'tour-next'}">${last ? t('tour_finish') : t('tour_next')} ${last ? '🌱' : '→'}</button>
     </div>`;
+  const primary = card.querySelector('.btn-primary'); if (primary) primary.focus({ preventScroll: true });
   if (el) {
     el.scrollIntoView({ block: 'center', behavior: 'instant' });
     const r = el.getBoundingClientRect();
@@ -916,7 +918,7 @@ function libraryContext() {
 function ensureAskModal() {
   if ($('#askModal')) return;
   const el = document.createElement('div');
-  el.className = 'take-overlay'; el.id = 'askModal';
+  el.className = 'take-overlay'; el.id = 'askModal'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true');
   el.innerHTML = `<div class="take-card ask-card">
     <button class="modal-x" data-action="ask-close" aria-label="Close">✕</button>
     <div class="ob-eyebrow">✦ ${t('ask_h')}</div>
@@ -1210,7 +1212,7 @@ function openFlash() {
   flashIdx = 0; flashFlipped = false;
   if (!$('#flashModal')) {
     const el = document.createElement('div');
-    el.className = 'take-overlay'; el.id = 'flashModal';
+    el.className = 'take-overlay'; el.id = 'flashModal'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true');
     el.innerHTML = `<div class="take-card flash-wrap"><button class="modal-x" data-action="flash-close" aria-label="Close">✕</button>
       <div class="ob-eyebrow">🃏 ${t('flash_h')}</div><div id="flashBody"></div></div>`;
     document.body.appendChild(el);
@@ -1341,15 +1343,22 @@ function missionCardHTML(c) {
 }
 function compressPhoto(file, cb) {
   const img = new Image();
+  /* cb(null) = unusable photo (HEIC the browser can't decode, corrupt file, or too big even after compression) */
+  img.onerror = () => { URL.revokeObjectURL(img.src); cb(null); };
   img.onload = () => {
-    const max = 900, k = Math.min(1, max / Math.max(img.width, img.height));
-    const cv = document.createElement('canvas');
-    cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
-    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
-    let q = 0.72, out = cv.toDataURL('image/jpeg', q);
-    while (out.length > 280000 && q > 0.3) { q -= 0.12; out = cv.toDataURL('image/jpeg', q); }
+    const draw = max => {
+      const k = Math.min(1, max / Math.max(img.width, img.height));
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      let q = 0.72, out = cv.toDataURL('image/jpeg', q);
+      while (out.length > 280000 && q > 0.3) { q -= 0.12; out = cv.toDataURL('image/jpeg', q); }
+      return out;
+    };
+    let out = draw(900);
+    if (out.length > 280000) out = draw(600);
     URL.revokeObjectURL(img.src);
-    cb(out);
+    cb(out.length > 280000 ? null : out);
   };
   img.src = URL.createObjectURL(file);
 }
@@ -1367,6 +1376,7 @@ document.addEventListener('change', e => {
   }
   if (e.target && e.target.id === 'misPhoto' && e.target.files && e.target.files[0]) {
     compressPhoto(e.target.files[0], data => {
+      if (!data) { misPhotoData = ''; toast(t('mis_photo_fail'), '⚠️'); e.target.value = ''; return; }
       misPhotoData = data;
       const pv = $('#misPreview'); if (pv) pv.innerHTML = `<img class="mis-thumb" src="${data}" alt="">`;
     });
@@ -1388,7 +1398,7 @@ function claimMission(id, courseId) {
     const mine = (myMissions || []).find(x => x.id === id); if (mine) mine.claimed = true;
     awardXp((m && m.xp) || 100, t('mis_h'));
     render();
-  }).catch(() => {});
+  }).catch(() => toast(_lang() === 'pt' ? 'Não foi possível reclamar — tente de novo' : 'Could not claim — try again', '⚠️'));
 }
 
 /* ================= AI Role-Play Coach — the practice arena ================= */
@@ -1396,7 +1406,7 @@ let coach = null;
 function ensureCoachModal() {
   if ($('#coachModal')) return;
   const el = document.createElement('div');
-  el.className = 'take-overlay'; el.id = 'coachModal';
+  el.className = 'take-overlay'; el.id = 'coachModal'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true');
   el.innerHTML = `<div class="take-card coach-card">
     <button class="modal-x" data-action="coach-close" aria-label="Close">✕</button>
     <div class="ob-eyebrow" id="coachEyebrow"></div>
@@ -1405,7 +1415,7 @@ function ensureCoachModal() {
     <div class="coach-chat" id="coachChat"></div>
     <div class="coach-input" id="coachInputRow">
       <input class="auth-input" id="coachBox" placeholder="">
-      <button class="btn btn-primary btn-sm" data-action="coach-send">→</button>
+      <button class="btn btn-primary btn-sm" data-action="coach-send" aria-label="Send">→</button>
     </div>
     <div class="coach-foot"><button class="link-quiet" data-action="coach-finish" id="coachFinish"></button></div>
   </div>`;
@@ -2526,7 +2536,7 @@ function submitReply() {
   if (!forumCanPost()) return showLoginGate();
   const body = ($('#commReplyBox') && $('#commReplyBox').value || '').trim();
   if (!body || !commThread) return;
-  EdenForum.addReply(commThread, body).then(() => { if ($('#commReplyBox')) $('#commReplyBox').value = ''; }).catch(() => {});
+  EdenForum.addReply(commThread, body).then(() => { if ($('#commReplyBox')) $('#commReplyBox').value = ''; }).catch(() => toast(_lang() === 'pt' ? 'Não foi possível publicar' : 'Could not post', '⚠️'));
 }
 
 function renderProfile() {
