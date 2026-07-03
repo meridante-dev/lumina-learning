@@ -377,7 +377,13 @@ const UI = {
     comm_new:'Start a discussion', comm_title_ph:'Title — ask a question or start a topic', comm_body_ph:'Share your thoughts…', comm_msg_ph:'Write a message…', comm_post:'Post', comm_send:'Send', comm_reply:'Reply', comm_replies:'replies', comm_reply_one:'reply',
     comm_signin_post:'Sign in to join the conversation', comm_empty:'No posts here yet — be the first to start the conversation 🌱', comm_empty_replies:'No replies yet. Be the first.', comm_back:'Back', comm_posted:'Posted to the community', comm_members:'members learning here', comm_just_now:'just now',
     comm_online:'Online now', comm_top:'Leader’s board', comm_newest:'New in the community', comm_next_live:'Next live session', comm_members:'Members', comm_all_members:'See all members →', comm_member_since:'here since', comm_add_poll:'+ Poll', comm_poll_opt:'Option', comm_poll_votes:'votes', comm_vote:'Vote', comm_no_members:'The community grows as the team signs in 🌱',
-    comm_pinned:'Pinned', comm_official:'Official', comm_pin:'Pin', comm_unpin:'Unpin', comm_delete:'Delete', comm_confirm_del:'Delete this post for everyone?', comm_confirm_del_reply:'Delete this reply?', comm_deleted:'Deleted', comm_privacy:'Your progress is stored in your EdenRise account (Firestore, EU) and only you — and EdenRise admins — can see it. Turn nudges on or off anytime in your profile.',
+    comm_pinned:'Pinned', comm_official:'Official',
+    cert_title:'Certificate of Completion', cert_awarded:'Awarded to', cert_for:'for completing', cert_dl:'Download certificate', cert_li:'Add to LinkedIn', certs_h:'Certificates', certs_sub:'Every course you finish earns one — share it proudly.', cert_none:'Finish a course to earn your first certificate.',
+    asg_assigned:'Assigned to you', asg_due:'Due', asg_overdue:'Overdue', asg_start:'Start', dept_label:'Department', dept_none:'Choose your department', mod_locked:'Finish the previous module to unlock this one',
+    mis_h:'Field Mission', mis_sub:'Take what you learned onto the land — photo proof earns real XP.', mis_note_ph:'What did you notice? What did you do?', mis_photo:'Add photo proof', mis_submit:'Submit for review', mis_pending:'Submitted — awaiting review 🌾', mis_approved:'Mission approved!', mis_claim:'Claim', mis_declined:'Not approved this time — read the brief again and resubmit.', mis_done:'Mission complete', mis_signin:'Sign in to take on field missions',
+    coach_h:'Practice arena', coach_sub:'A safe place to practice the hard conversation — with an AI playing the other side.', coach_goal:'Your goal', coach_start:'Start the conversation', coach_end:'End & get feedback', coach_again:'Practice again', coach_ph:'Your reply…', coach_score:'Your feedback', coach_thinking:'…',
+    rate_h:'How was this course?', rate_thanks:'Thank you — this helps us grow the library.',
+    res_h:'Resources', cal_add:'Add to calendar', comm_pin:'Pin', comm_unpin:'Unpin', comm_delete:'Delete', comm_confirm_del:'Delete this post for everyone?', comm_confirm_del_reply:'Delete this reply?', comm_deleted:'Deleted', comm_privacy:'Your progress is stored in your EdenRise account (Firestore, EU) and only you — and EdenRise admins — can see it. Turn nudges on or off anytime in your profile.',
     take_title:'What you take with you', take_sub:'Three things worth keeping from this module.', take_continue:'Keep going →', take_done:'Finish course 🎉',
     match_goal:'For your goal', missing_ask:'Not seeing what you need? Tell the AI →', missing_prompt:'Tell me what you’re looking for — a topic, a problem on the land, a skill — and I’ll find it or flag it for the EdenRise team to add. Your path only gets smarter when you push back on it.',
     assigned_tag:'Assigned', chosen_tag:'Your pick',
@@ -431,7 +437,13 @@ const UI = {
     comm_new:'Iniciar uma discussão', comm_title_ph:'Título — faça uma pergunta ou inicie um tema', comm_body_ph:'Partilhe as suas ideias…', comm_msg_ph:'Escreva uma mensagem…', comm_post:'Publicar', comm_send:'Enviar', comm_reply:'Responder', comm_replies:'respostas', comm_reply_one:'resposta',
     comm_signin_post:'Entre para participar na conversa', comm_empty:'Ainda sem publicações — seja o primeiro a começar a conversa 🌱', comm_empty_replies:'Ainda sem respostas. Seja o primeiro.', comm_back:'Voltar', comm_posted:'Publicado na comunidade', comm_members:'a aprender aqui', comm_just_now:'agora',
     comm_online:'Online agora', comm_top:'Ranking', comm_newest:'Novos na comunidade', comm_next_live:'Próxima sessão ao vivo', comm_members:'Membros', comm_all_members:'Ver todos os membros →', comm_member_since:'aqui desde', comm_add_poll:'+ Sondagem', comm_poll_opt:'Opção', comm_poll_votes:'votos', comm_vote:'Votar', comm_no_members:'A comunidade cresce à medida que a equipa entra 🌱',
-    comm_pinned:'Fixado', comm_official:'Oficial', comm_pin:'Fixar', comm_unpin:'Soltar', comm_delete:'Eliminar', comm_confirm_del:'Eliminar esta publicação para todos?', comm_confirm_del_reply:'Eliminar esta resposta?', comm_deleted:'Eliminado', comm_privacy:'O seu progresso é guardado na sua conta EdenRise (Firestore, UE) e só você — e os administradores da EdenRise — o podem ver. Ative ou desative os lembretes no seu perfil quando quiser.',
+    comm_pinned:'Fixado', comm_official:'Oficial',
+    cert_title:'Certificado de Conclusão', cert_awarded:'Atribuído a', cert_for:'pela conclusão de', cert_dl:'Transferir certificado', cert_li:'Adicionar ao LinkedIn', certs_h:'Certificados', certs_sub:'Cada curso terminado vale um — partilhe com orgulho.', cert_none:'Termine um curso para ganhar o seu primeiro certificado.',
+    asg_assigned:'Atribuído a si', asg_due:'Prazo', asg_overdue:'Em atraso', asg_start:'Começar', dept_label:'Departamento', dept_none:'Escolha o seu departamento', mod_locked:'Termine o módulo anterior para desbloquear este',
+    mis_h:'Missão de Campo', mis_sub:'Leve o que aprendeu para o terreno — a prova fotográfica vale XP real.', mis_note_ph:'O que reparou? O que fez?', mis_photo:'Adicionar foto', mis_submit:'Submeter para revisão', mis_pending:'Submetido — em revisão 🌾', mis_approved:'Missão aprovada!', mis_claim:'Reclamar', mis_declined:'Não aprovada desta vez — releia o guião e volte a submeter.', mis_done:'Missão concluída', mis_signin:'Inicie sessão para aceitar missões de campo',
+    coach_h:'Arena de prática', coach_sub:'Um lugar seguro para praticar a conversa difícil — com uma IA do outro lado.', coach_goal:'O seu objetivo', coach_start:'Começar a conversa', coach_end:'Terminar e receber feedback', coach_again:'Praticar de novo', coach_ph:'A sua resposta…', coach_score:'O seu feedback', coach_thinking:'…',
+    rate_h:'Como foi este curso?', rate_thanks:'Obrigado — isto ajuda-nos a fazer crescer a biblioteca.',
+    res_h:'Recursos', cal_add:'Adicionar ao calendário', comm_pin:'Fixar', comm_unpin:'Soltar', comm_delete:'Eliminar', comm_confirm_del:'Eliminar esta publicação para todos?', comm_confirm_del_reply:'Eliminar esta resposta?', comm_deleted:'Eliminado', comm_privacy:'O seu progresso é guardado na sua conta EdenRise (Firestore, UE) e só você — e os administradores da EdenRise — o podem ver. Ative ou desative os lembretes no seu perfil quando quiser.',
     take_title:'O que leva consigo', take_sub:'Três coisas a guardar deste módulo.', take_continue:'Continuar →', take_done:'Terminar curso 🎉',
     match_goal:'Para o seu objetivo', missing_ask:'Não encontra o que precisa? Diga à IA →', missing_prompt:'Diga-me o que procura — um tema, um problema na terra, uma competência — e eu encontro-o ou sinalizo-o à equipa EdenRise para o criar. O seu percurso só fica mais inteligente quando o desafia.',
     assigned_tag:'Atribuído', chosen_tag:'Escolha sua',
@@ -528,3 +540,54 @@ const ctitle = c => (_lang() === 'pt' && ((COURSE_PT[c.id] && COURSE_PT[c.id].ti
 const cdesc = c => (_lang() === 'pt' && ((COURSE_PT[c.id] && COURSE_PT[c.id].desc) || (c.pt && c.pt.desc))) || c.desc;
 const cmods = c => (_lang() === 'pt' && ((COURSE_PT[c.id] && COURSE_PT[c.id].modules) || (c.pt && c.pt.modules))) || c.modules;
 const tnote = n => _lang() === 'pt' ? String(n).replace('modules skipped by AI', 'módulos ignorados pela IA').replace('module skipped by AI', 'módulo ignorado pela IA') : n;
+
+/* ================= World-class pack: departments, missions, role-play ================= */
+const DEPTS = [
+  { key: 'land', en: 'Land & Gardens', pt: 'Terra e Jardins' },
+  { key: 'building', en: 'Building & Maintenance', pt: 'Construção e Manutenção' },
+  { key: 'hospitality', en: 'Malhão Pardo & Hospitality', pt: 'Malhão Pardo e Hospitalidade' },
+  { key: 'animals', en: 'Animal Care', pt: 'Cuidado Animal' },
+  { key: 'office', en: 'Office & Leadership', pt: 'Escritório e Liderança' }
+];
+const tdept = k => { const d = DEPTS.find(x => x.key === k); return d ? (_lang() === 'pt' ? d.pt : d.en) : ''; };
+
+/* Field Missions — learn online, prove it on the land. One mission per course (photo-proof). */
+const MISSIONS = {
+  'land-team-journey': { xp: 150,
+    en: { title: 'Catch yourself below the line', brief: 'For three days, notice one moment each day when you slip below the line — blame, excuse or denial. Write the three moments down, and what pulled you back above. Photograph your notes as proof.' },
+    pt: { title: 'Apanhe-se abaixo da linha', brief: 'Durante três dias, repare num momento por dia em que desce abaixo da linha — culpa, desculpa ou negação. Anote os três momentos e o que o trouxe de volta acima. Fotografe as suas notas como prova.' } },
+  'living-soil': { xp: 150,
+    en: { title: 'Dig a test pit', brief: 'Dig a small pit (30cm) somewhere on the land. Photograph the soil profile and note: colour, smell, moisture, and any life you find. The photo is your proof.' },
+    pt: { title: 'Abra uma cova de teste', brief: 'Abra uma pequena cova (30cm) algures no terreno. Fotografe o perfil do solo e anote: cor, cheiro, humidade e a vida que encontrar. A foto é a sua prova.' } },
+  'water-cycles': { xp: 150,
+    en: { title: 'Walk the water', brief: 'On (or right after) a rainy day, walk the land and photograph two places where water flows or pools. Note where you would slow it, spread it, or sink it.' },
+    pt: { title: 'Caminhe com a água', brief: 'Num dia de chuva (ou logo depois), percorra o terreno e fotografe dois locais onde a água corre ou se acumula. Anote onde a iria travar, espalhar ou infiltrar.' } },
+  'composting': { xp: 120,
+    en: { title: 'Feed the pile', brief: 'Build or turn a compost pile using the layering you learned. Photograph the layers (greens/browns) before you close it up.' },
+    pt: { title: 'Alimente a pilha', brief: 'Monte ou vire uma pilha de compostagem com as camadas que aprendeu. Fotografe as camadas (verdes/castanhos) antes de a fechar.' } },
+  'nature-connection': { xp: 100,
+    en: { title: 'One sit spot, three days', brief: 'Sit in the same outdoor spot for 10 minutes, three days in a row. Photograph the spot and note one thing you only noticed on day three.' },
+    pt: { title: 'Um lugar, três dias', brief: 'Sente-se no mesmo lugar ao ar livre 10 minutos, três dias seguidos. Fotografe o lugar e anote algo que só reparou ao terceiro dia.' } }
+};
+const missionFor = id => { const m = MISSIONS[id]; return m ? Object.assign({ xp: m.xp }, _lang() === 'pt' ? m.pt : m.en) : null; };
+
+/* AI Role-Play Coach — practice the hard conversation before it happens */
+const ROLEPLAY = {
+  'land-team-journey': {
+    en: { title: 'The blame spiral', persona: 'Rui, a tired team member', opening: 'Honestly? The seedlings died because Marta never set up the irrigation properly. I did my part. Not my fault.',
+      system: 'You are Rui, a hard-working but frustrated land-team member at a regenerative resort in Alentejo, Portugal. A planting bed failed and you are firmly below the line: blaming Marta, making excuses, denying any part in it. Stay realistic and human — a little defensive at first, warming ONLY if the user leads with curiosity and ownership instead of accusation. Keep replies under 60 words, spoken tone. Never break character, never mention being an AI.',
+      goal: 'Lead Rui back above the line — without blaming him for blaming.', rubric: ['Stayed above the line yourself', 'Curiosity before correction', 'A clear next step, agreed together'] },
+    pt: { title: 'A espiral da culpa', persona: 'Rui, um colega cansado', opening: 'Sinceramente? As mudas morreram porque a Marta nunca montou bem a rega. Eu fiz a minha parte. A culpa não é minha.',
+      system: 'És o Rui, um membro trabalhador mas frustrado da equipa de terra num resort regenerativo no Alentejo. Um canteiro falhou e estás firmemente abaixo da linha: a culpar a Marta, a arranjar desculpas, a negar qualquer parte. Sê realista e humano — defensivo no início, abrindo APENAS se o utilizador liderar com curiosidade e responsabilidade em vez de acusação. Respostas com menos de 60 palavras, tom falado. Nunca saias da personagem, nunca digas que és uma IA.',
+      goal: 'Traga o Rui de volta acima da linha — sem o culpar por culpar.', rubric: ['Manteve-se acima da linha', 'Curiosidade antes de correção', 'Um próximo passo claro, acordado juntos'] }
+  },
+  'community-land': {
+    en: { title: 'The boundary talk', persona: 'Sr. Almeida, a wary neighbour', opening: 'Your people left the shared gate open again. My sheep were on the road. This arrangement is not working for me.',
+      system: 'You are Sr. Almeida, a 60-year-old Alentejo farmer who shares a boundary and a gate with a regenerative resort. You are courteous but firm and skeptical of newcomers. A real grievance: their volunteers left the gate open twice. You soften only with genuine listening, respect for your experience, and a concrete fix. Replies under 60 words, spoken tone. Never break character.',
+      goal: 'Repair trust and agree a practical fix for the gate.', rubric: ['Listened before defending', 'Respected his experience', 'A concrete, checkable agreement'] },
+    pt: { title: 'A conversa da vizinhança', persona: 'Sr. Almeida, um vizinho desconfiado', opening: 'A vossa gente deixou o portão partilhado aberto outra vez. As minhas ovelhas andavam na estrada. Este arranjo não está a funcionar para mim.',
+      system: 'És o Sr. Almeida, um agricultor alentejano de 60 anos que partilha uma extrema e um portão com um resort regenerativo. És cortês mas firme e desconfiado de recém-chegados. Queixa real: os voluntários deixaram o portão aberto duas vezes. Só abrandas com escuta genuína, respeito pela tua experiência e uma solução concreta. Respostas com menos de 60 palavras. Nunca saias da personagem.',
+      goal: 'Repare a confiança e acorde uma solução prática para o portão.', rubric: ['Ouviu antes de se defender', 'Respeitou a experiência dele', 'Um acordo concreto e verificável'] }
+  }
+};
+const roleplayFor = id => { const r = ROLEPLAY[id]; return r ? (_lang() === 'pt' ? r.pt : r.en) : null; };

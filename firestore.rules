@@ -37,6 +37,18 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    // Field Missions — members submit their own proof; admins review; members
+    // may update their own doc (resubmit / claim); admins set status.
+    match /missions/{missionId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+                    && request.resource.data.authorUid == request.auth.uid;
+      allow update: if request.auth != null
+                    && (resource.data.authorUid == request.auth.uid || isAdmin());
+      allow delete: if request.auth != null
+                    && (resource.data.authorUid == request.auth.uid || isAdmin());
+    }
+
     // Community forum — everyone reads; signed-in users post; authors (or admins)
     // edit/delete; any signed-in user may react/bump.
     match /forum_posts/{postId} {

@@ -262,6 +262,36 @@ window.EdenForum = {
 };
 function ms(ts) { return ts && typeof ts.toMillis === 'function' ? ts.toMillis() : (ts && ts.seconds ? ts.seconds * 1000 : 0); }
 
+/* ================= Field Missions — real-world proof, reviewed by admins ================= */
+window.EdenMissions = {
+  async submit({ courseId, note, photo }) {
+    const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
+    return addDoc(collection(db, 'missions'), Object.assign({
+      courseId, note: note || '', photo: photo || '',
+      status: 'pending', claimed: false, createdAt: serverTimestamp()
+    }, authorStub()));
+  },
+  async listMine() {
+    const u = auth.currentUser; if (!u) return [];
+    const snap = await getDocs(query(collection(db, 'missions'), where('authorUid', '==', u.uid)));
+    return snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+  },
+  async listPending() {
+    const snap = await getDocs(query(collection(db, 'missions'), where('status', '==', 'pending')));
+    const list = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+    list.sort((a, b) => (ms(a.createdAt) || 0) - (ms(b.createdAt) || 0));
+    return list;
+  },
+  async review(id, approved) {
+    if (!auth.currentUser) return;
+    await updateDoc(doc(db, 'missions', id), { status: approved ? 'approved' : 'declined', reviewedAt: serverTimestamp() });
+  },
+  async claim(id) {
+    if (!auth.currentUser) return;
+    await updateDoc(doc(db, 'missions', id), { claimed: true });
+  }
+};
+
 /* load team-published courses + studio meta for everyone (guests included) */
 (function loadCustomCourses(tries) {
   window.EdenCloud.listCourses().then(({ courses, meta }) => {

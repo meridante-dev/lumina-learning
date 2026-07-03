@@ -268,6 +268,7 @@ function renderHome() {
   </header>
   <div class="hero-divider" aria-hidden="true"></div>
   ${dailyDropHTML()}
+  ${assignmentCardsHTML()}
   ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
   ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
   <section class="path-banner">
@@ -348,7 +349,7 @@ function renderLive() {
           <span class="live-when">${s.live ? `🔴 ${s.viewers} ${t('watching')}` : s.when}</span>
           ${s.live
             ? `<button class="btn btn-primary btn-sm" data-action="join-live" data-id="${s.id}">${t('join_now')}</button>`
-            : `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12px;color:var(--text-faint);font-weight:600;">${t('remind_me')}</span><div class="toggle ${S.reminders.includes(s.id) ? 'on' : ''}" data-action="remind" data-id="${s.id}"></div></div>`}
+            : `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12px;color:var(--text-faint);font-weight:600;">${t('remind_me')}</span><div class="toggle ${S.reminders.includes(s.id) ? 'on' : ''}" data-action="remind" data-id="${s.id}"></div></div>${s.date ? `<button class="btn btn-glass btn-sm" data-action="cal-ics" data-id="${s.id}">📅 ${t('cal_add')}</button>` : ''}`}
         </div>
       </div>`).join('')}
   </div>${footerHTML()}</div>`;
@@ -400,6 +401,7 @@ function renderAnalytics() {
 function renderCourse(id) {
   const c = courseById(id);
   if (!c) { location.hash = '#/home'; return ''; }
+  if (myMissions === null && S.profile && S.profile.uid && window.EdenMissions) { myMissions = []; loadMyMissions(); }
   const p = prog(id);
   const cur = p && !p.done ? (p.mod || 0) : -1;
   const modules = c.modules.map((m, i) => {
@@ -408,6 +410,14 @@ function renderCourse(id) {
     const done = isDone(id) || (p && !p.done && i < (p.mod || 0));
     const isCur = i === cur && !soon;
     const review = S.review[id] === i;
+    const seqLocked = c.sequential && i > 0 && !done && !isDone(id) && !(p && i <= (p.mod || 0));
+    if (seqLocked && !soon) {
+      return `<div class="module-row locked" data-action="seq-locked">
+        <div class="m-num">🔒</div>
+        <div class="m-title">${cmods(c)[i] || m}</div>
+        <span class="m-dur">${moduleDur(c, i)}</span>
+      </div>`;
+    }
     if (soon) {
       return `<div class="module-row soon">
         <div class="m-num">🔒</div>
@@ -450,6 +460,11 @@ function renderCourse(id) {
     </div>
     <div class="rail-head" style="margin-top:14px;"><h2>${t('modules_h')}</h2><span class="hint">${t('tap_module')}</span></div>
     <div class="module-list">${modules}</div>
+    <div class="page-pad" style="padding-top:0;">
+      ${resourcesHTML(c)}
+      ${missionCardHTML(c)}
+      ${coachCardHTML(c)}
+    </div>
     ${railHTML(t('more_in') + ' ' + tcat(c.cat), t('related_courses'), CATALOG.filter(x => x.cat === c.cat && x.id !== id).map(x => cardHTML(x)))}
     ${footerHTML()}</div>`;
 }
@@ -569,9 +584,14 @@ function initAdmin(retries) {
     if (window.EdenForum && EdenForum.listOfficial) EdenForum.listOfficial().then(paintBroadcasts).catch(() => paintBroadcasts([]));
     return;
   }
+  if (adminTab === 'content') {
+    if (!adminMembers) EdenCloud.listMembers().then(m => { adminMembers = m; if (adminTab === 'content' && !editingCourse) render(); }).catch(() => {});
+    return;
+  }
   if (adminTab !== 'cockpit') return;
+  if (window.EdenMissions) EdenMissions.listPending().then(paintMissions).catch(() => paintMissions([]));
   const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="8"><div class="skel"></div></td></tr>`).join('');
-  EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); }).catch(err => {
+  EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); paintTrends(); paintAsgList(); }).catch(err => {
     console.error('[cockpit]', err);
     const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="8" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
   });
@@ -666,12 +686,354 @@ function studioPublish() {
   }).catch(() => toast(t('studio_failed'), '⚠️'));
 }
 
+/* ================= Certificates — a moment you can hold ================= */
+function certDate(courseId) {
+  const p = S.progress[courseId];
+  return new Date((p && p.doneAt) || Date.now());
+}
+function certCanvas(c) {
+  const W = 1600, H = 1131;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d');
+  x.fillStyle = '#0e140f'; x.fillRect(0, 0, W, H);
+  const g = x.createRadialGradient(W / 2, H * 0.34, 80, W / 2, H / 2, W * 0.75);
+  g.addColorStop(0, 'rgba(200,164,93,.10)'); g.addColorStop(1, 'rgba(200,164,93,0)');
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(200,164,93,.85)'; x.lineWidth = 3; x.strokeRect(46, 46, W - 92, H - 92);
+  x.strokeStyle = 'rgba(200,164,93,.35)'; x.lineWidth = 1; x.strokeRect(60, 60, W - 120, H - 120);
+  x.textAlign = 'center';
+  x.fillStyle = '#c8a45d'; x.font = '600 26px Inter, sans-serif';
+  x.letterSpacing = '12px';
+  x.fillText('E D E N R I S E   A C A D E M Y', W / 2, 160);
+  x.letterSpacing = '0px';
+  x.fillStyle = 'rgba(166,195,165,.8)'; x.font = '500 20px Inter, sans-serif';
+  x.fillText('✦', W / 2, 212);
+  x.fillStyle = '#f7f6f1'; x.font = '600 64px "Cormorant Garamond", serif';
+  x.fillText(t('cert_title'), W / 2, 320);
+  x.fillStyle = 'rgba(247,246,241,.55)'; x.font = '400 24px Inter, sans-serif';
+  x.fillText(t('cert_awarded'), W / 2, 420);
+  x.fillStyle = '#c8a45d'; x.font = 'italic 600 84px "Cormorant Garamond", serif';
+  x.fillText(displayName(), W / 2, 520);
+  x.fillStyle = 'rgba(247,246,241,.55)'; x.font = '400 24px Inter, sans-serif';
+  x.fillText(t('cert_for'), W / 2, 600);
+  x.fillStyle = '#f7f6f1'; x.font = '600 46px "Cormorant Garamond", serif';
+  x.fillText(ctitle(c), W / 2, 668);
+  x.fillStyle = 'rgba(166,195,165,.75)'; x.font = '500 21px Inter, sans-serif';
+  x.fillText(`${tcat(c.cat)} · ${c.modules.length} ${t('modules')} · ${fmtMins(courseMins(c))}`, W / 2, 726);
+  const d = certDate(c.id);
+  x.strokeStyle = 'rgba(200,164,93,.5)'; x.beginPath(); x.moveTo(W / 2 - 130, 830); x.lineTo(W / 2 + 130, 830); x.stroke();
+  x.fillStyle = '#f7f6f1'; x.font = '500 24px Inter, sans-serif';
+  x.fillText(d.toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), W / 2, 880);
+  x.fillStyle = 'rgba(247,246,241,.4)'; x.font = '400 19px Inter, sans-serif';
+  x.fillText('EdenRise Academy · Baixo Alentejo, Portugal', W / 2, 1005);
+  return cv;
+}
+function downloadCert(courseId) {
+  const c = courseById(courseId); if (!c || !isDone(courseId)) return;
+  certCanvas(c).toBlob(b => {
+    const url = URL.createObjectURL(b);
+    const a = document.createElement('a'); a.href = url; a.download = `edenrise-certificate-${courseId}.png`;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    toast(t('cert_dl'), '🎓');
+  }, 'image/png');
+}
+function linkedInCertUrl(c) {
+  const d = certDate(c.id);
+  return 'https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME'
+    + '&name=' + encodeURIComponent(ctitle(c))
+    + '&organizationName=' + encodeURIComponent('EdenRise Academy')
+    + '&issueYear=' + d.getFullYear() + '&issueMonth=' + (d.getMonth() + 1);
+}
+function certsSectionHTML() {
+  const done = CATALOG.filter(c => isDone(c.id));
+  return `<div class="admin-section">
+    <h2>🎓 ${t('certs_h')}</h2>
+    <p class="sect-sub">${t('certs_sub')}</p>
+    ${done.length ? `<div class="cert-grid">${done.map(c => `
+      <div class="cert-card">
+        <div class="cert-art"><span>✦</span><b>${esc(ctitle(c))}</b><span class="cert-d">${certDate(c.id).toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { month: 'short', year: 'numeric' })}</span></div>
+        <div class="cert-actions">
+          <button class="btn btn-glass btn-sm" data-action="cert-dl" data-id="${c.id}">⤓ ${t('cert_dl')}</button>
+          <a class="btn btn-glass btn-sm" href="${linkedInCertUrl(c)}" target="_blank" rel="noopener">in ${t('cert_li')}</a>
+        </div>
+      </div>`).join('')}</div>` : `<p class="empty-note" style="text-align:left;padding:8px 0;">${t('cert_none')}</p>`}
+  </div>`;
+}
+
+/* ================= Field Missions — prove it on the land ================= */
+let myMissions = null;
+let misPhotoData = '';
+function loadMyMissions() {
+  if (!(window.EdenMissions && S.profile && S.profile.uid)) return;
+  EdenMissions.listMine().then(list => { myMissions = list; if (location.hash.indexOf('#/course') === 0) render(); }).catch(() => {});
+}
+function missionState(courseId) {
+  return (myMissions || []).filter(m => m.courseId === courseId)
+    .sort((a, b) => tsMillis(b.createdAt) - tsMillis(a.createdAt))[0] || null;
+}
+function missionCardHTML(c) {
+  const m = missionFor(c.id); if (!m) return '';
+  const st = missionState(c.id);
+  let body;
+  if (!(S.profile && S.profile.uid)) body = `<p class="mis-note">${t('mis_signin')}</p>`;
+  else if (st && st.status === 'approved' && st.claimed) body = `<p class="mis-ok">✓ ${t('mis_done')} · +${m.xp} XP</p>`;
+  else if (st && st.status === 'approved') body = `<button class="btn btn-primary btn-sm" data-action="mis-claim" data-id="${st.id}" data-course="${c.id}">🌾 ${t('mis_claim')} +${m.xp} XP</button>`;
+  else if (st && st.status === 'pending') body = `<p class="mis-note">${t('mis_pending')}</p>`;
+  else body = `${st && st.status === 'declined' ? `<p class="mis-note warn">${t('mis_declined')}</p>` : ''}
+    <textarea class="comm-input" id="misNote" rows="2" placeholder="${t('mis_note_ph')}"></textarea>
+    <div class="mis-actions">
+      <label class="btn btn-glass btn-sm mis-photo-btn">📷 ${t('mis_photo')}<input type="file" id="misPhoto" accept="image/*" hidden></label>
+      <span id="misPreview"></span>
+      <span style="flex:1"></span>
+      <button class="btn btn-primary btn-sm" data-action="mis-submit" data-id="${c.id}">${t('mis_submit')}</button>
+    </div>`;
+  return `<div class="admin-section mission-card">
+    <h2>🌾 ${t('mis_h')} <span class="mis-xp">+${m.xp} XP</span></h2>
+    <p class="sect-sub">${t('mis_sub')}</p>
+    <div class="mis-brief"><b>${esc(m.title)}</b><p>${esc(m.brief)}</p></div>
+    ${body}
+  </div>`;
+}
+function compressPhoto(file, cb) {
+  const img = new Image();
+  img.onload = () => {
+    const max = 900, k = Math.min(1, max / Math.max(img.width, img.height));
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k);
+    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+    let q = 0.72, out = cv.toDataURL('image/jpeg', q);
+    while (out.length > 280000 && q > 0.3) { q -= 0.12; out = cv.toDataURL('image/jpeg', q); }
+    URL.revokeObjectURL(img.src);
+    cb(out);
+  };
+  img.src = URL.createObjectURL(file);
+}
+document.addEventListener('change', e => {
+  if (e.target && e.target.id === 'misPhoto' && e.target.files && e.target.files[0]) {
+    compressPhoto(e.target.files[0], data => {
+      misPhotoData = data;
+      const pv = $('#misPreview'); if (pv) pv.innerHTML = `<img class="mis-thumb" src="${data}" alt="">`;
+    });
+  }
+});
+function submitMission(courseId) {
+  if (!(window.EdenMissions && S.profile && S.profile.uid)) { showLoginGate(); return; }
+  const note = ($('#misNote') && $('#misNote').value || '').trim();
+  if (!note && !misPhotoData) { if ($('#misNote')) $('#misNote').focus(); return; }
+  EdenMissions.submit({ courseId, note, photo: misPhotoData }).then(() => {
+    misPhotoData = '';
+    toast(t('mis_pending'), '🌾');
+    loadMyMissions(); render();
+  }).catch(() => toast(_lang() === 'pt' ? 'Não foi possível submeter' : 'Could not submit', '⚠️'));
+}
+function claimMission(id, courseId) {
+  const m = MISSIONS[courseId];
+  EdenMissions.claim(id).then(() => {
+    const mine = (myMissions || []).find(x => x.id === id); if (mine) mine.claimed = true;
+    awardXp((m && m.xp) || 100, t('mis_h'));
+    render();
+  }).catch(() => {});
+}
+
+/* ================= AI Role-Play Coach — the practice arena ================= */
+let coach = null;
+function ensureCoachModal() {
+  if ($('#coachModal')) return;
+  const el = document.createElement('div');
+  el.className = 'take-overlay'; el.id = 'coachModal';
+  el.innerHTML = `<div class="take-card coach-card">
+    <button class="modal-x" data-action="coach-close" aria-label="Close">✕</button>
+    <div class="ob-eyebrow" id="coachEyebrow"></div>
+    <h3 id="coachTitle" style="font-family:var(--font-display);font-size:24px;margin:6px 0 2px;"></h3>
+    <p class="m-sub" id="coachGoal"></p>
+    <div class="coach-chat" id="coachChat"></div>
+    <div class="coach-input" id="coachInputRow">
+      <input class="auth-input" id="coachBox" placeholder="">
+      <button class="btn btn-primary btn-sm" data-action="coach-send">→</button>
+    </div>
+    <div class="coach-foot"><button class="link-quiet" data-action="coach-finish" id="coachFinish"></button></div>
+  </div>`;
+  document.body.appendChild(el);
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+  $('#coachBox').addEventListener('keydown', e => { if (e.key === 'Enter') coachSend(); });
+}
+function openCoach(courseId) {
+  const sc = roleplayFor(courseId); if (!sc) return;
+  if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
+  ensureCoachModal();
+  coach = { courseId, sc, msgs: [{ role: 'assistant', content: sc.opening }], busy: false, done: false };
+  $('#coachEyebrow').textContent = `🎭 ${t('coach_h')} · ${sc.persona}`;
+  $('#coachTitle').textContent = sc.title;
+  $('#coachGoal').textContent = `${t('coach_goal')}: ${sc.goal}`;
+  $('#coachBox').placeholder = t('coach_ph');
+  $('#coachFinish').textContent = t('coach_end');
+  $('#coachInputRow').style.display = '';
+  $('#coachFinish').style.display = '';
+  paintCoach();
+  $('#coachModal').classList.add('open');
+  setTimeout(() => $('#coachBox').focus(), 250);
+}
+function paintCoach() {
+  const el = $('#coachChat'); if (!el || !coach) return;
+  el.innerHTML = coach.msgs.map(m => `<div class="coach-msg ${m.role === 'user' ? 'me' : 'them'}">${esc(m.content)}</div>`).join('')
+    + (coach.busy ? `<div class="coach-msg them typing">${t('coach_thinking')}</div>` : '');
+  el.scrollTop = el.scrollHeight;
+}
+async function coachSend() {
+  if (!coach || coach.busy || coach.done) return;
+  const box = $('#coachBox'); const text = (box.value || '').trim(); if (!text) return;
+  box.value = '';
+  coach.msgs.push({ role: 'user', content: text });
+  coach.busy = true; paintCoach();
+  try {
+    const reply = await llmComplete({ maxTokens: 220, system: coach.sc.system, messages: coach.msgs.map(m => ({ role: m.role, content: m.content })) });
+    coach.msgs.push({ role: 'assistant', content: reply.trim() });
+  } catch (e) { coach.msgs.push({ role: 'assistant', content: '…' }); }
+  coach.busy = false; paintCoach();
+}
+async function coachFinish() {
+  if (!coach || coach.busy) return;
+  if (coach.msgs.filter(m => m.role === 'user').length < 2) { toast(_lang() === 'pt' ? 'Troque mais algumas mensagens primeiro' : 'Exchange a few more messages first', 'ℹ️'); return; }
+  coach.busy = true; coach.done = true; paintCoach();
+  const transcript = coach.msgs.map(m => `${m.role === 'user' ? 'Leader' : coach.sc.persona}: ${m.content}`).join('\n');
+  try {
+    const raw = await llmComplete({ maxTokens: 600,
+      system: `You are a warm, honest leadership coach at EdenRise Academy. Score the Leader's side of this role-play against the rubric. Reply as raw JSON only: {"scores":[{"dim":str,"score":1-5,"note":str(short)}],"tip":str(one specific, kind suggestion)} . Rubric dimensions: ${coach.sc.rubric.join(' | ')}. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}`,
+      messages: [{ role: 'user', content: transcript }] });
+    const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
+    const first = !(S.coachDone && S.coachDone[coach.courseId]);
+    (S.coachDone || (S.coachDone = {}))[coach.courseId] = Date.now(); save();
+    $('#coachChat').innerHTML += `<div class="coach-score"><b>${t('coach_score')}</b>
+      ${j.scores.map(s => `<div class="cs-row"><span>${esc(s.dim)}</span><span class="cs-stars">${'★'.repeat(s.score)}${'☆'.repeat(5 - s.score)}</span><em>${esc(s.note || '')}</em></div>`).join('')}
+      <p class="cs-tip">💡 ${esc(j.tip || '')}</p>
+      <button class="btn btn-glass btn-sm" data-action="coach-again" data-id="${coach.courseId}">↺ ${t('coach_again')}</button></div>`;
+    $('#coachChat').scrollTop = $('#coachChat').scrollHeight;
+    $('#coachInputRow').style.display = 'none';
+    $('#coachFinish').style.display = 'none';
+    if (first) setTimeout(() => awardXp(40, t('coach_h')), 600);
+  } catch (e) {
+    coach.done = false;
+    toast(_lang() === 'pt' ? 'Não foi possível avaliar — tente de novo' : 'Could not score — try again', '⚠️');
+  }
+  coach.busy = false;
+}
+function coachCardHTML(c) {
+  const sc = roleplayFor(c.id); if (!sc) return '';
+  const done = S.coachDone && S.coachDone[c.id];
+  return `<div class="admin-section coach-invite">
+    <h2>🎭 ${t('coach_h')}</h2>
+    <p class="sect-sub">${t('coach_sub')}</p>
+    <div class="mis-brief"><b>${esc(sc.title)}</b><p>${esc(sc.goal)}</p></div>
+    <button class="btn btn-primary btn-sm" data-action="coach-open" data-id="${c.id}">${done ? '↺ ' + t('coach_again') : t('coach_start')}</button>
+  </div>`;
+}
+
+/* ================= Assignments, resources, ratings, calendar ================= */
+const activeAssignments = () => (studioMeta && Array.isArray(studioMeta.assignments)) ? studioMeta.assignments : [];
+function myAssignments() {
+  const dept = (S.profile && S.profile.dept) || '';
+  return activeAssignments().filter(a => (a.team === 'everyone' || a.team === dept) && !isDone(a.courseId));
+}
+function assignmentCardsHTML() {
+  const list = myAssignments(); if (!list.length) return '';
+  return `<section class="page-pad" style="padding-top:0;">${list.map(a => {
+    const c = courseById(a.courseId); if (!c) return '';
+    const overdue = a.due && new Date(a.due + 'T23:59:59') < new Date();
+    return `<div class="asg-card" data-action="open-course" data-id="${c.id}" role="button" tabindex="0">
+      <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
+      <div class="ct"><b>📌 ${t('asg_assigned')}: ${esc(ctitle(c))}</b>
+        <span>${a.due ? `${t('asg_due')} ${new Date(a.due).toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'short' })}` : ''}${overdue ? ` · <em class="asg-over">${t('asg_overdue')}</em>` : ''}${coursePct(c.id) ? ` · ${coursePct(c.id)}%` : ''}</span></div>
+      <button class="btn btn-primary btn-sm">${coursePct(c.id) ? t('resume_module').split(' ')[0] : t('asg_start')} →</button>
+    </div>`;
+  }).join('')}</section>`;
+}
+function resourcesHTML(c) {
+  if (!Array.isArray(c.resources) || !c.resources.length) return '';
+  return `<div class="admin-section"><h2>📎 ${t('res_h')}</h2>
+    <div class="res-list">${c.resources.map(r => `<a class="res-row" href="${esc(r.url)}" target="_blank" rel="noopener"><span>↗</span>${esc(r.label || r.url)}</a>`).join('')}</div></div>`;
+}
+function ratingStarsHTML(courseId) {
+  const mine = (S.ratings || {})[courseId] || 0;
+  return `<div class="rate-block"><b>${t('rate_h')}</b><div class="rate-stars">${[1, 2, 3, 4, 5].map(n =>
+    `<button class="rate-star ${n <= mine ? 'on' : ''}" data-action="rate" data-id="${courseId}" data-n="${n}">${n <= mine ? '★' : '☆'}</button>`).join('')}</div></div>`;
+}
+function icsForSession(s) {
+  if (!s.date) return;
+  const dt = new Date(s.date);
+  const fmt = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//EdenRise Academy//EN', 'BEGIN:VEVENT',
+    'UID:' + s.id + '@edenrise-academy', 'DTSTAMP:' + fmt(new Date(dt)),
+    'DTSTART:' + fmt(dt), 'DTEND:' + fmt(new Date(dt.getTime() + 3600000)),
+    'SUMMARY:' + s.title.replace(/,/g, '\\,'), 'DESCRIPTION:' + (s.desc || '').replace(/,/g, '\\,'),
+    'LOCATION:EdenRise Academy (online)', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+  const a = document.createElement('a'); a.href = url; a.download = 'edenrise-' + s.id + '.ics';
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
 /* ---------- admin console — EdenRise Studio ---------- */
 let adminTab = 'cockpit';
 let editingCourse = null;   /* working copy inside the course editor */
 let liveDraft = null;       /* live schedule being edited */
 const attr = s => esc(String(s == null ? '' : s)).replace(/"/g, '&quot;');
 
+function saveAssignments(assignments, msg) {
+  if (!(window.EdenCloud && EdenCloud.saveMeta)) { toast('You need to be online and signed in', '⚠️'); return; }
+  EdenCloud.saveMeta(Object.assign({}, studioMeta, { assignments })).then(() => {
+    studioMeta = Object.assign({}, studioMeta, { assignments });
+    toast(msg, '📌'); render(); initAdmin();
+  }).catch(() => toast('Could not save — are the Firestore rules published?', '⚠️'));
+}
+/* how many members in the target team have finished the assigned course */
+function assignmentTrack(a) {
+  if (!adminMembers) return '';
+  const pool = adminMembers.filter(m => a.team === 'everyone' || (m.profile && m.profile.dept) === a.team);
+  if (!pool.length) return '';
+  const done = pool.filter(m => { const p = (m.state.progress || {})[a.courseId]; return p && p.done; }).length;
+  return `${done}/${pool.length} done`;
+}
+function paintMissions(list) {
+  const el = $('#missionQueue'); if (!el) return;
+  el.innerHTML = list.length ? list.map(m => {
+    const c = courseById(m.courseId);
+    const mis = MISSIONS[m.courseId];
+    return `<div class="mq-row">
+      ${m.photo ? `<img class="mq-photo" src="${m.photo}" alt="proof">` : `<span class="ci t-grad-${c ? c.grad : 1}">${svgIcon(c ? c.icon : 'leaf')}</span>`}
+      <div class="ct"><b>${esc(m.authorName || 'Learner')} · ${c ? esc(c.title) : m.courseId}</b>
+        <span>${esc((mis && mis.en.title) || '')}${m.note ? ' — “' + esc(m.note.slice(0, 140)) + '”' : ''} · ${timeAgo(m.createdAt)}</span></div>
+      <button class="btn btn-primary btn-sm" data-action="mis-review" data-id="${m.id}" data-ok="1">✓ Approve</button>
+      <button class="btn btn-glass btn-sm" data-action="mis-review" data-id="${m.id}" data-ok="0">Decline</button>
+    </div>`;
+  }).join('') : `<p class="empty-note" style="text-align:left;padding:8px 0;">No missions waiting — the queue is clear 🌿</p>`;
+}
+function paintAsgList() {
+  const el = $('#asgList'); if (!el) return;
+  el.innerHTML = activeAssignments().map((a, i) => {
+    const c = courseById(a.courseId);
+    const track = assignmentTrack(a);
+    return `<div class="assignment-row">📌 <b>${c ? esc(c.title) : a.courseId}</b> → ${a.team === 'everyone' ? 'Everyone' : tdept(a.team)}${a.due ? ` · due ${a.due}` : ''}${track ? ` · <span class="asg-track">${track}</span>` : ''}<button class="ar-x" data-action="unassign" data-idx="${i}" title="Remove">✕</button></div>`;
+  }).join('');
+}
+function paintTrends() {
+  const el = $('#cockpitTrends'); if (!el || !adminMembers) return;
+  /* team minutes + completions per week, last 4 weeks */
+  const now = Date.now(), week = 6048e5;
+  const mins = [0, 0, 0, 0], comps = [0, 0, 0, 0];
+  adminMembers.forEach(m => {
+    Object.entries(m.state.mins || {}).forEach(([day, v]) => {
+      const age = Math.floor((now - new Date(day).getTime()) / week);
+      if (age >= 0 && age < 4) mins[3 - age] += v;
+    });
+    Object.values(m.state.progress || {}).forEach(p => {
+      if (p && p.done && p.doneAt) { const age = Math.floor((now - p.doneAt) / week); if (age >= 0 && age < 4) comps[3 - age]++; }
+    });
+  });
+  const bars = (arr, unit) => { const mx = Math.max(...arr, 1); return arr.map((v, i) => `
+    <div class="bar-col"><span class="bv">${Math.round(v) || ''}</span><div class="bar ${i === 3 ? 'today' : ''}" style="height:${Math.max(4, v / mx * 100)}%"></div><span class="bl">${['-3w', '-2w', '-1w', 'now'][i]}</span></div>`).join(''); };
+  el.innerHTML = `
+    <div class="chart-card"><h3>Team minutes · last 4 weeks</h3><div class="bars sm">${bars(mins)}</div></div>
+    <div class="chart-card"><h3>Courses completed · last 4 weeks</h3><div class="bars sm">${bars(comps)}</div></div>`;
+}
 function studioTabsHTML() {
   const tabs = [['cockpit', 'People'], ['content', 'Content'], ['broadcasts', 'Broadcasts'], ['live', 'Live sessions'], ['settings', 'Settings']];
   return `<div class="comm-pills studio-tabs">${tabs.map(([id, label]) =>
@@ -679,9 +1041,11 @@ function studioTabsHTML() {
 }
 
 function adminCockpitHTML() {
-  const assignments = S.assignments.map((a, i) => {
+  const asgs = activeAssignments();
+  const assignments = asgs.map((a, i) => {
     const c = courseById(a.courseId);
-    return `<div class="assignment-row">📌 <b>${c ? c.title : a.courseId}</b> → ${a.team} · due ${a.due}<button class="ar-x" data-action="unassign" data-idx="${i}" title="Remove">✕</button></div>`;
+    const track = assignmentTrack(a);
+    return `<div class="assignment-row">📌 <b>${c ? esc(c.title) : a.courseId}</b> → ${a.team === 'everyone' ? 'Everyone' : tdept(a.team)}${a.due ? ` · due ${a.due}` : ''}${track ? ` · <span class="asg-track">${track}</span>` : ''}<button class="ar-x" data-action="unassign" data-idx="${i}" title="Remove">✕</button></div>`;
   }).join('');
   return `<section class="stats" id="cockpitStats" style="margin:24px 0 0;">
       <div class="stat"><div class="num">—</div><div class="lbl">Members</div></div>
@@ -698,6 +1062,12 @@ function adminCockpitHTML() {
         <thead><tr><th>Member</th><th>Path progress</th><th></th><th>Level</th><th>Streak</th><th>Last active</th><th>Status</th><th></th></tr></thead>
         <tbody id="cockpitRoster"><tr><td colspan="8" class="empty-note">Loading members…</td></tr></tbody>
       </table></div>
+      <div class="two-col" id="cockpitTrends" style="margin-top:18px;"></div>
+    </div>
+    <div class="admin-section">
+      <h2>🌾 Field Missions review</h2>
+      <p class="sect-sub">Members' real-world proof, waiting for your eyes. Approve to release their XP.</p>
+      <div id="missionQueue"><p class="empty-note" style="text-align:left;padding:8px 0;">Loading…</p></div>
     </div>
     <div class="admin-section">
       <h2>Assign learning</h2>
@@ -706,23 +1076,29 @@ function adminCockpitHTML() {
         <div class="field"><label>Course</label>
           <select id="asgCourse">${CATALOG.map(c => `<option value="${c.id}">${esc(c.title)}</option>`).join('')}</select></div>
         <div class="field"><label>Team</label>
-          <select id="asgTeam"><option>Everyone</option><option>Land</option><option>Building</option><option>Hospitality</option><option>Leadership</option></select></div>
-        <div class="field"><label>Due date</label><input id="asgDue" type="date" value="2026-07-31"></div>
+          <select id="asgTeam"><option value="everyone">Everyone</option>${DEPTS.map(d => `<option value="${d.key}">${d.en}</option>`).join('')}</select></div>
+        <div class="field"><label>Due date</label><input id="asgDue" type="date"></div>
         <button class="btn btn-primary" data-action="assign">Assign →</button>
       </div>
-      ${assignments}
+      <div id="asgList">${assignments}</div>
     </div>`;
 }
 
 /* ----- Content: every course, editable ----- */
 function courseStatus(c) { return c.custom ? ['draft', 'Team'] : c.edited ? ['edited', 'Edited'] : ['live', 'Catalog']; }
+function avgRating(courseId) {
+  if (!adminMembers) return null;
+  const rs = adminMembers.map(m => (m.state.ratings || {})[courseId]).filter(Boolean);
+  return rs.length ? { avg: (rs.reduce((a, b) => a + b, 0) / rs.length).toFixed(1), n: rs.length } : null;
+}
 function adminContentHTML() {
   if (editingCourse) return courseEditorHTML();
   const rows = CATALOG.map(c => {
     const [cls, label] = courseStatus(c);
+    const r = avgRating(c.id);
     return `<div class="content-row">
       <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
-      <div class="ct"><b>${esc(ctitle(c))}</b><span>${tcat(c.cat)} · ${c.modules.length} ${t('modules')} · ${fmtMins(courseMins(c))}</span></div>
+      <div class="ct"><b>${esc(ctitle(c))}</b><span>${tcat(c.cat)} · ${c.modules.length} ${t('modules')} · ${fmtMins(courseMins(c))}${r ? ` · ★ ${r.avg} (${r.n})` : ''}</span></div>
       <span class="pub-chip ${cls}">${label}</span>
       <button class="btn btn-glass btn-sm" data-action="ce-open" data-id="${c.id}">✎ Edit</button>
     </div>`;
@@ -767,7 +1143,9 @@ function openCourseEditor(id) {
       en: m, pt: ptMods[i] || '',
       video: videoUrlOf(modMedia(c, i)),
       mins: (c.moduleDurations && c.moduleDurations[i]) || 12
-    }))
+    })),
+    resourcesRaw: (c.resources || []).map(r => `${r.label} | ${r.url}`).join('\n'),
+    sequential: !!c.sequential
   };
   adminTab = 'content';
   render();
@@ -810,6 +1188,10 @@ function courseEditorHTML() {
       <div class="field"><label>Category</label><select data-ce="cat">${cats.map(x => `<option ${x === e.cat ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
       <div class="field"><label>Level</label><select data-ce="level">${levels.map(x => `<option ${x === e.level ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
     </div>
+    <div class="ce-two">
+      <div class="field"><label>Resources — one per line: Label | https://url</label><textarea class="comm-input" rows="2" data-ce="resourcesRaw" placeholder="Soil worksheet | https://…">${esc(e.resourcesRaw)}</textarea></div>
+      <div class="field" style="display:flex;align-items:flex-end;padding-bottom:6px;"><label class="lv-check" style="margin:0;"><input type="checkbox" id="ceSeq" ${e.sequential ? 'checked' : ''}> 🔒 Sequential — modules unlock in order</label></div>
+    </div>
     <h3 class="ce-h3">Modules <span class="sect-sub" style="display:inline;font-weight:400;">— paste a Vimeo or YouTube link and the player wires it automatically</span></h3>
     <div id="ceMods">${modRows}</div>
     <button class="btn btn-glass btn-sm" data-action="ce-mod-add" style="margin-top:10px;">+ Add module</button>
@@ -850,6 +1232,11 @@ function ceSave() {
       hook: e.hook_pt.trim() || e.hook.trim(), hookSub: e.hookSub_pt.trim() || e.hookSub.trim()
     }
   });
+  out.resources = (e.resourcesRaw || '').split('\n').map(l => {
+    const m = l.split('|'); const url = (m[1] || m[0] || '').trim();
+    return /^https?:\/\//.test(url) ? { label: (m.length > 1 ? m[0] : url).trim(), url } : null;
+  }).filter(Boolean);
+  out.sequential = !!($('#ceSeq') && $('#ceSeq').checked);
   if (!out.custom) out.edited = true;
   const clean = JSON.parse(JSON.stringify(out));   /* Firestore rejects undefined values */
   EdenCloud.saveCourse(clean).then(() => {
@@ -932,6 +1319,7 @@ function adminLiveHTML() {
         <input class="auth-input" data-lv="host" value="${attr(s.host)}" placeholder="Host — Name · Role">
         <input class="auth-input" data-lv="when" value="${attr(s.when)}" placeholder="When — e.g. Fri 14:00 WET">
         <input class="auth-input" data-lv="desc" value="${attr(s.desc)}" placeholder="One-line description">
+        <input class="auth-input" data-lv="date" type="datetime-local" value="${attr(s.date)}" title="Exact date & time — enables members' Add-to-calendar">
       </div>
       <label class="lv-check"><input type="checkbox" data-lv="live" ${s.live ? 'checked' : ''}> 🔴 LIVE now</label>
       <button class="btn btn-glass btn-sm" data-action="lv-del" data-idx="${i}" title="Remove">✕</button>
@@ -961,7 +1349,7 @@ function lvSave() {
   const ICON_CYCLE = ['sprout', 'tree', 'drop', 'sun', 'leaf', 'people'];
   const live = liveDraft.filter(s => (s.title || '').trim()).map((s, i) => ({
     id: s.id || 'live-' + slugify(s.title), title: s.title.trim(), host: (s.host || '').trim(),
-    when: (s.when || '').trim(), desc: (s.desc || '').trim(), live: !!s.live,
+    when: (s.when || '').trim(), desc: (s.desc || '').trim(), date: s.date || '', live: !!s.live,
     viewers: s.viewers || 0, grad: s.grad || (i % 8) + 1, icon: s.icon || ICON_CYCLE[i % ICON_CYCLE.length]
   }));
   if (!(window.EdenCloud && EdenCloud.saveMeta)) { toast('You need to be online and signed in', '⚠️'); return; }
@@ -1035,6 +1423,8 @@ function renderProgress() {
         <div class="stat"><div class="num">${doneCount}</div><div class="lbl">${t('courses_finished')}</div><div class="delta">${S.quizzesPassed} ${t('skills_verified').toLowerCase()}</div></div>
       </div>
     </div>
+
+    ${certsSectionHTML()}
 
     <div class="admin-section">
       <h2>${t('badges_h')}</h2>
@@ -1499,6 +1889,7 @@ function renderProfile() {
         <label>${t('prof_name')}<input class="auth-input" id="pfName" value="${esc(displayName())}"></label>
         <label>${t('prof_username')}<div class="ob-handle"><span>@</span><input class="ob-input" id="pfUser" maxlength="20" value="${esc(userHandle())}" placeholder="${suggestHandle()}"></div></label>
         <label>${t('prof_role')}<select class="auth-input" id="pfRole"><option value="">—</option>${roleOpts}</select></label>
+        <label>${t('dept_label')}<select class="auth-input" id="pfDept"><option value="">${t('dept_none')}</option>${DEPTS.map(d => `<option value="${d.key}" ${(S.profile && S.profile.dept) === d.key ? 'selected' : ''}>${tdept(d.key)}</option>`).join('')}</select></label>
         <label>${t('prof_goal')}<select class="auth-input" id="pfGoal">${goalOpts}</select></label>
       </div>
       <button class="btn btn-primary" data-action="save-profile" style="margin-top:16px;">${t('prof_save')}</button>
@@ -1523,7 +1914,7 @@ function renderProfile() {
   </div>${footerHTML()}</div>`;
 }
 function exportMyData() {
-  const data = { exportedAt: new Date().toISOString(), app: 'EdenRise Academy', profile: S.profile || {}, goal: S.goal, role: S.role, path: S.path, progress: S.progress, xp: S.xp, badges: S.badges, streak: S.streak, quizzesPassed: S.quizzesPassed, notes: S.notes, lang: S.lang, notify: (S.profile || {}).notify || {} };
+  const data = { exportedAt: new Date().toISOString(), app: 'EdenRise Academy', profile: S.profile || {}, goal: S.goal, role: S.role, path: S.path, progress: S.progress, xp: S.xp, badges: S.badges, streak: S.streak, quizzesPassed: S.quizzesPassed, notes: S.notes, lang: S.lang, ratings: S.ratings || {}, coachDone: S.coachDone || {}, notify: (S.profile || {}).notify || {} };
   delete data.profile.notify;
   const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
   const a = document.createElement('a'); a.href = url; a.download = 'edenrise-my-data.json'; document.body.appendChild(a); a.click(); a.remove();
@@ -1552,7 +1943,8 @@ function saveProfile() {
   const role = $('#pfRole').value;
   const goal = $('#pfGoal').value;
   const phone = $('#pfPhone') ? $('#pfPhone').value.trim() : ((S.profile && S.profile.phone) || '');
-  S.profile = Object.assign({}, S.profile, { name: name || displayName(), username: user, role, phone });
+  const dept = $('#pfDept') ? $('#pfDept').value : ((S.profile && S.profile.dept) || '');
+  S.profile = Object.assign({}, S.profile, { name: name || displayName(), username: user, role, phone, dept });
   if (role) S.role = role;
   if (goal && goal !== S.goal) { S.goal = goal; S.path = [...GOAL_PRESETS[goal]]; }
   save();
@@ -1903,6 +2295,12 @@ function showTakeaways(c, mod, next) {
   $('#takeTitle').textContent = t('take_title');
   $('#takeSub').textContent = t('take_sub');
   $('#takeGo').textContent = next && next.kind === 'course-done' ? t('take_done') : t('take_continue');
+  if (next && next.kind === 'course-done') {
+    $('#takeList').innerHTML += `<div class="take-extra">
+      ${ratingStarsHTML(next.courseId)}
+      <button class="btn btn-glass btn-sm" data-action="cert-dl" data-id="${next.courseId}">🎓 ${t('cert_dl')}</button>
+    </div>`;
+  }
   const tq = $('#takeQuiz');
   if (tq) { tq.style.display = next && next.kind === 'course-done' ? '' : 'none'; tq.textContent = t('take_quiz'); }
   $('#takeModal').classList.add('open');
@@ -2380,6 +2778,23 @@ document.addEventListener('click', e => {
     case 'lv-add': readLiveRows(); liveDraft.push({ title: '', host: '', when: '', desc: '', live: false }); render(); break;
     case 'lv-del': readLiveRows(); liveDraft.splice(+el.dataset.idx, 1); render(); break;
     case 'lv-save': lvSave(); break;
+    case 'cert-dl': downloadCert(id); break;
+    case 'mis-submit': submitMission(id); break;
+    case 'mis-claim': claimMission(id, el.dataset.course); break;
+    case 'mis-review': EdenMissions.review(id, el.dataset.ok === '1').then(() => { toast(el.dataset.ok === '1' ? '🌾 Approved' : 'Declined', el.dataset.ok === '1' ? '✓' : '－'); initAdmin(); }); break;
+    case 'coach-open': openCoach(id); break;
+    case 'coach-close': $('#coachModal').classList.remove('open'); break;
+    case 'coach-send': coachSend(); break;
+    case 'coach-finish': coachFinish(); break;
+    case 'coach-again': $('#coachModal').classList.remove('open'); setTimeout(() => openCoach(id), 200); break;
+    case 'rate': {
+      (S.ratings || (S.ratings = {}))[id] = +el.dataset.n; save();
+      const blk = el.closest('.rate-block'); if (blk) { const w = document.createElement('div'); w.innerHTML = ratingStarsHTML(id); blk.replaceWith(w.firstElementChild); }
+      toast(t('rate_thanks'), '🌿');
+      break;
+    }
+    case 'cal-ics': { const s = liveList().find(x => x.id === id); if (s) icsForSession(s); break; }
+    case 'seq-locked': toast(t('mod_locked'), '🔒'); break;
     case 'voice-search': startVoiceSearch(); break;
     case 'save-profile': saveProfile(); break;
     case 'gdpr-export': exportMyData(); break;
@@ -2451,13 +2866,16 @@ document.addEventListener('click', e => {
       break;
     case 'export-members': exportMembersCSV(); break;
     case 'assign': {
-      const courseId = $('#asgCourse').value, team = $('#asgTeam').value, due = $('#asgDue').value || 'soon';
-      S.assignments.push({ courseId, team, due });
-      save(); render();
-      toast(`Assigned “${courseById(courseId).title}” to ${team}`, '📌');
+      const courseId = $('#asgCourse').value, team = $('#asgTeam').value, due = $('#asgDue').value || '';
+      const assignments = activeAssignments().concat([{ id: 'asg-' + courseId + '-' + team, courseId, team, due }]);
+      saveAssignments(assignments, `Assigned “${courseById(courseId).title}”`);
       break;
     }
-    case 'unassign': S.assignments.splice(+el.dataset.idx, 1); save(); render(); toast('Assignment removed', '－'); break;
+    case 'unassign': {
+      const assignments = activeAssignments().slice(); assignments.splice(+el.dataset.idx, 1);
+      saveAssignments(assignments, 'Assignment removed');
+      break;
+    }
     case 'reset-demo': localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); break;
   }
 });
