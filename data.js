@@ -32,16 +32,16 @@ const CATALOG = [
     id: 'land-team-journey', title: 'Land Team Journey', cat: 'Leadership', grad: 4, icon: 'compass',
     level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line-cover.jpg',
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
-    modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Part 3', 'Part 4', 'Part 5', 'Part 6', 'Part 7'],
-    moduleDurations: [6, 6, 6, 6, 6, 6, 6],   /* estimates — Vimeo hides duration on unlisted uploads; refine when titles land */
+    modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Attention to Detail', 'Total Responsibility', 'A Learner for Life', "Don't Assume, Clarify", 'The Benchmark of Excellence'],
+    moduleDurations: [5, 5, 4, 3, 3, 4, 4],   /* real Vimeo lengths: 5:06 4:29 4:05 3:27 3:27 4:15 3:38 */
     moduleMedia: [
-      { type: 'vimeo', id: '1206810959' },   /* 1. Acima da linha, abaixo da linha (confirmed) */
-      { type: 'vimeo', id: '1206811136' },
-      { type: 'vimeo', id: '1206817926' },
-      { type: 'vimeo', id: '1207365126' },
-      { type: 'vimeo', id: '1207365326' },
-      { type: 'vimeo', id: '1207317081' },
-      { type: 'vimeo', id: '1207317283' }
+      { type: 'vimeo', id: '1206810959' },   /* 1. Acima da Linha, Abaixo da Linha */
+      { type: 'vimeo', id: '1206811136' },   /* 2. Não Há Fracasso, Só Feedback */
+      { type: 'vimeo', id: '1206817926' },   /* 3. Atenção ao Detalhe */
+      { type: 'vimeo', id: '1207365126' },   /* 4. Responsabilidade Total */
+      { type: 'vimeo', id: '1207365326' },   /* 5. Seja um Aprendiz para a Vida */
+      { type: 'vimeo', id: '1207317081' },   /* 6. Não Presuma, Esclareça */
+      { type: 'vimeo', id: '1207317283' }    /* 7. Benchmark de Excelência */
     ]
   },
   {
@@ -349,7 +349,22 @@ const TAKEAWAYS = {
        'One honest question shifts everything: “Where am I right now?”'],
       ['Failure is data — every result is information about the system, not a verdict on you.',
        'Teams that treat mistakes as feedback learn faster and hide less.',
-       'Ask “what is this teaching us?” before “whose fault is this?”']
+       'Ask “what is this teaching us?” before “whose fault is this?”'],
+      ['Excellence lives in the details others walk past — the loose gate, the mislabelled seedling, the half-finished job.',
+       'Attention to detail is a form of respect: for the land, the work, and whoever comes after you.',
+       'Before you call it done, look once more — what would the most careful version of you check?'],
+      ['Total responsibility means owning the result, not just your slice of it — no “that wasn’t my job.”',
+       'When something goes wrong, the strong question is “what could I have done differently?” not “who’s to blame?”',
+       'Taking full ownership is what turns a worker into someone the team can rely on.'],
+      ['The land never stops teaching — the day you think you know it all is the day you stop growing.',
+       'Every task, mistake and season is a lesson if you stay curious enough to receive it.',
+       'Ask more than you assume; the best on the team never stopped being students.'],
+      ['Most mistakes on the land begin as a misunderstanding nobody checked.',
+       'Don’t assume you understood — say it back, ask the question, confirm before you act.',
+       'Clear beats clever: a short “let me make sure I’ve got this” saves hours of redoing.'],
+      ['Set the standard by how you’d want it done if this were your own land.',
+       'Excellence isn’t a burst of effort — it’s the standard you hold when nobody is watching.',
+       'Be the benchmark others measure against; raise the bar and the whole team rises with you.']
     ],
     pt: [
       ['Acima da linha é abertura, curiosidade e vontade de aprender; abaixo é defesa, culpa e precisar de ter razão.',
@@ -357,7 +372,22 @@ const TAKEAWAYS = {
        'Uma pergunta honesta muda tudo: “Onde estou agora?”'],
       ['O fracasso é informação — cada resultado fala do sistema, não é um veredicto sobre si.',
        'Equipas que tratam erros como feedback aprendem mais depressa e escondem menos.',
-       'Pergunte “o que nos está a ensinar?” antes de “de quem é a culpa?”']
+       'Pergunte “o que nos está a ensinar?” antes de “de quem é a culpa?”'],
+      ['A excelência vive nos detalhes que os outros ignoram — o portão solto, a muda mal etiquetada, o trabalho a meio.',
+       'A atenção ao detalhe é uma forma de respeito: pela terra, pelo trabalho e por quem vem a seguir.',
+       'Antes de dizer que está feito, olhe mais uma vez — o que verificaria a sua versão mais cuidadosa?'],
+      ['Responsabilidade total é assumir o resultado, não só a sua parte — nada de “isso não era comigo.”',
+       'Quando algo corre mal, a pergunta forte é “o que poderia eu ter feito diferente?” e não “de quem é a culpa?”',
+       'Assumir por inteiro é o que transforma um trabalhador em alguém com quem a equipa pode contar.'],
+      ['A terra nunca deixa de ensinar — o dia em que julga saber tudo é o dia em que deixa de crescer.',
+       'Cada tarefa, erro e estação é uma lição, se mantiver a curiosidade para a receber.',
+       'Pergunte mais do que presume; os melhores da equipa nunca deixaram de ser aprendizes.'],
+      ['A maioria dos erros na terra começa num mal-entendido que ninguém confirmou.',
+       'Não presuma que percebeu — repita por palavras suas, faça a pergunta, confirme antes de agir.',
+       'Claro vale mais que esperto: um breve “deixa-me confirmar” poupa horas de retrabalho.'],
+      ['Defina o padrão pela forma como o quereria feito se a terra fosse sua.',
+       'A excelência não é um rasgo de esforço — é o padrão que mantém quando ninguém está a ver.',
+       'Seja a referência pela qual os outros se medem; eleve a fasquia e toda a equipa sobe consigo.']
     ]
   }
 };
@@ -535,7 +565,7 @@ const tbadge = (b, f) => { if (_lang() === 'pt' && BADGES_PT[b.id]) return f ===
 
 /* Course content — Portuguese (title / desc / modules). Missing fields fall back to English. */
 const COURSE_PT = {
-  'land-team-journey': { title:'Jornada da Equipa da Terra', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Parte 3','Parte 4','Parte 5','Parte 6','Parte 7'] },
+  'land-team-journey': { title:'Jornada da Equipa da Terra', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Atenção ao Detalhe','Responsabilidade Total','Seja um Aprendiz para a Vida','Não Presuma, Esclareça','Benchmark de Excelência'] },
   'land-literacy': { title:'Ler a Terra', desc:'Antes de mudar uma paisagem, aprenda a lê-la. Declive, água, solo, sol e sucessão — a literacia com que começa todo o ato de zeladoria.', modules:['Ficar quieto: como observar','Ler o declive e a água','O solo ao toque e à vista','Sol, sombra e exposição','Sucessão e o que a terra quer','Mapear o seu terreno'] },
   'living-soil': { title:'Solo Vivo', desc:'O solo não é terra morta — é uma comunidade viva. Conheça o microbioma sob os seus pés e as práticas que o alimentam em vez de o esgotar.', modules:['A teia alimentar do solo','Porque deixámos de lavrar','Compostagem como inoculante','Culturas de cobertura e raízes vivas','Cobertura morta e solo nu','Ler uma análise de solo'] },
   'water-cycles': { title:'A Água e a Paisagem Viva', desc:'Domine o pequeno ciclo da água de que a sua terra depende. Este programa adapta-se ao seu terreno — a IA da EdenRise reordena cada módulo conforme o que já sabe.', modules:['O pequeno ciclo da água','Para onde vai a sua água','Abrandar, espalhar, infiltrar','Valas de infiltração em curva de nível','Charcos e represas','Reidratar terra seca','Águas cinzentas, com cuidado','Proteger uma horta da seca','Ler uma bacia','Nascentes e olheiros','Medir a infiltração','Avaliação final'] },
