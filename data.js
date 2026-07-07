@@ -32,13 +32,16 @@ const CATALOG = [
     id: 'land-team-journey', title: 'Land Team Journey', cat: 'Leadership', grad: 4, icon: 'compass',
     level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line-cover.jpg',
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
-    modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Coming soon', 'Coming soon'],
-    moduleDurations: [5, 5, 12, 12],   /* real: 5:04 + 4:29 from Vimeo; estimates for coming-soon */
+    modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Part 3', 'Part 4', 'Part 5', 'Part 6', 'Part 7'],
+    moduleDurations: [6, 6, 6, 6, 6, 6, 6],   /* estimates — Vimeo hides duration on unlisted uploads; refine when titles land */
     moduleMedia: [
-      { type: 'vimeo', id: '1206132511' },
-      { type: 'vimeo', id: '1206132221' },
-      { type: 'soon' },
-      { type: 'soon' }
+      { type: 'vimeo', id: '1206810959' },   /* 1. Acima da linha, abaixo da linha (confirmed) */
+      { type: 'vimeo', id: '1206811136' },
+      { type: 'vimeo', id: '1206817926' },
+      { type: 'vimeo', id: '1207365126' },
+      { type: 'vimeo', id: '1207365326' },
+      { type: 'vimeo', id: '1207317081' },
+      { type: 'vimeo', id: '1207317283' }
     ]
   },
   {
@@ -532,7 +535,7 @@ const tbadge = (b, f) => { if (_lang() === 'pt' && BADGES_PT[b.id]) return f ===
 
 /* Course content — Portuguese (title / desc / modules). Missing fields fall back to English. */
 const COURSE_PT = {
-  'land-team-journey': { title:'Jornada da Equipa da Terra', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Em breve','Em breve'] },
+  'land-team-journey': { title:'Jornada da Equipa da Terra', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Parte 3','Parte 4','Parte 5','Parte 6','Parte 7'] },
   'land-literacy': { title:'Ler a Terra', desc:'Antes de mudar uma paisagem, aprenda a lê-la. Declive, água, solo, sol e sucessão — a literacia com que começa todo o ato de zeladoria.', modules:['Ficar quieto: como observar','Ler o declive e a água','O solo ao toque e à vista','Sol, sombra e exposição','Sucessão e o que a terra quer','Mapear o seu terreno'] },
   'living-soil': { title:'Solo Vivo', desc:'O solo não é terra morta — é uma comunidade viva. Conheça o microbioma sob os seus pés e as práticas que o alimentam em vez de o esgotar.', modules:['A teia alimentar do solo','Porque deixámos de lavrar','Compostagem como inoculante','Culturas de cobertura e raízes vivas','Cobertura morta e solo nu','Ler uma análise de solo'] },
   'water-cycles': { title:'A Água e a Paisagem Viva', desc:'Domine o pequeno ciclo da água de que a sua terra depende. Este programa adapta-se ao seu terreno — a IA da EdenRise reordena cada módulo conforme o que já sabe.', modules:['O pequeno ciclo da água','Para onde vai a sua água','Abrandar, espalhar, infiltrar','Valas de infiltração em curva de nível','Charcos e represas','Reidratar terra seca','Águas cinzentas, com cuidado','Proteger uma horta da seca','Ler uma bacia','Nascentes e olheiros','Medir a infiltração','Avaliação final'] },
