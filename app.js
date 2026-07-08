@@ -1147,6 +1147,87 @@ function downloadRUannex() {
 }
 function trainingActionsAll(pool, y) { const s = new Set(); pool.forEach(m => (m.state && m.state.trainingLog || []).filter(e => new Date(e.at).getFullYear() === y).forEach(e => s.add(e.courseId))); return s.size; }
 
+/* ---------- RGPD doc pack (Compliance Phase 4) — print-ready PT documents.
+   DRAFTS ("minuta"): wording pending lawyer sign-off, like the training certificate. */
+function gdprDocShell(title, body) {
+  const today = new Date().toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
+  return `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>${title} — ${companyName()}</title>
+<style>
+  body { font-family: Georgia, 'Times New Roman', serif; color: #1a221c; max-width: 760px; margin: 40px auto; padding: 0 24px; line-height: 1.6; font-size: 14px; }
+  h1 { font-size: 22px; border-bottom: 2px solid #40563E; padding-bottom: 10px; }
+  h2 { font-size: 15px; margin-top: 26px; color: #40563E; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12.5px; }
+  th, td { border: 1px solid #c9c4b8; padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: #f0efe8; }
+  .meta { color: #555; font-size: 12.5px; }
+  .draft { background: #fdf6e3; border: 1px solid #e5d9a8; padding: 10px 14px; font-size: 12px; margin: 18px 0; }
+  .sig { margin-top: 46px; display: flex; gap: 60px; }
+  .sig div { flex: 1; border-top: 1px solid #888; padding-top: 6px; font-size: 12px; }
+  @media print { body { margin: 10mm auto; } }
+</style></head><body>
+<h1>${title}</h1>
+<p class="meta"><b>${esc(companyName())}</b>${companyNif() ? ' · NIF ' + esc(companyNif()) : ''} · ${today} · Plataforma: EdenRise Academy</p>
+<div class="draft">⚠️ MINUTA — documento em validação jurídica. Rever com aconselhamento legal antes de adotar formalmente.</div>
+${body}
+<div class="sig"><div>A Gerência / Administração</div><div>Data e assinatura</div></div>
+</body></html>`;
+}
+function gdprRetentionDoc() {
+  return gdprDocShell('Política de Retenção de Dados de Formação', `
+<h2>1. Objeto e âmbito</h2>
+<p>Esta política define os prazos de conservação dos dados pessoais tratados na plataforma de formação EdenRise Academy, em cumprimento do RGPD (princípio da limitação da conservação, art. 5.º/1-e) e do Código do Trabalho (arts. 130.º–134.º — formação contínua obrigatória).</p>
+<h2>2. Prazos de conservação</h2>
+<table><tr><th>Categoria de dados</th><th>Fundamento</th><th>Prazo</th></tr>
+<tr><td>Registos de formação (horas, ações, confirmações, certificados)</td><td>Obrigação jurídica — CT arts. 131.º–134.º; crédito de horas (2+3 anos); cessação (5 anos)</td><td><b>5 anos</b> após o ano civil a que respeitam, ou após cessação do contrato</td></tr>
+<tr><td>Identificação do trabalhador (nome, NIF, n.º trabalhador, contrato, FTE)</td><td>Obrigação jurídica — Relatório Único e prova de formação</td><td>Enquanto durar o vínculo + 5 anos</td></tr>
+<tr><td>Conta e progresso de aprendizagem (percursos, quizzes, XP, notas pessoais)</td><td>Execução do contrato de trabalho / interesse legítimo (desenvolvimento)</td><td>Enquanto a conta estiver ativa; eliminação a pedido</td></tr>
+<tr><td>Perguntas colocadas à IA (anonimizadas no cockpit)</td><td>Interesse legítimo — deteção de lacunas de formação</td><td>Máx. 12 meses</td></tr></table>
+<h2>3. Eliminação</h2>
+<p>Findo o prazo, os dados são eliminados ou anonimizados de forma irreversível. O trabalhador pode exercer os direitos de acesso, retificação, portabilidade e apagamento (este último sem prejuízo das obrigações legais de conservação) diretamente na plataforma (Perfil → Privacidade) ou junto do responsável de RH.</p>`);
+}
+function gdprArt30Doc() {
+  return gdprDocShell('Registo de Atividades de Tratamento (art. 30.º RGPD)', `
+<h2>Responsável pelo tratamento</h2>
+<p>${esc(companyName())}${companyNif() ? ', NIF ' + esc(companyNif()) : ''} — na qualidade de entidade empregadora.</p>
+<h2>Atividades de tratamento</h2>
+<table><tr><th>Atividade</th><th>Finalidade</th><th>Base jurídica</th><th>Categorias de dados</th><th>Prazo</th></tr>
+<tr><td>Gestão da formação contínua</td><td>Cumprir as 40h anuais (CT art. 131.º) e produzir prova documental</td><td>Obrigação jurídica (art. 6.º/1-c RGPD)</td><td>Identificação, NIF, contrato, horas e ações de formação, confirmações</td><td>5 anos</td></tr>
+<tr><td>Conta de aprendizagem</td><td>Percursos, progresso, avaliações e certificados internos</td><td>Execução do contrato (art. 6.º/1-b)</td><td>Nome, email, função, progresso, resultados</td><td>Conta ativa</td></tr>
+<tr><td>Tutor de IA e "Perguntar à Academia"</td><td>Apoio à aprendizagem; identificação de lacunas de conteúdo</td><td>Interesse legítimo (art. 6.º/1-f) — com transparência ativa na plataforma</td><td>Perguntas colocadas (visíveis aos administradores de formação)</td><td>12 meses</td></tr></table>
+<h2>Destinatários e subcontratantes</h2>
+<table><tr><th>Entidade</th><th>Papel</th><th>Localização / garantias</th></tr>
+<tr><td>Google Ireland Ltd. (Firebase: Auth, Firestore)</td><td>Subcontratante — alojamento e autenticação</td><td>UE; Data Processing Terms Google Cloud, CCT quando aplicável</td></tr>
+<tr><td>Google (Gemini API)</td><td>Subcontratante — geração de respostas do tutor</td><td>Termos API Google; sem uso de dados para treino nos termos pagos/empresariais aplicáveis</td></tr></table>
+<h2>Medidas de segurança (art. 32.º)</h2>
+<p>Transporte cifrado (TLS), autenticação por conta individual, regras de acesso por perfil e por empresa (multi-inquilino), registo de formação em livro-razão só-de-acréscimo com código de verificação (SHA-256), cópias de segurança do fornecedor de nuvem.</p>`);
+}
+function gdprDpaDoc() {
+  return gdprDocShell('Acordo de Subcontratação de Dados (art. 28.º RGPD) — Minuta', `
+<h2>Partes</h2>
+<p><b>Responsável:</b> ${esc(companyName())}${companyNif() ? ', NIF ' + esc(companyNif()) : ''} ("Cliente").<br>
+<b>Subcontratante:</b> [operador da plataforma EdenRise Academy — preencher denominação e NIF] ("Plataforma").</p>
+<h2>1. Objeto e duração</h2>
+<p>Tratamento de dados pessoais de trabalhadores do Cliente estritamente necessário à prestação do serviço de formação online e registo de formação obrigatória, pela vigência do contrato de serviço.</p>
+<h2>2. Instruções e finalidade</h2>
+<p>A Plataforma trata os dados apenas mediante instruções documentadas do Cliente e exclusivamente para: (a) gestão de contas e percursos de aprendizagem; (b) registo e prova das horas de formação (CT arts. 130.º–134.º); (c) funcionalidades de tutor de IA, com transparência para os titulares.</p>
+<h2>3. Obrigações da Plataforma</h2>
+<p>Confidencialidade das pessoas autorizadas; medidas técnicas e organizativas do art. 32.º (cifragem em trânsito, controlo de acessos por empresa, registos verificáveis); assistência ao Cliente no exercício de direitos dos titulares e em avaliações de impacto; notificação de violações de dados sem demora injustificada; eliminação ou devolução dos dados no termo do contrato, sem prejuízo de conservação legal.</p>
+<h2>4. Subcontratantes ulteriores</h2>
+<p>O Cliente autoriza genericamente o recurso a: Google Ireland Ltd. (Firebase — alojamento, autenticação) e Google (Gemini API — tutor de IA). A Plataforma informará o Cliente de alterações, podendo este opor-se.</p>
+<h2>5. Auditoria</h2>
+<p>A Plataforma disponibiliza a informação necessária para demonstrar o cumprimento deste acordo e permite auditorias razoáveis, mediante pré-aviso escrito de 15 dias.</p>`);
+}
+function downloadGdprDoc(kind) {
+  const map = { retention: [gdprRetentionDoc, 'politica-retencao'], art30: [gdprArt30Doc, 'registo-tratamento-art30'], dpa: [gdprDpaDoc, 'acordo-subcontratacao-dpa'] };
+  const m = map[kind]; if (!m) return;
+  const blob = new Blob([m[0]()], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${m[1]}-${new Date().getFullYear()}.html`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast(t('gdpr_doc_done'), '⤓');
+}
+
 function compliancePanelHTML() {
   const pf = S.profile || {};
   const log = (S.trainingLog || []).filter(e => new Date(e.at).getFullYear() === complianceYear()).sort((a, b) => b.at - a.at);
@@ -2066,7 +2147,7 @@ function adminCockpitHTML() {
         <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
         <div style="display:flex;gap:8px;align-items:center;">
           <select id="ckDept" class="ck-dept"><option value="">All departments</option>${DEPTS.map(d => `<option value="${d.key}" ${cockpitDept === d.key ? 'selected' : ''}>${d.en}</option>`).join('')}</select>
-          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex">🛡 ${t('ru_annex_btn')}</button>
+          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex">🛡 ${t('ru_annex_btn')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="retention" title="${t('gdpr_retention')}">📄 RGPD·1</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="art30" title="${t('gdpr_art30')}">📄 RGPD·2</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="dpa" title="${t('gdpr_dpa')}">📄 RGPD·3</button>
         </div>
       </div>
       <div class="team-table"><table>
@@ -3374,6 +3455,7 @@ function openPlayer(courseId, mod) {
   if (mod == null) mod = (prog(courseId) && !isDone(courseId)) ? (prog(courseId).mod || 0) : 0;
   mod = Math.min(mod, c.modules.length - 1);
   const media = modMedia(c, mod);
+  clearCheckpoint();
   playing = { courseId, mod };
   if (!prog(courseId)) S.progress[courseId] = { mod, pct: 0 };
   resetStages();
@@ -3391,6 +3473,7 @@ function openPlayer(courseId, mod) {
     videoEl.style.display = 'none';
     vimeoWrap.classList.add('on');
     vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?${media.h ? 'h=' + media.h + '&' : ''}title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&player_id=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${cmods(c)[mod]}"></iframe>`;
+    armCheckpoint(c, mod);
   } else {
     videoEl.src = c.video || vidFor(courseId, mod);
     videoEl.play().catch(() => {});
@@ -3415,8 +3498,80 @@ function closePlayer() {
   playerEl.classList.remove('open');
   $('#notesDrawer').classList.remove('open');
   resetStages();
+  clearCheckpoint();
   playing = null;
   render();
+}
+
+/* ---------- in-video checkpoints — one retrieval question mid-lesson (Vimeo Player SDK).
+   Learning science: a single active-recall pause beats passive watching. Once per lesson, ever. */
+let vimeoPlayer = null, _vimeoSDKp = null;
+function loadVimeoSDK() {
+  if (window.Vimeo) return Promise.resolve();
+  if (!_vimeoSDKp) _vimeoSDKp = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://player.vimeo.com/api/player.js';
+    s.onload = res; s.onerror = () => { _vimeoSDKp = null; rej(); };
+    document.head.appendChild(s);
+  });
+  return _vimeoSDKp;
+}
+function clearCheckpoint() {
+  const ov = $('#ckOv'); if (ov) { ov.classList.remove('on'); ov.innerHTML = ''; }
+  if (vimeoPlayer) { try { vimeoPlayer.destroy(); } catch (e) {} vimeoPlayer = null; }
+}
+function checkpointQuestion(c, mod) {
+  const cq = (typeof COURSE_QUIZ !== 'undefined' && COURSE_QUIZ[c.id]) || c.quiz;
+  const qs = cq ? (cq[_lang() === 'pt' ? 'pt' : 'en'] || cq.en || cq) : null;
+  return (Array.isArray(qs) && qs.length) ? qs[mod % qs.length] : null;
+}
+function armCheckpoint(c, mod) {
+  const key = c.id + ':' + mod;
+  const q = checkpointQuestion(c, mod);
+  if (!q || (S.checkpoints || {})[key]) return;
+  loadVimeoSDK().then(() => {
+    const ifr = vimeoWrap.querySelector('iframe');
+    if (!ifr || !window.Vimeo || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
+    try { vimeoPlayer = new Vimeo.Player(ifr); } catch (e) { return; }
+    let fired = false;
+    vimeoPlayer.on('timeupdate', d => {
+      if (fired || !d || !d.percent || d.percent < 0.5) return;
+      fired = true;
+      (S.checkpoints = S.checkpoints || {})[key] = 1; save();
+      vimeoPlayer.pause().catch(() => {});
+      showCheckpoint(q, c);
+    });
+  }).catch(() => {});
+}
+function showCheckpoint(q, c) {
+  const ov = $('#ckOv'); if (!ov) return;
+  let answered = false;
+  ov.innerHTML = `<div class="ck-card">
+    <div class="ob-eyebrow">🎯 ${t('ck_h')} · ${esc(ctitle(c))}</div>
+    <div class="ck-q">${esc(q.q)}</div>
+    ${q.opts.map((o, i) => `<div class="q-opt" data-ck="${i}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
+    <div class="ck-foot"><span class="ck-note" id="ckNote"></span><button class="btn btn-primary btn-sm" id="ckGo" style="display:none;">▶ ${t('ck_continue')}</button></div>
+  </div>`;
+  ov.classList.add('on');
+  ov.querySelectorAll('.q-opt').forEach(el => el.addEventListener('click', () => {
+    if (answered) return; answered = true;
+    const sel = +el.dataset.ck;
+    ov.querySelectorAll('.q-opt').forEach((x, i) => {
+      if (i === q.a) x.classList.add('correct');
+      else if (i === sel) x.classList.add('wrong');
+    });
+    if (sel === q.a) { $('#ckNote').textContent = t('ck_right'); awardXp(5, t('ck_h')); }
+    else {
+      $('#ckNote').textContent = t('ck_wrong');
+      S.missedQ = ((S.missedQ || []).filter(m => m.q !== q.q)).concat({ q: q.q, back: q.opts[q.a], courseId: c.id, at: Date.now() }).slice(-30);
+      save();
+    }
+    $('#ckGo').style.display = '';
+  }));
+  $('#ckGo').addEventListener('click', () => {
+    ov.classList.remove('on'); ov.innerHTML = '';
+    if (vimeoPlayer) vimeoPlayer.play().catch(() => {});
+  });
 }
 
 /* ---------- notes & transcript ---------- */
@@ -4084,6 +4239,7 @@ document.addEventListener('click', e => {
     case 'comp-cert': downloadTrainingCert(); break;
     case 'comp-register': downloadTrainingRegister(); break;
     case 'ru-annex': downloadRUannex(); break;
+    case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
     case 'member-detail': openMemberDetail(el.dataset.uid); break;
     case 'mdet-close': { const mv = $('#mdetModal'); if (mv) mv.remove(); break; }
     case 'mdet-register': downloadMemberRegister(el.dataset.uid); break;

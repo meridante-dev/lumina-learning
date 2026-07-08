@@ -281,7 +281,8 @@ const DEFAULT_STATE = {
   reminders: [],
   rationaleIdx: 0,
   quizzesPassed: 0,
-  trainingLog: []   /* append-only continuous-training hours ledger (40h compliance) */
+  trainingLog: [],  /* append-only continuous-training hours ledger (40h compliance) */
+  checkpoints: {}   /* in-video quick-checks answered, keyed courseId:mod — asked once per lesson */
 };
 
 /* ================= course invitation copy — hook headline + subheadline =================
@@ -491,6 +492,8 @@ const UI = {
     flash_missed:'missed in a quiz', flash_missed_n:'missed questions queued — they come first',
     quiz_flag_tip:'Something wrong with this question? Flag it for review', quiz_flagged:'Flagged — your training admin will review this question. Thank you!',
     updated_lbl:'Updated', ask_by:'Answered by',
+    ck_h:'Quick check', ck_continue:'Continue watching', ck_right:'Spot on — keep going 🌱', ck_wrong:'Not quite — the right answer is highlighted. It will come back in your review deck.',
+    gdpr_doc_done:'Document downloaded — open it and print to PDF', gdpr_retention:'Retention policy (PT)', gdpr_art30:'Record of processing — art. 30 (PT)', gdpr_dpa:'DPA template — art. 28 (PT)',
     ask_h:'Ask the Academy', ask_sub:'Any question about the land — answered from your team\u2019s own courses.', ask_ph:'e.g. How do I slow erosion on the slope path?', ask_go:'Ask', ask_refs:'Learn more in', ask_thinking:'Reading the library…', ask_fail:'Could not answer right now — try again.',
     skills_h:'Skills', skills_sub:'What your learning is building — course by course.',
     comp_expired:'Certification expired', comp_expiring:'Expires soon', comp_renew:'Renew', nudge_recert_t:'Time to recertify', nudge_recert_b:'Your {course} certification {when} — a quick rewatch renews it.',
@@ -576,6 +579,8 @@ const UI = {
     flash_missed:'falhada num quiz', flash_missed_n:'perguntas falhadas em fila — vêm primeiro',
     quiz_flag_tip:'Algo errado nesta pergunta? Assinale para revisão', quiz_flagged:'Assinalada — o admin de formação vai rever esta pergunta. Obrigado!',
     updated_lbl:'Atualizado', ask_by:'Respondido por',
+    ck_h:'Verificação rápida', ck_continue:'Continuar a ver', ck_right:'Em cheio — continue 🌱', ck_wrong:'Quase — a resposta certa está destacada. Vai voltar no seu baralho de revisão.',
+    gdpr_doc_done:'Documento descarregado — abra e imprima para PDF', gdpr_retention:'Política de retenção', gdpr_art30:'Registo de tratamento — art. 30.º', gdpr_dpa:'Minuta DPA — art. 28.º',
     lesson_goal:'Nesta lição', nudge_today_one:'Tem 1 ação sugerida hoje', nudge_today:'Tem {n} ações sugeridas hoje',
     ask_h:'Pergunte à Academia', ask_sub:'Qualquer pergunta sobre a terra — respondida a partir dos cursos da equipa.', ask_ph:'ex.: Como travo a erosão no caminho da encosta?', ask_go:'Perguntar', ask_refs:'Aprenda mais em', ask_thinking:'A ler a biblioteca…', ask_fail:'Não foi possível responder — tente de novo.',
     skills_h:'Competências', skills_sub:'O que a sua aprendizagem está a construir — curso a curso.',

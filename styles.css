@@ -2187,3 +2187,12 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .q-flag:hover { opacity: 1; color: var(--accent); }
 .missed-note { font-size: 13px; color: var(--accent-2); margin: -6px 0 12px; }
 .fresh-tag { color: var(--accent-2); }
+
+/* ===== in-video checkpoints (edr64) ===== */
+.player-stage { position: relative; }
+.ck-ov { position: absolute; inset: 0; display: none; place-items: center; background: rgba(8,12,9,.86); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 6; padding: 18px; }
+.ck-ov.on { display: grid; }
+.ck-card { width: min(560px, 100%); max-height: 100%; overflow-y: auto; background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 22px 24px; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+.ck-q { font-family: var(--font-display); font-size: 20px; line-height: 1.35; margin: 8px 0 14px; }
+.ck-foot { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.ck-note { flex: 1; font-size: 13px; color: var(--text-dim); }
