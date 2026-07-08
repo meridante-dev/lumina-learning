@@ -20,6 +20,12 @@
   --ivory: #f7f6f1;
   --focus: #a6c3a5;
   --radius: 16px;
+  /* centered content column — every top-level container aligns to this.
+     --edge stays at the mobile gutter until the viewport exceeds --content-w,
+     then grows so the column is centered on tablet/desktop/wide screens. */
+  --content-w: 1200px;
+  --gutter: 40px;
+  --edge: max(var(--gutter), calc((100% - var(--content-w)) / 2 + var(--gutter)));
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-body: "Inter", -apple-system, sans-serif;
 }
@@ -42,7 +48,7 @@ button { font-family: var(--font-body); }
 nav.topnav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; gap: 28px;
-  padding: 14px 40px;
+  padding: 14px max(40px, calc((100% - 1520px) / 2 + 40px));
   background: linear-gradient(rgba(14,20,15,.88), rgba(14,20,15,0));
   transition: background .35s, backdrop-filter .35s;
 }
@@ -135,7 +141,7 @@ nav.topnav.scrolled {
 #app { min-height: 100vh; }
 .page { animation: pageIn .4s ease both; padding-bottom: 100px; }
 @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-.page-pad { padding: 110px 40px 0; }
+.page-pad { padding: 110px var(--edge) 0; }
 .page-title { font-family: var(--font-display); font-size: 34px; font-weight: 700; letter-spacing: -.02em; }
 .page-sub { color: var(--text-dim); font-size: 14.5px; margin-top: 8px; max-width: 560px; line-height: 1.6; }
 
@@ -143,7 +149,7 @@ nav.topnav.scrolled {
 .hero {
   position: relative; min-height: 88vh;
   display: flex; align-items: flex-end;
-  padding: 0 40px 64px;
+  padding: 0 var(--edge) 64px;
   overflow: hidden;
 }
 .hero-bg {
@@ -307,7 +313,7 @@ nav.topnav.scrolled {
 section.rail-section { margin-top: 52px; }
 .rail-head {
   display: flex; align-items: baseline; gap: 16px;
-  padding: 0 40px; margin-bottom: 14px;
+  padding: 0 var(--edge); margin-bottom: 14px;
 }
 .rail-head h2 {
   font-family: var(--font-display);
@@ -323,9 +329,9 @@ section.rail-section { margin-top: 52px; }
 .rail-wrap { position: relative; }
 .rail {
   display: flex; gap: 16px; overflow-x: auto;
-  padding: 14px 40px 22px;
+  padding: 14px var(--edge) 22px;
   scroll-snap-type: x mandatory;
-  scroll-padding: 0 40px;
+  scroll-padding: 0 var(--edge);
   scrollbar-width: none;
 }
 .rail::-webkit-scrollbar { display: none; }
@@ -432,7 +438,7 @@ section.rail-section { margin-top: 52px; }
 
 /* ---------- AI PATH BANNER / STEPPER ---------- */
 .path-banner {
-  margin: 64px 40px 8px;
+  margin: 64px var(--edge) 8px;
   border-radius: 24px;
   overflow: hidden;   /* the animated .shimmer must never poke past the card */
   border: 1px solid var(--line);
@@ -508,7 +514,7 @@ section.rail-section { margin-top: 52px; }
 /* ---------- STATS ---------- */
 .stats {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-  margin: 60px 40px 0;
+  margin: 60px var(--edge) 0;
 }
 .stat {
   background: var(--surface); border: 1px solid var(--line);
@@ -557,7 +563,7 @@ section.rail-section { margin-top: 52px; }
 
 /* ---------- COURSE DETAIL ---------- */
 .course-hero {
-  position: relative; padding: 130px 40px 50px; overflow: hidden;
+  position: relative; padding: 130px var(--edge) 50px; overflow: hidden;
 }
 .course-hero .bg { position: absolute; inset: 0; opacity: .35; }
 .course-hero .bg::after {
@@ -579,7 +585,7 @@ section.rail-section { margin-top: 52px; }
 .course-info { flex: 1; min-width: min(320px, 100%); }
 .course-info h1 { font-family: var(--font-display); font-size: 40px; font-weight: 700; letter-spacing: -.02em; margin: 10px 0 14px; }
 .course-info .desc { color: var(--text-dim); font-size: 15px; line-height: 1.7; max-width: 640px; margin-bottom: 26px; }
-.module-list { margin: 14px 40px 0; max-width: 860px; }
+.module-list { margin: 14px 0 0 var(--edge); max-width: 860px; }
 .module-row {
   display: flex; align-items: center; gap: 16px;
   padding: 15px 18px; border-radius: 14px; cursor: pointer;
@@ -1068,7 +1074,7 @@ section.rail-section { margin-top: 52px; }
 
 /* ---------- FOOTER ---------- */
 footer {
-  margin-top: 90px; padding: 36px 40px;
+  margin-top: 90px; padding: 36px var(--edge);
   border-top: 1px solid var(--line);
   display: flex; align-items: center; gap: 20px;
   font-size: 12.5px; color: var(--text-faint);
