@@ -1,7 +1,7 @@
 /* EdenRise Academy — offline app shell + cached art
    Strategy: network-first for code/HTML (updates always win, cache is the
    offline fallback); cache-first for media/fonts (immutable-ish). */
-const VERSION = 'edenrise-v66';
+const VERSION = 'edenrise-v67';
 const CORE = ['./', './index.html', './styles.css', './app.js', './data.js', './manifest.json', './favicon.svg', './icon-192.png', './icon-512.png', './og-image.png'];
 
 self.addEventListener('install', e => {

@@ -257,7 +257,7 @@ nav.topnav.scrolled {
 
 /* hero side panel */
 .hero-side {
-  position: absolute; right: 48px; bottom: 84px; z-index: 3;
+  position: absolute; right: var(--edge); bottom: 84px; z-index: 3;
   width: 320px;
   background: rgba(16,16,26,.6);
   border: 1px solid var(--line);
