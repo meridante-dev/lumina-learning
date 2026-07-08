@@ -163,6 +163,19 @@ const CATALOG = [
     level: 'Beginner', rating: 4.7, learners: 132, ai: true,
     desc: 'Land heals faster together. Shared tools, work parties, and the old-and-new structures that let a community steward a place as one.',
     modules: ['Why the commons works', 'Sharing tools & labour', 'Running a work party', 'Decisions without burnout', 'A 90-day community plan']
+  },
+  {
+    id: 'fire-truck-training', title: 'Fire Truck Training', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12,
+    level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/fire-truck-training.jpg',
+    desc: 'Hands-on operation of the land’s fire truck — start it, drive it, fill it, and put water exactly where it’s needed. When fire season comes, everyone should know how to move water.',
+    modules: ['Starting & Driving the Truck', 'Filling the Water Tank', 'Off-Road, Pump & Spray', 'Power, Safety & the Drill'],
+    moduleDurations: [6, 10, 10, 9],   /* real Vimeo lengths: 5:55 10:11 9:49 9:28 */
+    moduleMedia: [
+      { type: 'vimeo', id: '1207710846' },   /* 1. Start & Drive */
+      { type: 'vimeo', id: '1208024648' },   /* 2. Water Fill */
+      { type: 'vimeo', id: '1208024647' },   /* 3. Off-road, Pump & Spray */
+      { type: 'vimeo', id: '1208024649' }     /* 4. Power, Safety & Drill */
+    ]
   }
 ];
 /* designed brand covers — every course ships with art (land-team-journey keeps its filmed cover) */
@@ -273,6 +286,7 @@ const DEFAULT_STATE = {
 /* ================= course invitation copy — hook headline + subheadline =================
    MasterClass-style invites: every course opens with a line that pulls you in. */
 const COURSE_HOOKS = {
+  'fire-truck-training': ['When fire comes, know the truck.', 'Start it, drive it, fill it, and put water where it’s needed — hands-on, step by step.'],
   'land-team-journey': ['One question changes how you show up.', 'Above the line or below it — the mindset the whole journey grows from.'],
   'land-literacy': ['Learn to read the land like a story.', 'Slope, soil, water, wind — see what the land has been telling you all along.'],
   'living-soil': ['There’s a universe under your feet.', 'Feed the soil, and everything above it thrives.'],
@@ -296,6 +310,7 @@ const COURSE_HOOKS = {
   'community-land': ['No one stewards alone.', 'Commons, councils and shared care for shared ground.']
 };
 const COURSE_HOOKS_PT = {
+  'fire-truck-training': ['Quando o fogo vem, conheça o camião.', 'Arrancar, conduzir, encher e pôr água onde é preciso — na prática, passo a passo.'],
   'land-team-journey': ['Uma pergunta muda como aparecemos.', 'Acima ou abaixo da linha — a mentalidade de onde cresce toda a jornada.'],
   'land-literacy': ['Aprenda a ler a terra como uma história.', 'Declive, solo, água, vento — veja o que a terra sempre lhe quis dizer.'],
   'living-soil': ['Há um universo debaixo dos seus pés.', 'Alimente o solo, e tudo acima dele floresce.'],
@@ -324,6 +339,20 @@ const chooksub = c => ((_lang() === 'pt' ? (COURSE_HOOKS_PT[c.id] || (c.pt && c.
 /* ================= per-course quizzes — real content first =================
    COURSE_QUIZ beats the generic category bank; grounded in the actual lessons. */
 const COURSE_QUIZ = {
+  'fire-truck-training': {
+    en: [
+      { q: 'Driving the truck off-road with a full tank, the biggest change to handle is…', opts: ['The radio volume', 'The shifting weight of the water moving the truck around', 'The colour of the dashboard', 'Nothing changes'], a: 1 },
+      { q: 'When filling the water tank you should…', opts: ['Fill past the top for extra water', 'Watch the level, stop before it overflows, and secure the cap', 'Leave it unattended', 'Fill with the pump running dry'], a: 1 },
+      { q: 'To get water from the pump to the hose, the truck’s power take-off (PTO) must be…', opts: ['Switched off', 'Engaged, with the engine at the right RPM', 'Removed', 'Painted red'], a: 1 },
+      { q: 'The most important habit in a fire drill is…', opts: ['Working alone to be faster', 'Knowing your role and where the water is before you need it', 'Skipping the walk-through', 'Leaving the keys out of the truck'], a: 1 }
+    ],
+    pt: [
+      { q: 'A conduzir o camião em todo-o-terreno com o depósito cheio, a maior mudança a controlar é…', opts: ['O volume do rádio', 'O peso da água a deslocar-se, que move o camião', 'A cor do painel', 'Nada muda'], a: 1 },
+      { q: 'Ao encher o depósito de água deve…', opts: ['Encher acima do limite para ter mais água', 'Vigiar o nível, parar antes de transbordar e fechar bem a tampa', 'Deixar sem vigilância', 'Encher com a bomba a trabalhar em seco'], a: 1 },
+      { q: 'Para levar a água da bomba à mangueira, a tomada de força (PTO) do camião tem de estar…', opts: ['Desligada', 'Engatada, com o motor nas rotações certas', 'Retirada', 'Pintada de vermelho'], a: 1 },
+      { q: 'O hábito mais importante num exercício de incêndio é…', opts: ['Trabalhar sozinho para ser mais rápido', 'Saber a sua função e onde está a água antes de precisar', 'Saltar o reconhecimento', 'Deixar as chaves fora do camião'], a: 1 }
+    ]
+  },
   'land-team-journey': {
     en: [
       { q: 'You catch yourself defending a decision instead of listening. Where are you?', opts: ['Above the line', 'Below the line', 'On the line', 'It depends on who is right'], a: 1 },
@@ -342,6 +371,36 @@ const COURSE_QUIZ = {
 
 /* per-module takeaways — "what you take with you" (real content courses) */
 const TAKEAWAYS = {
+  'fire-truck-training': {
+    en: [
+      ['Know the truck cold: ignition sequence, gears, brakes and the gauges that matter before you move.',
+       'A loaded water truck handles slow and heavy — anticipate, brake early, take corners wide.',
+       'Do the walk-around first: tyres, leaks, water level, and a clear path out.'],
+      ['Fill from a known source; watch the level and stop before it overflows.',
+       'Secure the cap and valves — a loose fitting sprays or drains when you least want it.',
+       'A full tank changes the truck’s weight and balance — re-check handling before you set off.'],
+      ['Engage the PTO and bring the engine to the right RPM before you expect pressure at the hose.',
+       'On rough ground, stabilise and level the truck before you pump — never spray from an unsafe position.',
+       'Control the jet: right pressure, right pattern, aimed at the base of the fire, not the flames.'],
+      ['Learn the power system — PTO, pump and cut-offs — and how to shut it all down safely.',
+       'Never work alone at the pump; know your role, your water source and your exit before the drill starts.',
+       'Drill it until it’s muscle memory — in a real fire there’s no time to read the manual.']
+    ],
+    pt: [
+      ['Conheça o camião de cor: sequência de arranque, mudanças, travões e os indicadores que importam antes de andar.',
+       'Um camião com água conduz-se pesado e lento — antecipe, trave cedo, faça as curvas largas.',
+       'Faça a volta de inspeção primeiro: pneus, fugas, nível de água e um caminho de saída livre.'],
+      ['Encha de uma fonte conhecida; vigie o nível e pare antes de transbordar.',
+       'Feche bem a tampa e as válvulas — uma ligação solta esguicha ou esvazia na pior altura.',
+       'Um depósito cheio muda o peso e o equilíbrio do camião — reconfirme a condução antes de partir.'],
+      ['Engate a tomada de força (PTO) e leve o motor às rotações certas antes de esperar pressão na mangueira.',
+       'Em terreno acidentado, estabilize e nivele o camião antes de bombear — nunca projete de uma posição insegura.',
+       'Controle o jato: pressão certa, padrão certo, apontado à base do fogo e não às chamas.'],
+      ['Aprenda o sistema de potência — PTO, bomba e cortes — e como desligar tudo em segurança.',
+       'Nunca trabalhe sozinho na bomba; saiba a sua função, a sua fonte de água e a sua saída antes de começar.',
+       'Treine até ser memória muscular — num incêndio real não há tempo para ler o manual.']
+    ]
+  },
   'land-team-journey': {
     en: [
       ['Above the line is openness, curiosity and commitment to learning; below it is defensiveness, blame and needing to be right.',
@@ -565,6 +624,7 @@ const tbadge = (b, f) => { if (_lang() === 'pt' && BADGES_PT[b.id]) return f ===
 
 /* Course content — Portuguese (title / desc / modules). Missing fields fall back to English. */
 const COURSE_PT = {
+  'fire-truck-training': { title:'Formação — Camião de Incêndio', desc:'Operação prática do camião de combate a incêndios da propriedade — arrancar, conduzir, encher e pôr água exatamente onde é preciso. Quando chega a época de fogos, todos devem saber mover água.', modules:['Arrancar e Conduzir o Camião','Encher o Depósito de Água','Todo-o-Terreno, Bomba e Jato','Potência, Segurança e o Exercício'] },
   'land-team-journey': { title:'Jornada da Equipa da Terra', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Atenção ao Detalhe','Responsabilidade Total','Seja um Aprendiz para a Vida','Não Presuma, Esclareça','Benchmark de Excelência'] },
   'land-literacy': { title:'Ler a Terra', desc:'Antes de mudar uma paisagem, aprenda a lê-la. Declive, água, solo, sol e sucessão — a literacia com que começa todo o ato de zeladoria.', modules:['Ficar quieto: como observar','Ler o declive e a água','O solo ao toque e à vista','Sol, sombra e exposição','Sucessão e o que a terra quer','Mapear o seu terreno'] },
   'living-soil': { title:'Solo Vivo', desc:'O solo não é terra morta — é uma comunidade viva. Conheça o microbioma sob os seus pés e as práticas que o alimentam em vez de o esgotar.', modules:['A teia alimentar do solo','Porque deixámos de lavrar','Compostagem como inoculante','Culturas de cobertura e raízes vivas','Cobertura morta e solo nu','Ler uma análise de solo'] },
@@ -658,6 +718,7 @@ const SKILLS = [
 const tskill = k => { const s = SKILLS.find(x => x.key === k); return s ? (_lang() === 'pt' ? s.pt : s.en) : k; };
 const CAT_SKILL = { 'Land & Soil': 'soil', 'Water & Climate': 'water', 'Food & Forest': 'food', 'Nature Connection': 'nature', 'Craft & Hands': 'craft', 'Wellbeing': 'wellbeing', 'Community': 'community', 'Leadership': 'leadership', 'Stewardship': 'nature' };
 const COURSE_SKILLS = {
+  'fire-truck-training': ['safety'],
   'land-team-journey': ['leadership', 'community'],
   'fire-safety': ['safety'],
   'capstone-land': ['soil', 'water', 'food'],
