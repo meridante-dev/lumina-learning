@@ -553,6 +553,7 @@ async function emailNudgeMember(uid, btn) {
 let adminMembers = null;
 function memberSummary(m) {
   const st = m.state || {}, pf = m.profile || {};
+  const compHours = trainingHours(st.trainingLog || []), compTarget = complianceTarget(pf) || 40;
   const name = pf.name || (pf.email ? pf.email.split('@')[0] : 'Learner');
   const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER';
   const path = st.path || [], prg = st.progress || {};
@@ -563,7 +564,7 @@ function memberSummary(m) {
   const days = m.updatedAt ? Math.floor((Date.now() - m.updatedAt) / 86400000) : null;
   const atRisk = pathPct < 35 || (days != null && days > 10);
     const _rr = roleReadiness(m.state || {});
-  return { ready: _rr ? _rr.overall : null, uid: m.uid, name, initials, email: pf.email || '', username: pf.username || '', role: st.role || pf.role || '', goal: st.goal || '', pathPct, coursesDone, xp, level: lvl.idx + 1, levelName: tlevel(lvl.idx), streak: st.streak || 0, days, atRisk };
+  return { compHours, compTarget, ready: _rr ? _rr.overall : null, uid: m.uid, name, initials, email: pf.email || '', username: pf.username || '', role: st.role || pf.role || '', goal: st.goal || '', pathPct, coursesDone, xp, level: lvl.idx + 1, levelName: tlevel(lvl.idx), streak: st.streak || 0, days, atRisk };
 }
 function memberRow(s) {
   return `<tr>
@@ -572,6 +573,7 @@ function memberRow(s) {
     <td>${s.pathPct}%</td>
     <td>Lv ${s.level}</td>
     <td>${s.ready == null ? '<span style="color:var(--text-faint)">—</span>' : `<span class="sk-pct">${s.ready}%</span>`}</td>
+    <td><span class="comp-cell ${s.compHours >= s.compTarget ? 'ok' : s.compHours >= trainingPace(s.compTarget) - 1 ? '' : 'low'}">${s.compHours}/${s.compTarget}h</span></td>
     <td>${s.streak}d</td>
     <td style="color:var(--text-faint);">${s.days == null ? '—' : s.days === 0 ? 'today' : s.days + 'd ago'}</td>
     <td><span class="status-chip ${s.atRisk ? 'risk' : 'ok'}">${s.atRisk ? '⚠ At risk' : '● On track'}</span></td>
@@ -592,12 +594,12 @@ function paintCockpit() {
     <div class="stat"><div class="num">${active}</div><div class="lbl">Active this week</div></div>
     <div class="stat"><div class="num">${risk}</div><div class="lbl">At risk</div><div class="delta ${risk ? 'warn' : ''}">${risk ? '⚠ Needs a nudge' : '● All on track'}</div></div>`;
   const roster = $('#cockpitRoster');
-  if (roster) roster.innerHTML = n ? sums.map(memberRow).join('') : `<tr><td colspan="8" class="empty-note">No members yet — as people sign in, they'll appear here.</td></tr>`;
+  if (roster) roster.innerHTML = n ? sums.map(memberRow).join('') : `<tr><td colspan="10" class="empty-note">No members yet — as people sign in, they'll appear here.</td></tr>`;
 }
 function initAdmin(retries) {
   if (!window.EdenCloud || !EdenCloud.listMembers) {
     if ((retries || 0) < 24 && location.hash.indexOf('#/admin') === 0) { setTimeout(() => initAdmin((retries || 0) + 1), 250); return; }
-    const r = $('#cockpitRoster'); if (r) r.innerHTML = `<tr><td colspan="8" class="empty-note">The cockpit needs an internet connection.</td></tr>`;
+    const r = $('#cockpitRoster'); if (r) r.innerHTML = `<tr><td colspan="10" class="empty-note">The cockpit needs an internet connection.</td></tr>`;
     return;
   }
   if (adminTab === 'broadcasts') {
@@ -610,10 +612,10 @@ function initAdmin(retries) {
   }
   if (adminTab !== 'cockpit') return;
   if (window.EdenMissions) EdenMissions.listPending().then(paintMissions).catch(() => paintMissions([]));
-  const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="8"><div class="skel"></div></td></tr>`).join('');
+  const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="10"><div class="skel"></div></td></tr>`).join('');
   EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); paintTrends(); paintAsgList(); const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML(); const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML(); const iw = $('#intelWrap'); if (iw) iw.outerHTML = intelHTML(); }).catch(err => {
     console.error('[cockpit]', err);
-    const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="8" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
+    const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="10" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
   });
 }
 function exportMembersCSV() {
@@ -1028,6 +1030,52 @@ function roleReadiness(state) {
   const gap = rows.slice().sort((a, b) => a.ready - b.ready)[0];
   return { role, overall, rows, gap };
 }
+/* ================= 40h Continuous-Training Compliance (Código do Trabalho art. 131.º) ================= */
+const complianceYear = () => new Date().getFullYear();
+/* target = 40h × FTE × (months worked this year / 12); fixed-term hired mid-year prorates */
+function complianceTarget(pf) {
+  pf = pf || S.profile || {};
+  const fte = pf.fte != null ? pf.fte : 1;
+  let frac = 1;
+  if (pf.hireDate) { const h = new Date(pf.hireDate); if (!isNaN(h) && h.getFullYear() === complianceYear()) frac = Math.max(0, 12 - h.getMonth()) / 12; }
+  return Math.round(40 * fte * frac);
+}
+function trainingHours(log) {
+  const y = complianceYear();
+  return Math.round((log || []).filter(e => e && new Date(e.at).getFullYear() === y).reduce((a, e) => a + (e.hours || 0), 0) * 10) / 10;
+}
+/* expected hours by today if pacing evenly across the year (the ~1h/week line) */
+function trainingPace(target) {
+  const now = new Date(), start = new Date(now.getFullYear(), 0, 1);
+  return Math.round(target * ((now - start) / (365 * 864e5)) * 10) / 10;
+}
+function compliancePanelHTML() {
+  const pf = S.profile || {};
+  const log = (S.trainingLog || []).filter(e => new Date(e.at).getFullYear() === complianceYear()).sort((a, b) => b.at - a.at);
+  const target = complianceTarget(pf) || 40;
+  const done = trainingHours(S.trainingLog);
+  const pct = Math.min(100, Math.round(done / target * 100));
+  const pace = trainingPace(target);
+  const behind = done < pace - 1;
+  const dateFmt = ts => new Date(ts).toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'short' });
+  return `<div class="admin-section comp-panel">
+    <h2>🛡 ${t('comp_h')} · ${complianceYear()}</h2>
+    <p class="sect-sub">${t('comp_sub')}</p>
+    <div class="ready-wrap">
+      <div class="jour-ring lg" style="background:conic-gradient(${behind ? 'var(--warn, #d9b38c)' : 'var(--accent-2)'} ${pct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${done}<small style="font-size:11px">/${target}h</small></span></div>
+      <div class="ready-rows" style="gap:6px;">
+        <div class="between"><span class="sk-name">${t('comp_done')}</span><b>${done} ${t('comp_h_unit')}</b></div>
+        <div class="between"><span class="sk-name">${t('comp_target')}</span><b>${target} ${t('comp_h_unit')}</b></div>
+        <div class="between"><span class="sk-name">${t('comp_left')}</span><b>${Math.max(0, Math.round((target - done) * 10) / 10)} ${t('comp_h_unit')}</b></div>
+        <div class="comp-status ${behind ? 'behind' : 'ok'}">${behind ? `⚠ ${t('comp_behind')} · ${t('comp_pace_by')} ${pace}h` : `● ${t('comp_ontrack')}`}</div>
+      </div>
+    </div>
+    ${!pf.nif ? `<div class="comp-note" data-action="goto" data-route="#/profile" role="button" tabindex="0">🪪 ${t('comp_nif_prompt')} →</div>` : ''}
+    <div class="ob-eyebrow" style="margin-top:16px;">${t('comp_log')}</div>
+    ${log.length ? `<div class="comp-log">${log.slice(0, 8).map(e => `<div class="comp-row"><span class="cl-t">${esc(e.title || '')}</span><span class="cl-meta">${dateFmt(e.at)} · ${e.hours}${t('comp_h_unit')} ${e.confirmed ? '· ✓' : ''}</span></div>`).join('')}</div>` : `<p class="empty-note" style="text-align:left;padding:6px 0;">${t('comp_none')}</p>`}
+  </div>`;
+}
+
 function readinessSectionHTML() {
   const r = roleReadiness();
   if (!r) return '';
@@ -1703,8 +1751,8 @@ function adminCockpitHTML() {
         </div>
       </div>
       <div class="team-table"><table>
-        <thead><tr><th>Member</th><th>Path progress</th><th></th><th>Level</th><th>Role ready</th><th>Streak</th><th>Last active</th><th>Status</th><th></th></tr></thead>
-        <tbody id="cockpitRoster"><tr><td colspan="8" class="empty-note">Loading members…</td></tr></tbody>
+        <thead><tr><th>Member</th><th>Path progress</th><th></th><th>Level</th><th>Role ready</th><th>40h</th><th>Streak</th><th>Last active</th><th>Status</th><th></th></tr></thead>
+        <tbody id="cockpitRoster"><tr><td colspan="10" class="empty-note">Loading members…</td></tr></tbody>
       </table></div>
       <div class="two-col" id="cockpitTrends" style="margin-top:18px;"></div>
       <div style="margin-top:18px;"><button class="btn btn-glass btn-sm" data-action="ai-digest">✦ AI weekly digest</button><div id="aiDigest"></div></div>
@@ -2099,6 +2147,7 @@ function renderProgress() {
       </div>
     </div>
 
+    ${compliancePanelHTML()}
     ${readinessSectionHTML()}
     ${skillsSectionHTML()}
     ${certsSectionHTML()}
@@ -2578,6 +2627,11 @@ function renderProfile() {
         <label>${t('prof_username')}<div class="ob-handle"><span>@</span><input class="ob-input" id="pfUser" maxlength="20" value="${esc(userHandle())}" placeholder="${suggestHandle()}"></div></label>
         <label>${t('prof_role')}<select class="auth-input" id="pfRole"><option value="">—</option>${roleOpts}</select></label>
         <label>${t('dept_label')}<select class="auth-input" id="pfDept"><option value="">${t('dept_none')}</option>${DEPTS.map(d => `<option value="${d.key}" ${(S.profile && S.profile.dept) === d.key ? 'selected' : ''}>${tdept(d.key)}</option>`).join('')}</select></label>
+        <label>${t('prof_nif')}<input class="auth-input" id="pfNif" inputmode="numeric" maxlength="9" value="${esc((S.profile && S.profile.nif) || '')}" placeholder="123456789"></label>
+        <label>${t('prof_empno')}<input class="auth-input" id="pfEmpNo" value="${esc((S.profile && S.profile.employeeNo) || '')}"></label>
+        <label>${t('prof_contract')}<select class="auth-input" id="pfContract">${[['permanent','contract_permanent'],['fixed_term','contract_fixed'],['part_time','contract_part']].map(([v,k])=>`<option value="${v}" ${(S.profile && S.profile.contractType)===v?'selected':''}>${t(k)}</option>`).join('')}</select></label>
+        <label>${t('prof_fte')}<select class="auth-input" id="pfFte">${[['1',t('fte_full')],['0.5',t('fte_half')]].map(([v,l])=>`<option value="${v}" ${String((S.profile && S.profile.fte)!=null?S.profile.fte:1)===v?'selected':''}>${l}</option>`).join('')}</select></label>
+        <label>${t('prof_hire')}<input class="auth-input" id="pfHire" type="date" value="${esc((S.profile && S.profile.hireDate) || '')}"></label>
         <label>${t('prof_goal')}<select class="auth-input" id="pfGoal">${goalOpts}</select></label>
       </div>
       <button class="btn btn-primary" data-action="save-profile" style="margin-top:16px;">${t('prof_save')}</button>
@@ -2632,7 +2686,14 @@ function saveProfile() {
   const goal = $('#pfGoal').value;
   const phone = $('#pfPhone') ? $('#pfPhone').value.trim() : ((S.profile && S.profile.phone) || '');
   const dept = $('#pfDept') ? $('#pfDept').value : ((S.profile && S.profile.dept) || '');
-  S.profile = Object.assign({}, S.profile, { name: name || displayName(), username: user, role, phone, dept });
+  const legal = {
+    nif: ($('#pfNif') && $('#pfNif').value || '').replace(/\D/g, '').slice(0, 9),
+    employeeNo: ($('#pfEmpNo') && $('#pfEmpNo').value || '').trim(),
+    contractType: ($('#pfContract') && $('#pfContract').value) || 'permanent',
+    fte: $('#pfFte') ? +$('#pfFte').value : 1,
+    hireDate: ($('#pfHire') && $('#pfHire').value) || ''
+  };
+  S.profile = Object.assign({}, S.profile, { name: name || displayName(), username: user, role, phone, dept }, legal);
   if (role) S.role = role;
   if (goal && goal !== S.goal) { S.goal = goal; S.path = [...GOAL_PRESETS[goal]]; }
   save();
@@ -3017,6 +3078,11 @@ function resolveTakeaways(toQuiz) {
 function completeModule(courseId, mod) {
   const c = courseById(courseId);
   const p = S.progress[courseId] || (S.progress[courseId] = { mod: 0, pct: 0 });
+  /* 40h compliance: credit this lesson's carga horária to the append-only training ledger */
+  if (!(S.trainingLog || (S.trainingLog = [])).some(e => e.courseId === courseId && e.mod === mod)) {
+    const mins = (c.moduleDurations && c.moduleDurations[mod]) || 12;
+    S.trainingLog.push({ courseId, mod, title: (cmods(c)[mod] || c.modules[mod]), hours: Math.round(mins / 60 * 100) / 100, at: Date.now(), confirmed: true });
+  }
   if (S.review[courseId] === mod) { delete S.review[courseId]; toast('Review module cleared — nice recovery', '↺'); }
   bumpStreak();
   if (mod >= c.modules.length - 1) {

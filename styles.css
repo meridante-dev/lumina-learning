@@ -2094,3 +2094,18 @@ html.os-android body { text-rendering: optimizeLegibility; }
   footer .links { margin-left: 0; justify-content: flex-start; gap: 12px 16px; }
   .path-banner { margin: 44px 16px 8px; }
 }
+
+/* ================= 40h Compliance ================= */
+.comp-panel .jour-ring.lg span { flex-direction: column; line-height: 1.1; }
+.comp-status { font-size: 12.5px; font-weight: 600; margin-top: 6px; }
+.comp-status.ok { color: var(--accent-2); }
+.comp-status.behind { color: var(--warn, #d9b38c); }
+.comp-note { margin-top: 14px; background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line)); border-radius: 12px; padding: 11px 15px; font-size: 13px; color: var(--text-dim); cursor: pointer; }
+.comp-note:hover { color: var(--text); }
+.comp-log { display: flex; flex-direction: column; }
+.comp-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 13px; }
+.comp-row .cl-t { color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.comp-row .cl-meta { color: var(--text-faint); font-size: 12px; white-space: nowrap; }
+.comp-cell { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; padding: 3px 8px; border-radius: 99px; background: var(--surface-2); }
+.comp-cell.ok { background: color-mix(in srgb, var(--success, #6fd08c) 18%, transparent); color: var(--success, #6fd08c); }
+.comp-cell.low { background: color-mix(in srgb, var(--warn, #d9b38c) 16%, transparent); color: var(--warn, #d9b38c); }
