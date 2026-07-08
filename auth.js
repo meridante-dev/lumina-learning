@@ -349,7 +349,9 @@ onAuthStateChanged(auth, async user => {
       }, 400);
     } catch (e) { console.error('[auth] sync failed', e); }
   } else {
-    if (localStorage.getItem(MODE) === 'guest') { hideGate(); if (window.EdenApp) window.EdenApp.maybeOnboard(); }
+    const mode = localStorage.getItem(MODE);
+    if (mode === 'guest') { hideGate(); if (window.EdenApp) window.EdenApp.maybeOnboard(); }
+    else if (mode === 'firebase') { hideGate(); if (window.EdenApp) window.EdenApp.reloadState(); }  /* remembered: a returning member stays in with their cached state even if the session needs a moment (or is briefly offline) */
     else showGate();
   }
 });

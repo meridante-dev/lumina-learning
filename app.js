@@ -223,7 +223,9 @@ function pathStepperHTML() {
 
 /* ---------- pages ---------- */
 function renderHome() {
-  const featured = courseById(S.path.find(x => !isDone(x))) || CATALOG.find(c => !isDone(c.id)) || CATALOG[0];
+  const featured = S.path.map(courseById).filter(Boolean).find(c => !isDone(c.id))   /* real, existing, not-done path course */
+    || CATALOG.find(c => c.featured && !isDone(c.id)) || CATALOG.find(c => !isDone(c.id))
+    || CATALOG.find(c => c.featured) || CATALOG[0];                                    /* always a real course */
   const featuredCourses = CATALOG.filter(c => c.featured);
   const fp = prog(featured.id);
   const continuing = CATALOG.filter(c => coursePct(c.id) > 0 && !isDone(c.id));
@@ -2749,10 +2751,18 @@ function loadMotionLibs() {
     .then(() => add('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'))
     .then(() => { motionLibsState = 2; initMotion(); });
 }
+let _motionRoute = null;
 function initMotion() {
   const G = window.gsap;
   if (!G) { forceVisible(); loadMotionLibs(); return; }
   if (reduceMotion) { forceVisible(); return; }
+  /* Only play entrance animations on a genuine ROUTE CHANGE. On same-route
+     re-renders (async cloud data → render()), NEVER re-hide content — else
+     gsap.from() re-sets opacity:0 and an interrupted tween leaves the hero /
+     featured program blank. */
+  const _r = (location.hash || '#/home').split('/')[1] || 'home';
+  if (_r === _motionRoute) { forceVisible(); return; }
+  _motionRoute = _r;
   const ST = window.ScrollTrigger;
   if (ST) { G.registerPlugin(ST); ST.getAll().forEach(t => t.kill()); }
 
@@ -3037,14 +3047,16 @@ async function generateAIQuiz(c) {
   const lang = _lang() === 'pt' ? 'pt' : 'en';
   const key = c.id + ':' + lang;
   if (aiQuizCache[key]) return aiQuizCache[key];
+  /* ground the questions in the course's real takeaways, not just the blurb */
+  const tk = []; try { const T = (typeof TAKEAWAYS !== 'undefined') && TAKEAWAYS[c.id]; if (T) (T[lang] || T.en || []).forEach(m => Array.isArray(m) ? tk.push(...m) : tk.push(m)); } catch (e) {}
   const text = await llmComplete({
-    system: `You write short, rigorous multiple-choice quizzes for EdenRise Academy (regenerative living school, Alentejo). Reply with ONLY a JSON array of exactly 3 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. Questions test understanding (not trivia) of the course's core ideas. Language: ${lang === 'pt' ? 'European Portuguese' : 'English'}. No markdown, no fences — raw JSON only.`,
-    messages: [{ role: 'user', content: `Course: "${ctitle(c)}" — ${chook(c)} ${chooksub(c)} ${cdesc(c)} Modules: ${cmods(c).join('; ')}.` }],
-    maxTokens: 900
+    system: `You are a master instructor and assessment designer for EdenRise Academy — a regenerative-living school working REAL LAND in the Baixo Alentejo, Portugal. Write a rigorous, practical quiz that tests whether a worker can APPLY this course on the land — never rote recall of words.\nRULES:\n1. Every question is a realistic ON-THE-LAND scenario or judgement call ("You're doing X and Y happens — what's the best move / why?").\n2. Distractors must be PLAUSIBLE mistakes a real person would actually make — never obviously silly.\n3. Ground every question in THIS course's real content AND the Alentejo reality (heat, drought, fire season, cork-oak montado, clay soils, water scarcity, working as a team).\n4. Reply with ONLY a raw JSON array of EXACTLY 4 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. No markdown, no fences.\nLanguage: ${lang === 'pt' ? 'European Portuguese (pt-PT — never Brazilian)' : 'English'}.`,
+    messages: [{ role: 'user', content: `COURSE: "${ctitle(c)}" (${tcat(c.cat)})\nHook: ${chook(c)} ${chooksub(c)}\nAbout: ${cdesc(c)}\nModules: ${cmods(c).join('; ')}.${tk.length ? '\nKey ideas taught: ' + tk.join(' | ') : ''}` }],
+    maxTokens: 1300
   });
   const qs = JSON.parse(text.replace(/^[^\[]*/, '').replace(/[^\]]*$/, ''));
   if (!Array.isArray(qs) || qs.length < 3 || !qs.every(x => x.q && Array.isArray(x.opts) && x.opts.length === 4 && x.a >= 0 && x.a < 4)) throw new Error('bad shape');
-  aiQuizCache[key] = qs.slice(0, 3);
+  aiQuizCache[key] = qs.slice(0, 4);
   return aiQuizCache[key];
 }
 function startQuiz(c, qs, ai) {
@@ -3053,18 +3065,17 @@ function startQuiz(c, qs, ai) {
   drawQuiz();
 }
 function openQuiz(courseId) {
-  const c = courseById(courseId) || courseById('leading-data');
+  const c = courseById(courseId) || CATALOG[0];
   const lang = _lang() === 'pt' ? 'pt' : 'en';
   const cq = COURSE_QUIZ[c.id] || c.quiz;
-  if (cq) { startQuiz(c, cq[lang] || cq.en || cq, false); return; }   /* real content (incl. studio courses) */
-  const fallback = () => startQuiz(c, QUIZ_BANK[c.cat] || QUIZ_BANK._default, false);
-  if (aiKey()) {                                                     /* AI writes from the course */
+  const staticQ = cq ? (cq[lang] || cq.en || cq) : (QUIZ_BANK[c.cat] || QUIZ_BANK._default);
+  if (aiKey()) {   /* AI-FIRST: rigorous, land-adapted, scenario questions; curated set is the fallback */
     $('#quizModal').classList.add('open');
     $('#quizBody').innerHTML = `<div class="q-center"><div class="orb-spin"></div><p class="m-sub" style="margin-top:16px;">${t('quiz_ai_building')}</p></div>`;
-    generateAIQuiz(c).then(qs => startQuiz(c, qs, true)).catch(() => fallback());
+    generateAIQuiz(c).then(qs => startQuiz(c, qs, true)).catch(() => startQuiz(c, staticQ, false));
     return;
   }
-  fallback();
+  startQuiz(c, staticQ, false);
 }
 function drawQuiz() {
   const c = courseById(quiz.courseId);
