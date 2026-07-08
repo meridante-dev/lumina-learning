@@ -2109,3 +2109,11 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .comp-cell { font-family: var(--font-mono); font-size: 12.5px; font-weight: 700; padding: 3px 8px; border-radius: 99px; background: var(--surface-2); }
 .comp-cell.ok { background: color-mix(in srgb, var(--success, #6fd08c) 18%, transparent); color: var(--success, #6fd08c); }
 .comp-cell.low { background: color-mix(in srgb, var(--warn, #d9b38c) 16%, transparent); color: var(--warn, #d9b38c); }
+
+/* QA: Cockpit header controls wrap on phones (dept filter + export buttons) */
+.cockpit-head { flex-wrap: wrap; gap: 12px; }
+.cockpit-head > div:last-child { flex-wrap: wrap; }
+@media (max-width: 640px) {
+  .cockpit-head .ck-dept { flex: 1 1 100%; }
+  .cockpit-head > div:last-child { width: 100%; }
+}
