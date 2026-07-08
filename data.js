@@ -176,6 +176,42 @@ const CATALOG = [
       { type: 'vimeo', id: '1208024647' },   /* 3. Off-road, Pump & Spray */
       { type: 'vimeo', id: '1208024649' }     /* 4. Power, Safety & Drill */
     ]
+  },
+  {
+    id: 'alignment-journey', title: 'The EdenRise Alignment Journey', cat: 'Leadership', grad: 1, icon: 'compass', featured: true, updated: '2026-07',
+    level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/alignment-journey.svg',
+    desc: 'The EdenRise team’s inner journey — the mindset that shapes how we work the land and each other. Six shifts, from Above the Line thinking to goals, fear, and the wholeness of body, soul and spirit.',
+    modules: [
+      'Warm Welcome',
+      'Above the Line · Intro', 'Above the Line · Simple & Powerful Thinking', 'Above the Line · Deep Dive', 'Above the Line · Summary',
+      'No Failure, Only Feedback · Intro', 'No Failure, Only Feedback · Animation', 'No Failure, Only Feedback · Summary',
+      'ESIP · Introduction',
+      'Goal Setting · Intro', 'Goal Setting · Animation', 'Goal Setting · 90-Day Goals', 'Goal Setting · Top 5 Goals', 'Goal Setting · Summary',
+      'Beyond Fear · Intro', 'Beyond Fear · Animation', 'Beyond Fear · Unpack & Summary',
+      'Body, Soul & Spirit · Intro', 'Body, Soul & Spirit · Deep Dive'
+    ],
+    moduleDurations: [5, 3, 3, 10, 1, 1, 4, 10, 16, 1, 3, 10, 10, 2, 2, 6, 12, 1, 13],
+    moduleMedia: [
+      { type: 'vimeo', id: '1060039319', h: '359d98f5b5' },   /* Warm Welcome — Intro to training */
+      { type: 'vimeo', id: '1057945306', h: '96a8550c8a' },   /* 1.1 Intro to Above the Line */
+      { type: 'vimeo', id: '1057946039', h: '01b76c3f3a' },   /* 1.2 Mindset Sport — Simple & Powerful */
+      { type: 'vimeo', id: '1057946404', h: '32d1731d94' },   /* 1.3 Above the Line deep dive */
+      { type: 'vimeo', id: '1057946740', h: 'ad497964dd' },   /* 1.4 Above the Line summary */
+      { type: 'vimeo', id: '1057992514', h: '39a7efea09' },   /* 2.1 Intro no failure */
+      { type: 'vimeo', id: '1057993253', h: 'a0e377a463' },   /* 2.2 Sport 2 — no failure */
+      { type: 'vimeo', id: '1057993947', h: '050f21a22a' },   /* 2.3 Summary no failure */
+      { type: 'vimeo', id: '1058001287', h: 'aacf5e8fee' },   /* 3. ESIP Intro */
+      { type: 'vimeo', id: '1058014143', h: '5c16a3ee50' },   /* 4. Goal Setting Intro */
+      { type: 'vimeo', id: '1058013428', h: '4889d44aee' },   /* 4.1 Animation */
+      { type: 'vimeo', id: '1058013161', h: '9ec326fc49' },   /* 4.2 90-Day Goals */
+      { type: 'vimeo', id: '1058013794', h: '148790e3a6' },   /* 4.3 Top 5 Goals */
+      { type: 'vimeo', id: '1058014738', h: 'd33926d00a' },   /* 4.4 Goal Summary */
+      { type: 'vimeo', id: '1058001585', h: 'd0776cc1f4' },   /* 5.1 Beyond Fear Intro */
+      { type: 'vimeo', id: '1058002386', h: '82d3bb9d67' },   /* 5.2 Animation Fear */
+      { type: 'vimeo', id: '1058003540', h: '79850e86ba' },   /* 5.3 Unpack & Summary */
+      { type: 'vimeo', id: '1058016139', h: 'b5e41053e2' },   /* 6.1 Body, Soul and Spirit */
+      { type: 'vimeo', id: '1058015323', h: 'be2e764833' }    /* 6.2 Body Soul Spirit deep dive */
+    ]
   }
 ];
 /* designed brand covers — every course ships with art (land-team-journey keeps its filmed cover) */
@@ -289,6 +325,7 @@ const DEFAULT_STATE = {
    MasterClass-style invites: every course opens with a line that pulls you in. */
 const COURSE_HOOKS = {
   'fire-truck-training': ['When fire comes, know the truck.', 'Start it, drive it, fill it, and put water where it’s needed — hands-on, step by step.'],
+  'alignment-journey': ['One team, one way of showing up.', 'Six shifts that align how we think, set goals, meet fear, and work the land together.'],
   'land-team-journey': ['One question changes how you show up.', 'Above the line or below it — the mindset the whole journey grows from.'],
   'land-literacy': ['Learn to read the land like a story.', 'Slope, soil, water, wind — see what the land has been telling you all along.'],
   'living-soil': ['There’s a universe under your feet.', 'Feed the soil, and everything above it thrives.'],
@@ -313,6 +350,7 @@ const COURSE_HOOKS = {
 };
 const COURSE_HOOKS_PT = {
   'fire-truck-training': ['Quando o fogo vem, conheça o camião.', 'Arrancar, conduzir, encher e pôr água onde é preciso — na prática, passo a passo.'],
+  'alignment-journey': ['Uma equipa, uma forma de estar.', 'Seis mudanças que alinham como pensamos, definimos objetivos, enfrentamos o medo e trabalhamos a terra juntos.'],
   'land-team-journey': ['Uma pergunta muda como aparecemos.', 'Acima ou abaixo da linha — a mentalidade de onde cresce toda a jornada.'],
   'land-literacy': ['Aprenda a ler a terra como uma história.', 'Declive, solo, água, vento — veja o que a terra sempre lhe quis dizer.'],
   'living-soil': ['Há um universo debaixo dos seus pés.', 'Alimente o solo, e tudo acima dele floresce.'],
@@ -665,6 +703,15 @@ const tbadge = (b, f) => { if (_lang() === 'pt' && BADGES_PT[b.id]) return f ===
 /* Course content — Portuguese (title / desc / modules). Missing fields fall back to English. */
 const COURSE_PT = {
   'fire-truck-training': { title:'Formação — Camião de Incêndio', desc:'Operação prática do camião de combate a incêndios da propriedade — arrancar, conduzir, encher e pôr água exatamente onde é preciso. Quando chega a época de fogos, todos devem saber mover água.', modules:['Arrancar e Conduzir o Camião','Encher o Depósito de Água','Todo-o-Terreno, Bomba e Jato','Potência, Segurança e o Exercício'] },
+  'alignment-journey': { title:'A Jornada de Alinhamento EdenRise', desc:'A jornada interior da equipa EdenRise — a mentalidade que molda como trabalhamos a terra e uns com os outros. Seis mudanças, do pensamento “Acima da Linha” aos objetivos, ao medo, e à totalidade de corpo, alma e espírito.', modules:[
+    'Boas-vindas',
+    'Acima da Linha · Introdução', 'Acima da Linha · Pensamento Simples e Poderoso', 'Acima da Linha · Análise Profunda', 'Acima da Linha · Síntese',
+    'Sem Fracasso, Só Feedback · Introdução', 'Sem Fracasso, Só Feedback · Animação', 'Sem Fracasso, Só Feedback · Síntese',
+    'ESIP · Introdução',
+    'Definição de Objetivos · Introdução', 'Definição de Objetivos · Animação', 'Objetivos a 90 Dias', 'Os 5 Principais Objetivos', 'Definição de Objetivos · Síntese',
+    'Para Além do Medo · Introdução', 'Para Além do Medo · Animação', 'Para Além do Medo · Desmontar e Sintetizar',
+    'Corpo, Alma e Espírito · Introdução', 'Corpo, Alma e Espírito · Análise Profunda'
+  ] },
   'land-team-journey': { title:'Acima da Linha', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Atenção ao Detalhe','Responsabilidade Total','Seja um Aprendiz para a Vida','Não Presuma, Esclareça','Benchmark de Excelência'] },
   'land-literacy': { title:'Ler a Terra', desc:'Antes de mudar uma paisagem, aprenda a lê-la. Declive, água, solo, sol e sucessão — a literacia com que começa todo o ato de zeladoria.', modules:['Ficar quieto: como observar','Ler o declive e a água','O solo ao toque e à vista','Sol, sombra e exposição','Sucessão e o que a terra quer','Mapear o seu terreno'] },
   'living-soil': { title:'Solo Vivo', desc:'O solo não é terra morta — é uma comunidade viva. Conheça o microbioma sob os seus pés e as práticas que o alimentam em vez de o esgotar.', modules:['A teia alimentar do solo','Porque deixámos de lavrar','Compostagem como inoculante','Culturas de cobertura e raízes vivas','Cobertura morta e solo nu','Ler uma análise de solo'] },
@@ -759,6 +806,7 @@ const tskill = k => { const s = SKILLS.find(x => x.key === k); return s ? (_lang
 const CAT_SKILL = { 'Land & Soil': 'soil', 'Water & Climate': 'water', 'Food & Forest': 'food', 'Nature Connection': 'nature', 'Craft & Hands': 'craft', 'Wellbeing': 'wellbeing', 'Community': 'community', 'Leadership': 'leadership', 'Stewardship': 'nature' };
 const COURSE_SKILLS = {
   'fire-truck-training': ['safety'],
+  'alignment-journey': ['leadership', 'community'],
   'land-team-journey': ['leadership', 'community'],
   'fire-safety': ['safety'],
   'capstone-land': ['soil', 'water', 'food'],
