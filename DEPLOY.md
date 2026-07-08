@@ -10,7 +10,7 @@ When the build work is done, deploy like this:
 
 4. **Verify the deploy by curling the live site, not the workflow status.** The push triggers `.github/workflows/pages.yml` (checkout → esbuild minify → upload-pages-artifact → deploy-pages; local source stays unminified). Content often goes live before the run reports completed, so poll:
    ```
-   curl -s "https://meridante-dev.github.io/lumina-learning/?nocache=$RANDOM" | grep -o "v=edr[0-9]*"
+   curl -s "https://academy.edenrise.com/?nocache=$RANDOM" | grep -o "v=edr[0-9]*"
    ```
    until it shows your new number (typically 1–6 min). Also confirm `curl -s .../sw.js | grep edenrise-v` matches. Never use `/pages/builds/latest` — it reports "errored" forever on this repo.
 
