@@ -21,6 +21,9 @@ let studioMeta = null;
 const ORIG_COURSES = {};
 const liveList = () => (studioMeta && Array.isArray(studioMeta.live) && studioMeta.live.length) ? studioMeta.live : LIVE_SESSIONS;
 const fmtMins = m => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60 ? (m % 60) + 'm' : ''}`.trim() : `${m}m`;
+/* '2026-07' → 'Jul 2026' / 'jul 2026' — content-freshness dates (hand-rolled: locale data isn't guaranteed) */
+const fmtYm = ym => { const [y, m] = String(ym).split('-'); const M = _lang() === 'pt' ? ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'] : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; return (M[+m - 1] || m) + ' ' + y; };
+const courseStale = c => !c.updated || (Date.now() - new Date(c.updated + '-01T12:00:00').getTime() > 366 * 864e5);
 const vidFor = (id, mod) => VIDS[(id.length * 7 + mod * 3) % VIDS.length];
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 /* identity — real profile name once signed in, else the demo founder */
@@ -465,6 +468,7 @@ function renderCourse(id) {
             <span>${c.modules.length} ${t('modules')}</span><span class="sep"></span>
             <span>${fmtMins(courseMins(c))}</span><span class="sep"></span><span>${t(c.level) || c.level}</span>
             <span class="sep"></span><span>★ ${c.rating} · ${c.learners} ${t('learners')}</span>
+            ${c.updated ? `<span class="sep"></span><span class="fresh-tag">${t('updated_lbl')} ${fmtYm(c.updated)}</span>` : ''}
           </div>
           <h1>${ctitle(c)}</h1>
           <p class="course-hook">${chook(c)}</p>
@@ -959,7 +963,7 @@ async function openAsk(q) {
   $('#askModal').classList.add('open');
   try {
     const raw = await llmComplete({ maxTokens: 700,
-      system: `You are the EdenRise Academy guide (regenerative-living school, Baixo Alentejo, Portugal). Answer the member's question warmly and practically, grounded ONLY in the course library below. Reply as raw JSON: {"answer":str(2-4 sentences, concrete),"refs":[{"courseId":str(an id from the library),"why":str(short)}]} — 1-3 refs, best first. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}\n\nLIBRARY:\n${libraryContext()}${aiGuardrails()}`,
+      system: `You are the EdenRise Academy guide (regenerative-living school, Baixo Alentejo, Portugal). Answer the member's question warmly and practically, grounded ONLY in the course library below. HONESTY RULE: if the library doesn't cover the question, say so plainly in the answer ("our courses don't cover this yet") and point to the nearest course — never bluff or invent. Reply as raw JSON: {"answer":str(2-4 sentences, concrete),"refs":[{"courseId":str(an id from the library),"why":str(short)}]} — 0-3 refs, best first. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}\n\nLIBRARY:\n${libraryContext()}${aiGuardrails()}`,
       messages: [{ role: 'user', content: q }] });
     const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
     const refs = (j.refs || []).map(r => ({ r, c: courseById(r.courseId) })).filter(x => x.c);
@@ -970,7 +974,8 @@ async function openAsk(q) {
           <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
           <div class="ct"><b>${esc(ctitle(c))}</b><span>${esc(r.why || tcat(c.cat))}</span></div>
           <span class="ask-go">→</span>
-        </div>`).join('')}</div>` : ''}`;
+        </div>`).join('')}</div>` : ''}
+      ${aiModelLabel() ? `<div class="ask-model">✦ ${t('ask_by')} ${esc(aiModelLabel())}</div>` : ''}`;
   } catch (e) {
     $('#askBody').innerHTML = `<div class="auth-err on">${t('ask_fail')}</div>`;
   }
@@ -1332,6 +1337,11 @@ function downloadJourneyCert(id) {
 let flashDeck = null, flashIdx = 0, flashFlipped = false;
 function buildFlashDeck() {
   const cards = [];
+  /* mastery loop — questions missed in quizzes come first, once each */
+  const missed = (S.missedQ || []).slice(-4).map(m => {
+    const c = courseById(m.courseId);
+    return { front: m.q, back: m.back, from: `${c ? ctitle(c) + ' · ' : ''}${t('flash_missed')}`, missed: m.q };
+  });
   CATALOG.filter(c => isDone(c.id)).forEach(c => {
     const qz = (c.quiz && (c.quiz[_lang()] || c.quiz.en)) || (typeof COURSE_QUIZ !== 'undefined' && COURSE_QUIZ[c.id] && (COURSE_QUIZ[c.id][_lang()] || COURSE_QUIZ[c.id].en)) || [];
     qz.forEach(q => cards.push({ front: q.q, back: q.opts[q.a], from: ctitle(c) }));
@@ -1340,7 +1350,7 @@ function buildFlashDeck() {
   const day = new Date().toISOString().slice(0, 10);
   let seed = [...day].reduce((a, ch) => a + ch.charCodeAt(0), 0);
   const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
-  return cards.sort(() => rnd() - 0.5).slice(0, 5);
+  return missed.concat(cards.sort(() => rnd() - 0.5)).slice(0, 5);
 }
 function flashCardHTML() {
   const c = flashDeck[flashIdx];
@@ -1367,6 +1377,8 @@ function openFlash() {
   $('#flashModal').classList.add('open');
 }
 function flashNext() {
+  const cur = flashDeck[flashIdx];
+  if (cur && cur.missed) { S.missedQ = (S.missedQ || []).filter(m => m.q !== cur.missed); save(); }
   if (flashIdx + 1 >= flashDeck.length) {
     $('#flashModal').classList.remove('open');
     const day = new Date().toISOString().slice(0, 10);
@@ -1755,6 +1767,14 @@ function intelHTML() {
     ${qs.length ? qs.slice(0, 10).map(x => `<div class="intel-q"><span class="n">${timeAgo({ seconds: (x.at || 0) / 1000 })}</span><span>${esc(x.q)}</span></div>`).join('') : `<p class="empty-note" style="text-align:left;padding:8px 0;">No questions logged yet — they appear as the team uses Ask the Academy and the tutor.</p>`}
     ${qs.length >= 3 ? `<button class="btn btn-glass btn-sm" data-action="intel-gaps" style="margin-top:12px;">✦ Find content gaps</button><div id="gapResults"></div>` : ''}
   </div>
+  ${(() => { /* quality loop — quiz questions the team flagged as possibly wrong */
+    const flags = (filteredMembers() || []).flatMap(m => (m.state.qFlags || [])).sort((a, b) => (b.at || 0) - (a.at || 0));
+    if (!flags.length) return '';
+    return `<div class="admin-section">
+    <h2>⚑ Flagged quiz questions</h2>
+    <p class="sect-sub">Questions the team marked as possibly wrong — review them, and fix the course content or quiz where needed.</p>
+    ${flags.slice(0, 10).map(f => { const c = courseById(f.courseId); return `<div class="intel-q"><span class="n">${c ? esc(ctitle(c)) : ''}${f.ai ? ' · ✦AI' : ''}</span><span>${esc(f.q)}</span></div>`; }).join('')}
+  </div>`; })()}
   <div class="admin-section">
     <h2>✦ Ask the Cockpit</h2>
     <p class="sect-sub">Your admin assistant — ask anything about the team in plain language: “who’s behind?”, “what should I assign the Land team?”, “who’s ready for leadership?”</p>
@@ -2090,6 +2110,7 @@ function adminContentHTML() {
     return `<div class="content-row">
       <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
       <div class="ct"><b>${esc(ctitle(c))}</b><span>${tcat(c.cat)} · ${c.modules.length} ${t('modules')} · ${fmtMins(courseMins(c))}${r ? ` · ★ ${r.avg} (${r.n})` : ''}</span></div>
+      <span class="pub-chip ${courseStale(c) ? 'draft' : 'live'}" title="Content freshness — re-dated on every save">${courseStale(c) ? '⏳ review due' : '✓ ' + fmtYm(c.updated)}</span>
       <span class="pub-chip ${cls}">${label}</span>
       <button class="btn btn-glass btn-sm" data-action="ce-open" data-id="${c.id}">✎ Edit</button>
     </div>`;
@@ -2236,6 +2257,7 @@ function ceSave() {
     return /^https?:\/\//.test(url) ? { label: (m.length > 1 ? m[0] : url).trim(), url } : null;
   }).filter(Boolean);
   out.sequential = !!($('#ceSeq') && $('#ceSeq').checked);
+  out.updated = new Date().toISOString().slice(0, 7);   /* content freshness — every save re-dates the course */
   out.recertMonths = Math.max(0, +($('#ceRecert') && $('#ceRecert').value) || 0) || null;
   if (!out.custom) out.edited = true;
   const clean = JSON.parse(JSON.stringify(out));   /* Firestore rejects undefined values */
@@ -2533,6 +2555,7 @@ function renderProgress() {
     ${skillsSectionHTML()}
     ${certsSectionHTML()}
     <div class="admin-section"><h2>🃏 ${t('flash_h')}</h2><p class="sect-sub">${t('flash_sub')}</p>
+      ${(S.missedQ || []).length ? `<p class="missed-note">🎯 ${(S.missedQ || []).length} ${t('flash_missed_n')}</p>` : ''}
       <button class="btn btn-glass btn-sm" data-action="flash-open">${t('flash_open')}</button></div>
 
     <div class="admin-section">
@@ -3034,6 +3057,11 @@ function renderProfile() {
         <li>🤝 ${t('trust_visible')}</li>
         <li>🧠 ${t('trust_thinking')}</li>
       </ul>
+      <details class="trust-peek">
+        <summary>👁 ${t('trust_peek')}</summary>
+        <ul class="trust-list">${aiKnowsLines().map(l => `<li>${l}</li>`).join('')}</ul>
+        <p class="sect-sub" style="margin-top:8px;">${t('trust_peek_note')}</p>
+      </details>
     </div>
     <div class="admin-section">
       <h2>${t('gdpr_title')}</h2>
@@ -3045,6 +3073,18 @@ function renderProfile() {
     </div>
     ${isGuest ? '' : `<button class="btn btn-glass" data-action="signout" style="margin-top:20px;">${t('prof_signout')}</button>`}
   </div>${footerHTML()}</div>`;
+}
+/* inspectable memory — literally the data points buildTutorSystem feeds the AI, human-readable */
+function aiKnowsLines() {
+  const lines = [];
+  lines.push(`${t('knows_name')}: ${esc(displayName())}${S.role ? ' · ' + esc(S.role) : ''}`);
+  if (S.goal) lines.push(`${t('knows_goal')}: “${esc(S.goal)}”`);
+  const pathBits = S.path.map(x => { const c = courseById(x); return c ? `${esc(ctitle(c))} (${isDone(x) ? '✓' : coursePct(x) + '%'})` : ''; }).filter(Boolean);
+  if (pathBits.length) lines.push(`${t('knows_path')}: ${pathBits.join(' · ')}`);
+  const id = currentCourseId(); const c = id && courseById(id);
+  if (c) lines.push(`${t('knows_open')}: ${esc(ctitle(c))}`);
+  lines.push(`${t('knows_stats')}: ${S.streak || 0}🔥 · ${S.xp || 0} XP · ${S.quizzesPassed || 0} ${t('knows_quizzes')}`);
+  return lines;
 }
 function exportMyData() {
   const data = { exportedAt: new Date().toISOString(), app: 'EdenRise Academy', profile: S.profile || {}, goal: S.goal, role: S.role, path: S.path, progress: S.progress, xp: S.xp, badges: S.badges, streak: S.streak, quizzesPassed: S.quizzesPassed, notes: S.notes, lang: S.lang, ratings: S.ratings || {}, coachDone: S.coachDone || {}, notify: (S.profile || {}).notify || {} };
@@ -3508,7 +3548,7 @@ async function generateAIQuiz(c) {
   /* ground the questions in the course's real takeaways, not just the blurb */
   const tk = []; try { const T = (typeof TAKEAWAYS !== 'undefined') && TAKEAWAYS[c.id]; if (T) (T[lang] || T.en || []).forEach(m => Array.isArray(m) ? tk.push(...m) : tk.push(m)); } catch (e) {}
   const text = await llmComplete({
-    system: `You are a master instructor and assessment designer for EdenRise Academy — a regenerative-living school working REAL LAND in the Baixo Alentejo, Portugal. Write a rigorous, practical quiz that tests whether a worker can APPLY this course on the land — never rote recall of words.\nRULES:\n1. Every question is a realistic ON-THE-LAND scenario or judgement call ("You're doing X and Y happens — what's the best move / why?").\n2. Distractors must be PLAUSIBLE mistakes a real person would actually make — never obviously silly.\n3. Ground every question in THIS course's real content AND the Alentejo reality (heat, drought, fire season, cork-oak montado, clay soils, water scarcity, working as a team).\n4. Reply with ONLY a raw JSON array of EXACTLY 4 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. No markdown, no fences.\nLanguage: ${lang === 'pt' ? 'European Portuguese (pt-PT — never Brazilian)' : 'English'}.`,
+    system: `You are a master instructor and assessment designer for EdenRise Academy — a regenerative-living school working REAL LAND in the Baixo Alentejo, Portugal. Write a rigorous, practical quiz that tests whether a worker can APPLY this course on the land — never rote recall of words.\nRULES:\n1. Every question is a realistic ON-THE-LAND scenario or judgement call ("You're doing X and Y happens — what's the best move / why?").\n2. Distractors must be PLAUSIBLE mistakes a real person would actually make — never obviously silly.\n3. Ground every question in THIS course's real content AND the Alentejo reality (heat, drought, fire season, cork-oak montado, clay soils, water scarcity, working as a team).\n4. ACCURACY OVER QUANTITY: every question and its correct answer must be verifiably supported by the course content provided — if the content is thin, write only 3 solid questions instead of inventing a 4th. A wrong "correct answer" is the worst possible failure.\n5. Reply with ONLY a raw JSON array of 3-4 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. No markdown, no fences.\nLanguage: ${lang === 'pt' ? 'European Portuguese (pt-PT — never Brazilian)' : 'English'}.`,
     messages: [{ role: 'user', content: `COURSE: "${ctitle(c)}" (${tcat(c.cat)})\nHook: ${chook(c)} ${chooksub(c)}\nAbout: ${cdesc(c)}\nModules: ${cmods(c).join('; ')}.${tk.length ? '\nKey ideas taught: ' + tk.join(' | ') : ''}` }],
     maxTokens: 1300
   });
@@ -3572,6 +3612,7 @@ function drawQuiz() {
     </div>
     <div class="q-foot">
       <button class="ob-skip" data-action="quiz-close">Exit</button>
+      <button class="ob-skip q-flag" data-action="quiz-flag" title="${t('quiz_flag_tip')}" aria-label="${t('quiz_flag_tip')}">⚑</button>
       <span style="flex:1"></span>
       <button class="btn btn-primary btn-sm" id="quizNext" disabled style="opacity:.5">Check answer</button>
     </div>`;
@@ -3591,6 +3632,10 @@ function drawQuiz() {
         else if (i === quiz.sel && i !== q.a) x.classList.add('wrong');
       });
       if (quiz.sel === q.a) quiz.score++;
+      else { /* practice-what-you-missed: wrong answers resurface first in the review deck */
+        S.missedQ = ((S.missedQ || []).filter(m => m.q !== q.q)).concat({ q: q.q, back: q.opts[q.a], courseId: quiz.courseId, at: Date.now() }).slice(-30);
+        save();
+      }
       $('#quizNext').textContent = quiz.idx === quiz.qs.length - 1 ? 'See result' : 'Next question';
     } else {
       quiz.idx++; quiz.sel = null; quiz.answered = false; drawQuiz();
@@ -3745,12 +3790,15 @@ ${c ? `He currently has "${c.title}" open${p && !p.done ? ` — module ${(p.mod 
 Deadlines: "Fire Safety on the Land" is required and due in 3 days (it's fire season in the Alentejo); the team series "Living by the Seasons" is due June 30.
 
 Style: warm, encouraging, concise (2-4 sentences unless asked for depth). Refer to his actual progress and path when relevant. You can offer to quiz him — if he agrees, tell him to press the "Quiz me now" button. Never invent courses that aren't in his path or the descriptions above.
+HONESTY: Be honest before being helpful. If you are not sure of something, or the courses don't cover it, say so plainly ("I'm not certain" / "our courses don't cover this yet — check with the land team") instead of guessing. Never invent facts, names, numbers or regulations. When the learner shares their own reasoning, respond to their ACTUAL thinking — name what's right in it before correcting what's off.
 ${_lang() === 'pt' ? 'IMPORTANT: Respond in European Portuguese (português de Portugal).' : ''}\n\n${TUTOR_MODES[S.tutorMode || 'explain']}${aiGuardrails()}`;
 }
 /* provider-agnostic completion — Claude (sk-ant-…) or free-tier Gemini (AIza…) */
 const aiKey = () => S.apiKey || (window.EdenOrg && window.EdenOrg.aiKey) || '';
 const llmProvider = () => aiKey().startsWith('AIza') ? 'gemini' : 'anthropic';
 function aiModel() { return S.aiModel || (window.EdenOrg && window.EdenOrg.aiModel) || ''; }
+/* transparency: the model that actually answers — shown on AI outputs (no silent swaps) */
+function aiModelLabel() { const k = aiKey(); if (!k) return ''; return aiModel() || LLM_DEFAULTS[llmProviderOf(k, aiModel())] || ''; }
 function llmProviderOf(key, model) {
   if (!key) return null;
   if (key.startsWith('AIza')) return 'gemini';
@@ -4055,6 +4103,11 @@ document.addEventListener('click', e => {
     case 'dig-close': $('#digModal').classList.remove('open'); break;
     case 'dig-publish': digPublish(); break;
     case 'intel-gaps': findContentGaps(); break;
+    case 'quiz-flag': { /* honesty loop — members can flag a question that looks wrong */
+      const fq = quiz && quiz.qs && quiz.qs[quiz.idx]; if (!fq) break;
+      S.qFlags = ((S.qFlags || []).filter(f => f.q !== fq.q)).concat({ q: fq.q, courseId: quiz.courseId, ai: !!quiz.ai, at: Date.now() }).slice(-20);
+      save(); toast(t('quiz_flagged'), '⚑'); break;
+    }
     case 'ck-ask': cockpitAsk(); break;
     case 'gap-draft': {
       adminTab = 'content'; editingCourse = null; render();

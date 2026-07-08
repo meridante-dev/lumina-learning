@@ -2174,3 +2174,16 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .story-text { font-family: var(--font-display); font-size: 18px; line-height: 1.6; font-style: italic; color: var(--text); max-width: 640px; margin-bottom: 10px; }
 .player-goal { font-size: 12.5px; color: var(--accent-2); margin-top: 4px; max-width: 720px; }
 .nudge-head { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); padding: 10px 14px 6px; }
+
+/* ===== honesty & trust pass (edr62) ===== */
+.trust-peek { margin-top: 14px; }
+.trust-peek summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--accent); list-style: none; user-select: none; }
+.trust-peek summary::-webkit-details-marker { display: none; }
+.trust-peek summary::after { content: ' ▾'; opacity: .6; }
+.trust-peek[open] summary::after { content: ' ▴'; }
+.trust-peek .trust-list { margin-top: 12px; padding: 14px 16px; background: rgba(255,255,255,.03); border: 1px solid var(--line); border-radius: 12px; }
+.ask-model { margin-top: 14px; font-size: 11px; color: var(--text-dim); opacity: .75; letter-spacing: .03em; }
+.q-flag { font-size: 15px; opacity: .55; }
+.q-flag:hover { opacity: 1; color: var(--accent); }
+.missed-note { font-size: 13px; color: var(--accent-2); margin: -6px 0 12px; }
+.fresh-tag { color: var(--accent-2); }

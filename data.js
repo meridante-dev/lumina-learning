@@ -30,7 +30,7 @@ const PILLARS = [
 const CATALOG = [
   {
     id: 'land-team-journey', title: 'Above the Line', cat: 'Leadership', grad: 4, icon: 'compass',
-    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line-cover.jpg',
+    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line-cover.jpg', updated: '2026-07',
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
     modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Attention to Detail', 'Total Responsibility', 'A Learner for Life', "Don't Assume, Clarify", 'The Benchmark of Excellence'],
     moduleDurations: [5, 5, 4, 3, 3, 4, 4],   /* real Vimeo lengths: 5:06 4:29 4:05 3:27 3:27 4:15 3:38 */
@@ -165,7 +165,7 @@ const CATALOG = [
     modules: ['Why the commons works', 'Sharing tools & labour', 'Running a work party', 'Decisions without burnout', 'A 90-day community plan']
   },
   {
-    id: 'fire-truck-training', title: 'Fire Truck Training', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12, featured: true,
+    id: 'fire-truck-training', title: 'Fire Truck Training', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12, featured: true, updated: '2026-07',
     level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/fire-truck-training.jpg',
     desc: 'Hands-on operation of the land’s fire truck — start it, drive it, fill it, and put water exactly where it’s needed. When fire season comes, everyone should know how to move water.',
     modules: ['Starting & Driving the Truck', 'Filling the Water Tank', 'Off-Road, Pump & Spray', 'Power, Safety & the Drill'],
@@ -486,6 +486,11 @@ const UI = {
     trust_thinking:'The tutor\u2019s Hint, Coach and Practice modes are designed to build your thinking, not replace it.',
     story_h:'My learning story', story_sub:'Not a percentage — where you actually are, and what\u2019s next.', story_btn:'✦ Tell me where I am', story_refresh:'↺ Refresh',
     lesson_goal:'In this lesson', nudge_today_one:'You have 1 suggested action today', nudge_today:'You have {n} suggested actions today',
+    trust_peek:'See exactly what the AI knows about me', trust_peek_note:'That’s the whole list — the AI sees nothing else about you.',
+    knows_name:'Who you are', knows_goal:'Your goal', knows_path:'Your path', knows_open:'Course open now', knows_stats:'Your rhythm', knows_quizzes:'quizzes passed',
+    flash_missed:'missed in a quiz', flash_missed_n:'missed questions queued — they come first',
+    quiz_flag_tip:'Something wrong with this question? Flag it for review', quiz_flagged:'Flagged — your training admin will review this question. Thank you!',
+    updated_lbl:'Updated', ask_by:'Answered by',
     ask_h:'Ask the Academy', ask_sub:'Any question about the land — answered from your team\u2019s own courses.', ask_ph:'e.g. How do I slow erosion on the slope path?', ask_go:'Ask', ask_refs:'Learn more in', ask_thinking:'Reading the library…', ask_fail:'Could not answer right now — try again.',
     skills_h:'Skills', skills_sub:'What your learning is building — course by course.',
     comp_expired:'Certification expired', comp_expiring:'Expires soon', comp_renew:'Renew', nudge_recert_t:'Time to recertify', nudge_recert_b:'Your {course} certification {when} — a quick rewatch renews it.',
@@ -566,6 +571,11 @@ const UI = {
     trust_visible:'As suas perguntas à IA são visíveis para os administradores de formação da sua empresa — é assim que a aprendizagem é apoiada, e preferimos ser transparentes.',
     trust_thinking:'Os modos Pista, Coach e Praticar do tutor foram desenhados para desenvolver o seu raciocínio, não para o substituir.',
     story_h:'A minha história de aprendizagem', story_sub:'Não é uma percentagem — é onde realmente está, e o que vem a seguir.', story_btn:'✦ Diz-me onde estou', story_refresh:'↺ Atualizar',
+    trust_peek:'Ver exatamente o que a IA sabe sobre mim', trust_peek_note:'É esta a lista completa — a IA não vê mais nada sobre si.',
+    knows_name:'Quem é', knows_goal:'O seu objetivo', knows_path:'O seu percurso', knows_open:'Curso aberto agora', knows_stats:'O seu ritmo', knows_quizzes:'quizzes passados',
+    flash_missed:'falhada num quiz', flash_missed_n:'perguntas falhadas em fila — vêm primeiro',
+    quiz_flag_tip:'Algo errado nesta pergunta? Assinale para revisão', quiz_flagged:'Assinalada — o admin de formação vai rever esta pergunta. Obrigado!',
+    updated_lbl:'Atualizado', ask_by:'Respondido por',
     lesson_goal:'Nesta lição', nudge_today_one:'Tem 1 ação sugerida hoje', nudge_today:'Tem {n} ações sugeridas hoje',
     ask_h:'Pergunte à Academia', ask_sub:'Qualquer pergunta sobre a terra — respondida a partir dos cursos da equipa.', ask_ph:'ex.: Como travo a erosão no caminho da encosta?', ask_go:'Perguntar', ask_refs:'Aprenda mais em', ask_thinking:'A ler a biblioteca…', ask_fail:'Não foi possível responder — tente de novo.',
     skills_h:'Competências', skills_sub:'O que a sua aprendizagem está a construir — curso a curso.',
