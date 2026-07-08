@@ -6,7 +6,7 @@
 <title>EdenRise Academy — Regenerative Living, Learned</title>
 <meta name="description" content="EdenRise Academy — learn regenerative living, land stewardship and the rhythm of the land, guided by adaptive AI learning paths and a personal AI tutor.">
 <meta name="theme-color" content="#0e140f">
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=edr60">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=edr61">
 <meta property="og:title" content="EdenRise Academy — Regenerative Living, Learned">
 <meta property="og:description" content="Where nature leads, the land heals, and stewardship shapes everything we learn.">
 <meta property="og:type" content="website">
@@ -29,7 +29,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=edr60">
+<link rel="stylesheet" href="styles.css?v=edr61">
 <script>try{var m=localStorage.getItem('eden-auth-mode');document.documentElement.setAttribute('data-gate',(m==='guest'||m==='firebase')?'off':'on');}catch(e){document.documentElement.setAttribute('data-gate','on');}</script>
 </head>
 <body>
@@ -142,6 +142,7 @@
     <div>
       <div class="pt" id="playerTitle"></div>
       <div class="ps" id="playerSub"></div>
+      <div class="player-goal" id="playerGoal"></div>
     </div>
     <span class="spacer"></span>
     <button class="btn btn-glass btn-sm" data-action="ai-open">✦ Ask the tutor</button>
@@ -217,6 +218,13 @@
     </div>
   </div>
   <div class="ai-msgs" id="aiMsgs"></div>
+  <div class="tmode-row" id="tutorModes" role="tablist" aria-label="Tutor mode">
+    <button class="tmode" data-action="tutor-mode" data-mode="hint" data-tk="mode_hint">💡 Hint</button>
+    <button class="tmode" data-action="tutor-mode" data-mode="coach" data-tk="mode_coach">🧭 Coach</button>
+    <button class="tmode on" data-action="tutor-mode" data-mode="explain" data-tk="mode_explain">📖 Explain</button>
+    <button class="tmode" data-action="tutor-mode" data-mode="practice" data-tk="mode_practice">🎯 Practice</button>
+  </div>
+  <div class="grounded-note" id="groundedNote">🔒 Answers come only from your courses</div>
   <div class="quick-row">
     <button class="quick" data-intent="summarize" data-tk="summarize_course">Summarize this course</button>
     <button class="quick" data-intent="quiz" data-tk="quiz_now">Quiz me now</button>
@@ -253,9 +261,9 @@
 
 <div id="toasts"></div>
 
-<script src="data.js?v=edr60"></script>
-<script src="app.js?v=edr60"></script>
-<script type="module" src="auth.js?v=edr60"></script>
+<script src="data.js?v=edr61"></script>
+<script src="app.js?v=edr61"></script>
+<script type="module" src="auth.js?v=edr61"></script>
 <script>
 /* Safety net: if the Firebase module can't load (blocked CDN, offline), make sure
    the "continue as guest" button still dismisses the gate so no one is stuck. */

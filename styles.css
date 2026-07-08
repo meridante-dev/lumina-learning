@@ -2162,3 +2162,15 @@ html.os-android body { text-rendering: optimizeLegibility; }
 
 /* ================= Phase 5: multi-tenant ================= */
 #suspendBar { position: sticky; top: 0; z-index: 950; background: color-mix(in srgb, var(--warn, #d9b38c) 22%, var(--bg)); color: var(--text); border-bottom: 1px solid var(--warn, #d9b38c); padding: 10px var(--gutter, 20px); font-size: 13px; font-weight: 600; text-align: center; }
+
+/* ================= Pain-point pass: modes, trust, story ================= */
+.tmode-row { display: flex; gap: 6px; padding: 8px 14px 0; flex-wrap: wrap; }
+.tmode { background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 5px 11px; font-size: 11.5px; font-weight: 600; color: var(--text-dim); cursor: pointer; font-family: var(--font-body); transition: border-color .15s, color .15s; }
+.tmode.on { border-color: var(--accent); color: var(--accent); background: rgba(200,164,93,.1); }
+.grounded-note { padding: 5px 16px 0; font-size: 10.5px; color: var(--text-faint); }
+.trust-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.trust-list li { font-size: 13.5px; color: var(--text-dim); line-height: 1.55; padding-left: 4px; }
+.story-card { border-color: rgba(200,164,93,.3); }
+.story-text { font-family: var(--font-display); font-size: 18px; line-height: 1.6; font-style: italic; color: var(--text); max-width: 640px; margin-bottom: 10px; }
+.player-goal { font-size: 12.5px; color: var(--accent-2); margin-top: 4px; max-width: 720px; }
+.nudge-head { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); padding: 10px 14px 6px; }

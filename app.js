@@ -954,11 +954,12 @@ async function openAsk(q) {
   if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
   ensureAskModal();
   $('#askQ').textContent = q;
+  const eb = $('#askModal .ob-eyebrow'); if (eb) eb.innerHTML = `✦ ${t('ask_h')} <span class="grounded-inline">· 🔒 ${t('grounded_note')}</span>`;
   $('#askBody').innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:20px;height:20px;"></span> ${t('ask_thinking')}</div>`;
   $('#askModal').classList.add('open');
   try {
     const raw = await llmComplete({ maxTokens: 700,
-      system: `You are the EdenRise Academy guide (regenerative-living school, Baixo Alentejo, Portugal). Answer the member's question warmly and practically, grounded ONLY in the course library below. Reply as raw JSON: {"answer":str(2-4 sentences, concrete),"refs":[{"courseId":str(an id from the library),"why":str(short)}]} — 1-3 refs, best first. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}\n\nLIBRARY:\n${libraryContext()}`,
+      system: `You are the EdenRise Academy guide (regenerative-living school, Baixo Alentejo, Portugal). Answer the member's question warmly and practically, grounded ONLY in the course library below. Reply as raw JSON: {"answer":str(2-4 sentences, concrete),"refs":[{"courseId":str(an id from the library),"why":str(short)}]} — 1-3 refs, best first. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}\n\nLIBRARY:\n${libraryContext()}${aiGuardrails()}`,
       messages: [{ role: 'user', content: q }] });
     const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
     const refs = (j.refs || []).map(r => ({ r, c: courseById(r.courseId) })).filter(x => x.c);
@@ -1375,6 +1376,25 @@ function flashNext() {
   }
   flashIdx++; flashFlipped = false;
   $('#flashBody').innerHTML = flashCardHTML();
+}
+
+/* ================= Learning story — the map, not the percentage ================= */
+async function generateLearnStory(force) {
+  if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
+  const el = $('#storyBody'); if (!el) return;
+  if (!force && S.learnStory && S.learnStory.lang === S.lang && Date.now() - (S.learnStory.at || 0) < 6048e5) return;
+  el.innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:18px;height:18px;"></span></div>`;
+  const skills = skillScores().filter(s => s.touched).map(s => `${tskill(s.key)} ${s.score}%`).join(', ') || 'nothing started yet';
+  const rr = roleReadiness();
+  const done = CATALOG.filter(c => isDone(c.id)).map(c => ctitle(c)).join(', ') || 'none yet';
+  const recent = (S.trainingLog || []).slice(-4).map(e => e.title).join('; ');
+  try {
+    const text = await llmComplete({ maxTokens: 350,
+      system: `You are the learner's guide at EdenRise Academy. Write a warm, honest, PERSONAL 3-sentence learning story in the second person: (1) what they're genuinely strong in, (2) what they're still building, (3) the ONE next right step. Concrete, no percentages, no flattery, no lists — just three flowing sentences. ${_lang() === 'pt' ? 'Escreve em português europeu.' : 'Write in English.'}`,
+      messages: [{ role: 'user', content: `Skills: ${skills}. ${rr ? `Role readiness: ${rr.overall}% (weakest: ${tskill(rr.gap.key)}).` : ''} Courses completed: ${done}. Recent sessions: ${recent}. Streak: ${S.streak || 0} days. Goal: ${tgoal(S.goal)}.` }] });
+    S.learnStory = { text: text.trim().slice(0, 600), at: Date.now(), lang: S.lang }; save();
+    el.innerHTML = `<p class="story-text">${esc(S.learnStory.text)}</p><button class="link-quiet" data-action="story-gen">${t('story_refresh')}</button>`;
+  } catch (e) { el.innerHTML = `<button class="btn btn-glass btn-sm" data-action="story-gen">${t('story_btn')}</button>`; toast(t('ask_fail'), '⚠️'); }
 }
 
 /* ================= Certificates — a moment you can hold ================= */
@@ -2414,8 +2434,17 @@ function createCompanyFromForm() {
 
 /* ----- Settings ----- */
 function adminSettingsHTML() {
+  const g = (window.EdenOrg && window.EdenOrg.aiGuard) || {};
   return `<div class="admin-section">
     <h2>Team settings</h2>
+    <div class="org-key" style="margin-top:14px;">
+      <div class="notif-info"><b>AI guardrails</b><span>What the learners' AI may talk about. Questions are always visible to admins (learning visibility).</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px;flex:1;min-width:280px;">
+        <label class="lv-check" style="margin:0;"><input type="checkbox" id="guardCourseOnly" ${g.courseOnly !== false ? 'checked' : ''}> Course-only mode — the AI stays on course & work topics</label>
+        <input class="auth-input" id="guardBlocked" placeholder="Blocked topics (comma-separated, optional)" value="${attr(g.blocked || '')}">
+        <button class="btn btn-glass btn-sm" data-action="guard-save" style="align-self:flex-start;">Save guardrails</button>
+      </div>
+    </div>
     <div class="org-key" style="margin-top:14px;">
       <div class="notif-info"><b>Demo content</b><span>Seed a welcome broadcast, a wins post with photo, a poll, two dated live sessions and one assignment — so the platform demos inhabited.</span></div>
       <button class="btn btn-glass btn-sm" data-action="seed-demo">🌿 Seed demo content</button>
@@ -2494,6 +2523,11 @@ function renderProgress() {
       </div>
     </div>
 
+    <div class="admin-section story-card">
+      <h2>✦ ${t('story_h')}</h2>
+      <p class="sect-sub">${t('story_sub')}</p>
+      <div id="storyBody">${S.learnStory && S.learnStory.text && S.learnStory.lang === S.lang ? `<p class="story-text">${esc(S.learnStory.text)}</p><button class="link-quiet" data-action="story-gen">${t('story_refresh')}</button>` : `<button class="btn btn-glass btn-sm" data-action="story-gen">${t('story_btn')}</button>`}</div>
+    </div>
     ${compliancePanelHTML()}
     ${readinessSectionHTML()}
     ${skillsSectionHTML()}
@@ -2640,7 +2674,7 @@ function updateBell() {
 function nudgePanelHTML() {
   const ns = computeNudges();
   if (!ns.length) return `<div class="nudge-empty">${t('nudge_empty')}</div>`;
-  return ns.map(n => `<button class="nudge" data-action="goto" data-route="${n.route}">
+  return `<div class="nudge-head">${(ns.length === 1 ? t('nudge_today_one') : t('nudge_today')).replace('{n}', ns.length)}</div>` + ns.map(n => `<button class="nudge" data-action="goto" data-route="${n.route}">
     <span class="nudge-ic">${n.icon}</span>
     <div class="nudge-txt"><div class="nudge-t">${n.title}</div><div class="nudge-b">${n.body}</div></div>
   </button>`).join('');
@@ -2992,6 +3026,16 @@ function renderProfile() {
       ${notify.whatsapp ? `<input class="auth-input" id="pfPhone" placeholder="${t('notif_phone_ph')}" value="${esc(p.phone || '')}" style="margin-top:12px;max-width:300px;">` : ''}
     </div>
     <div class="admin-section">
+      <h2>🔒 ${t('trust_title')}</h2>
+      <p class="sect-sub">${t('trust_sub')}</p>
+      <ul class="trust-list">
+        <li>👁 ${t('trust_sees')}</li>
+        <li>📚 ${t('trust_grounded')}</li>
+        <li>🤝 ${t('trust_visible')}</li>
+        <li>🧠 ${t('trust_thinking')}</li>
+      </ul>
+    </div>
+    <div class="admin-section">
       <h2>${t('gdpr_title')}</h2>
       <p class="sect-sub">${t('gdpr_sub')}${isGuest ? ' ' + t('gdpr_guest_note') : ''}</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -3310,6 +3354,7 @@ function openPlayer(courseId, mod) {
 
   $('#playerTitle').textContent = ctitle(c);
   $('#playerSub').textContent = `${t('module')} ${mod + 1} ${t('of')} ${c.modules.length} · ${cmods(c)[mod]}`;
+  const pg = $('#playerGoal'); if (pg) { const goal = (takeawaysFor(c, mod) || [])[0] || ''; pg.textContent = goal ? `🎯 ${t('lesson_goal')}: ${goal}` : ''; }
   $('#playerPills').innerHTML = c.modules.map((m, i) => {
     const p = prog(courseId);
     const mm = modMedia(c, i);
@@ -3669,6 +3714,19 @@ function openTutorWith(html, quicks) {
 }
 /* ---------- real Claude integration (BYO key) ---------- */
 let tutorHistory = [];
+const TUTOR_MODES = {
+  hint:     'MODE: HINT — reply with ONE small nudge (max 2 sentences) that helps them find the answer themselves. NEVER give the full answer; end by handing the thinking back to them.',
+  coach:    'MODE: COACH — reply Socratically: acknowledge briefly, then ask 1–2 guiding questions that lead them to the answer. Do not hand over answers; build their thinking.',
+  explain:  'MODE: EXPLAIN — teach the concept clearly and warmly, with ONE concrete example from the land/courses, then end with one short check-for-understanding question.',
+  practice: 'MODE: PRACTICE — give ONE practical exercise on their topic (something they can do or answer now). When they attempt it, give specific feedback and only then the model answer.'
+};
+function aiGuardrails() {
+  const g = (window.EdenOrg && window.EdenOrg.aiGuard) || {};
+  let out = '';
+  if (g.courseOnly !== false) out += '\nSCOPE: only discuss topics related to this team\'s courses and their work on the land. If asked something unrelated, warmly steer back to the learning.';
+  if (g.blocked) out += '\nNever discuss: ' + g.blocked + '.';
+  return out;
+}
 function buildTutorSystem() {
   const id = currentCourseId(); const c = id && courseById(id);
   const p = c && prog(c.id);
@@ -3687,7 +3745,7 @@ ${c ? `He currently has "${c.title}" open${p && !p.done ? ` — module ${(p.mod 
 Deadlines: "Fire Safety on the Land" is required and due in 3 days (it's fire season in the Alentejo); the team series "Living by the Seasons" is due June 30.
 
 Style: warm, encouraging, concise (2-4 sentences unless asked for depth). Refer to his actual progress and path when relevant. You can offer to quiz him — if he agrees, tell him to press the "Quiz me now" button. Never invent courses that aren't in his path or the descriptions above.
-${_lang() === 'pt' ? 'IMPORTANT: Respond in European Portuguese (português de Portugal).' : ''}`;
+${_lang() === 'pt' ? 'IMPORTANT: Respond in European Portuguese (português de Portugal).' : ''}\n\n${TUTOR_MODES[S.tutorMode || 'explain']}${aiGuardrails()}`;
 }
 /* provider-agnostic completion — Claude (sk-ant-…) or free-tier Gemini (AIza…) */
 const aiKey = () => S.apiKey || (window.EdenOrg && window.EdenOrg.aiKey) || '';
@@ -3948,6 +4006,18 @@ document.addEventListener('click', e => {
     }
     case 'cal-ics': { const s = liveList().find(x => x.id === id); if (s) icsForSession(s); break; }
     case 'seq-locked': toast(t('mod_locked'), '🔒'); break;
+    case 'tutor-mode': {
+      S.tutorMode = el.dataset.mode; save();
+      document.querySelectorAll('#tutorModes .tmode').forEach(b => b.classList.toggle('on', b.dataset.mode === S.tutorMode));
+      toast(t('mode_tip_' + S.tutorMode), '✦');
+      break;
+    }
+    case 'story-gen': generateLearnStory(true); break;
+    case 'guard-save': {
+      const aiGuard = { courseOnly: $('#guardCourseOnly').checked, blocked: ($('#guardBlocked').value || '').trim() };
+      EdenCloud.saveOrgConfig({ aiGuard }).then(() => { window.EdenOrg = Object.assign({}, window.EdenOrg, { aiGuard }); toast('Guardrails saved', '🔒'); }).catch(() => toast(t('mail_failed'), '⚠️'));
+      break;
+    }
     case 'ask-go': openAsk($('#askInput') && $('#askInput').value); break;
     case 'ask-close': $('#askModal').classList.remove('open'); break;
     case 'ask-ref': $('#askModal').classList.remove('open'); location.hash = '#/course/' + id; break;
@@ -4156,7 +4226,12 @@ addEventListener('keydown', e => {
 });
 
 /* tutor settings */
+function syncTutorModesUI() {
+  document.querySelectorAll('#tutorModes .tmode').forEach(b => { b.classList.toggle('on', b.dataset.mode === (S.tutorMode || 'explain')); const k = b.dataset.tk; if (k) b.textContent = t(k); b.title = t('mode_tip_' + b.dataset.mode); });
+  const g = $('#groundedNote'); if (g) g.textContent = '🔒 ' + t('grounded_note');
+}
 function syncTutorStatus() {
+  syncTutorModesUI();
   const orgOnly = !S.apiKey && aiKey();
   const prov = llmProviderOf(aiKey(), aiModel());
   const label = { gemini: 'Gemini', anthropic: 'Claude', openrouter: 'OpenRouter', groq: 'Groq', deepseek: 'DeepSeek', mistral: 'Mistral', openai: 'OpenAI' }[prov] || 'AI';
