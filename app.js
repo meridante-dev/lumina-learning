@@ -4474,6 +4474,19 @@ syncTutorStatus();
 
 /* ---------- onboarding ---------- */
 let ob = { step: 0, role: null, goal: null, username: '' };
+/* true when the user has clearly used the platform before — used to avoid
+   re-onboarding a returning user whose `onboarded` flag was lost. */
+function hasLearningHistory() {
+  return !!(
+    (S.progress && Object.keys(S.progress).length) ||
+    (S.badges && S.badges.length) ||
+    (S.quizzesPassed > 0) ||
+    (S.trainingLog && S.trainingLog.length) ||
+    (S.streak > 0) ||
+    (S.profile && (S.profile.username || S.profile.role || S.profile.nif)) ||
+    (S.xp && S.xp > (typeof seedXp === 'function' ? seedXp() : 0))
+  );
+}
 function startOnboarding() {
   ob = { step: 0, role: (S.profile && S.profile.role) || null, goal: null, username: (S.profile && S.profile.username) || '' };
   $('#onboard').classList.add('open');
@@ -4581,7 +4594,16 @@ window.EdenApp = {
     this.maybeOnboard();
     if (S.onboarded) welcomeNudge();
   },
-  maybeOnboard() { if (!S.onboarded) startOnboarding(); },
+  maybeOnboard() {
+    /* Returning-user safety net: the `onboarded` flag can be lost (iOS evicts
+       PWA/Safari storage after ~7 idle days; an in-app browser like WhatsApp has
+       isolated storage; Firebase auth can resolve a beat after the null state).
+       Anyone who already has real history must NEVER be dumped back into
+       onboarding — land them on their home page instead. */
+    if (!S.onboarded && hasLearningHistory()) { S.onboarded = true; save(); }
+    if (S.onboarded) { const ob = $('#onboard'); if (ob) ob.classList.remove('open'); return; }
+    startOnboarding();
+  },
   applyProfile(p) {
     if (!p) return;
     S.profile = Object.assign({}, S.profile, p); save();   /* merge — keep username/bio set during onboarding */

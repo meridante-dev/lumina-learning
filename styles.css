@@ -2053,7 +2053,7 @@ html.os-android body { text-rendering: optimizeLegibility; }
 #tourOv { position: fixed; inset: 0; z-index: 900; background: rgba(5,9,6,.68); animation: authIn .25s ease; }
 .tour-ring { position: fixed; border: 2px solid var(--accent); border-radius: 16px; box-shadow: 0 0 0 9999px rgba(5,9,6,.68), 0 0 30px rgba(200,164,93,.35); background: transparent; transition: all .3s ease; pointer-events: none; }
 #tourOv { background: transparent; pointer-events: auto; }
-.tour-card { position: fixed; width: min(310px, calc(100vw - 24px)); background: var(--surface); border: 1px solid rgba(200,164,93,.4); border-radius: 16px; padding: 18px 20px; box-shadow: 0 24px 70px rgba(0,0,0,.6); transition: all .3s ease; z-index: 901; }
+.tour-card { position: fixed; width: min(310px, calc(100vw - 24px)); background: #18211a; border: 1px solid rgba(200,164,93,.4); border-radius: 16px; padding: 18px 20px; box-shadow: 0 24px 70px rgba(0,0,0,.7); transition: all .3s ease; z-index: 901; }
 .tour-step { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; color: var(--accent); margin-bottom: 8px; }
 .tour-card b { font-family: var(--font-display); font-size: 18px; display: block; }
 .tour-card p { font-size: 13px; color: var(--text-dim); line-height: 1.55; margin: 6px 0 14px; }
