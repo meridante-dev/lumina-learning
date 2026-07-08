@@ -1049,6 +1049,87 @@ function trainingPace(target) {
   const now = new Date(), start = new Date(now.getFullYear(), 0, 1);
   return Math.round(target * ((now - start) / (365 * 864e5)) * 10) / 10;
 }
+/* ===== Compliance Phase 2: legal documents (DRAFT wording — pending lawyer sign-off, SPEC §6/§9) ===== */
+const COMPANY = { name: 'EdenRise', nif: '' };   /* multi-tenant: from company settings later */
+function ptCourseTitle(id) { const c = courseById(id); return (typeof COURSE_PT !== 'undefined' && COURSE_PT[id] && COURSE_PT[id].title) || (c && c.title) || id; }
+function trainingActions(log, year) {
+  const b = {};
+  (log || []).filter(e => new Date(e.at).getFullYear() === year).forEach(e => { const k = ptCourseTitle(e.courseId); b[k] = (b[k] || 0) + (e.hours || 0); });
+  return Object.entries(b).map(([title, h]) => ({ title, hours: Math.round(h * 10) / 10 })).sort((a, b) => b.hours - a.hours);
+}
+async function complianceVerifyCode(pf, year, log) {
+  const e = (log || []).filter(x => new Date(x.at).getFullYear() === year).map(x => `${x.courseId}:${x.mod}:${x.hours}:${x.at}`).sort().join('|');
+  try { const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${pf.nif || ''}|${year}|${e}`)); return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('').slice(0, 16).toUpperCase(); }
+  catch (_) { return 'N/D'; }
+}
+function wrapCanvasText(x, text, cx, cy, maxW, lh) {
+  const words = text.split(' '); let line = '', y = cy;
+  words.forEach(w => { const test = line + w + ' '; if (x.measureText(test).width > maxW && line) { x.fillText(line.trim(), cx, y); line = w + ' '; y += lh; } else line = test; });
+  x.fillText(line.trim(), cx, y); return y;
+}
+function trainingCertCanvas(pf, year, code) {
+  const W = 1600, H = 1131, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
+  x.fillStyle = '#0e140f'; x.fillRect(0, 0, W, H);
+  const g = x.createRadialGradient(W / 2, H * 0.3, 80, W / 2, H / 2, W * 0.8); g.addColorStop(0, 'rgba(200,164,93,.09)'); g.addColorStop(1, 'rgba(200,164,93,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(200,164,93,.85)'; x.lineWidth = 3; x.strokeRect(46, 46, W - 92, H - 92);
+  x.strokeStyle = 'rgba(200,164,93,.35)'; x.lineWidth = 1; x.strokeRect(60, 60, W - 120, H - 120);
+  x.textAlign = 'center';
+  x.fillStyle = '#c8a45d'; x.font = '600 24px Inter, sans-serif'; try { x.letterSpacing = '10px'; } catch (e) {} x.fillText('E D E N R I S E   A C A D E M Y', W / 2, 138); try { x.letterSpacing = '0px'; } catch (e) {}
+  x.fillStyle = '#f7f6f1'; x.font = '600 52px "Cormorant Garamond", serif'; x.fillText('Certificado de Frequência', W / 2, 244);
+  x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 26px "Cormorant Garamond", serif'; x.fillText('Formação Profissional Contínua', W / 2, 286);
+  const done = trainingHours(S.trainingLog), target = complianceTarget(pf) || 40;
+  x.fillStyle = 'rgba(247,246,241,.55)'; x.font = '400 22px Inter'; x.fillText('Certifica-se que', W / 2, 372);
+  x.fillStyle = '#c8a45d'; x.font = 'italic 600 60px "Cormorant Garamond", serif'; x.fillText(pf.name || '—', W / 2, 442);
+  x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 20px Inter'; x.fillText(`NIF ${pf.nif || '—'}${pf.employeeNo ? ' · N.º ' + pf.employeeNo : ''}`, W / 2, 480);
+  x.fillStyle = 'rgba(247,246,241,.85)'; x.font = '400 21px Inter';
+  wrapCanvasText(x, `frequentou ${done} horas de formação profissional contínua no ano de ${year}, ministrada por ${COMPANY.name} ao abrigo do dever de formação previsto nos artigos 130.º a 134.º do Código do Trabalho.`, W / 2, 534, 1080, 30);
+  const acts = trainingActions(S.trainingLog, year).slice(0, 6);
+  x.textAlign = 'left'; let ay = 672;
+  x.fillStyle = 'rgba(200,164,93,.9)'; x.font = '700 13px Inter'; x.fillText('AÇÕES DE FORMAÇÃO · modalidade: formação à distância (e-learning)', 270, ay); ay += 32;
+  x.font = '400 18px Inter';
+  acts.forEach(a => { x.fillStyle = 'rgba(247,246,241,.8)'; x.fillText(a.title.slice(0, 60), 270, ay); x.textAlign = 'right'; x.fillStyle = '#c8a45d'; x.fillText(a.hours + ' h', W - 270, ay); x.textAlign = 'left'; ay += 30; });
+  x.textAlign = 'center';
+  x.strokeStyle = 'rgba(200,164,93,.5)'; x.beginPath(); x.moveTo(W / 2 - 150, 902); x.lineTo(W / 2 + 150, 902); x.stroke();
+  x.fillStyle = '#f7f6f1'; x.font = '600 30px "Cormorant Garamond", serif'; x.fillText(`Total: ${done} h de ${target} h`, W / 2, 948);
+  x.fillStyle = 'rgba(247,246,241,.5)'; x.font = '400 18px Inter'; x.fillText(new Date().toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' }), W / 2, 986);
+  x.fillStyle = 'rgba(247,246,241,.4)'; x.font = '400 15px Inter'; x.fillText(`Código de verificação: ${code}`, W / 2, 1040);
+  x.fillStyle = 'rgba(217,179,140,.6)'; x.font = 'italic 400 13px Inter'; x.fillText('Documento comprovativo interno · modelo em validação jurídica', W / 2, 1066);
+  return cv;
+}
+async function downloadTrainingCert() {
+  const pf = S.profile || {};
+  if (!pf.nif) { toast(t('comp_nif_prompt'), '🪪'); location.hash = '#/profile'; return; }
+  const code = await complianceVerifyCode(pf, complianceYear(), S.trainingLog);
+  trainingCertCanvas(pf, complianceYear(), code).toBlob(b => {
+    const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `certificado-formacao-${pf.nif || 'x'}-${complianceYear()}.png`;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); toast(t('comp_cert_dl'), '🎓');
+  }, 'image/png');
+}
+function csvBlob(rows, name) {
+  const csv = rows.map(r => r.map(v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+  const u = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
+  const a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u);
+}
+function downloadTrainingRegister() {
+  const pf = S.profile || {}, y = complianceYear();
+  const rows = [['Trabalhador', 'NIF', 'Ação', 'Módulo', 'Modalidade', 'Data', 'Duração (h)', 'Confirmação']];
+  (S.trainingLog || []).filter(e => new Date(e.at).getFullYear() === y).sort((a, b) => a.at - b.at)
+    .forEach(e => rows.push([pf.name || '', pf.nif || '', ptCourseTitle(e.courseId), e.title || '', 'e-learning', new Date(e.at).toLocaleString('pt-PT'), e.hours, e.confirmed ? 'Sim' : '']));
+  csvBlob(rows, `registo-presencas-${y}.csv`); toast(t('comp_reg_dl'), '⤓');
+}
+function downloadRUannex() {
+  if (!adminMembers) { toast('Members still loading', 'ℹ️'); return; }
+  const y = complianceYear(), pool = filteredMembers();
+  const rows = [['Trabalhador', 'NIF', 'Departamento', 'Contrato', `Horas ${y}`, 'Meta', 'Cumprido', 'Área de formação']];
+  pool.forEach(m => { const pf = m.profile || {}, st = m.state || {}, h = trainingHours(st.trainingLog || []), tg = complianceTarget(pf) || 40; rows.push([pf.name || '', pf.nif || '', tdept(pf.dept) || '', pf.contractType || '', h, tg, h >= tg ? 'Sim' : 'Não', 'Formação contínua']); });
+  const totalH = pool.reduce((a, m) => a + trainingHours((m.state || {}).trainingLog || []), 0);
+  const covered = pool.filter(m => trainingHours((m.state || {}).trainingLog || []) > 0).length;
+  rows.push([]); rows.push(['TOTAIS', '', '', '', Math.round(totalH * 10) / 10, '', '', '']);
+  rows.push(['Nº de ações', trainingActionsAll(pool, y), 'Trabalhadores abrangidos', covered, '% da força', pool.length ? Math.round(covered / pool.length * 100) + '%' : '0%', '', '']);
+  csvBlob(rows, `relatorio-unico-formacao-${y}.csv`); toast('Relatório Único · anexo exportado', '⤓');
+}
+function trainingActionsAll(pool, y) { const s = new Set(); pool.forEach(m => (m.state && m.state.trainingLog || []).filter(e => new Date(e.at).getFullYear() === y).forEach(e => s.add(e.courseId))); return s.size; }
+
 function compliancePanelHTML() {
   const pf = S.profile || {};
   const log = (S.trainingLog || []).filter(e => new Date(e.at).getFullYear() === complianceYear()).sort((a, b) => b.at - a.at);
@@ -1073,6 +1154,10 @@ function compliancePanelHTML() {
     ${!pf.nif ? `<div class="comp-note" data-action="goto" data-route="#/profile" role="button" tabindex="0">🪪 ${t('comp_nif_prompt')} →</div>` : ''}
     <div class="ob-eyebrow" style="margin-top:16px;">${t('comp_log')}</div>
     ${log.length ? `<div class="comp-log">${log.slice(0, 8).map(e => `<div class="comp-row"><span class="cl-t">${esc(e.title || '')}</span><span class="cl-meta">${dateFmt(e.at)} · ${e.hours}${t('comp_h_unit')} ${e.confirmed ? '· ✓' : ''}</span></div>`).join('')}</div>` : `<p class="empty-note" style="text-align:left;padding:6px 0;">${t('comp_none')}</p>`}
+    ${log.length ? `<div class="row wrapf gap-3" style="margin-top:16px;">
+      <button class="btn btn-primary btn-sm" data-action="comp-cert">🎓 ${t('comp_cert_btn')}</button>
+      <button class="btn btn-glass btn-sm" data-action="comp-register">⤓ ${t('comp_reg_btn')}</button>
+    </div>` : ''}
   </div>`;
 }
 
@@ -1747,7 +1832,7 @@ function adminCockpitHTML() {
         <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
         <div style="display:flex;gap:8px;align-items:center;">
           <select id="ckDept" class="ck-dept"><option value="">All departments</option>${DEPTS.map(d => `<option value="${d.key}" ${cockpitDept === d.key ? 'selected' : ''}>${d.en}</option>`).join('')}</select>
-          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button>
+          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex">🛡 ${t('ru_annex_btn')}</button>
         </div>
       </div>
       <div class="team-table"><table>
@@ -3612,6 +3697,9 @@ document.addEventListener('click', e => {
     case 'open-journey': location.hash = '#/journey/' + id; break;
     case 'jour-cert': downloadJourneyCert(id); break;
     case 'ai-digest': generateCockpitDigest(); break;
+    case 'comp-cert': downloadTrainingCert(); break;
+    case 'comp-register': downloadTrainingRegister(); break;
+    case 'ru-annex': downloadRUannex(); break;
     case 'dig-open': openDigest(id); break;
     case 'dig-close': $('#digModal').classList.remove('open'); break;
     case 'dig-publish': digPublish(); break;
