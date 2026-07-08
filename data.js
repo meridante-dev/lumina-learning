@@ -165,7 +165,7 @@ const CATALOG = [
     modules: ['Why the commons works', 'Sharing tools & labour', 'Running a work party', 'Decisions without burnout', 'A 90-day community plan']
   },
   {
-    id: 'fire-truck-training', title: 'Fire Truck Training', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12,
+    id: 'fire-truck-training', title: 'Fire Truck Training', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12, featured: true,
     level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/fire-truck-training.jpg',
     desc: 'Hands-on operation of the land’s fire truck — start it, drive it, fill it, and put water exactly where it’s needed. When fire season comes, everyone should know how to move water.',
     modules: ['Starting & Driving the Truck', 'Filling the Water Tank', 'Off-Road, Pump & Spray', 'Power, Safety & the Drill'],
@@ -502,7 +502,7 @@ const UI = {
     notif_title:'Notifications', notif_sub:'Choose how EdenRise nudges you back. Opt-in and GDPR-friendly — change anytime.', notif_browser:'Browser notifications', notif_browser_d:'Gentle desktop reminders — works right away.', notif_email:'Email', notif_email_d:'A weekly nudge to your inbox.', notif_whatsapp:'WhatsApp', notif_whatsapp_d:'Streak & leaderboard pings on WhatsApp.', notif_phone_ph:'WhatsApp number (+351…)', notif_soon:'ready once delivery is connected', notif_on:'Notifications on 🌿', notif_blocked:'Your browser blocked notifications — enable them in site settings.',
     mail_not_connected:'Email delivery isn’t connected yet — deploy the mailer first', mail_sent:'Encouragement sent 🌿', mail_rate_limited:'Already nudged this week — we keep it gentle 🌿', mail_no_email:'No email on this account', mail_not_opted:'hasn’t opted into email nudges — consent first 🌿', mail_optin_sent:'Welcome email sent — check your inbox 📬', mail_failed:'Couldn’t send — try again in a moment',
     search_ph:'Search courses, the land…', org:'EdenRise · Academy',
-    featured_eyebrow:'Featured Program · Curated for you by AI', match:'match', modules:'modules', certified:'CERTIFIED',
+    featured_eyebrow:'Featured Program · Curated for you by AI', match:'match', modules:'modules', certified:'CERTIFIED', featured_h:'Featured', featured_sub:'Essential programs, front and centre',
     all_levels:'All levels', Beginner:'Beginner', Intermediate:'Intermediate', Advanced:'Advanced', 'All levels':'All levels',
     resume_module:'Resume Module', start_learning:'Start learning', start_course:'Start course', rewatch:'Rewatch',
     ai_overview:'AI Overview', my_path:'+ My Path', in_my_path:'✓ In My Path', complete:'complete', est:'est.', left:'left',
@@ -571,7 +571,7 @@ const UI = {
     notif_title:'Notificações', notif_sub:'Escolha como a EdenRise o incentiva a voltar. Opcional e compatível com o RGPD — mude quando quiser.', notif_browser:'Notificações do navegador', notif_browser_d:'Lembretes suaves no ecrã — funcionam já.', notif_email:'Email', notif_email_d:'Um lembrete semanal no seu email.', notif_whatsapp:'WhatsApp', notif_whatsapp_d:'Avisos de sequência e ranking no WhatsApp.', notif_phone_ph:'Número de WhatsApp (+351…)', notif_soon:'pronto assim que o envio for ligado', notif_on:'Notificações ativas 🌿', notif_blocked:'O navegador bloqueou as notificações — ative-as nas definições do site.',
     mail_not_connected:'O envio de emails ainda não está ligado — implemente primeiro o mailer', mail_sent:'Incentivo enviado 🌿', mail_rate_limited:'Já foi incentivado esta semana — mantemos a suavidade 🌿', mail_no_email:'Esta conta não tem email', mail_not_opted:'não ativou os lembretes por email — consentimento primeiro 🌿', mail_optin_sent:'Email de boas-vindas enviado — veja a sua caixa 📬', mail_failed:'Não foi possível enviar — tente novamente',
     search_ph:'Procurar cursos, a terra…', org:'EdenRise · Academia',
-    featured_eyebrow:'Programa em Destaque · Escolhido para si pela IA', match:'compatível', modules:'módulos', certified:'CERTIFICADO',
+    featured_eyebrow:'Programa em Destaque · Escolhido para si pela IA', match:'compatível', modules:'módulos', certified:'CERTIFICADO', featured_h:'Em Destaque', featured_sub:'Programas essenciais, em primeiro plano',
     all_levels:'Todos os níveis', Beginner:'Iniciante', Intermediate:'Intermédio', Advanced:'Avançado', 'All levels':'Todos os níveis',
     resume_module:'Retomar Módulo', start_learning:'Começar', start_course:'Começar curso', rewatch:'Rever',
     ai_overview:'Visão da IA', my_path:'+ Meu Percurso', in_my_path:'✓ No Meu Percurso', complete:'concluído', est:'aprox.', left:'restantes',

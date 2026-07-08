@@ -224,6 +224,7 @@ function pathStepperHTML() {
 /* ---------- pages ---------- */
 function renderHome() {
   const featured = courseById(S.path.find(x => !isDone(x))) || CATALOG.find(c => !isDone(c.id)) || CATALOG[0];
+  const featuredCourses = CATALOG.filter(c => c.featured);
   const fp = prog(featured.id);
   const continuing = CATALOG.filter(c => coursePct(c.id) > 0 && !isDone(c.id));
   const adminAssigned = S.assignments
@@ -277,6 +278,7 @@ function renderHome() {
     </aside>
   </header>
   <div class="hero-divider" aria-hidden="true"></div>
+  ${featuredCourses.length ? railHTML(t('featured_h'), t('featured_sub'), featuredCourses.map(c => cardHTML(c))) : ''}
   ${dailyDropHTML()}
   ${assignmentCardsHTML()}
   ${askBarHTML()}
