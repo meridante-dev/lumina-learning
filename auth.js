@@ -4,8 +4,8 @@
    in Firestore, and bridges to app.js via window.EdenApp / window.EdenCloud.        */
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
 import {
-  getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence,
-  GoogleAuthProvider, signInWithPopup,
+  getAuth, onAuthStateChanged, setPersistence, browserLocalPersistence, indexedDBLocalPersistence,
+  GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult,
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile,
   sendPasswordResetEmail, sendEmailVerification, deleteUser
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
@@ -32,7 +32,12 @@ let db;
 try {   /* IndexedDB cache: repeat visits read state instantly, offline included */
   db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
 } catch (e) { db = getFirestore(app); }
-setPersistence(auth, browserLocalPersistence).catch(() => {});
+/* Persist the session across app restarts. IndexedDB persistence survives best;
+   fall back to localStorage. Returns a promise we await before any sign-in. */
+const persistenceReady = setPersistence(auth, indexedDBLocalPersistence)
+  .catch(() => setPersistence(auth, browserLocalPersistence)).catch(() => {});
+/* Complete a Google redirect sign-in if we're returning from one (mobile/PWA flow). */
+getRedirectResult(auth).catch(() => {});
 
 const KEY = 'edenrise-state-v2';
 const MODE = 'eden-auth-mode';          // 'firebase' | 'guest' | 'out'
@@ -405,8 +410,15 @@ function wire() {
 
   $('#authGoogle').addEventListener('click', async () => {
     showErr(''); setBusy(true);
-    try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-    catch (e) { setBusy(false); showErr(friendly(e.code)); }
+    try {
+      await persistenceReady;                       /* guarantee local persistence before sign-in */
+      const provider = new GoogleAuthProvider();
+      const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+      const mobile = /iphone|ipad|ipod|android/i.test(navigator.userAgent);
+      /* Popups don't persist reliably in iOS/Android PWAs — use full-page redirect there. */
+      if (standalone || mobile) await signInWithRedirect(auth, provider);
+      else await signInWithPopup(auth, provider);
+    } catch (e) { setBusy(false); showErr(friendly(e.code)); }
   });
 
   $('#authForm').addEventListener('submit', async e => {
@@ -420,6 +432,7 @@ function wire() {
     }
     setBusy(true);
     try {
+      await persistenceReady;                        /* remember this device across restarts */
       if (signupMode) {
         const cred = await createUserWithEmailAndPassword(auth, email, pass);
         if (name) await updateProfile(cred.user, { displayName: name });
