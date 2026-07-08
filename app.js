@@ -567,7 +567,7 @@ function memberSummary(m) {
   return { compHours, compTarget, ready: _rr ? _rr.overall : null, uid: m.uid, name, initials, email: pf.email || '', username: pf.username || '', role: st.role || pf.role || '', goal: st.goal || '', pathPct, coursesDone, xp, level: lvl.idx + 1, levelName: tlevel(lvl.idx), streak: st.streak || 0, days, atRisk };
 }
 function memberRow(s) {
-  return `<tr>
+  return `<tr class="mrow" data-action="member-detail" data-uid="${esc(s.uid)}">
     <td><div class="member"><span class="mi t-grad-3">${esc(s.initials)}</span><div>${esc(s.name)}${s.username ? ` <span class="post-handle">@${esc(s.username)}</span>` : ''}<div class="mr">${esc(s.email || '—')}</div></div></div></td>
     <td style="min-width:150px;"><div class="track" style="width:100%;"><div class="fill" style="width:${s.pathPct}%"></div></div></td>
     <td>${s.pathPct}%</td>
@@ -613,7 +613,7 @@ function initAdmin(retries) {
   if (adminTab !== 'cockpit') return;
   if (window.EdenMissions) EdenMissions.listPending().then(paintMissions).catch(() => paintMissions([]));
   const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="10"><div class="skel"></div></td></tr>`).join('');
-  EdenCloud.listMembers().then(m => { adminMembers = m; paintCockpit(); paintTrends(); paintAsgList(); const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML(); const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML(); const iw = $('#intelWrap'); if (iw) iw.outerHTML = intelHTML(); }).catch(err => {
+  EdenCloud.listMembers().then(m => { adminMembers = m; paintMgrDash(); paintCockpit(); paintTrends(); paintAsgList(); const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML(); const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML(); const iw = $('#intelWrap'); if (iw) iw.outerHTML = intelHTML(); }).catch(err => {
     console.error('[cockpit]', err);
     const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="10" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
   });
@@ -1111,11 +1111,9 @@ function csvBlob(rows, name) {
   const a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u);
 }
 function downloadTrainingRegister() {
-  const pf = S.profile || {}, y = complianceYear();
-  const rows = [['Trabalhador', 'NIF', 'Ação', 'Módulo', 'Modalidade', 'Data', 'Duração (h)', 'Confirmação']];
-  (S.trainingLog || []).filter(e => new Date(e.at).getFullYear() === y).sort((a, b) => a.at - b.at)
-    .forEach(e => rows.push([pf.name || '', pf.nif || '', ptCourseTitle(e.courseId), e.title || '', 'e-learning', new Date(e.at).toLocaleString('pt-PT'), e.hours, e.confirmed ? 'Sim' : '']));
-  csvBlob(rows, `registo-presencas-${y}.csv`); toast(t('comp_reg_dl'), '⤓');
+  const y = complianceYear();
+  csvBlob(registerRowsFor(S.profile || {}, S.trainingLog, y), `registo-presencas-${y}.csv`);
+  toast(t('comp_reg_dl'), '⤓');
 }
 function downloadRUannex() {
   if (!adminMembers) { toast('Members still loading', 'ℹ️'); return; }
@@ -1506,7 +1504,7 @@ document.addEventListener('keydown', e => {
 document.addEventListener('change', e => {
   if (e.target && e.target.id === 'ckDept') {
     cockpitDept = e.target.value;
-    paintCockpit(); paintTrends(); paintAsgList();
+    paintMgrDash(); paintCockpit(); paintTrends(); paintAsgList();
     const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML();
     const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML();
     return;
@@ -1814,6 +1812,187 @@ function studioTabsHTML() {
     `<button class="ch-item ${adminTab === id ? 'active' : ''}" data-action="admin-tab" data-tab="${id}"><span>${label}</span></button>`).join('')}</div>`;
 }
 
+/* ================= Manager Dashboard — compliance-first team command (Phase 3) ================= */
+function memberRecertIssues(m) {
+  const now = Date.now(), out = [];
+  CATALOG.filter(c => c.recertMonths).forEach(c => {
+    const p = ((m.state || {}).progress || {})[c.id];
+    if (p && p.done && p.doneAt) {
+      const days = Math.ceil((p.doneAt + c.recertMonths * 2629800000 - now) / 86400000);
+      if (days < 0) out.push({ course: c.title, state: 'expired', days });
+      else if (days <= 30) out.push({ course: c.title, state: 'expiring', days });
+    }
+  });
+  return out;
+}
+function attentionQueue(pool) {
+  return pool.map(m => {
+    const s = memberSummary(m);
+    const reasons = [];
+    memberRecertIssues(m).forEach(r => reasons.push({ sev: r.state === 'expired' ? 3 : 2, txt: r.state === 'expired' ? `🛡 ${r.course} expired` : `🛡 ${r.course} expires in ${r.days}d` }));
+    const pace = trainingPace(s.compTarget);
+    if (s.compHours < pace - 2) reasons.push({ sev: 2, txt: `⏱ ${s.compHours}h of ~${Math.round(pace)}h expected (40h pace)` });
+    if (s.days == null) reasons.push({ sev: 1, txt: '😴 never active' });
+    else if (s.days >= 10) reasons.push({ sev: 1, txt: `😴 inactive ${s.days}d` });
+    if (s.pathPct < 35) reasons.push({ sev: 1, txt: `🌱 path at ${s.pathPct}%` });
+    return { s, reasons, score: reasons.reduce((a, r) => a + r.sev, 0) };
+  }).filter(x => x.reasons.length).sort((a, b) => b.score - a.score);
+}
+function pacingChartSVG(pool) {
+  const y = complianceYear(), now = new Date(), curM = now.getFullYear() === y ? now.getMonth() : 11;
+  const teamTarget = pool.reduce((a, m) => a + (complianceTarget(m.profile || {}) || 40), 0);
+  const byMonth = Array(12).fill(0);
+  pool.forEach(m => ((m.state || {}).trainingLog || []).forEach(e => { const d = new Date(e.at); if (d.getFullYear() === y) byMonth[d.getMonth()] += (e.hours || 0); }));
+  let cum = 0; const actual = byMonth.map(h => (cum += h));
+  const W = 640, H = 190, PX = 34, PY = 18, iw = W - PX - 14, ih = H - PY - 30;
+  const maxV = Math.max(teamTarget, actual[curM] || 1, 1);
+  const X = i => PX + (i / 11) * iw, Y = v => PY + ih - (v / maxV) * ih;
+  const idealPts = Array.from({ length: 12 }, (_, i) => `${X(i)},${Y(teamTarget * (i + 1) / 12)}`).join(' ');
+  const actualPts = actual.slice(0, curM + 1).map((v, i) => `${X(i)},${Y(v)}`).join(' ');
+  const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  const onPace = actual[curM] >= teamTarget * (curM + 1) / 12 - 2;
+  return `<svg viewBox="0 0 ${W} ${H}" class="pace-chart" role="img" aria-label="Team training hours vs the 40h pacing line">
+    ${[0, .5, 1].map(f => `<line x1="${PX}" x2="${W - 14}" y1="${Y(maxV * f)}" y2="${Y(maxV * f)}" class="pc-grid"/><text x="${PX - 6}" y="${Y(maxV * f) + 4}" class="pc-lbl" text-anchor="end">${Math.round(maxV * f)}</text>`).join('')}
+    ${months.map((mm, i) => `<text x="${X(i)}" y="${H - 8}" class="pc-lbl" text-anchor="middle">${mm}</text>`).join('')}
+    <polyline points="${idealPts}" class="pc-ideal"/>
+    ${actualPts.includes(' ') || curM === 0 ? `<polyline points="${actualPts}" class="pc-actual ${onPace ? '' : 'warn'}"/>` : ''}
+    <circle cx="${X(curM)}" cy="${Y(actual[curM] || 0)}" r="4" class="pc-dot ${onPace ? '' : 'warn'}"/>
+    <text x="${X(curM) + (curM > 8 ? -8 : 8)}" y="${Y(actual[curM] || 0) - 8}" class="pc-now ${onPace ? '' : 'warn'}" text-anchor="${curM > 8 ? 'end' : 'start'}">${Math.round(actual[curM] * 10) / 10}h</text>
+  </svg>`;
+}
+function paintMgrDash() {
+  const el = $('#mgrDash'); if (!el || !adminMembers) return;
+  const pool = filteredMembers(); if (!pool.length) { el.innerHTML = ''; return; }
+  const sums = pool.map(memberSummary);
+  const teamTarget = sums.reduce((a, s) => a + s.compTarget, 0);
+  const teamHours = Math.round(sums.reduce((a, s) => a + s.compHours, 0) * 10) / 10;
+  const teamPct = teamTarget ? Math.min(100, Math.round(teamHours / teamTarget * 100)) : 0;
+  const trained = sums.filter(s => s.compHours > 0).length;
+  const tenPct = pool.length ? trained / pool.length >= 0.10 : false;
+  const complete = sums.filter(s => s.compHours >= s.compTarget).length;
+  const onTrack = sums.filter(s => s.compHours < s.compTarget && s.compHours >= trainingPace(s.compTarget) - 2).length;
+  const behind = pool.length - complete - onTrack;
+  const expired = pool.reduce((a, m) => a + memberRecertIssues(m).filter(r => r.state === 'expired').length, 0);
+  const q = attentionQueue(pool);
+  el.innerHTML = `
+  <div class="admin-section" style="margin-top:18px;">
+    <h2>🛡 Compliance command</h2>
+    <p class="sect-sub">The team's mandatory 40h continuous training — Código do Trabalho art. 131.º. Live, prorated, exportable.</p>
+    <span class="badge ${tenPct ? 'mg-ok' : 'mg-bad'}" style="margin-top:10px;display:inline-flex;">${tenPct ? '● Art. 131.º/5 · ≥10% trained ✓' : '⚠ Art. 131.º/5 · <10% of workforce trained'}</span>
+    <div class="mgr-heroes">
+      <div class="mgr-hero"><div class="jour-ring" style="--sz:74px;background:conic-gradient(${teamPct >= 50 ? 'var(--accent-2)' : 'var(--warn, #d9b38c)'} ${teamPct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${teamPct}%</span></div>
+        <div><div class="mh-num">${teamHours}<small>/${teamTarget}h</small></div><div class="mh-lbl">Team hours · ${complianceYear()}</div></div></div>
+      <div class="mgr-hero"><div class="mh-num">${trained}<small>/${pool.length}</small></div><div class="mh-lbl">Workers trained this year</div><div class="mh-sub ${tenPct ? 'ok' : 'bad'}">${Math.round((pool.length ? trained / pool.length : 0) * 100)}% of workforce · legal min 10%</div></div>
+      <div class="mgr-hero"><div class="mgr-dist" role="img" aria-label="Compliance distribution">
+          ${complete ? `<span class="md-seg done" style="flex:${complete}" title="${complete} complete"></span>` : ''}
+          ${onTrack ? `<span class="md-seg ok" style="flex:${onTrack}" title="${onTrack} on track"></span>` : ''}
+          ${behind ? `<span class="md-seg low" style="flex:${behind}" title="${behind} behind"></span>` : ''}</div>
+        <div class="mh-lbl">${complete} complete · ${onTrack} on track · ${behind} behind</div></div>
+      <div class="mgr-hero"><div class="mh-num ${expired ? 'bad' : ''}">${expired}</div><div class="mh-lbl">Expired certifications</div>${expired ? '<div class="mh-sub bad">action required</div>' : '<div class="mh-sub ok">all current</div>'}</div>
+    </div>
+    <div class="mgr-pace"><div class="ob-eyebrow" style="margin-bottom:8px;">Hours vs the pacing line</div>${pacingChartSVG(pool)}
+      <div class="pc-legend"><span><i class="pc-key ideal"></i>ideal pace (40h × team, spread over the year)</span><span><i class="pc-key actual"></i>actual cumulative hours</span></div></div>
+    <div class="ob-eyebrow" style="margin:20px 0 8px;">Needs attention ${q.length ? `· ${q.length}` : ''}</div>
+    ${q.length ? q.slice(0, 8).map(x => `
+      <div class="mgr-q" data-action="member-detail" data-uid="${esc(x.s.uid)}" role="button" tabindex="0">
+        <span class="avatar">${esc(x.s.initials)}</span>
+        <div class="grow"><b>${esc(x.s.name)}</b><div class="mgr-reasons">${x.reasons.slice(0, 3).map(r => `<span class="chip" style="font-size:11px;">${r.txt}</span>`).join('')}</div></div>
+        <button class="btn btn-glass btn-sm" data-action="nudge" data-uid="${esc(x.s.uid)}" data-name="${esc(x.s.name)}">Nudge</button>
+      </div>`).join('') : `<p class="empty-note" style="text-align:left;padding:6px 0;">Nobody needs attention — the whole team is on pace 🌿</p>`}
+  </div>`;
+}
+
+/* ---- Member drill-down drawer ---- */
+function openMemberDetail(uid) {
+  const m = (adminMembers || []).find(x => x.uid === uid); if (!m) return;
+  const s = memberSummary(m), pf = m.profile || {}, st = m.state || {};
+  const log = (st.trainingLog || []).slice().sort((a, b) => b.at - a.at);
+  const pace = trainingPace(s.compTarget);
+  const issues = memberRecertIssues(m);
+  const pct = Math.min(100, Math.round(s.compHours / (s.compTarget || 40) * 100));
+  document.querySelectorAll('#mdetModal').forEach(x => x.remove());
+  const ov = document.createElement('div');
+  ov.className = 'take-overlay open'; ov.id = 'mdetModal'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
+  ov.innerHTML = `<div class="take-card mdet">
+    <button class="modal-x" data-action="mdet-close" aria-label="Close">✕</button>
+    <div class="row gap-3"><span class="avatar" style="width:46px;height:46px;font-size:15px;">${esc(s.initials)}</span>
+      <div class="grow"><h3 style="font-family:var(--font-display);font-size:21px;margin:0;">${esc(s.name)}</h3>
+      <span class="m-sub">${tdept(pf.dept) || '—'} · ${esc(s.email || '')}</span></div></div>
+    <div class="mdet-meta">${[['NIF', pf.nif], ['N.º', pf.employeeNo], ['Contract', pf.contractType], ['FTE', pf.fte != null ? pf.fte : 1], ['Since', pf.hireDate]].filter(x => x[1]).map(x => `<span>${x[0]} <b>${esc(String(x[1]))}</b></span>`).join('')}</div>
+    <div class="ready-wrap" style="margin-top:14px;">
+      <div class="jour-ring" style="--sz:74px;background:conic-gradient(${s.compHours >= pace - 2 ? 'var(--accent-2)' : 'var(--warn, #d9b38c)'} ${pct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${s.compHours}<small style="font-size:10px;">/${s.compTarget}h</small></span></div>
+      <div class="ready-rows" style="gap:5px;">
+        <div class="between"><span class="sk-name">40h status</span><b>${s.compHours >= s.compTarget ? '✓ complete' : s.compHours >= pace - 2 ? '● on track' : '⚠ behind pace'}</b></div>
+        <div class="between"><span class="sk-name">Courses done</span><b>${s.coursesDone}</b></div>
+        <div class="between"><span class="sk-name">Level · streak</span><b>Lv ${s.level} · ${s.streak}d</b></div>
+        ${issues.length ? `<div class="comp-status behind">🛡 ${issues.map(i => `${esc(i.course)} ${i.state === 'expired' ? 'expired' : 'expires in ' + i.days + 'd'}`).join(' · ')}</div>` : ''}
+      </div></div>
+    <div class="ob-eyebrow" style="margin-top:16px;">Training log · ${complianceYear()}</div>
+    ${log.length ? `<div class="comp-log">${log.slice(0, 8).map(e => `<div class="comp-row"><span class="cl-t">${esc(e.title || '')}</span><span class="cl-meta">${new Date(e.at).toLocaleDateString('pt-PT')} · ${e.hours}h</span></div>`).join('')}</div>` : `<p class="empty-note" style="text-align:left;padding:6px 0;">No credited hours yet.</p>`}
+    <div class="row wrapf gap-3" style="margin-top:16px;">
+      <button class="btn btn-primary btn-sm" data-action="nudge" data-uid="${esc(s.uid)}" data-name="${esc(s.name)}">Nudge</button>
+      <button class="btn btn-glass btn-sm" data-action="mdet-register" data-uid="${esc(s.uid)}">⤓ Registo CSV</button>
+      <button class="btn btn-glass btn-sm" data-action="mdet-exit" data-uid="${esc(s.uid)}">📄 Declaração de cessação</button>
+    </div>
+  </div>`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+  const esch = e => { if (e.key === 'Escape') { ov.remove(); removeEventListener('keydown', esch); } };
+  addEventListener('keydown', esch);
+}
+function registerRowsFor(pf, log, y) {
+  const rows = [['Trabalhador', 'NIF', 'Ação', 'Módulo', 'Modalidade', 'Data', 'Duração (h)', 'Confirmação']];
+  (log || []).filter(e => new Date(e.at).getFullYear() === y).sort((a, b) => a.at - b.at)
+    .forEach(e => rows.push([pf.name || '', pf.nif || '', ptCourseTitle(e.courseId), e.title || '', 'e-learning', new Date(e.at).toLocaleString('pt-PT'), e.hours, e.confirmed ? 'Sim' : '']));
+  return rows;
+}
+function downloadMemberRegister(uid) {
+  const m = (adminMembers || []).find(x => x.uid === uid); if (!m) return;
+  csvBlob(registerRowsFor(m.profile || {}, (m.state || {}).trainingLog, complianceYear()), `registo-presencas-${(m.profile || {}).nif || uid}-${complianceYear()}.csv`);
+  toast(t('comp_reg_dl'), '⤓');
+}
+/* Art. 134.º exit statement — outstanding training hours at contract cessation (DRAFT wording) */
+async function downloadExitStatement(uid) {
+  const m = (adminMembers || []).find(x => x.uid === uid); if (!m) return;
+  const pf = m.profile || {}, log = (m.state || {}).trainingLog || [];
+  const y = complianceYear();
+  const years = [];
+  for (let i = 4; i >= 0; i--) {
+    const yy = y - i;
+    const h = Math.round(log.filter(e => new Date(e.at).getFullYear() === yy).reduce((a, e) => a + (e.hours || 0), 0) * 10) / 10;
+    if (h > 0 || yy === y) years.push({ yy, h, target: yy === y ? (complianceTarget(pf) || 40) : Math.round(40 * (pf.fte != null ? pf.fte : 1)) });
+  }
+  const code = await complianceVerifyCode(pf, y, log);
+  const W = 1600, H = 1131, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
+  x.fillStyle = '#0e140f'; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(200,164,93,.85)'; x.lineWidth = 3; x.strokeRect(46, 46, W - 92, H - 92);
+  x.textAlign = 'center';
+  x.fillStyle = '#c8a45d'; x.font = '600 24px Inter'; x.fillText('E D E N R I S E', W / 2, 140);
+  x.fillStyle = '#f7f6f1'; x.font = '600 46px "Cormorant Garamond", serif'; x.fillText('Declaração de Formação Profissional Contínua', W / 2, 236);
+  x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 22px "Cormorant Garamond", serif'; x.fillText('para efeitos do artigo 134.º do Código do Trabalho (cessação de contrato)', W / 2, 276);
+  x.fillStyle = 'rgba(247,246,241,.85)'; x.font = '400 21px Inter';
+  wrapCanvasText(x, `Declara-se, para os devidos efeitos, que ${pf.name || '—'}, NIF ${pf.nif || '—'}${pf.employeeNo ? ', trabalhador n.º ' + pf.employeeNo : ''}, tem o seguinte registo de horas de formação profissional contínua nos últimos anos civis:`, W / 2, 356, 1100, 32);
+  x.textAlign = 'left'; let ay = 470;
+  x.fillStyle = 'rgba(200,164,93,.9)'; x.font = '700 15px Inter';
+  x.fillText('ANO', 380, ay); x.fillText('HORAS REGISTADAS', 620, ay); x.fillText('MÍNIMO LEGAL', 940, ay); x.fillText('EM FALTA', 1160, ay); ay += 14;
+  x.strokeStyle = 'rgba(200,164,93,.35)'; x.beginPath(); x.moveTo(380, ay); x.lineTo(1240, ay); x.stroke(); ay += 34;
+  let owed = 0;
+  years.forEach(r => { const miss = Math.max(0, Math.round((r.target - r.h) * 10) / 10); owed += miss;
+    x.fillStyle = 'rgba(247,246,241,.85)'; x.font = '400 20px Inter';
+    x.fillText(String(r.yy), 380, ay); x.fillText(r.h + ' h', 620, ay); x.fillText(r.target + ' h', 940, ay);
+    x.fillStyle = miss ? '#d9b38c' : '#a6c3a5'; x.fillText(miss + ' h', 1160, ay); ay += 34; });
+  ay += 10; x.strokeStyle = 'rgba(200,164,93,.35)'; x.beginPath(); x.moveTo(380, ay); x.lineTo(1240, ay); x.stroke(); ay += 44;
+  x.fillStyle = '#f7f6f1'; x.font = '600 26px "Cormorant Garamond", serif';
+  x.fillText(`Total de horas de formação em falta: ${Math.round(owed * 10) / 10} h`, 380, ay);
+  x.textAlign = 'center';
+  x.fillStyle = 'rgba(247,246,241,.55)'; x.font = '400 17px Inter';
+  wrapCanvasText(x, 'Nota: este registo reflete as horas documentadas na plataforma EdenRise Academy; formação anterior à adoção da plataforma pode não estar incluída.', W / 2, 880, 1000, 26);
+  x.fillStyle = 'rgba(247,246,241,.5)'; x.font = '400 18px Inter'; x.fillText(new Date().toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' }), W / 2, 966);
+  x.fillStyle = 'rgba(247,246,241,.4)'; x.font = '400 15px Inter'; x.fillText(`Código de verificação: ${code}`, W / 2, 1024);
+  x.fillStyle = 'rgba(217,179,140,.6)'; x.font = 'italic 400 13px Inter'; x.fillText('Documento comprovativo interno · modelo em validação jurídica', W / 2, 1052);
+  cv.toBlob(b => { const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `declaracao-cessacao-${pf.nif || uid}.png`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); toast('Declaração transferida', '📄'); }, 'image/png');
+}
+
 function adminCockpitHTML() {
   const asgs = activeAssignments();
   const assignments = asgs.map((a, i) => {
@@ -1827,6 +2006,7 @@ function adminCockpitHTML() {
       <div class="stat"><div class="num">—</div><div class="lbl">Active this week</div></div>
       <div class="stat"><div class="num">—</div><div class="lbl">At risk</div></div>
     </section>
+    <div id="mgrDash"></div>
     <div class="admin-section">
       <div class="cockpit-head">
         <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
@@ -3700,6 +3880,10 @@ document.addEventListener('click', e => {
     case 'comp-cert': downloadTrainingCert(); break;
     case 'comp-register': downloadTrainingRegister(); break;
     case 'ru-annex': downloadRUannex(); break;
+    case 'member-detail': openMemberDetail(el.dataset.uid); break;
+    case 'mdet-close': { const mv = $('#mdetModal'); if (mv) mv.remove(); break; }
+    case 'mdet-register': downloadMemberRegister(el.dataset.uid); break;
+    case 'mdet-exit': downloadExitStatement(el.dataset.uid); break;
     case 'dig-open': openDigest(id); break;
     case 'dig-close': $('#digModal').classList.remove('open'); break;
     case 'dig-publish': digPublish(); break;
