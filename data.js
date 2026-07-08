@@ -179,7 +179,7 @@ const CATALOG = [
   },
   {
     id: 'alignment-journey', title: 'The EdenRise Alignment Journey', cat: 'Leadership', grad: 1, icon: 'compass', featured: true, updated: '2026-07',
-    level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/alignment-journey.svg',
+    level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/alignment-journey.jpg',
     desc: 'The EdenRise team’s inner journey — the mindset that shapes how we work the land and each other. Six shifts, from Above the Line thinking to goals, fear, and the wholeness of body, soul and spirit.',
     modules: [
       'Warm Welcome',
