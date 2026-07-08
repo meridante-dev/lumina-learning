@@ -4002,7 +4002,22 @@ document.addEventListener('visibilitychange', () => {
 });
 /* service worker — offline app shell + cached art */
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+  /* AUTO-UPDATE: when a newer version is deployed, the new service worker
+     activates (sw.js does skipWaiting + clients.claim) and takes control →
+     reload ONCE to the fresh version. Guard against the first-install case
+     (no existing controller) and against reload loops. Kills stale-cache. */
+  if (navigator.serviceWorker.controller) {
+    let _swReloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (_swReloaded) return; _swReloaded = true; location.reload();
+    });
+  }
+  addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      reg.update().catch(() => {});                          /* check for a newer SW right now */
+      setInterval(() => reg.update().catch(() => {}), 1800000);  /* …and every 30 min */
+    }).catch(() => {});
+  });
 }
 
 /* boot */
