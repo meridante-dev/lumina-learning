@@ -26,11 +26,15 @@ const fmtYm = ym => { const [y, m] = String(ym).split('-'); const M = _lang() ==
 const courseStale = c => !c.updated || (Date.now() - new Date(c.updated + '-01T12:00:00').getTime() > 366 * 864e5);
 const vidFor = (id, mod) => VIDS[(id.length * 7 + mod * 3) % VIDS.length];
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-/* identity — real profile name once signed in, else the demo founder */
-const displayName = () => (S.profile && S.profile.name) || 'João';
-const firstName = () => displayName().trim().split(/\s+/)[0] || 'João';
+/* identity — real profile name once signed in → their @username → email handle → warm generic.
+   NEVER a hardcoded person: every user must see their own name. */
+const displayName = () => (S.profile && S.profile.name)
+  || (S.profile && S.profile.username)
+  || (S.profile && S.profile.email ? S.profile.email.split('@')[0] : '')
+  || (_lang() === 'pt' ? 'amigo' : 'friend');
+const firstName = () => displayName().trim().split(/\s+/)[0];
 const userHandle = () => (S.profile && S.profile.username) || '';
-const userInitials = () => displayName().trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'JA';
+const userInitials = () => displayName().trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || '🌱';
 const slugHandle = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '').slice(0, 20);
 const suggestHandle = () => { const p = S.profile || {}; return slugHandle(p.username) || slugHandle(p.name) || slugHandle((p.email || '').split('@')[0]) || 'learner'; };
 /* admin access — only these accounts see Analytics + Admin */
@@ -4379,7 +4383,8 @@ function drawOnboard() {
       S.path = [...GOAL_PRESETS[ob.goal]];
       S.role = ob.role;
       const handle = slugHandle(ob.username) || suggestHandle();
-      S.profile = Object.assign({}, S.profile, { username: handle, role: ob.role });
+      /* guests have no auth name — the handle they just picked becomes their display name */
+      S.profile = Object.assign({}, S.profile, { username: handle, role: ob.role }, (S.profile && S.profile.name) ? {} : { name: handle });
       S.onboarded = true;
       save();   /* → syncs the profile (name, @username, role) + path to the account in Firestore */
       $('#onboard').classList.remove('open');
