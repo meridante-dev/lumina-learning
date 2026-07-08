@@ -54,6 +54,13 @@ function showErr(msg) { const e = $('#authErr'); if (e) { e.textContent = msg ||
 
 /* ---------- state <-> Firestore ---------- */
 function localState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+/* ---- multi-tenant helpers ---- */
+const SUPERADMINS = ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'];
+const cid = () => ((localState().profile || {}).companyId) || 'edenrise';
+const isSuperEmail = e => SUPERADMINS.includes((e || '').trim().toLowerCase());
+const metaDocId = c => (c || cid()) === 'edenrise' ? '__meta' : '__meta_' + (c || cid());
+/* legacy docs without companyId belong to 'edenrise' */
+const ofCompany = (obj, c) => ((obj.companyId || 'edenrise') === (c || cid()));
 /* merge instead of clobber — earned things take the best of both devices */
 function mergeStates(cloud, local) {
   if (!cloud) return local;
@@ -100,19 +107,20 @@ window.EdenCloud = {
     setDoc(doc(db, 'users', u.uid), { state: st, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
     /* public board entry — the real leaderboard everyone can read */
     const p = st.profile || {};
+    if (!p.companyId) p.companyId = 'edenrise';   /* tenant stamp (founding tenant default) */
     const name = p.name || (p.email ? p.email.split('@')[0] : 'Learner');
     setDoc(doc(db, 'leaderboard', u.uid), {
       name, username: p.username || '',
       initials: name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER',
       xp: st.xp || 0, streak: st.streak || 0, level: st.xp != null ? st.xp : 0,
-      joinedAt: p.joinedAt || null, dept: p.dept || null,
+      joinedAt: p.joinedAt || null, dept: p.dept || null, companyId: p.companyId || 'edenrise',
       weekStart: st.weekStart || null, weekBaseXp: st.weekBaseXp || 0,
       lastSeen: serverTimestamp(), updatedAt: serverTimestamp()
     }, { merge: true }).catch(() => {});
   },
   async saveOrgConfig(cfg) {
     if (!auth.currentUser) throw new Error('not-signed-in');
-    await setDoc(doc(db, 'config', 'org'), cfg, { merge: true });
+    await setDoc(doc(db, 'config', cid() === 'edenrise' ? 'org' : cid()), cfg, { merge: true });
   },
   heartbeat() {
     const u = auth.currentUser; if (!u) return;
@@ -120,7 +128,7 @@ window.EdenCloud = {
   },
   async listBoard() {
     const snap = await getDocs(collection(db, 'leaderboard'));
-    return snap.docs.map(d => Object.assign({ uid: d.id }, d.data()));
+    return snap.docs.map(d => Object.assign({ uid: d.id }, d.data())).filter(r => ofCompany(r));
   },
   async signOut() {
     localStorage.setItem(MODE, 'out');
@@ -145,7 +153,8 @@ window.EdenCloud = {
   /* team-published courses (AI Course Studio) — readable by everyone */
   async saveCourse(course) {
     const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
-    await setDoc(doc(db, 'courses', course.id), { course, authorUid: u.uid, authorEmail: u.email || '', createdAt: serverTimestamp() });
+    const cc = isSuperEmail(u.email) ? null : cid();   /* superadmin publishes to the global catalog */
+    await setDoc(doc(db, 'courses', course.id), { course, companyId: cc, authorUid: u.uid, authorEmail: u.email || '', createdAt: serverTimestamp() });
   },
   async deleteCourse(id) {
     if (!auth.currentUser) return;
@@ -154,11 +163,13 @@ window.EdenCloud = {
   async listCourses() {
     const snap = await getDocs(collection(db, 'courses'));
     const out = { courses: [], meta: null, digests: [] };
+    const myMeta = metaDocId();
     snap.docs.forEach(d => {
       const x = d.data();
-      if (d.id === '__meta') out.meta = x.meta || null;
-      else if (x.digest) out.digests.push(x.digest);
-      else if (x.course) out.courses.push(x.course);
+      if (d.id === myMeta) out.meta = x.meta || null;
+      else if (d.id.startsWith('__meta')) return;                       /* other tenants' meta */
+      else if (x.digest) { if (ofCompany(x.digest)) out.digests.push(x.digest); }
+      else if (x.course) { if (!x.companyId || ofCompany(x)) out.courses.push(x.course); }
     });
     out.digests.sort((a, b) => (b.at || 0) - (a.at || 0));
     return out;
@@ -166,7 +177,8 @@ window.EdenCloud = {
   /* department digests — published into the same public collection */
   async saveDigest(d) {
     const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
-    await setDoc(doc(db, 'courses', 'digest-' + d.id), { digest: d, authorUid: u.uid, createdAt: serverTimestamp() });
+    d.companyId = d.companyId || cid();
+    await setDoc(doc(db, 'courses', 'digest-' + d.id), { digest: d, companyId: d.companyId, authorUid: u.uid, createdAt: serverTimestamp() });
   },
   async deleteDigest(id) {
     if (!auth.currentUser) return;
@@ -176,15 +188,63 @@ window.EdenCloud = {
      so guests can read it and ONLY admins can write it, with the existing rules */
   async saveMeta(meta) {
     const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
-    await setDoc(doc(db, 'courses', '__meta'), { meta, authorUid: u.uid, updatedAt: serverTimestamp() });
+    await setDoc(doc(db, 'courses', metaDocId()), { meta, companyId: cid(), authorUid: u.uid, updatedAt: serverTimestamp() });
   },
   // admin-only (enforced by Firestore rules): read every member's profile + state
   async listMembers() {
-    const snap = await getDocs(collection(db, 'users'));
-    return snap.docs.map(d => {
-      const x = d.data();
-      return { uid: d.id, profile: x.profile || {}, state: x.state || {}, updatedAt: (x.updatedAt && x.updatedAt.toMillis) ? x.updatedAt.toMillis() : 0, createdAt: (x.createdAt && x.createdAt.toMillis) ? x.createdAt.toMillis() : 0 };
-    });
+    const u = auth.currentUser;
+    const mapDoc = d => { const x = d.data(); return { uid: d.id, profile: x.profile || {}, state: x.state || {}, updatedAt: (x.updatedAt && x.updatedAt.toMillis) ? x.updatedAt.toMillis() : 0, createdAt: (x.createdAt && x.createdAt.toMillis) ? x.createdAt.toMillis() : 0 }; };
+    if (u && isSuperEmail(u.email)) {   /* superadmin: all docs, client-scope to the active tenant */
+      const snap = await getDocs(collection(db, 'users'));
+      return snap.docs.map(mapDoc).filter(m => ofCompany(m.profile || {}));
+    }
+    /* company admin: server-scoped query (rules enforce it) */
+    const snap = await getDocs(query(collection(db, 'users'), where('profile.companyId', '==', cid())));
+    return snap.docs.map(mapDoc);
+  },
+  /* ---- Phase 5: tenant management ---- */
+  async loadCompany() {
+    try {
+      const snap = await getDoc(doc(db, 'companies', cid()));
+      window.EdenCompany = snap.exists() ? Object.assign({ id: cid() }, snap.data())
+        : { id: cid(), name: cid() === 'edenrise' ? 'EdenRise' : cid(), status: 'active', adminEmails: [] };
+    } catch (e) { window.EdenCompany = { id: cid(), name: 'EdenRise', status: 'active', adminEmails: [] }; }
+    if (window.EdenApp && window.EdenApp.applyCompany) window.EdenApp.applyCompany(window.EdenCompany);
+    return window.EdenCompany;
+  },
+  async saveCompany(data) {
+    await setDoc(doc(db, 'companies', data.id || cid()), data, { merge: true });
+    if ((data.id || cid()) === cid()) { window.EdenCompany = Object.assign({}, window.EdenCompany, data); if (window.EdenApp && window.EdenApp.applyCompany) window.EdenApp.applyCompany(window.EdenCompany); }
+  },
+  async createCompany({ id, name, nif, adminEmail }) {
+    const code = (id + '-' + Math.random().toString(36).slice(2, 8)).toUpperCase();
+    await setDoc(doc(db, 'companies', id), { name, nif: nif || '', status: 'active', plan: 'trial', adminEmails: adminEmail ? [adminEmail.toLowerCase()] : [], inviteCode: code, createdAt: serverTimestamp() });
+    await setDoc(doc(db, 'invites', code), { companyId: id, createdAt: serverTimestamp() });
+    return code;
+  },
+  async listCompanies() {
+    const snap = await getDocs(collection(db, 'companies'));
+    return snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+  },
+  async resolveInvite(code) {
+    const snap = await getDoc(doc(db, 'invites', (code || '').trim().toUpperCase()));
+    return snap.exists() ? snap.data().companyId : null;
+  },
+  async joinCompany(code) {
+    const companyId = await window.EdenCloud.resolveInvite(code);
+    if (!companyId) throw new Error('invalid-code');
+    const s = localState(); s.profile = Object.assign({}, s.profile, { companyId });
+    localStorage.setItem(KEY, JSON.stringify(s));
+    window.EdenCloud.flush();
+    await window.EdenCloud.loadCompany();
+    return companyId;
+  },
+  async rotateInvite() {
+    const code = (cid() + '-' + Math.random().toString(36).slice(2, 8)).toUpperCase();
+    await setDoc(doc(db, 'invites', code), { companyId: cid(), createdAt: serverTimestamp() });
+    await setDoc(doc(db, 'companies', cid()), { inviteCode: code }, { merge: true });
+    window.EdenCompany = Object.assign({}, window.EdenCompany, { inviteCode: code });
+    return code;
   }
 };
 
@@ -205,7 +265,7 @@ window.EdenForum = {
   subscribeChannel(channel, cb) {
     const q = query(collection(db, 'forum_posts'), where('channel', '==', channel));
     return onSnapshot(q, snap => {
-      const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+      const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(p => ofCompany(p));
       posts.sort((a, b) => (ms(b.lastActivity) || ms(b.createdAt)) - (ms(a.lastActivity) || ms(a.createdAt)));
       cb(posts);
     }, err => { console.error('[forum] channel sub', err); cb([]); });
@@ -221,6 +281,7 @@ window.EdenForum = {
   async createPost({ channel, kind, title, body, poll, official, pinned }) {
     if (!auth.currentUser) throw new Error('not-signed-in');
     return addDoc(collection(db, 'forum_posts'), Object.assign({
+      companyId: cid(),
       channel, kind: kind || 'message', title: title || '', body,
       createdAt: serverTimestamp(), lastActivity: serverTimestamp(),
       replyCount: 0, likes: 0, likedBy: []
@@ -229,7 +290,7 @@ window.EdenForum = {
   /* all official broadcasts across channels (equality-only where — no index needed) */
   async listOfficial() {
     const snap = await getDocs(query(collection(db, 'forum_posts'), where('official', '==', true)));
-    const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+    const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(p => ofCompany(p));
     posts.sort((a, b) => (ms(b.createdAt) || 0) - (ms(a.createdAt) || 0));
     return posts;
   },
@@ -284,6 +345,7 @@ window.EdenMissions = {
   async submit({ courseId, note, photo }) {
     const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
     return addDoc(collection(db, 'missions'), Object.assign({
+      companyId: cid(),
       courseId, note: note || '', photo: photo || '',
       status: 'pending', claimed: false, createdAt: serverTimestamp()
     }, authorStub()));
@@ -295,7 +357,7 @@ window.EdenMissions = {
   },
   async listPending() {
     const snap = await getDocs(query(collection(db, 'missions'), where('status', '==', 'pending')));
-    const list = snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+    const list = snap.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(m => ofCompany(m));
     list.sort((a, b) => (ms(a.createdAt) || 0) - (ms(b.createdAt) || 0));
     return list;
   },
@@ -321,7 +383,7 @@ window.EdenMissions = {
 
 async function loadOrgConfig() {
   try {
-    const snap = await getDoc(doc(db, 'config', 'org'));
+    const snap = await getDoc(doc(db, 'config', cid() === 'edenrise' ? 'org' : cid()));
     if (snap.exists()) { window.EdenOrg = snap.data(); if (window.syncTutorStatus) window.syncTutorStatus(); }
   } catch (e) { /* not signed in yet or rules pending */ }
 }
@@ -342,7 +404,7 @@ onAuthStateChanged(auth, async user => {
     if (window.EdenApp) window.EdenApp.applyProfile(profile);
     try {
       /* ONE read for state+profile, org config in parallel (both instant from cache on repeat visits) */
-      const [snap] = await Promise.all([getDoc(doc(db, 'users', user.uid)), loadOrgConfig()]);
+      const [snap] = await Promise.all([getDoc(doc(db, 'users', user.uid)), loadOrgConfig(), window.EdenCloud.loadCompany()]);
       const data = snap.exists() ? snap.data() : null;
       if (data && data.state) localStorage.setItem(KEY, JSON.stringify(mergeStates(data.state, localState())));
       if (window.EdenApp) { window.EdenApp.reloadState(); window.EdenApp.applyProfile(profile); }

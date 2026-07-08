@@ -2,55 +2,96 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Admin accounts — identified by their signed-in, VERIFIED email.
-    // (email_verified stops a password signup with a spoofed admin address.)
-    function isAdmin() {
+    // ============ MULTI-TENANT (Phase 5) ============
+    // Platform superadmins (EdenRise) — verified email allowlist.
+    function isSuper() {
       return request.auth != null
         && request.auth.token.email_verified == true
         && request.auth.token.email in [
           'admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'
         ];
     }
+    // The caller's company, read from their own user doc (cached per request).
+    function myCompany() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.profile.companyId;
+    }
+    // Legacy docs without companyId belong to the founding tenant 'edenrise'.
+    function docCompany(d) {
+      return ('companyId' in d) ? d.companyId : 'edenrise';
+    }
+    function sameCompany(d) {
+      return request.auth != null && docCompany(d) == myCompany();
+    }
+    // Company admin: verified email listed on that company's doc.
+    function isCompanyAdminOf(cid) {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in get(/databases/$(database)/documents/companies/$(cid)).data.adminEmails;
+    }
+    function isAdminOfDoc(d) { return isSuper() || isCompanyAdminOf(docCompany(d)); }
 
-    // Each learner reads/writes their OWN profile + state.
-    // Admins may READ every member's doc (for the Leader's Cockpit) but never write it.
+    // ---- Companies: members read their own company; admins/super write.
+    match /companies/{cid} {
+      allow read: if isSuper() || (request.auth != null && myCompany() == cid);
+      allow create, delete: if isSuper();
+      allow update: if isSuper() || isCompanyAdminOf(cid);
+    }
+    // ---- Invites: code → companyId. Unguessable codes; any signed-in user may resolve one.
+    match /invites/{code} {
+      allow get: if request.auth != null;
+      allow list: if isSuper();
+      allow write: if isSuper() || isCompanyAdminOf(request.resource.data.companyId);
+      allow delete: if isSuper();
+    }
+
+    // ---- Users: own doc; superadmins read all; company admins read their company's people.
     match /users/{uid} {
-      allow read:  if request.auth != null && (request.auth.uid == uid || isAdmin());
+      allow read:  if request.auth != null && (
+                     request.auth.uid == uid
+                     || isSuper()
+                     || isCompanyAdminOf(docCompany(resource.data.profile)) );
       allow write: if request.auth != null && request.auth.uid == uid;
     }
 
-    // Org config (e.g. the shared team AI key) — signed-in members read, admins write.
-    match /config/{docId} {
-      allow read: if request.auth != null;
-      allow write: if isAdmin();
+    // ---- Org/tenant config (AI keys etc): same-company read, company-admin write.
+    // 'org' is the legacy edenrise doc; per-tenant docs are keyed by companyId.
+    match /config/{cid} {
+      allow read: if request.auth != null
+                  && (isSuper() || myCompany() == cid || (cid == 'org' && myCompany() == 'edenrise'));
+      allow write: if isSuper() || isCompanyAdminOf(cid == 'org' ? 'edenrise' : cid);
     }
 
-    // Public leaderboard — each member maintains only their own entry; everyone reads.
+    // ---- Public leaderboard: own row writes. Read stays public for now
+    // (guest community view); entries carry companyId and clients scope queries.
     match /leaderboard/{uid} {
       allow read: if true;
       allow write: if request.auth != null && request.auth.uid == uid;
     }
 
-    // Team-published courses (AI Course Studio) — everyone reads, only admins publish.
+    // ---- Courses: global catalog docs (companyId == null) are public;
+    // tenant-published docs are same-company only. Admin-of-tenant writes.
     match /courses/{courseId} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
+      allow read: if !('companyId' in resource.data)
+                  || resource.data.companyId == null
+                  || sameCompany(resource.data)
+                  || isSuper();
+      allow create, update, delete: if isSuper()
+                  || isCompanyAdminOf(docCompany(request.resource.data));
     }
 
-    // Field Missions — members submit their own proof; admins review; members
-    // may update their own doc (resubmit / claim); admins set status.
+    // ---- Field Missions: same-company; author submits/updates own; company admin reviews.
     match /missions/{missionId} {
-      allow read: if request.auth != null;
+      allow read: if request.auth != null && (sameCompany(resource.data) || isSuper());
       allow create: if request.auth != null
                     && request.resource.data.authorUid == request.auth.uid;
       allow update: if request.auth != null
-                    && (resource.data.authorUid == request.auth.uid || isAdmin());
+                    && (resource.data.authorUid == request.auth.uid || isAdminOfDoc(resource.data));
       allow delete: if request.auth != null
-                    && (resource.data.authorUid == request.auth.uid || isAdmin());
+                    && (resource.data.authorUid == request.auth.uid || isAdminOfDoc(resource.data));
     }
 
-    // Community forum — everyone reads; signed-in users post; authors (or admins)
-    // edit/delete; any signed-in user may react/bump.
+    // ---- Community forum: reads public for now (guest onboarding); posts carry
+    // companyId and clients scope queries. Author edits own; tenant admin moderates.
     match /forum_posts/{postId} {
       allow read: if true;
       allow create: if request.auth != null
@@ -59,11 +100,11 @@ service cloud.firestore {
                        resource.data.authorUid == request.auth.uid
                        || request.resource.data.diff(resource.data).affectedKeys()
                             .hasOnly(['likes', 'likedBy', 'replyCount', 'lastActivity', 'reactions', 'poll'])
-                       || (isAdmin() && request.resource.data.diff(resource.data)
+                       || (isAdminOfDoc(resource.data) && request.resource.data.diff(resource.data)
                             .affectedKeys().hasOnly(['pinned']))
                     );
       allow delete: if request.auth != null
-                    && (resource.data.authorUid == request.auth.uid || isAdmin());
+                    && (resource.data.authorUid == request.auth.uid || isAdminOfDoc(resource.data));
 
       match /replies/{replyId} {
         allow read: if true;
@@ -75,7 +116,7 @@ service cloud.firestore {
                               .hasOnly(['likes', 'likedBy', 'reactions'])
                       );
         allow delete: if request.auth != null
-                      && (resource.data.authorUid == request.auth.uid || isAdmin());
+                      && (resource.data.authorUid == request.auth.uid || isSuper());
       }
     }
   }

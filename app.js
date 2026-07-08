@@ -32,7 +32,12 @@ const slugHandle = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ
 const suggestHandle = () => { const p = S.profile || {}; return slugHandle(p.username) || slugHandle(p.name) || slugHandle((p.email || '').split('@')[0]) || 'learner'; };
 /* admin access — only these accounts see Analytics + Admin */
 const ADMIN_EMAILS = ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'];
-const isAdmin = () => ADMIN_EMAILS.includes(((S.profile && S.profile.email) || '').trim().toLowerCase());
+const myEmail = () => ((S.profile && S.profile.email) || '').trim().toLowerCase();
+const isSuperAdmin = () => ADMIN_EMAILS.includes(myEmail());
+/* tenant admin: superadmin OR listed on the company doc */
+const isAdmin = () => isSuperAdmin() || ((window.EdenCompany && EdenCompany.adminEmails) || []).map(e => (e || '').toLowerCase()).includes(myEmail());
+const companyName = () => (window.EdenCompany && EdenCompany.name) || 'EdenRise';
+const companyNif = () => (window.EdenCompany && EdenCompany.nif) || '';
 
 function toast(msg, icon = '✨') {
   const t = document.createElement('div');
@@ -602,6 +607,10 @@ function initAdmin(retries) {
     const r = $('#cockpitRoster'); if (r) r.innerHTML = `<tr><td colspan="10" class="empty-note">The cockpit needs an internet connection.</td></tr>`;
     return;
   }
+  if (adminTab === 'companies') {
+    if (window.EdenCloud && EdenCloud.listCompanies) EdenCloud.listCompanies().then(cs => { companiesCache = cs; const el = $('#coList'); if (el) el.innerHTML = companiesListHTML(); }).catch(() => {});
+    return;
+  }
   if (adminTab === 'broadcasts') {
     if (window.EdenForum && EdenForum.listOfficial) EdenForum.listOfficial().then(paintBroadcasts).catch(() => paintBroadcasts([]));
     return;
@@ -1050,7 +1059,7 @@ function trainingPace(target) {
   return Math.round(target * ((now - start) / (365 * 864e5)) * 10) / 10;
 }
 /* ===== Compliance Phase 2: legal documents (DRAFT wording — pending lawyer sign-off, SPEC §6/§9) ===== */
-const COMPANY = { name: 'EdenRise', nif: '' };   /* multi-tenant: from company settings later */
+/* company identity comes from window.EdenCompany (Phase 5); helpers above */
 function ptCourseTitle(id) { const c = courseById(id); return (typeof COURSE_PT !== 'undefined' && COURSE_PT[id] && COURSE_PT[id].title) || (c && c.title) || id; }
 function trainingActions(log, year) {
   const b = {};
@@ -1074,7 +1083,7 @@ function trainingCertCanvas(pf, year, code) {
   x.strokeStyle = 'rgba(200,164,93,.85)'; x.lineWidth = 3; x.strokeRect(46, 46, W - 92, H - 92);
   x.strokeStyle = 'rgba(200,164,93,.35)'; x.lineWidth = 1; x.strokeRect(60, 60, W - 120, H - 120);
   x.textAlign = 'center';
-  x.fillStyle = '#c8a45d'; x.font = '600 24px Inter, sans-serif'; try { x.letterSpacing = '10px'; } catch (e) {} x.fillText('E D E N R I S E   A C A D E M Y', W / 2, 138); try { x.letterSpacing = '0px'; } catch (e) {}
+  x.fillStyle = '#c8a45d'; x.font = '600 24px Inter, sans-serif'; try { x.letterSpacing = '10px'; } catch (e) {} x.fillText(companyName().toUpperCase().split('').join(' '), W / 2, 138); try { x.letterSpacing = '0px'; } catch (e) {}
   x.fillStyle = '#f7f6f1'; x.font = '600 52px "Cormorant Garamond", serif'; x.fillText('Certificado de Frequência', W / 2, 244);
   x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 26px "Cormorant Garamond", serif'; x.fillText('Formação Profissional Contínua', W / 2, 286);
   const done = trainingHours(S.trainingLog), target = complianceTarget(pf) || 40;
@@ -1082,7 +1091,7 @@ function trainingCertCanvas(pf, year, code) {
   x.fillStyle = '#c8a45d'; x.font = 'italic 600 60px "Cormorant Garamond", serif'; x.fillText(pf.name || '—', W / 2, 442);
   x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 20px Inter'; x.fillText(`NIF ${pf.nif || '—'}${pf.employeeNo ? ' · N.º ' + pf.employeeNo : ''}`, W / 2, 480);
   x.fillStyle = 'rgba(247,246,241,.85)'; x.font = '400 21px Inter';
-  wrapCanvasText(x, `frequentou ${done} horas de formação profissional contínua no ano de ${year}, ministrada por ${COMPANY.name} ao abrigo do dever de formação previsto nos artigos 130.º a 134.º do Código do Trabalho.`, W / 2, 534, 1080, 30);
+  wrapCanvasText(x, `frequentou ${done} horas de formação profissional contínua no ano de ${year}, ministrada por ${companyName()}${companyNif() ? ' (NIF ' + companyNif() + ')' : ''} ao abrigo do dever de formação previsto nos artigos 130.º a 134.º do Código do Trabalho.`, W / 2, 534, 1080, 30);
   const acts = trainingActions(S.trainingLog, year).slice(0, 6);
   x.textAlign = 'left'; let ay = 672;
   x.fillStyle = 'rgba(200,164,93,.9)'; x.font = '700 13px Inter'; x.fillText('AÇÕES DE FORMAÇÃO · modalidade: formação à distância (e-learning)', 270, ay); ay += 32;
@@ -1807,7 +1816,8 @@ function paintTrends() {
     <div class="chart-card"><h3>Courses completed · last 4 weeks</h3><div class="bars sm">${bars(comps)}</div></div>`;
 }
 function studioTabsHTML() {
-  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['broadcasts', 'Broadcasts'], ['digests', 'Digests'], ['live', 'Live sessions'], ['settings', 'Settings']];
+  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['broadcasts', 'Broadcasts'], ['digests', 'Digests'], ['live', 'Live sessions'], ['company', 'Company'], ['settings', 'Settings']];
+  if (isSuperAdmin()) tabs.push(['companies', 'Companies ✦']);
   return `<div class="comm-pills studio-tabs">${tabs.map(([id, label]) =>
     `<button class="ch-item ${adminTab === id ? 'active' : ''}" data-action="admin-tab" data-tab="${id}"><span>${label}</span></button>`).join('')}</div>`;
 }
@@ -1967,7 +1977,7 @@ async function downloadExitStatement(uid) {
   x.fillStyle = '#0e140f'; x.fillRect(0, 0, W, H);
   x.strokeStyle = 'rgba(200,164,93,.85)'; x.lineWidth = 3; x.strokeRect(46, 46, W - 92, H - 92);
   x.textAlign = 'center';
-  x.fillStyle = '#c8a45d'; x.font = '600 24px Inter'; x.fillText('E D E N R I S E', W / 2, 140);
+  x.fillStyle = '#c8a45d'; x.font = '600 24px Inter'; x.fillText(companyName().toUpperCase().split('').join(' '), W / 2, 140);
   x.fillStyle = '#f7f6f1'; x.font = '600 46px "Cormorant Garamond", serif'; x.fillText('Declaração de Formação Profissional Contínua', W / 2, 236);
   x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 22px "Cormorant Garamond", serif'; x.fillText('para efeitos do artigo 134.º do Código do Trabalho (cessação de contrato)', W / 2, 276);
   x.fillStyle = 'rgba(247,246,241,.85)'; x.font = '400 21px Inter';
@@ -2330,6 +2340,78 @@ function lvSave() {
   }).catch(() => toast('Could not save — are the Firestore rules published?', '⚠️'));
 }
 
+/* ----- Phase 5: Company (tenant self-service) ----- */
+function adminCompanyHTML() {
+  const co = window.EdenCompany || { id: 'edenrise', name: 'EdenRise', adminEmails: [] };
+  const invite = co.inviteCode ? `${location.origin}${location.pathname}?join=${co.inviteCode}` : '';
+  return `<div class="admin-section">
+    <h2>🏢 ${esc(co.name || co.id)}</h2>
+    <p class="sect-sub">Your company's identity — it brands the academy and, importantly, the legal training documents.</p>
+    <div class="ce-two">
+      <div class="field"><label>Company name</label><input class="auth-input" id="coName" value="${attr(co.name || '')}"></div>
+      <div class="field"><label>NIF</label><input class="auth-input" id="coNif" inputmode="numeric" maxlength="9" value="${attr(co.nif || '')}"></div>
+    </div>
+    <div class="ce-two">
+      <div class="field"><label>Logo URL (optional)</label><input class="auth-input" id="coLogo" value="${attr(co.logoUrl || '')}" placeholder="https://…/logo.png"></div>
+      <div class="field"><label>Accent colour (optional)</label><input class="auth-input" id="coAccent" value="${attr(co.accent || '')}" placeholder="#c8a45d"></div>
+    </div>
+    <div class="field" style="margin-top:12px;"><label>Admin emails (one per line — these people manage this company)</label>
+      <textarea class="comm-input" id="coAdmins" rows="3">${esc((co.adminEmails || []).join('\n'))}</textarea></div>
+    <button class="btn btn-primary btn-sm" style="margin-top:14px;" data-action="co-save">Save company</button>
+  </div>
+  <div class="admin-section">
+    <h2>✉️ Invite your team</h2>
+    <p class="sect-sub">Anyone who opens this link (or enters the code at sign-up) joins <b>${esc(co.name || co.id)}</b> automatically.</p>
+    ${co.inviteCode ? `<div class="org-key" style="align-items:center;">
+      <div class="notif-info"><b>${esc(co.inviteCode)}</b><span style="word-break:break-all;">${esc(invite)}</span></div>
+      <div class="row gap-3"><button class="btn btn-glass btn-sm" data-action="co-copy-invite">Copy link</button>
+      <button class="btn btn-quiet btn-sm" data-action="co-rotate-invite">↺ New code</button></div>
+    </div>` : `<button class="btn btn-glass btn-sm" data-action="co-rotate-invite">Generate invite code</button>`}
+  </div>`;
+}
+function saveCompanySettings() {
+  const admins = ($('#coAdmins').value || '').split('\n').map(x => x.trim().toLowerCase()).filter(x => /.+@.+\..+/.test(x));
+  const data = { id: (window.EdenCompany || {}).id, name: ($('#coName').value || '').trim(), nif: ($('#coNif').value || '').replace(/\D/g, '').slice(0, 9), logoUrl: ($('#coLogo').value || '').trim(), accent: ($('#coAccent').value || '').trim(), adminEmails: admins };
+  EdenCloud.saveCompany(data).then(() => { toast('Company saved', '🏢'); render(); }).catch(() => toast('Could not save — are the new Firestore rules deployed?', '⚠️'));
+}
+/* ----- Phase 5: Companies (superadmin console) ----- */
+let companiesCache = null;
+function adminCompaniesHTML() {
+  return `<div class="admin-section">
+    <h2>✦ Companies</h2>
+    <p class="sect-sub">Every tenant on the platform. Create a company, hand its admin the invite link, activate when they subscribe.</p>
+    <div id="coList">${companiesCache ? companiesListHTML() : '<div class="skel" style="height:44px;"></div>'}</div>
+  </div>
+  <div class="admin-section">
+    <h2>New company</h2>
+    <div class="ce-two">
+      <div class="field"><label>ID (slug, permanent)</label><input class="auth-input" id="ncId" placeholder="quinta-do-sol"></div>
+      <div class="field"><label>Name</label><input class="auth-input" id="ncName" placeholder="Quinta do Sol, Lda"></div>
+    </div>
+    <div class="ce-two">
+      <div class="field"><label>NIF</label><input class="auth-input" id="ncNif" inputmode="numeric" maxlength="9"></div>
+      <div class="field"><label>First admin email</label><input class="auth-input" id="ncAdmin" type="email" placeholder="gestor@quinta.pt"></div>
+    </div>
+    <button class="btn btn-primary btn-sm" style="margin-top:14px;" data-action="co-create">Create company →</button>
+  </div>`;
+}
+function companiesListHTML() {
+  return (companiesCache || []).map(c => `<div class="content-row">
+    <span class="ci t-grad-${1 + (c.id.length % 8)}">${svgIcon('people')}</span>
+    <div class="ct"><b>${esc(c.name || c.id)}</b><span>${esc(c.id)} · ${c.plan || 'trial'} · ${(c.adminEmails || []).length} admin(s) · invite ${esc(c.inviteCode || '—')}</span></div>
+    <span class="pub-chip ${c.status === 'active' ? 'live' : 'draft'}">${(c.status || 'active').toUpperCase()}</span>
+    <button class="btn btn-glass btn-sm" data-action="co-toggle" data-id="${esc(c.id)}">${c.status === 'suspended' ? 'Activate' : 'Suspend'}</button>
+  </div>`).join('') || `<p class="empty-note" style="text-align:left;padding:8px 0;">Only EdenRise so far — create the first client company below.</p>`;
+}
+function createCompanyFromForm() {
+  const id = ($('#ncId').value || '').trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+  const name = ($('#ncName').value || '').trim();
+  if (!id || !name) { toast('ID and name are needed', 'ℹ️'); return; }
+  EdenCloud.createCompany({ id, name, nif: ($('#ncNif').value || '').trim(), adminEmail: ($('#ncAdmin').value || '').trim() })
+    .then(code => { toast(`Company created — invite ${code}`, '✦'); companiesCache = null; initAdmin(); render(); })
+    .catch(e => toast('Create failed: ' + String(e.message || e).slice(0, 60), '⚠️'));
+}
+
 /* ----- Settings ----- */
 function adminSettingsHTML() {
   return `<div class="admin-section">
@@ -2363,7 +2445,7 @@ function adminSettingsHTML() {
 }
 
 function renderAdmin() {
-  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, broadcasts: adminBroadcastsHTML, digests: adminDigestsHTML, live: adminLiveHTML, settings: adminSettingsHTML };
+  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, broadcasts: adminBroadcastsHTML, digests: adminDigestsHTML, live: adminLiveHTML, company: adminCompanyHTML, companies: adminCompaniesHTML, settings: adminSettingsHTML };
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">EdenRise Studio</h1>
     <p class="page-sub">The back office — people, content, broadcasts and the live schedule in one place.</p>
@@ -3884,6 +3966,21 @@ document.addEventListener('click', e => {
     case 'mdet-close': { const mv = $('#mdetModal'); if (mv) mv.remove(); break; }
     case 'mdet-register': downloadMemberRegister(el.dataset.uid); break;
     case 'mdet-exit': downloadExitStatement(el.dataset.uid); break;
+    case 'co-save': saveCompanySettings(); break;
+    case 'co-create': createCompanyFromForm(); break;
+    case 'co-toggle': {
+      const co = (companiesCache || []).find(x => x.id === el.dataset.id); if (!co) break;
+      EdenCloud.saveCompany({ id: co.id, status: co.status === 'suspended' ? 'active' : 'suspended' })
+        .then(() => { co.status = co.status === 'suspended' ? 'active' : 'suspended'; const l = $('#coList'); if (l) l.innerHTML = companiesListHTML(); toast('Updated', '✓'); });
+      break;
+    }
+    case 'co-copy-invite': {
+      const co = window.EdenCompany || {};
+      const link = `${location.origin}${location.pathname}?join=${co.inviteCode || ''}`;
+      navigator.clipboard && navigator.clipboard.writeText(link).then(() => toast('Invite link copied', '✉️')).catch(() => prompt('Copy the invite link:', link));
+      break;
+    }
+    case 'co-rotate-invite': EdenCloud.rotateInvite().then(() => { toast('New invite code generated', '↺'); render(); }).catch(() => toast('Could not rotate', '⚠️')); break;
     case 'dig-open': openDigest(id); break;
     case 'dig-close': $('#digModal').classList.remove('open'); break;
     case 'dig-publish': digPublish(); break;
@@ -4191,6 +4288,7 @@ window.EdenApp = {
     if (!S.badges) S.badges = [];
     checkBadges(true);
     updateXpChip(); render();
+    setTimeout(applyPendingJoin, 600);
     this.maybeOnboard();
     if (S.onboarded) welcomeNudge();
   },
@@ -4236,6 +4334,20 @@ window.EdenApp = {
   },
   /* studio meta from Firestore (live-sessions schedule etc.) */
   applyMeta(meta) { studioMeta = meta || null; render(); },
+  /* Phase 5: tenant identity → branding + gating */
+  applyCompany(co) {
+    if (!co) return;
+    if (co.accent && /^#[0-9a-f]{6}$/i.test(co.accent)) {
+      document.documentElement.style.setProperty('--accent', co.accent);
+      document.documentElement.style.setProperty('--glow', co.accent + '55');
+    }
+    let bar = document.getElementById('suspendBar');
+    if (co.status === 'suspended' && !isSuperAdmin()) {
+      if (!bar) { bar = document.createElement('div'); bar.id = 'suspendBar'; document.body.prepend(bar); }
+      bar.innerHTML = '⚠ ' + (_lang() === 'pt' ? 'A subscrição desta empresa está suspensa — contacte o administrador.' : 'This company\'s subscription is suspended — contact your administrator.');
+    } else if (bar) bar.remove();
+    syncChrome && syncChrome();
+  },
   applyDigests(list) { digestsCache = list || []; render(); }
 };
 if (S.profile) EdenApp.applyProfile(S.profile);
@@ -4273,6 +4385,23 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden' && window.EdenCloud && EdenCloud.flush) EdenCloud.flush();
 });
 /* service worker — offline app shell + cached art */
+/* Phase 5: invite links — ?join=CODE joins that company after sign-in */
+(function captureJoin() {
+  try {
+    const code = new URLSearchParams(location.search).get('join');
+    if (code) { localStorage.setItem('eden-join', code.toUpperCase()); history.replaceState(null, '', location.pathname + location.hash); }
+  } catch (e) {}
+})();
+function applyPendingJoin() {
+  let code; try { code = localStorage.getItem('eden-join'); } catch (e) { return; }
+  if (!code || !(window.EdenCloud && EdenCloud.joinCompany)) return;
+  if (S.profile && S.profile.companyId && S.profile.companyId !== 'edenrise') { localStorage.removeItem('eden-join'); return; }
+  EdenCloud.joinCompany(code).then(cidJoined => {
+    localStorage.removeItem('eden-join');
+    S.profile = Object.assign({}, S.profile, { companyId: cidJoined }); save();
+    toast((_lang() === 'pt' ? 'Bem-vindo à ' : 'Welcome to ') + companyName() + ' 🏢', '✦'); render();
+  }).catch(() => { localStorage.removeItem('eden-join'); toast(_lang() === 'pt' ? 'Código de convite inválido' : 'Invalid invite code', '⚠️'); });
+}
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   /* AUTO-UPDATE: when a newer version is deployed, the new service worker
      activates (sw.js does skipWaiting + clients.claim) and takes control →
