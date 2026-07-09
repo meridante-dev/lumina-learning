@@ -16,7 +16,9 @@ import {
   increment, arrayUnion, arrayRemove
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
-const firebaseConfig = {
+/* Firebase project comes from the active brand (brandkit.js). Each white-label
+   company points at its OWN project; the founding EdenRise values are the fallback. */
+const firebaseConfig = (window.BRAND && window.BRAND.firebase) || {
   apiKey: 'AIzaSyBt4pfWRLWUdAjVL8xoEoR7o4wFCjUCUjs',
   authDomain: 'edenrise-academy.firebaseapp.com',
   projectId: 'edenrise-academy',
@@ -55,7 +57,7 @@ function showErr(msg) { const e = $('#authErr'); if (e) { e.textContent = msg ||
 /* ---------- state <-> Firestore ---------- */
 function localState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
 /* ---- multi-tenant helpers ---- */
-const SUPERADMINS = ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'];
+const SUPERADMINS = (window.BRAND && window.BRAND.superadmins) || ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'];
 const cid = () => ((localState().profile || {}).companyId) || 'edenrise';
 const isSuperEmail = e => SUPERADMINS.includes((e || '').trim().toLowerCase());
 const metaDocId = c => (c || cid()) === 'edenrise' ? '__meta' : '__meta_' + (c || cid());

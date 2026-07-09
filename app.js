@@ -26,6 +26,11 @@ const fmtYm = ym => { const [y, m] = String(ym).split('-'); const M = _lang() ==
 const courseStale = c => !c.updated || (Date.now() - new Date(c.updated + '-01T12:00:00').getTime() > 366 * 864e5);
 const vidFor = (id, mod) => VIDS[(id.length * 7 + mod * 3) % VIDS.length];
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+/* active white-label brand (from brandkit.js); EdenRise values are the fallback */
+const BRAND = (typeof window !== 'undefined' && window.BRAND) || {};
+const brandName = () => BRAND.name || 'EdenRise';
+const brandAcademy = () => BRAND.academy || 'EdenRise Academy';
+const brandEthos = () => BRAND.ethos || 'EdenRise, a regenerative-living farm and school in the Baixo Alentejo, Portugal. Its ethos: where nature leads, the land heals, and stewardship shapes everything. The courses teach regenerative living — soil, water, food forests, native flora, foraging, natural building, fire stewardship and nature connection.';
 /* identity — real profile name once signed in → their @username → email handle → warm generic.
    NEVER a hardcoded person: every user must see their own name. */
 const displayName = () => (S.profile && S.profile.name)
@@ -3938,7 +3943,7 @@ function buildTutorSystem() {
     const cc = courseById(x); if (!cc) return '';
     return `- ${cc.title}: ${isDone(x) ? 'completed' : pathStatus(x) === 'current' ? coursePct(x) + '% in progress' : 'locked'}`;
   }).join('\n');
-  return `You are the EdenRise Tutor, the in-app AI learning companion inside EdenRise Academy — the learning platform of EdenRise, a regenerative-living farm and school in the Baixo Alentejo, Portugal. Its ethos: where nature leads, the land heals, and stewardship shapes everything. The courses teach regenerative living — soil, water, food forests, native flora, foraging, natural building, fire stewardship and nature connection.
+  return `You are the ${brandName()} Tutor, the in-app AI learning companion inside ${brandAcademy()} — the learning platform of ${brandEthos()}
 You are talking to ${displayName()}${S.role ? ' (' + S.role + ')' : ''}, whose learning goal is "${S.goal}".
 
 His AI learning path right now:
