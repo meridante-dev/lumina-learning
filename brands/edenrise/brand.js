@@ -18,6 +18,9 @@
   lang: 'en',
   /* the "school ethos" the AI tutor is grounded in (see buildTutorSystem) */
   ethos: 'EdenRise, a regenerative-living farm and school in the Baixo Alentejo, Portugal. Its ethos: where nature leads, the land heals, and stewardship shapes everything. The courses teach regenerative living — soil, water, food forests, native flora, foraging, natural building, fire stewardship and nature connection.',
+  shortDesc: 'a regenerative-living school in the Baixo Alentejo, Portugal',   /* used inside AI prompts */
+  realm: 'the Alentejo reality (heat, drought, fire season, cork-oak montado, clay soils, water scarcity, working as a team)',  /* AI quiz/scenario grounding */
+  location: 'Baixo Alentejo, Portugal',   /* certificate / footer line */
   /* this instance's OWN Firebase project */
   firebase: {
     apiKey: 'AIzaSyBt4pfWRLWUdAjVL8xoEoR7o4wFCjUCUjs',

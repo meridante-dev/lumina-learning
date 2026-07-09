@@ -31,6 +31,12 @@ const BRAND = (typeof window !== 'undefined' && window.BRAND) || {};
 const brandName = () => BRAND.name || 'EdenRise';
 const brandAcademy = () => BRAND.academy || 'EdenRise Academy';
 const brandEthos = () => BRAND.ethos || 'EdenRise, a regenerative-living farm and school in the Baixo Alentejo, Portugal. Its ethos: where nature leads, the land heals, and stewardship shapes everything. The courses teach regenerative living — soil, water, food forests, native flora, foraging, natural building, fire stewardship and nature connection.';
+/* short descriptor used inside AI prompts ("… for {academy} — {shortDesc}") */
+const brandShortDesc = () => BRAND.shortDesc || 'a regenerative-living school in the Baixo Alentejo, Portugal';
+/* the real-world context AI quizzes/scenarios are grounded in (the client's world) */
+const brandRealm = () => BRAND.realm || 'the Alentejo reality (heat, drought, fire season, cork-oak montado, clay soils, water scarcity, working as a team)';
+/* location line for certificates / footers */
+const brandLocation = () => BRAND.location || 'Baixo Alentejo, Portugal';
 /* identity — real profile name once signed in → their @username → email handle → warm generic.
    NEVER a hardcoded person: every user must see their own name. */
 const displayName = () => (S.profile && S.profile.name)
@@ -544,8 +550,8 @@ function composeMemberNudge(m) {
       : { lang, title: `You're growing well, ${name} 🌿`, body: `You're ${pct}% of the way along your path — one step at a time, the way the land likes it. Your next chapter is <b>${course}</b>. Ten quiet minutes is all it takes.` };
   }
   return lang === 'pt'
-    ? { lang, title: `O bosque sente a sua falta, ${name} 🌿`, body: `O seu percurso está à sua espera, sem pressa. Quando tiver dez minutos, há sempre algo novo a crescer na EdenRise Academy.` }
-    : { lang, title: `The grove misses you, ${name} 🌿`, body: `Your path is waiting, no rush at all. Whenever you have ten minutes, there's always something new growing at EdenRise Academy.` };
+    ? { lang, title: `O bosque sente a sua falta, ${name} 🌿`, body: `O seu percurso está à sua espera, sem pressa. Quando tiver dez minutos, há sempre algo novo a crescer na ${brandAcademy()}.` }
+    : { lang, title: `The grove misses you, ${name} 🌿`, body: `Your path is waiting, no rush at all. Whenever you have ten minutes, there's always something new growing at ${brandAcademy()}.` };
 }
 async function emailNudgeMember(uid, btn) {
   if (!mailReady()) return toast(t('mail_not_connected'), 'ℹ️');
@@ -667,7 +673,7 @@ async function generateCourseDraft(title, text, mode) {
   const icons = Object.keys(ICONS).join(', ');
   const heavy = S.aiModelHeavy || (window.EdenOrg && window.EdenOrg.aiModelHeavy) || '';
   const raw = await llmComplete({ maxTokens: 4000, model: heavy || undefined,
-      system: `You are the course architect for EdenRise Academy (regenerative-living school, Baixo Alentejo, Portugal; warm, grounded, zero corporate jargon). From lesson material, produce ONE course as raw JSON only (no fences): {"title":str,"title_pt":str,"hook":str,"hook_pt":str,"hookSub":str,"hookSub_pt":str,"desc":str(1-2 sentences),"desc_pt":str,"cat":one of [${cats.join(' | ')}],"icon":one of [${icons}],"modules":[3-5 str],"modules_pt":[same length],"takeaways":[per module, array of exactly 3 str],"takeaways_pt":[same shape],"quiz":[3 of {"q":str,"opts":[4 str],"a":0-3}],"quiz_pt":[same shape]}. Portuguese = European Portuguese. Hooks are short invitations (MasterClass style). Takeaways are learning OUTCOMES — each starts with an action verb, stating what the learner CAN NOW DO (e.g. "Read a soil profile by colour and smell"). Quiz tests understanding of THIS material.${mode === 'capture' ? ' The source is a RAW EXPERT INTERVIEW or SOP, not a lesson: extract the expert\u2019s methods, rules of thumb, stories and step-by-step procedures; preserve their hard-won specifics (numbers, warnings, sequences) as the heart of each module; discard small talk.' : ''}`,
+      system: `You are the course architect for ${brandAcademy()} (${brandShortDesc()}; warm, grounded, zero corporate jargon). From lesson material, produce ONE course as raw JSON only (no fences): {"title":str,"title_pt":str,"hook":str,"hook_pt":str,"hookSub":str,"hookSub_pt":str,"desc":str(1-2 sentences),"desc_pt":str,"cat":one of [${cats.join(' | ')}],"icon":one of [${icons}],"modules":[3-5 str],"modules_pt":[same length],"takeaways":[per module, array of exactly 3 str],"takeaways_pt":[same shape],"quiz":[3 of {"q":str,"opts":[4 str],"a":0-3}],"quiz_pt":[same shape]}. Portuguese = European Portuguese. Hooks are short invitations (MasterClass style). Takeaways are learning OUTCOMES — each starts with an action verb, stating what the learner CAN NOW DO (e.g. "Read a soil profile by colour and smell"). Quiz tests understanding of THIS material.${mode === 'capture' ? ' The source is a RAW EXPERT INTERVIEW or SOP, not a lesson: extract the expert\u2019s methods, rules of thumb, stories and step-by-step procedures; preserve their hard-won specifics (numbers, warnings, sequences) as the heart of each module; discard small talk.' : ''}`,
       messages: [{ role: 'user', content: `Working title: ${title || '(none)'}\n\nLesson material:\n${text.slice(0, 14000)}` }]
   });
   const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
@@ -922,7 +928,7 @@ async function seedDemo() {
   const iso = d => d.toISOString().slice(0, 16);
   const fmtDay = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' }) + ' · 16:00';
   try {
-    await EdenForum.createPost({ channel: 'intro', kind: 'discussion', title: 'Welcome to the EdenRise Academy community 🌱', body: 'This is where we learn together — ask anything, share what the land is teaching you, and celebrate each other\u2019s wins. Warm welcome from the whole team!', official: true, pinned: true });
+    await EdenForum.createPost({ channel: 'intro', kind: 'discussion', title: 'Welcome to the ' + brandAcademy() + ' community 🌱', body: 'This is where we learn together — ask anything, share what the land is teaching you, and celebrate each other\u2019s wins. Warm welcome from the whole team!', official: true, pinned: true });
     await EdenForum.createPost({ channel: 'wins', kind: 'message', body: 'First compost pile turned using the layering from the course — look at this heat! https://picsum.photos/seed/edencompost/800/500.jpg' });
     await EdenForum.createPost({ channel: 'general', kind: 'discussion', title: 'Where should the next work party focus?', body: 'Vote below — we\u2019ll bring tools and lunch either way 🌿', poll: { options: ['The east swales', 'Food forest mulching', 'The nursery beds'], votes: {} } });
     const live = [
@@ -972,7 +978,7 @@ async function openAsk(q) {
   $('#askModal').classList.add('open');
   try {
     const raw = await llmComplete({ maxTokens: 700,
-      system: `You are the EdenRise Academy guide (regenerative-living school, Baixo Alentejo, Portugal). Answer the member's question warmly and practically, grounded ONLY in the course library below. HONESTY RULE: if the library doesn't cover the question, say so plainly in the answer ("our courses don't cover this yet") and point to the nearest course — never bluff or invent. Reply as raw JSON: {"answer":str(2-4 sentences, concrete),"refs":[{"courseId":str(an id from the library),"why":str(short)}]} — 0-3 refs, best first. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}\n\nLIBRARY:\n${libraryContext()}${aiGuardrails()}`,
+      system: `You are the ${brandAcademy()} guide (${brandShortDesc()}). Answer the member's question warmly and practically, grounded ONLY in the course library below. HONESTY RULE: if the library doesn't cover the question, say so plainly in the answer ("our courses don't cover this yet") and point to the nearest course — never bluff or invent. Reply as raw JSON: {"answer":str(2-4 sentences, concrete),"refs":[{"courseId":str(an id from the library),"why":str(short)}]} — 0-3 refs, best first. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}\n\nLIBRARY:\n${libraryContext()}${aiGuardrails()}`,
       messages: [{ role: 'user', content: q }] });
     const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
     const refs = (j.refs || []).map(r => ({ r, c: courseById(r.courseId) })).filter(x => x.c);
@@ -1171,7 +1177,7 @@ function gdprDocShell(title, body) {
   @media print { body { margin: 10mm auto; } }
 </style></head><body>
 <h1>${title}</h1>
-<p class="meta"><b>${esc(companyName())}</b>${companyNif() ? ' · NIF ' + esc(companyNif()) : ''} · ${today} · Plataforma: EdenRise Academy</p>
+<p class="meta"><b>${esc(companyName())}</b>${companyNif() ? ' · NIF ' + esc(companyNif()) : ''} · ${today} · Plataforma: ${brandAcademy()}</p>
 <div class="draft">⚠️ MINUTA — documento em validação jurídica. Rever com aconselhamento legal antes de adotar formalmente.</div>
 ${body}
 <div class="sig"><div>A Gerência / Administração</div><div>Data e assinatura</div></div>
@@ -1180,7 +1186,7 @@ ${body}
 function gdprRetentionDoc() {
   return gdprDocShell('Política de Retenção de Dados de Formação', `
 <h2>1. Objeto e âmbito</h2>
-<p>Esta política define os prazos de conservação dos dados pessoais tratados na plataforma de formação EdenRise Academy, em cumprimento do RGPD (princípio da limitação da conservação, art. 5.º/1-e) e do Código do Trabalho (arts. 130.º–134.º — formação contínua obrigatória).</p>
+<p>Esta política define os prazos de conservação dos dados pessoais tratados na plataforma de formação ${brandAcademy()}, em cumprimento do RGPD (princípio da limitação da conservação, art. 5.º/1-e) e do Código do Trabalho (arts. 130.º–134.º — formação contínua obrigatória).</p>
 <h2>2. Prazos de conservação</h2>
 <table><tr><th>Categoria de dados</th><th>Fundamento</th><th>Prazo</th></tr>
 <tr><td>Registos de formação (horas, ações, confirmações, certificados)</td><td>Obrigação jurídica — CT arts. 131.º–134.º; crédito de horas (2+3 anos); cessação (5 anos)</td><td><b>5 anos</b> após o ano civil a que respeitam, ou após cessação do contrato</td></tr>
@@ -1210,7 +1216,7 @@ function gdprDpaDoc() {
   return gdprDocShell('Acordo de Subcontratação de Dados (art. 28.º RGPD) — Minuta', `
 <h2>Partes</h2>
 <p><b>Responsável:</b> ${esc(companyName())}${companyNif() ? ', NIF ' + esc(companyNif()) : ''} ("Cliente").<br>
-<b>Subcontratante:</b> [operador da plataforma EdenRise Academy — preencher denominação e NIF] ("Plataforma").</p>
+<b>Subcontratante:</b> [operador da plataforma ${brandAcademy()} — preencher denominação e NIF] ("Plataforma").</p>
 <h2>1. Objeto e duração</h2>
 <p>Tratamento de dados pessoais de trabalhadores do Cliente estritamente necessário à prestação do serviço de formação online e registo de formação obrigatória, pela vigência do contrato de serviço.</p>
 <h2>2. Instruções e finalidade</h2>
@@ -1326,7 +1332,7 @@ async function generateCockpitDigest() {
   const asgs = activeAssignments().map(a => `${(courseById(a.courseId) || {}).title} → ${a.team}${a.due ? ' due ' + a.due : ''} (${assignmentTrack(a) || 'no data'})`).join('\n') || 'none';
   try {
     const raw = await llmComplete({ maxTokens: 700,
-      system: `You are the learning lead's chief of staff at EdenRise Academy. From the member data, write a short leadership digest as raw JSON: {"headline":str(one warm, true sentence about the week),"wins":[1-2 str],"attention":[1-2 str naming specific people kindly],"action":str(ONE concrete recommendation for this week)}. Honest, specific, zero corporate filler.`,
+      system: `You are the learning lead's chief of staff at ${brandAcademy()}. From the member data, write a short leadership digest as raw JSON: {"headline":str(one warm, true sentence about the week),"wins":[1-2 str],"attention":[1-2 str naming specific people kindly],"action":str(ONE concrete recommendation for this week)}. Honest, specific, zero corporate filler.`,
       messages: [{ role: 'user', content: `MEMBERS:\n${data}\n\nASSIGNMENTS:\n${asgs}` }] });
     const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
     el.innerHTML = `<div class="digest-card">
@@ -1492,7 +1498,7 @@ async function generateLearnStory(force) {
   const recent = (S.trainingLog || []).slice(-4).map(e => e.title).join('; ');
   try {
     const text = await llmComplete({ maxTokens: 350,
-      system: `You are the learner's guide at EdenRise Academy. Write a warm, honest, PERSONAL 3-sentence learning story in the second person: (1) what they're genuinely strong in, (2) what they're still building, (3) the ONE next right step. Concrete, no percentages, no flattery, no lists — just three flowing sentences. ${_lang() === 'pt' ? 'Escreve em português europeu.' : 'Write in English.'}`,
+      system: `You are the learner's guide at ${brandAcademy()}. Write a warm, honest, PERSONAL 3-sentence learning story in the second person: (1) what they're genuinely strong in, (2) what they're still building, (3) the ONE next right step. Concrete, no percentages, no flattery, no lists — just three flowing sentences. ${_lang() === 'pt' ? 'Escreve em português europeu.' : 'Write in English.'}`,
       messages: [{ role: 'user', content: `Skills: ${skills}. ${rr ? `Role readiness: ${rr.overall}% (weakest: ${tskill(rr.gap.key)}).` : ''} Courses completed: ${done}. Recent sessions: ${recent}. Streak: ${S.streak || 0} days. Goal: ${tgoal(S.goal)}.` }] });
     S.learnStory = { text: text.trim().slice(0, 600), at: Date.now(), lang: S.lang }; save();
     el.innerHTML = `<p class="story-text">${esc(S.learnStory.text)}</p><button class="link-quiet" data-action="story-gen">${t('story_refresh')}</button>`;
@@ -1538,7 +1544,7 @@ function certCanvas(c) {
   x.fillStyle = '#f7f6f1'; x.font = '500 24px Inter, sans-serif';
   x.fillText(d.toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), W / 2, 880);
   x.fillStyle = 'rgba(247,246,241,.4)'; x.font = '400 19px Inter, sans-serif';
-  x.fillText('EdenRise Academy · Baixo Alentejo, Portugal', W / 2, 1005);
+  x.fillText(brandAcademy() + ' · ' + brandLocation(), W / 2, 1005);
   return cv;
 }
 function downloadCert(courseId) {
@@ -1554,7 +1560,7 @@ function linkedInCertUrl(c) {
   const d = certDate(c.id);
   return 'https://www.linkedin.com/profile/add?startTask=CERTIFICATION_NAME'
     + '&name=' + encodeURIComponent(ctitle(c))
-    + '&organizationName=' + encodeURIComponent('EdenRise Academy')
+    + '&organizationName=' + encodeURIComponent(brandAcademy())
     + '&issueYear=' + d.getFullYear() + '&issueMonth=' + (d.getMonth() + 1);
 }
 function certsSectionHTML() {
@@ -1736,7 +1742,7 @@ async function coachFinish() {
   const transcript = coach.msgs.map(m => `${m.role === 'user' ? 'Leader' : coach.sc.persona}: ${m.content}`).join('\n');
   try {
     const raw = await llmComplete({ maxTokens: 600,
-      system: `You are a warm, honest leadership coach at EdenRise Academy. Score the Leader's side of this role-play against the rubric. Reply as raw JSON only: {"scores":[{"dim":str,"score":1-5,"note":str(short)}],"tip":str(one specific, kind suggestion)} . Rubric dimensions: ${coach.sc.rubric.join(' | ')}. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}`,
+      system: `You are a warm, honest leadership coach at ${brandAcademy()}. Score the Leader's side of this role-play against the rubric. Reply as raw JSON only: {"scores":[{"dim":str,"score":1-5,"note":str(short)}],"tip":str(one specific, kind suggestion)} . Rubric dimensions: ${coach.sc.rubric.join(' | ')}. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}`,
       messages: [{ role: 'user', content: transcript }] });
     const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
     const first = !(S.coachDone && S.coachDone[coach.courseId]);
@@ -1799,11 +1805,11 @@ function icsForSession(s) {
   if (!s.date) return;
   const dt = new Date(s.date);
   const fmt = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//EdenRise Academy//EN', 'BEGIN:VEVENT',
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//' + brandAcademy() + '//EN', 'BEGIN:VEVENT',
     'UID:' + s.id + '@edenrise-academy', 'DTSTAMP:' + fmt(new Date(dt)),
     'DTSTART:' + fmt(dt), 'DTEND:' + fmt(new Date(dt.getTime() + 3600000)),
     'SUMMARY:' + s.title.replace(/,/g, '\\,'), 'DESCRIPTION:' + (s.desc || '').replace(/,/g, '\\,'),
-    'LOCATION:EdenRise Academy (online)', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    'LOCATION:' + brandAcademy() + ' (online)', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
   const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
   const a = document.createElement('a'); a.href = url; a.download = 'edenrise-' + s.id + '.ics';
   document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
@@ -1885,7 +1891,7 @@ async function findContentGaps() {
   const cats = CATALOG.map(c => c.title).join(' | ');
   try {
     const raw = await llmComplete({ maxTokens: 700,
-      system: `You are the curriculum strategist for EdenRise Academy. Given real questions members asked, and the existing course list, find what training is MISSING. Reply as raw JSON: {"gaps":[1-3 of {"theme":str,"evidence":str(which questions point here),"course":str(a concrete course title to build)}]}. Only real gaps — if the library covers it, don't invent one.`,
+      system: `You are the curriculum strategist for ${brandAcademy()}. Given real questions members asked, and the existing course list, find what training is MISSING. Reply as raw JSON: {"gaps":[1-3 of {"theme":str,"evidence":str(which questions point here),"course":str(a concrete course title to build)}]}. Only real gaps — if the library covers it, don't invent one.`,
       messages: [{ role: 'user', content: `QUESTIONS:\n${qs}\n\nEXISTING COURSES: ${cats}` }] });
     const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
     el.innerHTML = (j.gaps || []).map(g => `<div class="gap-card">
@@ -1910,7 +1916,7 @@ async function cockpitAsk() {
   const asgs = activeAssignments().map(a => `${(courseById(a.courseId) || {}).title} → ${a.team}${a.due ? ' due ' + a.due : ''}`).join('\n') || 'none';
   try {
     const reply = await llmComplete({ maxTokens: 600,
-      system: `You are the EdenRise Academy admin assistant. Answer the leader's questions from the LIVE DATA below — specific names and numbers, warm but direct, max 120 words. If asked what to do, give ONE concrete recommendation. Never invent data.\n\nMEMBERS:\n${data}\n\nASSIGNMENTS:\n${asgs}\n\nCOURSES AVAILABLE: ${CATALOG.map(c => c.title).slice(0, 30).join(' | ')}`,
+      system: `You are the ${brandAcademy()} admin assistant. Answer the leader's questions from the LIVE DATA below — specific names and numbers, warm but direct, max 120 words. If asked what to do, give ONE concrete recommendation. Never invent data.\n\nMEMBERS:\n${data}\n\nASSIGNMENTS:\n${asgs}\n\nCOURSES AVAILABLE: ${CATALOG.map(c => c.title).slice(0, 30).join(' | ')}`,
       messages: ckHistory.slice(-8) });
     ckHistory.push({ role: 'assistant', content: reply });
   } catch (e) { ckHistory.push({ role: 'assistant', content: 'Could not reach the AI — check the team key in Settings.' }); }
@@ -2126,7 +2132,7 @@ async function downloadExitStatement(uid) {
   x.fillText(`Total de horas de formação em falta: ${Math.round(owed * 10) / 10} h`, 380, ay);
   x.textAlign = 'center';
   x.fillStyle = 'rgba(247,246,241,.55)'; x.font = '400 17px Inter';
-  wrapCanvasText(x, 'Nota: este registo reflete as horas documentadas na plataforma EdenRise Academy; formação anterior à adoção da plataforma pode não estar incluída.', W / 2, 880, 1000, 26);
+  wrapCanvasText(x, 'Nota: este registo reflete as horas documentadas na plataforma ' + brandAcademy() + '; formação anterior à adoção da plataforma pode não estar incluída.', W / 2, 880, 1000, 26);
   x.fillStyle = 'rgba(247,246,241,.5)'; x.font = '400 18px Inter'; x.fillText(new Date().toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' }), W / 2, 966);
   x.fillStyle = 'rgba(247,246,241,.4)'; x.font = '400 15px Inter'; x.fillText(`Código de verificação: ${code}`, W / 2, 1024);
   x.fillStyle = 'rgba(217,179,140,.6)'; x.font = 'italic 400 13px Inter'; x.fillText('Documento comprovativo interno · modelo em validação jurídica', W / 2, 1052);
@@ -2379,7 +2385,7 @@ function adminBroadcastsHTML() {
   const courseOpts = CATALOG.map(c => `<option value="${c.id}">${esc(ctitle(c))}</option>`).join('');
   return `<div class="admin-section">
     <h2>New broadcast</h2>
-    <p class="sect-sub">Posts as an official EdenRise announcement in the community — gold badge, optionally pinned to the top of its channel.</p>
+    <p class="sect-sub">Posts as an official ${brandName()} announcement in the community — gold badge, optionally pinned to the top of its channel.</p>
     <div class="studio">
       <div class="ce-two">
         <div class="field"><label>Channel</label><select id="bcChannel">
@@ -2533,7 +2539,7 @@ function companiesListHTML() {
     <div class="ct"><b>${esc(c.name || c.id)}</b><span>${esc(c.id)} · ${c.plan || 'trial'} · ${(c.adminEmails || []).length} admin(s) · invite ${esc(c.inviteCode || '—')}</span></div>
     <span class="pub-chip ${c.status === 'active' ? 'live' : 'draft'}">${(c.status || 'active').toUpperCase()}</span>
     <button class="btn btn-glass btn-sm" data-action="co-toggle" data-id="${esc(c.id)}">${c.status === 'suspended' ? 'Activate' : 'Suspend'}</button>
-  </div>`).join('') || `<p class="empty-note" style="text-align:left;padding:8px 0;">Only EdenRise so far — create the first client company below.</p>`;
+  </div>`).join('') || `<p class="empty-note" style="text-align:left;padding:8px 0;">Only ${brandName()} so far — create the first client company below.</p>`;
 }
 function createCompanyFromForm() {
   const id = ($('#ncId').value || '').trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
@@ -2588,7 +2594,7 @@ function adminSettingsHTML() {
 function renderAdmin() {
   const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, broadcasts: adminBroadcastsHTML, digests: adminDigestsHTML, live: adminLiveHTML, company: adminCompanyHTML, companies: adminCompaniesHTML, settings: adminSettingsHTML };
   return `<div class="page"><div class="page-pad">
-    <h1 class="page-title">EdenRise Studio</h1>
+    <h1 class="page-title">${brandName()} Studio</h1>
     <p class="page-sub">The back office — people, content, broadcasts and the live schedule in one place.</p>
     ${studioTabsHTML()}
     ${(bodies[adminTab] || adminCockpitHTML)()}
@@ -2804,7 +2810,7 @@ function fireBrowserNudge() {
   if (!('Notification' in window) || Notification.permission !== 'granted') return false;
   const ns = computeNudges(); if (!ns.length) return false;
   const n = ns[0];
-  try { new Notification('EdenRise · ' + n.title, { body: n.body, icon: 'favicon.svg', tag: 'edenrise-nudge' }); return true; } catch (e) { return false; }
+  try { new Notification(brandName() + ' · ' + n.title, { body: n.body, icon: 'favicon.svg', tag: 'edenrise-nudge' }); return true; } catch (e) { return false; }
 }
 function welcomeNudge() {
   if (sessionStorage.getItem('welcomed')) return;
@@ -2943,7 +2949,7 @@ function postCardHTML(p) {
   return `<article class="post ${isDisc ? 'is-disc' : ''} ${p.pinned ? 'pinned' : ''}"${isDisc ? ` data-action="comm-open" data-id="${p.id}"` : ''}>
     <div class="post-av" data-action="member-card" data-handle="${esc(p.authorHandle || '')}">${esc(p.authorInitials || 'ER')}</div>
     <div class="post-main">
-      <div class="post-head">${p.official ? `<span class="off-badge">✦ EdenRise · ${t('comm_official')}</span>` : ''}${p.pinned ? `<span class="pin-badge">\ud83d\udccc ${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle" data-action="member-card" data-handle="${esc(p.authorHandle)}">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">\u00b7 ${timeAgo(p.createdAt)}</span></div>
+      <div class="post-head">${p.official ? `<span class="off-badge">✦ ${brandName()} · ${t('comm_official')}</span>` : ''}${p.pinned ? `<span class="pin-badge">\ud83d\udccc ${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle" data-action="member-card" data-handle="${esc(p.authorHandle)}">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">\u00b7 ${timeAgo(p.createdAt)}</span></div>
       ${isDisc ? `<div class="post-title">${esc(p.title)}</div>` : ''}
       <div class="post-body">${richBody(p.body)}</div>
       ${pollHTML(p)}
@@ -3177,7 +3183,7 @@ function aiKnowsLines() {
   return lines;
 }
 function exportMyData() {
-  const data = { exportedAt: new Date().toISOString(), app: 'EdenRise Academy', profile: S.profile || {}, goal: S.goal, role: S.role, path: S.path, progress: S.progress, xp: S.xp, badges: S.badges, streak: S.streak, quizzesPassed: S.quizzesPassed, notes: S.notes, lang: S.lang, ratings: S.ratings || {}, coachDone: S.coachDone || {}, notify: (S.profile || {}).notify || {} };
+  const data = { exportedAt: new Date().toISOString(), app: brandAcademy(), profile: S.profile || {}, goal: S.goal, role: S.role, path: S.path, progress: S.progress, xp: S.xp, badges: S.badges, streak: S.streak, quizzesPassed: S.quizzesPassed, notes: S.notes, lang: S.lang, ratings: S.ratings || {}, coachDone: S.coachDone || {}, notify: (S.profile || {}).notify || {} };
   delete data.profile.notify;
   const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
   const a = document.createElement('a'); a.href = url; a.download = 'edenrise-my-data.json'; document.body.appendChild(a); a.click(); a.remove();
@@ -3583,7 +3589,7 @@ function showCheckpoint(q, c) {
 function makeTranscript(c, mod) {
   const t = c.modules[mod];
   return [
-    ['0:00', `Welcome back. This module is “${t}” — by the end you'll be able to apply it in your own work at EdenRise.`],
+    ['0:00', `Welcome back. This module is “${t}” — by the end you'll be able to apply it in your own work at ${brandName()}.`],
     ['0:48', `First, the common misconception: most teams treat ${t.toLowerCase()} as a one-off task. It's a habit, not an event.`],
     ['2:15', `Here's the framework — three parts, and the middle one is where ${c.cat.toLowerCase()} teams usually slip.`],
     ['4:40', `Quick example from a real ${c.cat.toLowerCase()} case. Notice what changes the moment the owner is named.`],
@@ -3712,7 +3718,7 @@ async function generateAIQuiz(c) {
   /* ground the questions in the course's real takeaways, not just the blurb */
   const tk = []; try { const T = (typeof TAKEAWAYS !== 'undefined') && TAKEAWAYS[c.id]; if (T) (T[lang] || T.en || []).forEach(m => Array.isArray(m) ? tk.push(...m) : tk.push(m)); } catch (e) {}
   const text = await llmComplete({
-    system: `You are a master instructor and assessment designer for EdenRise Academy — a regenerative-living school working REAL LAND in the Baixo Alentejo, Portugal. Write a rigorous, practical quiz that tests whether a worker can APPLY this course on the land — never rote recall of words.\nRULES:\n1. Every question is a realistic ON-THE-LAND scenario or judgement call ("You're doing X and Y happens — what's the best move / why?").\n2. Distractors must be PLAUSIBLE mistakes a real person would actually make — never obviously silly.\n3. Ground every question in THIS course's real content AND the Alentejo reality (heat, drought, fire season, cork-oak montado, clay soils, water scarcity, working as a team).\n4. ACCURACY OVER QUANTITY: every question and its correct answer must be verifiably supported by the course content provided — if the content is thin, write only 3 solid questions instead of inventing a 4th. A wrong "correct answer" is the worst possible failure.\n5. Reply with ONLY a raw JSON array of 3-4 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. No markdown, no fences.\nLanguage: ${lang === 'pt' ? 'European Portuguese (pt-PT — never Brazilian)' : 'English'}.`,
+    system: `You are a master instructor and assessment designer for ${brandAcademy()} — ${brandShortDesc()}. Write a rigorous, practical quiz that tests whether a worker can APPLY this course in the real world — never rote recall of words.\nRULES:\n1. Every question is a realistic ON-THE-LAND scenario or judgement call ("You're doing X and Y happens — what's the best move / why?").\n2. Distractors must be PLAUSIBLE mistakes a real person would actually make — never obviously silly.\n3. Ground every question in THIS course's real content AND ${brandRealm()}.\n4. ACCURACY OVER QUANTITY: every question and its correct answer must be verifiably supported by the course content provided — if the content is thin, write only 3 solid questions instead of inventing a 4th. A wrong "correct answer" is the worst possible failure.\n5. Reply with ONLY a raw JSON array of 3-4 objects: {"q":"…","opts":["…","…","…","…"],"a":<correct index 0-3>}. No markdown, no fences.\nLanguage: ${lang === 'pt' ? 'European Portuguese (pt-PT — never Brazilian)' : 'English'}.`,
     messages: [{ role: 'user', content: `COURSE: "${ctitle(c)}" (${tcat(c.cat)})\nHook: ${chook(c)} ${chooksub(c)}\nAbout: ${cdesc(c)}\nModules: ${cmods(c).join('; ')}.${tk.length ? '\nKey ideas taught: ' + tk.join(' | ') : ''}` }],
     maxTokens: 1300
   });
@@ -4101,7 +4107,7 @@ function regenPath() {
     S.path = [...done, ...rest];
     S.rationaleIdx = (S.rationaleIdx + 1) % PATH_RATIONALES.length;
     save(); render();
-    toast('Path re-planned by EdenRise AI', '✦');
+    toast('Path re-planned by ' + brandName() + ' AI', '✦');
   }, 1400);
 }
 
@@ -4546,8 +4552,8 @@ function drawOnboard() {
         <div class="gen-line" id="genLine">${_lang() === 'pt' ? 'A ler o seu perfil…' : 'Reading your role profile…'}</div>
       </div>`;
     const lines = _lang() === 'pt'
-      ? ['A ler o seu perfil…', 'A percorrer a biblioteca EdenRise…', 'A ver competências que pode saltar…', 'A sequenciar 4–6 cursos…', 'Concluído ✓']
-      : ['Reading your role profile…', 'Scanning the EdenRise library…', 'Checking skills you can skip…', 'Sequencing 4–6 courses…', 'Done ✓'];
+      ? ['A ler o seu perfil…', 'A percorrer a biblioteca ' + brandName() + '…', 'A ver competências que pode saltar…', 'A sequenciar 4–6 cursos…', 'Concluído ✓']
+      : ['Reading your role profile…', 'Scanning the ' + brandName() + ' library…', 'Checking skills you can skip…', 'Sequencing 4–6 courses…', 'Done ✓'];
     let i = 0;
     const iv = setInterval(() => {
       i++;
