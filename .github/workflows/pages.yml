@@ -27,7 +27,7 @@ jobs:
           npx --yes esbuild@0.24.2 brands/_example/brand.js --minify --charset=utf8 --outfile=brands/_example/brand.js --allow-overwrite
           npx --yes esbuild@0.24.2 core/brandkit.js --minify --charset=utf8 --outfile=core/brandkit.js --allow-overwrite
           npx --yes esbuild@0.24.2 core/app.js  --minify --charset=utf8 --outfile=core/app.js  --allow-overwrite
-          npx --yes esbuild@0.24.2 data.js --minify --charset=utf8 --outfile=data.js --allow-overwrite
+          npx --yes esbuild@0.24.2 brands/edenrise/content.js --minify --charset=utf8 --outfile=brands/edenrise/content.js --allow-overwrite          npx --yes esbuild@0.24.2 data.js --minify --charset=utf8 --outfile=data.js --allow-overwrite
           npx --yes esbuild@0.24.2 core/auth.js --minify --charset=utf8 --format=esm --outfile=core/auth.js --allow-overwrite
           npx --yes esbuild@0.24.2 sw.js   --minify --charset=utf8 --outfile=sw.js   --allow-overwrite
           npx --yes esbuild@0.24.2 core/styles.css --minify --outfile=core/styles.css --allow-overwrite
