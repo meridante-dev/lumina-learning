@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Minify JS + CSS (deploy artifact only; source stays readable)
         run: |
+          npx --yes esbuild@0.24.2 brandkit.js --minify --charset=utf8 --outfile=brandkit.js --allow-overwrite
           npx --yes esbuild@0.24.2 app.js  --minify --charset=utf8 --outfile=app.js  --allow-overwrite
           npx --yes esbuild@0.24.2 data.js --minify --charset=utf8 --outfile=data.js --allow-overwrite
           npx --yes esbuild@0.24.2 auth.js --minify --charset=utf8 --format=esm --outfile=auth.js --allow-overwrite
