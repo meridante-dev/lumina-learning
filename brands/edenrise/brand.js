@@ -33,6 +33,8 @@
   },
   superadmins: ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'],
   themeColor: '#0e140f',
+  wordSub: 'Academy',     /* the small word under the logo name */
+  logoSvg: null,          /* founding brand keeps the inline SVG in index.html; a client ships its own here */
   favicon: null,          /* keep index.html's versioned favicon for the founding brand */
   ogImage: 'https://academy.edenrise.com/og-image.png',
   content: 'data.js',     /* this instance's course catalog (Stage 2 splits per-brand) */

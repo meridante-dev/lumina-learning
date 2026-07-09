@@ -39,4 +39,16 @@
   const fav = document.querySelector('link[rel="icon"]'); if (fav && B.favicon) fav.setAttribute('href', B.favicon);
   const fl = document.getElementById('brandFonts');
   if (fl && B.fonts && B.fonts.link && fl.getAttribute('href') !== B.fonts.link) fl.setAttribute('href', B.fonts.link);
+
+  /* ---- logo + wordmark (body elements — after DOM is ready) --------------
+     Wordmark text is always applied (reproduces the founding brand exactly);
+     the logo SVG is only swapped when a brand ships its own `logoSvg`. */
+  const applyMark = () => {
+    const nm = B.wordName || B.name;
+    if (nm) document.querySelectorAll('.er-name').forEach(e => { e.textContent = nm.toUpperCase(); });
+    document.querySelectorAll('.er-sub').forEach(e => { e.textContent = B.wordSub || 'Academy'; });
+    if (B.logoSvg) document.querySelectorAll('.logo-mark').forEach(e => { e.innerHTML = B.logoSvg; });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', applyMark);
+  else applyMark();
 })();
