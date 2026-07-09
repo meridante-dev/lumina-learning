@@ -1,0 +1,6 @@
+Lumina Learning Platform — core
+1.0.0
+
+The shared white-label engine. Instances (EdenRise, …) live in brands/ and
+inherit every core release. Semver here is the PRODUCT version; the `v=edrNN`
+markers in index.html/sw.js are per-deploy cache-busters (separate concern).

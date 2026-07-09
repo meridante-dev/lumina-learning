@@ -1,8 +1,8 @@
 /* EdenRise Academy — offline app shell + cached art
    Strategy: network-first for code/HTML (updates always win, cache is the
    offline fallback); cache-first for media/fonts (immutable-ish). */
-const VERSION = 'edenrise-v70';
-const CORE = ['./', './index.html', './brandkit.js', './styles.css', './app.js', './data.js', './manifest.json', './favicon.svg', './icon-192.png', './icon-512.png', './og-image.png'];
+const VERSION = 'edenrise-v71';
+const CORE = ['./', './index.html', './brands/edenrise/brand.js', './core/brandkit.js', './core/styles.css', './core/app.js', './data.js', './manifest.json', './favicon.svg', './icon-192.png', './icon-512.png', './og-image.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => Promise.allSettled(CORE.map(u => c.add(u)))).then(() => self.skipWaiting()));

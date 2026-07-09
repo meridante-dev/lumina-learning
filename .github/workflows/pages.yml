@@ -23,12 +23,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Minify JS + CSS (deploy artifact only; source stays readable)
         run: |
-          npx --yes esbuild@0.24.2 brandkit.js --minify --charset=utf8 --outfile=brandkit.js --allow-overwrite
-          npx --yes esbuild@0.24.2 app.js  --minify --charset=utf8 --outfile=app.js  --allow-overwrite
+          npx --yes esbuild@0.24.2 brands/edenrise/brand.js --minify --charset=utf8 --outfile=brands/edenrise/brand.js --allow-overwrite
+          npx --yes esbuild@0.24.2 core/brandkit.js --minify --charset=utf8 --outfile=core/brandkit.js --allow-overwrite
+          npx --yes esbuild@0.24.2 core/app.js  --minify --charset=utf8 --outfile=core/app.js  --allow-overwrite
           npx --yes esbuild@0.24.2 data.js --minify --charset=utf8 --outfile=data.js --allow-overwrite
-          npx --yes esbuild@0.24.2 auth.js --minify --charset=utf8 --format=esm --outfile=auth.js --allow-overwrite
+          npx --yes esbuild@0.24.2 core/auth.js --minify --charset=utf8 --format=esm --outfile=core/auth.js --allow-overwrite
           npx --yes esbuild@0.24.2 sw.js   --minify --charset=utf8 --outfile=sw.js   --allow-overwrite
-          npx --yes esbuild@0.24.2 styles.css --minify --outfile=styles.css --allow-overwrite
+          npx --yes esbuild@0.24.2 core/styles.css --minify --outfile=core/styles.css --allow-overwrite
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
