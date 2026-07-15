@@ -2204,6 +2204,6 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .ck-note { flex: 1; font-size: 13px; color: var(--text-dim); }
 
 /* ===== evidence ledger & verified competency (R2-9/R2-5) + pretest (R2-12) ===== */
-.vc-panel .comp-ring { flex-shrink: 0; }
-.vc-ledger { margin-top: 10px; font-size: 12px; letter-spacing: .02em; }
+.vc-how { font-size: 12.5px; color: var(--text-dim); line-height: 1.55; max-width: 560px; }
+.vc-ledger { margin-top: 4px; font-size: 12px; letter-spacing: .02em; color: var(--text-faint); }
 .pre-sub { font-size: 13px; color: var(--text-dim); margin: 4px 0 10px; line-height: 1.5; }

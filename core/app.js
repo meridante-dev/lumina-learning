@@ -1358,14 +1358,12 @@ function verifiedPanelHTML() {
   return `<div class="admin-section vc-panel">
     <h2>🏅 ${t('vc_title')}</h2>
     <p class="sect-sub">${t('vc_sub')}</p>
-    <div class="comp-hero">
-      <div class="comp-ring" style="background:conic-gradient(${v.pct >= 100 ? 'var(--accent-2)' : 'var(--accent)'} ${v.pct * 3.6}deg, rgba(255,255,255,.08) 0);">
-        <span class="comp-ring-in"><b>${v.pct}%</b><small>${t('vc_ring')}</small></span>
-      </div>
-      <div class="comp-facts">
-        <div class="comp-fact">${t('vc_of').replace('{v}', v.verified).replace('{d}', v.done)}</div>
-        <div class="comp-fact-sub">${t('vc_how')}</div>
-        <div class="comp-fact-sub vc-ledger" id="vcLedger">🔐 ${events} ${t('vc_events')} · <span class="vc-chk">…</span></div>
+    <div class="ready-wrap">
+      <div class="jour-ring lg" style="background:conic-gradient(${v.pct >= 100 ? 'var(--accent-2)' : 'var(--accent)'} ${v.pct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${v.pct}%<small style="font-size:11px">${t('vc_ring')}</small></span></div>
+      <div class="ready-rows" style="gap:6px;">
+        <div class="between"><span class="sk-name">${t('vc_of').replace('{v}', v.verified).replace('{d}', v.done)}</span></div>
+        <div class="vc-how">${t('vc_how')}</div>
+        <div class="vc-ledger" id="vcLedger">🔐 ${events} ${t('vc_events')} · <span class="vc-chk">…</span></div>
       </div>
     </div>
   </div>`;
