@@ -191,6 +191,14 @@ const CATALOG = [
       { type: 'vimeo', id: '1058016139', h: 'b5e41053e2' },   /* 6.1 Body, Soul and Spirit */
       { type: 'vimeo', id: '1058015323', h: 'be2e764833' }    /* 6.2 Body Soul Spirit deep dive */
     ]
+  },
+  {
+    id: 'ai-literacy', title: 'Working Well with AI', cat: 'Leadership', grad: 2, icon: 'compass', recertMonths: 12,
+    level: 'All levels', rating: 5.0, learners: 0, isNew: true, updated: '2026-07', poster: 'media/covers/ai-literacy.svg',
+    hook: 'AI is on the team now. Use it well.', hookSub: 'The literacy every EU workplace must have — practical, honest, ours.',
+    desc: 'The EU AI Act (Article 4) asks every organisation using AI to make sure its people are AI-literate. This is our version: what AI is and isn\'t, how to work with the Academy\'s AI honestly and safely, what it does with your data, and what the law expects of us.',
+    modules: ['What AI Is (and Isn\'t)', 'Working with Our AI Tutor', 'When AI Is Wrong', 'Your Data & Privacy', 'The EU AI Act & Us'],
+    moduleDurations: [4, 5, 5, 4, 5]
   }
 ];
 /* designed brand covers — every course ships with art (land-team-journey keeps its filmed cover) */
@@ -202,6 +210,7 @@ const LIVE_SESSIONS = [
   { id: 'season-circle', title: 'Seasonal Circle: Midsummer', host: 'Marta Oliveira · Head of Regeneration', when: 'Thu 19 · 19:00 WET', grad: 6, icon: 'sun', desc: 'A gathering to mark midsummer — what to tend, what to harvest, what to let rest.' }
 ];
 const COURSE_HOOKS = {
+  'ai-literacy': ['AI is on the team now. Use it well.', 'The literacy every EU workplace must have — practical, honest, ours.'],
   'fire-truck-training': ['When fire comes, know the truck.', 'Start it, drive it, fill it, and put water where it’s needed — hands-on, step by step.'],
   'alignment-journey': ['One team, one way of showing up.', 'Six shifts that align how we think, set goals, meet fear, and work the land together.'],
   'land-team-journey': ['One question changes how you show up.', 'Above the line or below it — the mindset the whole journey grows from.'],
@@ -227,6 +236,7 @@ const COURSE_HOOKS = {
   'community-land': ['No one stewards alone.', 'Commons, councils and shared care for shared ground.']
 };
 const COURSE_HOOKS_PT = {
+  'ai-literacy': ['A IA já faz parte da equipa. Use-a bem.', 'A literacia que todos os locais de trabalho na UE devem ter — prática, honesta, nossa.'],
   'fire-truck-training': ['Quando o fogo vem, conheça o camião.', 'Arrancar, conduzir, encher e pôr água onde é preciso — na prática, passo a passo.'],
   'alignment-journey': ['Uma equipa, uma forma de estar.', 'Seis mudanças que alinham como pensamos, definimos objetivos, enfrentamos o medo e trabalhamos a terra juntos.'],
   'land-team-journey': ['Uma pergunta muda como aparecemos.', 'Acima ou abaixo da linha — a mentalidade de onde cresce toda a jornada.'],
@@ -252,6 +262,18 @@ const COURSE_HOOKS_PT = {
   'community-land': ['Ninguém cuida sozinho.', 'Baldios, conselhos e cuidado partilhado por um chão partilhado.']
 };
 const COURSE_QUIZ = {
+  'ai-literacy': {
+    en: [
+      { q: 'The Academy AI gives you a confident, detailed answer about a legal deadline. What is the right next move?', opts: ['Trust it — it sounded specific and confident', 'Check it against the official source before acting on it', 'Ask the AI to repeat it to confirm', 'Share it with the team immediately'], a: 1 },
+      { q: 'You want the AI tutor to help you actually LEARN a topic, not just hand you answers. Which is the best use?', opts: ['Ask for the final answer straight away', 'Have it quiz you and explain what you got wrong', 'Copy its summary into your notes unread', 'Avoid the AI entirely'], a: 1 },
+      { q: 'A colleague wants to paste a member\'s personal data into a public AI chatbot to draft a letter. What do you say?', opts: ['Fine — chatbots are private', 'Only if the letter is short', 'Don\'t — personal data stays inside our GDPR-covered tools; anonymise it first', 'Only paste the NIF, not the name'], a: 2 }
+    ],
+    pt: [
+      { q: 'A IA da Academia dá-lhe uma resposta confiante e detalhada sobre um prazo legal. Qual é o passo certo?', opts: ['Confiar — parecia específica e confiante', 'Verificar na fonte oficial antes de agir', 'Pedir à IA para repetir, para confirmar', 'Partilhar já com a equipa'], a: 1 },
+      { q: 'Quer que o tutor de IA o ajude a APRENDER de verdade, não só a dar respostas. Qual é o melhor uso?', opts: ['Pedir logo a resposta final', 'Pedir que o teste e explique o que errou', 'Copiar o resumo para as notas sem ler', 'Evitar a IA por completo'], a: 1 },
+      { q: 'Um colega quer colar dados pessoais de um membro num chatbot público de IA para redigir uma carta. O que diz?', opts: ['Pode ser — os chatbots são privados', 'Só se a carta for curta', 'Não — dados pessoais ficam nas nossas ferramentas cobertas pelo RGPD; anonimizar primeiro', 'Colar só o NIF, não o nome'], a: 2 }
+    ]
+  },
   'fire-truck-training': {
     en: [
       { q: 'Driving the truck off-road with a full tank, the biggest change to handle is…', opts: ['The radio volume', 'The shifting weight of the water moving the truck around', 'The colour of the dashboard', 'Nothing changes'], a: 1 },
@@ -282,6 +304,22 @@ const COURSE_QUIZ = {
   }
 };
 const TAKEAWAYS = {
+  'ai-literacy': {
+    en: [
+      ['Explain what a language model does (predicts likely text) and what it does not do (know or verify facts)', 'Name one task AI is strong at and one it is weak at in your own work', 'Spot marketing hype vs a real capability'],
+      ['Pick the right tutor mode (hint / coach / explain / practice / teach) for what you need', 'Ask grounded questions tied to your courses instead of vague ones', 'Use the AI to build your thinking, not to replace it'],
+      ['Recognise a hallucination: confident, specific, and wrong', 'Verify any AI claim that matters against an official or primary source', 'Correct the AI and re-ask instead of accepting a bad answer'],
+      ['State what our AI sees about you (progress + courses) and what it never sees', 'Keep personal data out of public AI tools; anonymise before drafting', 'Exercise your GDPR rights: export or erase your data anytime'],
+      ['State the Article 4 duty in one sentence: staff who use AI must be AI-literate', 'Know the enforcement date (3 Aug 2026) and that our internal record is the evidence', 'Point a colleague to this course as our AI-literacy path']
+    ],
+    pt: [
+      ['Explicar o que um modelo de linguagem faz (prevê texto provável) e o que não faz (saber ou verificar factos)', 'Nomear uma tarefa em que a IA é forte e uma em que é fraca no seu trabalho', 'Distinguir publicidade de capacidade real'],
+      ['Escolher o modo certo do tutor (pista / coach / explicar / praticar / ensinar) para o que precisa', 'Fazer perguntas ligadas aos seus cursos, em vez de perguntas vagas', 'Usar a IA para desenvolver o raciocínio, não para o substituir'],
+      ['Reconhecer uma alucinação: confiante, específica e errada', 'Verificar qualquer afirmação importante da IA numa fonte oficial', 'Corrigir a IA e voltar a perguntar, em vez de aceitar uma má resposta'],
+      ['Dizer o que a nossa IA vê sobre si (progresso + cursos) e o que nunca vê', 'Manter dados pessoais fora de IA pública; anonimizar antes de redigir', 'Exercer os direitos RGPD: exportar ou apagar os seus dados quando quiser'],
+      ['Dizer o dever do Artigo 4.º numa frase: quem usa IA deve ter literacia de IA', 'Saber a data de aplicação (3 ago 2026) e que o nosso registo interno é a prova', 'Indicar este curso a um colega como o nosso percurso de literacia de IA']
+    ]
+  },
   'fire-truck-training': {
     en: [
       ['Know the truck cold: ignition sequence, gears, brakes and the gauges that matter before you move.',
@@ -362,6 +400,7 @@ const TAKEAWAYS = {
   }
 };
 const COURSE_PT = {
+  'ai-literacy': { title:'Trabalhar Bem com a IA', desc:'O Regulamento IA da UE (Artigo 4.º) pede a todas as organizações que usam IA que garantam a literacia de IA das suas pessoas. Esta é a nossa versão: o que a IA é e não é, como trabalhar com a IA da Academia com honestidade e segurança, o que ela faz com os seus dados, e o que a lei espera de nós.', modules:['O que a IA É (e Não É)','Trabalhar com o Nosso Tutor de IA','Quando a IA Está Errada','Os Seus Dados e Privacidade','O Regulamento IA da UE e Nós'] },
   'fire-truck-training': { title:'Formação — Camião de Incêndio', desc:'Operação prática do camião de combate a incêndios da propriedade — arrancar, conduzir, encher e pôr água exatamente onde é preciso. Quando chega a época de fogos, todos devem saber mover água.', modules:['Arrancar e Conduzir o Camião','Encher o Depósito de Água','Todo-o-Terreno, Bomba e Jato','Potência, Segurança e o Exercício'] },
   'alignment-journey': { title:'A Jornada de Alinhamento EdenRise', desc:'A jornada interior da equipa EdenRise — a mentalidade que molda como trabalhamos a terra e uns com os outros. Seis mudanças, do pensamento “Acima da Linha” aos objetivos, ao medo, e à totalidade de corpo, alma e espírito.', modules:[
     'Boas-vindas',
@@ -395,6 +434,7 @@ const COURSE_PT = {
   'community-land': { title:'Comunidade e os Bens Comuns', desc:'A terra cura mais depressa em conjunto. Ferramentas partilhadas, mutirões e as estruturas que permitem a uma comunidade cuidar de um lugar como um só.', modules:['Porque funcionam os comuns','Partilhar ferramentas e trabalho','Organizar um mutirão','Decidir sem esgotamento','Um plano comunitário de 90 dias'] }
 };
 const COURSE_SKILLS = {
+  'ai-literacy': ['leadership'],
   'fire-truck-training': ['safety'],
   'alignment-journey': ['leadership', 'community'],
   'land-team-journey': ['leadership', 'community'],

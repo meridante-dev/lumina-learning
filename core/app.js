@@ -37,6 +37,70 @@ const brandShortDesc = () => BRAND.shortDesc || 'a regenerative-living school in
 const brandRealm = () => BRAND.realm || 'the Alentejo reality (heat, drought, fire season, cork-oak montado, clay soils, water scarcity, working as a team)';
 /* location line for certificates / footers */
 const brandLocation = () => BRAND.location || 'Baixo Alentejo, Portugal';
+
+/* ================= R2-9 · Evidence ledger — proven learning, append-only =================
+   One immutable, hash-chained stream of learning events per learner. Everything else
+   (Verified-Competency %, certificates, compliance packs) is DERIVED from it; the ledger
+   itself is never edited — any change breaks the chain, which is what makes an export
+   defensible to an auditor. Designed to migrate 1:1 into Firestore (create-only rules). */
+async function _ledgerSha(s) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+}
+let _ledgerChain = Promise.resolve();   /* serializes appends so the hash chain stays ordered */
+function ledgerAppend(type, data = {}) {
+  _ledgerChain = _ledgerChain.then(async () => {
+    try {
+      const L = (S.ledger = S.ledger || []);
+      /* idempotent event kinds — never double-record the same fact */
+      if (type === 'module_complete' && L.some(e => e.type === type && e.courseId === data.courseId && e.mod === data.mod)) return;
+      if (type === 'course_complete' && L.some(e => e.type === type && e.courseId === data.courseId)) return;
+      if (type === 'consent_given' && L.some(e => e.type === type)) return;
+      if (type === 'pretest' && L.some(e => e.type === type && e.courseId === data.courseId)) return;
+      const core = Object.assign({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+        brandId: BRAND.id || 'edenrise',
+        type,
+        at: new Date().toISOString(),
+        prevHash: L.length ? L[L.length - 1].hash : 'genesis'
+      }, data);
+      const hash = await _ledgerSha(JSON.stringify(core));
+      L.push(Object.assign(core, { hash }));
+      save();
+    } catch (e) { /* the ledger must never break the app */ }
+  });
+  return _ledgerChain;
+}
+/* walk the chain recomputing every hash — any tamper breaks it */
+async function ledgerVerify(L = S.ledger || []) {
+  let prev = 'genesis';
+  for (const ev of L) {
+    if (ev.prevHash !== prev) return { ok: false, at: ev.id };
+    const { hash, ...core } = ev;
+    if (await _ledgerSha(JSON.stringify(core)) !== hash) return { ok: false, at: ev.id };
+    prev = hash;
+  }
+  return { ok: true, events: L.length };
+}
+
+/* ---- R2-5 · Verified-Competency — the metric above raw completion ----
+   A course is VERIFIED only when the ledger holds: completion AND a passed
+   scenario/application item AND a delayed (≥7 days) retrieval pass. */
+function courseVerified(courseId, st = S) {
+  const p = (st.progress || {})[courseId];
+  if (!(p && p.done)) return false;
+  const L = st.ledger || [];
+  const doneAt = p.doneAt || 0;
+  const scenario = L.some(e => e.type === 'application_item_pass' && e.courseId === courseId);
+  const delayed = L.some(e => e.type === 'delayed_retrieval_pass' && e.courseId === courseId
+    && (new Date(e.at).getTime() - doneAt) >= 7 * 864e5);
+  return scenario && delayed;
+}
+function verifiedCompetency(st = S) {
+  const done = CATALOG.filter(c => { const p = (st.progress || {})[c.id]; return p && p.done; });
+  const v = done.filter(c => courseVerified(c.id, st));
+  return { done: done.length, verified: v.length, pct: done.length ? Math.round(v.length / done.length * 100) : 0 };
+}
 /* identity — real profile name once signed in → their @username → email handle → warm generic.
    NEVER a hardcoded person: every user must see their own name. */
 const displayName = () => (S.profile && S.profile.name)
@@ -1130,6 +1194,7 @@ async function downloadTrainingCert() {
   const pf = S.profile || {};
   if (!pf.nif) { toast(t('comp_nif_prompt'), '🪪'); location.hash = '#/profile'; return; }
   const code = await complianceVerifyCode(pf, complianceYear(), S.trainingLog);
+  ledgerAppend('cert_issued', { year: complianceYear(), code });
   trainingCertCanvas(pf, complianceYear(), code).toBlob(b => {
     const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `certificado-formacao-${pf.nif || 'x'}-${complianceYear()}.png`;
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); toast(t('comp_cert_dl'), '🎓');
@@ -1228,6 +1293,52 @@ function gdprDpaDoc() {
 <h2>5. Auditoria</h2>
 <p>A Plataforma disponibiliza a informação necessária para demonstrar o cumprimento deste acordo e permite auditorias razoáveis, mediante pré-aviso escrito de 15 dias.</p>`);
 }
+/* R2-8 · EU AI Act Article 4 — AI-literacy evidence pack.
+   Generated from the evidence ledger; framed as lightweight support + documentation
+   (the Art.4 duty), NOT a certified assessment. Draft wording pending legal review. */
+function art4Rows(list) {
+  return list.map(({ name, st }) => {
+    const p = (st.progress || {})['ai-literacy'];
+    const pct = p ? (p.done ? 100 : (p.pct || 0)) : 0;
+    const L = st.ledger || [];
+    const best = Math.max(0, ...L.filter(e => e.type === 'quiz_pass' && e.courseId === 'ai-literacy').map(e => e.score || 0));
+    const ver = courseVerified('ai-literacy', st);
+    const ev = L.filter(e => e.courseId === 'ai-literacy').length;
+    const hours = (st.trainingLog || []).filter(e => e.courseId === 'ai-literacy').reduce((a, e) => a + (e.hours || 0), 0);
+    return `<tr><td>${esc(name)}</td><td>${pct}%${p && p.done ? ' ✓' : ''}</td><td>${best || '—'}</td><td>${ver ? 'Sim ✓' : '—'}</td><td>${Math.round(hours * 100) / 100}h</td><td>${ev}</td></tr>`;
+  }).join('');
+}
+function art4PackHTML(list) {
+  const today = new Date().toLocaleDateString('pt-PT');
+  return `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>Registo de Literacia de IA — Art. 4.º</title>
+<style>body{font-family:Georgia,serif;max-width:860px;margin:40px auto;color:#1d2a20;line-height:1.55;padding:0 20px}h1{font-size:26px}h2{font-size:17px;margin-top:28px}.meta{color:#5a6a5c;font-size:13px}table{border-collapse:collapse;width:100%;margin:18px 0;font-size:13.5px}th,td{border:1px solid #c9d2c9;padding:7px 10px;text-align:left}th{background:#eef2ec}.note{background:#f6f3e8;border:1px solid #ddd2ae;padding:12px 16px;border-radius:8px;font-size:13px;margin-top:26px}</style></head><body>
+<h1>Registo de Literacia de IA — Regulamento (UE) 2024/1689, Artigo 4.º</h1>
+<p class="meta"><b>${esc(companyName())}</b>${companyNif() ? ' · NIF ' + esc(companyNif()) : ''} · ${today} · Plataforma: ${brandAcademy()}</p>
+<h2>1. Enquadramento</h2>
+<p>O Artigo 4.º do Regulamento IA obriga os fornecedores e utilizadores de sistemas de IA a assegurar, na medida do possível, um nível suficiente de <b>literacia no domínio da IA</b> do seu pessoal (aplicável desde 2 de fevereiro de 2025; regime sancionatório aplicável a partir de <b>3 de agosto de 2026</b>). Não é exigido formato certificado — um registo interno de formação documentada constitui o suporte adequado.</p>
+<h2>2. Medida implementada</h2>
+<p>Percurso interno «Working Well with AI / Trabalhar Bem com a IA» (5 módulos: natureza e limites da IA; utilização do tutor de IA; erros e alucinações; dados pessoais e RGPD; o Regulamento IA), com verificação por questionário de cenários e reverificação anual. Os registos abaixo derivam de um <b>diário de eventos de aprendizagem apenas-acrescentar, com cadeia de integridade (SHA-256)</b> — qualquer alteração posterior quebraria a cadeia.</p>
+<h2>3. Registo por trabalhador</h2>
+<table><tr><th>Trabalhador</th><th>Percurso</th><th>Melhor resultado</th><th>Competência verificada*</th><th>Horas</th><th>Eventos no diário</th></tr>${art4Rows(list)}</table>
+<p class="meta">* «Verificada» = percurso concluído + item de cenário aprovado + verificação de retenção diferida (≥7 dias).</p>
+<div class="note"><b>Nota:</b> documento de apoio gerado automaticamente pela plataforma ${brandAcademy()} como evidência de diligência nos termos do Art. 4.º — enquadramento de apoio e documentação, não uma certificação formal. Modelo em validação jurídica.</div>
+</body></html>`;
+}
+function downloadArt4Pack(team) {
+  let list;
+  if (team) {
+    if (!adminMembers) { toast('Members still loading', 'ℹ️'); return; }
+    list = filteredMembers().map(m => ({ name: (m.profile || {}).name || '—', st: m.state || {} }));
+  } else {
+    list = [{ name: displayName(), st: S }];
+  }
+  const blob = new Blob([art4PackHTML(list)], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `literacia-ia-art4-${new Date().getFullYear()}.html`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast(t('art4_done'), '⤓');
+}
 function downloadGdprDoc(kind) {
   const map = { retention: [gdprRetentionDoc, 'politica-retencao'], art30: [gdprArt30Doc, 'registo-tratamento-art30'], dpa: [gdprDpaDoc, 'acordo-subcontratacao-dpa'] };
   const m = map[kind]; if (!m) return;
@@ -1239,6 +1350,32 @@ function downloadGdprDoc(kind) {
   toast(t('gdpr_doc_done'), '⤓');
 }
 
+/* R2-5: the harder number above completion — with the evidence-record status line */
+function verifiedPanelHTML() {
+  const v = verifiedCompetency();
+  if (!v.done) return '';
+  const events = (S.ledger || []).length;
+  return `<div class="admin-section vc-panel">
+    <h2>🏅 ${t('vc_title')}</h2>
+    <p class="sect-sub">${t('vc_sub')}</p>
+    <div class="comp-hero">
+      <div class="comp-ring" style="background:conic-gradient(${v.pct >= 100 ? 'var(--accent-2)' : 'var(--accent)'} ${v.pct * 3.6}deg, rgba(255,255,255,.08) 0);">
+        <span class="comp-ring-in"><b>${v.pct}%</b><small>${t('vc_ring')}</small></span>
+      </div>
+      <div class="comp-facts">
+        <div class="comp-fact">${t('vc_of').replace('{v}', v.verified).replace('{d}', v.done)}</div>
+        <div class="comp-fact-sub">${t('vc_how')}</div>
+        <div class="comp-fact-sub vc-ledger" id="vcLedger">🔐 ${events} ${t('vc_events')} · <span class="vc-chk">…</span></div>
+      </div>
+    </div>
+  </div>`;
+}
+async function paintLedgerCheck() {
+  const el = document.querySelector('#vcLedger .vc-chk'); if (!el) return;
+  const r = await ledgerVerify();
+  el.textContent = r.ok ? t('vc_intact') : t('vc_broken');
+  el.style.color = r.ok ? 'var(--accent-2)' : '#d98a76';
+}
 function compliancePanelHTML() {
   const pf = S.profile || {};
   const log = (S.trainingLog || []).filter(e => new Date(e.at).getFullYear() === complianceYear()).sort((a, b) => b.at - a.at);
@@ -1266,6 +1403,7 @@ function compliancePanelHTML() {
     ${log.length ? `<div class="row wrapf gap-3" style="margin-top:16px;">
       <button class="btn btn-primary btn-sm" data-action="comp-cert">🎓 ${t('comp_cert_btn')}</button>
       <button class="btn btn-glass btn-sm" data-action="comp-register">⤓ ${t('comp_reg_btn')}</button>
+      <button class="btn btn-glass btn-sm" data-action="art4-self">🤖 ${t('art4_btn')}</button>
     </div>` : ''}
   </div>`;
 }
@@ -2035,6 +2173,12 @@ function paintMgrDash() {
           ${behind ? `<span class="md-seg low" style="flex:${behind}" title="${behind} behind"></span>` : ''}</div>
         <div class="mh-lbl">${complete} complete · ${onTrack} on track · ${behind} behind</div></div>
       <div class="mgr-hero"><div class="mh-num ${expired ? 'bad' : ''}">${expired}</div><div class="mh-lbl">Expired certifications</div>${expired ? '<div class="mh-sub bad">action required</div>' : '<div class="mh-sub ok">all current</div>'}</div>
+      ${(() => { /* R2-5: verified competency — the number above completion */
+        const withDone = pool.map(m => verifiedCompetency(m.state || {})).filter(v => v.done > 0);
+        const tv = withDone.reduce((a, v) => a + v.verified, 0), td = withDone.reduce((a, v) => a + v.done, 0);
+        const vp = td ? Math.round(tv / td * 100) : 0;
+        return `<div class="mgr-hero"><div class="mh-num">${vp}<small>%</small></div><div class="mh-lbl">Verified competency</div><div class="mh-sub">${tv}/${td} completed courses verified (scenario + delayed recall)</div></div>`;
+      })()}
     </div>
     <div class="mgr-pace"><div class="ob-eyebrow" style="margin-bottom:8px;">Hours vs the pacing line</div>${pacingChartSVG(pool)}
       <div class="pc-legend"><span><i class="pc-key ideal"></i>ideal pace (40h × team, spread over the year)</span><span><i class="pc-key actual"></i>actual cumulative hours</span></div></div>
@@ -2158,7 +2302,7 @@ function adminCockpitHTML() {
         <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
         <div style="display:flex;gap:8px;align-items:center;">
           <select id="ckDept" class="ck-dept"><option value="">All departments</option>${DEPTS.map(d => `<option value="${d.key}" ${cockpitDept === d.key ? 'selected' : ''}>${d.en}</option>`).join('')}</select>
-          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex">🛡 ${t('ru_annex_btn')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="retention" title="${t('gdpr_retention')}">📄 RGPD·1</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="art30" title="${t('gdpr_art30')}">📄 RGPD·2</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="dpa" title="${t('gdpr_dpa')}">📄 RGPD·3</button>
+          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex">🛡 ${t('ru_annex_btn')}</button><button class="btn btn-glass btn-sm" data-action="art4-pack" title="EU AI Act Art. 4 — AI-literacy evidence">🤖 ${t('art4_btn')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="retention" title="${t('gdpr_retention')}">📄 RGPD·1</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="art30" title="${t('gdpr_art30')}">📄 RGPD·2</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="dpa" title="${t('gdpr_dpa')}">📄 RGPD·3</button>
         </div>
       </div>
       <div class="team-table"><table>
@@ -2646,6 +2790,7 @@ function renderProgress() {
       <p class="sect-sub">${t('story_sub')}</p>
       <div id="storyBody">${S.learnStory && S.learnStory.text && S.learnStory.lang === S.lang ? `<p class="story-text">${esc(S.learnStory.text)}</p><button class="link-quiet" data-action="story-gen">${t('story_refresh')}</button>` : `<button class="btn btn-glass btn-sm" data-action="story-gen">${t('story_btn')}</button>`}</div>
     </div>
+    ${verifiedPanelHTML()}
     ${compliancePanelHTML()}
     ${readinessSectionHTML()}
     ${skillsSectionHTML()}
@@ -2736,7 +2881,9 @@ function dailyDropHTML() {
   </section>`;
 }
 function answerDaily(el) {
+  const d = dailyQuestion();   /* capture the course before S.daily marks it answered */
   const chosen = +el.dataset.opt, correct = chosen === +el.dataset.a;
+  if (correct && d && d.c) ledgerAppend('delayed_retrieval_pass', { courseId: d.c.id, via: 'daily' });
   S.daily = { date: new Date().toISOString().slice(0, 10), correct };
   bumpStreak();
   if (correct) awardXp(10, 'daily question');
@@ -3256,6 +3403,7 @@ function render() {
   if (route === 'community') initCommunity();
   if (route === 'admin' && isAdmin()) initAdmin();
   if (route === 'progress' && boardCache === null) initBoard();
+  if (route === 'progress') paintLedgerCheck();
   maybeTour();
   if (route === 'community') initBoard();
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -3504,6 +3652,50 @@ function openPlayer(courseId, mod) {
   $('#playerComplete').style.display = (media && media.type === 'soon') ? 'none' : '';
   playerEl.classList.add('open');
   if ($('#notesDrawer').classList.contains('open')) refreshNotesDrawer();
+  maybePretest(c, mod);
+}
+
+/* R2-12 · pretesting warm-up — guess before you learn. Two zero-stakes questions before
+   the FIRST lesson of an untouched course; even wrong guesses prime retention, and the
+   pretest→quiz delta becomes an honest learning-gain number in the ledger. */
+function maybePretest(c, mod) {
+  if (mod !== 0) return;
+  if (coursePct(c.id) > 0 || isDone(c.id)) return;
+  if ((S.ledger || []).some(e => e.type === 'pretest' && e.courseId === c.id)) return;
+  const qs = courseQuizFor(c);
+  if (!Array.isArray(qs) || qs.length < 2) return;
+  const pick = [qs[0], qs[1]];
+  const ov = $('#ckOv'); if (!ov) return;
+  let idx = 0, right = 0;
+  const drawOne = () => {
+    const q = pick[idx];
+    ov.innerHTML = `<div class="ck-card">
+      <div class="ob-eyebrow">🌱 ${t('pre_h')} · ${idx + 1}/2</div>
+      <p class="pre-sub">${t('pre_sub')}</p>
+      <div class="ck-q">${esc(q.q)}</div>
+      ${q.opts.map((o, i) => `<div class="q-opt" data-ck="${i}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
+      <div class="ck-foot"><button class="ob-skip" id="preSkip">${t('pre_skip')}</button><span style="flex:1"></span><button class="btn btn-primary btn-sm" id="preNext" style="display:none;">${idx ? '▶ ' + t('ck_continue') : t('pre_next')}</button></div>
+    </div>`;
+    ov.classList.add('on');
+    let answered = false;
+    ov.querySelectorAll('.q-opt').forEach(el => el.addEventListener('click', () => {
+      if (answered) return; answered = true;
+      const sel = +el.dataset.ck;
+      ov.querySelectorAll('.q-opt').forEach((x, i) => { if (i === q.a) x.classList.add('correct'); else if (i === sel) x.classList.add('wrong'); });
+      if (sel === q.a) right++;
+      $('#preNext').style.display = '';
+    }));
+    $('#preNext').addEventListener('click', () => {
+      idx++;
+      if (idx < pick.length) drawOne();
+      else { ledgerAppend('pretest', { courseId: c.id, score: Math.round(right / pick.length * 100) }); ov.classList.remove('on'); ov.innerHTML = ''; toast(t('pre_done'), '🌱'); }
+    });
+    $('#preSkip').addEventListener('click', () => {
+      ledgerAppend('pretest', { courseId: c.id, score: null, skipped: true });
+      ov.classList.remove('on'); ov.innerHTML = '';
+    });
+  };
+  drawOne();
 }
 function closePlayer() {
   playerEl.classList.remove('open');
@@ -3685,6 +3877,8 @@ function completeModule(courseId, mod) {
     const mins = (c.moduleDurations && c.moduleDurations[mod]) || 12;
     S.trainingLog.push({ courseId, mod, title: (cmods(c)[mod] || c.modules[mod]), hours: Math.round(mins / 60 * 100) / 100, at: Date.now(), confirmed: true });
   }
+  ledgerAppend('module_complete', { courseId, mod, mins: (c.moduleDurations && c.moduleDurations[mod]) || 12 });
+  if (mod >= c.modules.length - 1) ledgerAppend('course_complete', { courseId });
   if (S.review[courseId] === mod) { delete S.review[courseId]; toast('Review module cleared — nice recovery', '↺'); }
   bumpStreak();
   if (mod >= c.modules.length - 1) {
@@ -3758,6 +3952,13 @@ function drawQuiz() {
       S.review[quiz.courseId] = p && p.mod != null ? p.mod : 0;
     }
     save();
+    /* evidence ledger: every attempt recorded; AI quizzes are scenario/application items;
+       a pass ≥7 days after finishing the course doubles as a delayed retrieval check */
+    ledgerAppend(pass ? 'quiz_pass' : 'quiz_fail', { courseId: quiz.courseId, score: pctScore, ai: !!quiz.ai });
+    if (pass && quiz.ai) ledgerAppend('application_item_pass', { courseId: quiz.courseId, score: pctScore });
+    const _qp = prog(quiz.courseId);
+    if (pass && _qp && _qp.done && _qp.doneAt && (Date.now() - _qp.doneAt) >= 7 * 864e5)
+      ledgerAppend('delayed_retrieval_pass', { courseId: quiz.courseId, score: pctScore, via: 'quiz' });
     box.innerHTML = `<div class="q-center">
       <div class="score-ring" style="background:conic-gradient(${pass ? 'var(--accent-2)' : '#f59e0b'} ${pctScore * 3.6}deg, rgba(255,255,255,.08) 0); ">
         <span style="background:var(--bg-2);width:96px;height:96px;border-radius:50%;display:grid;place-items:center;">${pctScore}%</span>
@@ -3933,7 +4134,8 @@ const TUTOR_MODES = {
   hint:     'MODE: HINT — reply with ONE small nudge (max 2 sentences) that helps them find the answer themselves. NEVER give the full answer; end by handing the thinking back to them.',
   coach:    'MODE: COACH — reply Socratically: acknowledge briefly, then ask 1–2 guiding questions that lead them to the answer. Do not hand over answers; build their thinking.',
   explain:  'MODE: EXPLAIN — teach the concept clearly and warmly, with ONE concrete example from the land/courses, then end with one short check-for-understanding question.',
-  practice: 'MODE: PRACTICE — give ONE practical exercise on their topic (something they can do or answer now). When they attempt it, give specific feedback and only then the model answer.'
+  practice: 'MODE: PRACTICE — give ONE practical exercise on their topic (something they can do or answer now). When they attempt it, give specific feedback and only then the model answer.',
+  teach:    'MODE: TEACH-ME — role-reverse: you are now an eager, slightly confused APPRENTICE on their team, and THEY are your teacher. Ask them to explain their current topic in their own words. React like a real novice: get one thing subtly wrong or ask a naive follow-up ("wait, so why wouldn\'t I just…?") so they must clarify. NEVER lecture or correct with the full answer — if their explanation has a gap, ask the question that exposes it and let them close it. When they teach it well, tell them exactly what convinced you.'
 };
 function aiGuardrails() {
   const g = (window.EdenOrg && window.EdenOrg.aiGuard) || {};
@@ -4250,6 +4452,8 @@ document.addEventListener('click', e => {
     case 'comp-cert': downloadTrainingCert(); break;
     case 'comp-register': downloadTrainingRegister(); break;
     case 'ru-annex': downloadRUannex(); break;
+    case 'art4-pack': downloadArt4Pack(true); break;
+    case 'art4-self': downloadArt4Pack(false); break;
     case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
     case 'member-detail': openMemberDetail(el.dataset.uid); break;
     case 'mdet-close': { const mv = $('#mdetModal'); if (mv) mv.remove(); break; }
@@ -4618,6 +4822,7 @@ window.EdenApp = {
   applyProfile(p) {
     if (!p) return;
     S.profile = Object.assign({}, S.profile, p); save();   /* merge — keep username/bio set during onboarding */
+    if (p.email) ledgerAppend('consent_given', { via: 'signin' });   /* GDPR consent is part of the evidence record (idempotent) */
     const av = $('#avatarBtn'); if (av) { av.textContent = userInitials(); av.title = displayName(); }
   },
   currentState() { return S; },
