@@ -6,7 +6,17 @@ _Legend: 🧑 = only you can do it · 🤖 = Claude does it · ⏱ = rough wall-
 
 ---
 
-## Step 1 · Deploy the Firestore rules 🧑 ⏱ 3 min
+## Step 1 · Deploy the Firestore rules — ✅ DONE (2026-07-17, ruleset 794135b1, released 10:33Z)
+
+> **Verified live:** the released ruleset contains the events/anchors blocks, and 19/19 simulated
+> rule tests pass via the Firebase rules test API — 8 ledger (create ✓, update/delete/cross-read/
+> anonymous all denied) + 11 tenancy (no regression: own-doc read/write, super read, config/org
+> tenant isolation, leaderboard own-row-only, public forum/leaderboard reads).
+> Server-side counts at deploy time: **0 events / 0 anchors** — correct, since the rules went live
+> at 10:33 and no signed-in learner has been active since. Populates on the next module completion.
+
+<details><summary>original instructions (kept for reference)</summary>
+
 
 **Why this is first:** all the server-truth code is already live in production and running on
 every sync — but it hits `permission-denied`, catches it, and quietly waits. The ledger is
@@ -59,6 +69,8 @@ restore the previous set. The app tolerates either state, so a rollback breaks n
 > click through as (a) a normal EdenRise learner and (b) a super-admin (info@edenrise.com) and
 > confirm the Admin + Analytics pages still load. If tenancy rules misbehave, roll back and
 > tell me — I'll split the two rule sets into separate deploys.
+
+</details>
 
 ---
 
