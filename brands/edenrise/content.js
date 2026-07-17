@@ -310,14 +310,14 @@ const TAKEAWAYS = {
       ['Pick the right tutor mode (hint / coach / explain / practice / teach) for what you need', 'Ask grounded questions tied to your courses instead of vague ones', 'Use the AI to build your thinking, not to replace it'],
       ['Recognise a hallucination: confident, specific, and wrong', 'Verify any AI claim that matters against an official or primary source', 'Correct the AI and re-ask instead of accepting a bad answer'],
       ['State what our AI sees about you (progress + courses) and what it never sees', 'Keep personal data out of public AI tools; anonymise before drafting', 'Exercise your GDPR rights: export or erase your data anytime'],
-      ['State the Article 4 duty in one sentence: staff who use AI must be AI-literate', 'Know the enforcement date (3 Aug 2026) and that our internal record is the evidence', 'Point a colleague to this course as our AI-literacy path']
+      ['State the Article 4 duty in one sentence: staff who use AI must be AI-literate', 'Know the enforcement date (2 Aug 2026) and that our internal record is the evidence', 'Point a colleague to this course as our AI-literacy path']
     ],
     pt: [
       ['Explicar o que um modelo de linguagem faz (prevê texto provável) e o que não faz (saber ou verificar factos)', 'Nomear uma tarefa em que a IA é forte e uma em que é fraca no seu trabalho', 'Distinguir publicidade de capacidade real'],
       ['Escolher o modo certo do tutor (pista / coach / explicar / praticar / ensinar) para o que precisa', 'Fazer perguntas ligadas aos seus cursos, em vez de perguntas vagas', 'Usar a IA para desenvolver o raciocínio, não para o substituir'],
       ['Reconhecer uma alucinação: confiante, específica e errada', 'Verificar qualquer afirmação importante da IA numa fonte oficial', 'Corrigir a IA e voltar a perguntar, em vez de aceitar uma má resposta'],
       ['Dizer o que a nossa IA vê sobre si (progresso + cursos) e o que nunca vê', 'Manter dados pessoais fora de IA pública; anonimizar antes de redigir', 'Exercer os direitos RGPD: exportar ou apagar os seus dados quando quiser'],
-      ['Dizer o dever do Artigo 4.º numa frase: quem usa IA deve ter literacia de IA', 'Saber a data de aplicação (3 ago 2026) e que o nosso registo interno é a prova', 'Indicar este curso a um colega como o nosso percurso de literacia de IA']
+      ['Dizer o dever do Artigo 4.º numa frase: quem usa IA deve ter literacia de IA', 'Saber a data de aplicação (2 ago 2026) e que o nosso registo interno é a prova', 'Indicar este curso a um colega como o nosso percurso de literacia de IA']
     ]
   },
   'fire-truck-training': {

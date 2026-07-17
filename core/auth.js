@@ -119,6 +119,57 @@ window.EdenCloud = {
       weekStart: st.weekStart || null, weekBaseXp: st.weekBaseXp || 0,
       lastSeen: serverTimestamp(), updatedAt: serverTimestamp()
     }, { merge: true }).catch(() => {});
+    window.EdenCloud.syncLedger();
+  },
+  /* ---- evidence ledger → server truth --------------------------------------
+     Mirrors S.ledger events into users/{uid}/events (create-only rules) and pins
+     the chain head into users/{uid}/anchors with a SERVER timestamp. Event doc
+     id = event.id → idempotent across devices (an already-exists error means
+     another device mirrored it first — that counts as synced). Fault-tolerant:
+     while the create-only rules aren't deployed yet, permission-denied simply
+     stops the batch and the cursor stays put — nothing is lost, retried on the
+     next flush. Cursor lives OUTSIDE the state blob so syncing never mutates
+     the chain it is syncing. */
+  async syncLedger() {
+    const u = auth.currentUser; if (!u) return;
+    if (window.__ledgerSyncBusy) return; window.__ledgerSyncBusy = true;
+    try {
+      const st = localState();
+      const L = st.ledger || [];
+      const curKey = 'eden-ledger-synced-' + u.uid;
+      let cursor = +(localStorage.getItem(curKey) || 0);
+      if (cursor >= L.length) return;
+      for (let i = cursor; i < L.length; i++) {
+        const ev = L[i];
+        try {
+          await setDoc(doc(db, 'users', u.uid, 'events', ev.id), Object.assign({}, ev, { recordedAt: serverTimestamp() }));
+          cursor = i + 1; localStorage.setItem(curKey, String(cursor));
+        } catch (e) {
+          if ((e && e.code) === 'permission-denied') {
+            /* Two very different causes look identical here: (a) the create-only
+               rules aren't deployed yet, or (b) another device already mirrored
+               this event, so our setDoc is an UPDATE and updates are forbidden.
+               Disambiguate by reading the doc (own-uid reads are allowed). */
+            try {
+              const snap = await getDoc(doc(db, 'users', u.uid, 'events', ev.id));
+              if (snap.exists()) { cursor = i + 1; localStorage.setItem(curKey, String(cursor)); continue; }
+            } catch (e2) { /* read failed too → rules genuinely not live */ }
+            return;   /* rules not deployed yet — nothing lost, retry next flush */
+          }
+          return;   /* transient error — stop, retry later */
+        }
+      }
+      /* all mirrored → pin the chain head to server time (anchor id = head hash → idempotent) */
+      const head = L[L.length - 1];
+      if (head && head.hash) {
+        await setDoc(doc(db, 'users', u.uid, 'anchors', head.hash), {
+          headHash: head.hash, count: L.length,
+          brandId: head.brandId || 'edenrise',
+          recordedAt: serverTimestamp()
+        }).catch(() => {});
+      }
+    } catch (e) { /* never let ledger sync break the app */ }
+    finally { window.__ledgerSyncBusy = false; }
   },
   async saveOrgConfig(cfg) {
     if (!auth.currentUser) throw new Error('not-signed-in');

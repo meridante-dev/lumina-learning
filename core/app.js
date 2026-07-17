@@ -1315,7 +1315,7 @@ function art4PackHTML(list) {
 <h1>Registo de Literacia de IA — Regulamento (UE) 2024/1689, Artigo 4.º</h1>
 <p class="meta"><b>${esc(companyName())}</b>${companyNif() ? ' · NIF ' + esc(companyNif()) : ''} · ${today} · Plataforma: ${brandAcademy()}</p>
 <h2>1. Enquadramento</h2>
-<p>O Artigo 4.º do Regulamento IA obriga os fornecedores e utilizadores de sistemas de IA a assegurar, na medida do possível, um nível suficiente de <b>literacia no domínio da IA</b> do seu pessoal (aplicável desde 2 de fevereiro de 2025; regime sancionatório aplicável a partir de <b>3 de agosto de 2026</b>). Não é exigido formato certificado — um registo interno de formação documentada constitui o suporte adequado.</p>
+<p>O Artigo 4.º do Regulamento IA obriga os fornecedores e utilizadores de sistemas de IA a assegurar, na medida do possível, um nível suficiente de <b>literacia no domínio da IA</b> do seu pessoal (aplicável desde 2 de fevereiro de 2025; regime sancionatório aplicável a partir de <b>2 de agosto de 2026</b>). Não é exigido formato certificado — um registo interno de formação documentada constitui o suporte adequado.</p>
 <h2>2. Medida implementada</h2>
 <p>Percurso interno «Working Well with AI / Trabalhar Bem com a IA» (5 módulos: natureza e limites da IA; utilização do tutor de IA; erros e alucinações; dados pessoais e RGPD; o Regulamento IA), com verificação por questionário de cenários e reverificação anual. Os registos abaixo derivam de um <b>diário de eventos de aprendizagem apenas-acrescentar, com cadeia de integridade (SHA-256)</b> — qualquer alteração posterior quebraria a cadeia.</p>
 <h2>3. Registo por trabalhador</h2>
@@ -1350,6 +1350,66 @@ function downloadGdprDoc(kind) {
   toast(t('gdpr_doc_done'), '⤓');
 }
 
+/* ================= R2-18 · Transfer loop — did the learning reach the work? =================
+   Course end captures ONE implementation intention; at 7/14/30 days we ask whether it
+   was applied. 70–90% of training never reaches daily work — this loop is the counter,
+   and `application_checkin` events give the ledger a real Kirkpatrick-L3 signal. */
+const TRANSFER_DAYS = [7, 14, 30];
+function dueApplicationChecks(st = S) {
+  const out = [];
+  const its = st.intentions || {};
+  for (const courseId in its) {
+    const it = its[courseId];
+    const days = Math.floor((Date.now() - it.at) / 864e5);
+    for (const d of TRANSFER_DAYS) {
+      if (days >= d && !(it.checks || {})[d]) { out.push({ courseId, day: d, text: it.text }); break; }
+    }
+  }
+  return out;
+}
+function applicationRate(st = S) {
+  const L = (st.ledger || []).filter(e => e.type === 'application_checkin');
+  if (!L.length) return null;
+  return { applied: L.filter(e => e.applied).length, total: L.length, pct: Math.round(L.filter(e => e.applied).length / L.length * 100) };
+}
+function transferPanelHTML() {
+  const due = dueApplicationChecks();
+  if (!due.length) return '';
+  return `<div class="admin-section intent-panel">
+    <h2>🎯 ${t('appcheck_h')}</h2>
+    <p class="sect-sub">${t('appcheck_sub')}</p>
+    ${due.map(d => `<div class="intent-row">
+      <div class="intent-info"><b>${esc(ctitle(courseById(d.courseId)) || d.courseId)}</b> · ${t('appcheck_day').replace('{d}', d.day)}<span>“${esc(d.text)}”</span></div>
+      <div class="intent-btns">
+        <button class="btn btn-primary btn-sm" data-action="app-check" data-id="${d.courseId}" data-day="${d.day}" data-applied="1">✓ ${t('appcheck_yes')}</button>
+        <button class="btn btn-glass btn-sm" data-action="app-check" data-id="${d.courseId}" data-day="${d.day}" data-applied="0">${t('appcheck_no')}</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+/* evidence export — the client-owned file a third party can verify WITHOUT us
+   (regulators explicitly ask for tamper-evident records readable outside the vendor) */
+function downloadEvidenceExport() {
+  const L = S.ledger || [];
+  const payload = {
+    format: 'lumina-evidence-v1',
+    exportedAt: new Date().toISOString(),
+    platform: brandAcademy(),
+    brandId: BRAND.id || 'edenrise',
+    learner: displayName(),
+    events: L,
+    headHash: L.length ? L[L.length - 1].hash : null,
+    note: 'Append-only SHA-256 hash-chained learning record. Verify at /verify.html or with any RFC-6234 SHA-256 implementation: hash_i = sha256(JSON(event_i minus hash)), event_i.prevHash must equal hash_{i-1}.'
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `evidence-${(S.profile && S.profile.username) || 'learner'}-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast(t('ev_export_done'), '⤓');
+}
+
 /* R2-5: the harder number above completion — with the evidence-record status line */
 function verifiedPanelHTML() {
   const v = verifiedCompetency();
@@ -1363,7 +1423,8 @@ function verifiedPanelHTML() {
       <div class="ready-rows" style="gap:6px;">
         <div class="between"><span class="sk-name">${t('vc_of').replace('{v}', v.verified).replace('{d}', v.done)}</span></div>
         <div class="vc-how">${t('vc_how')}</div>
-        <div class="vc-ledger" id="vcLedger">🔐 ${events} ${t('vc_events')} · <span class="vc-chk">…</span></div>
+        ${(() => { const ar = applicationRate(); return ar ? `<div class="vc-how">🎯 ${t('vc_applied').replace('{a}', ar.applied).replace('{t}', ar.total)}</div>` : ''; })()}
+        <div class="vc-ledger" id="vcLedger">🔐 ${events} ${t('vc_events')} · <span class="vc-chk">…</span> · <button class="link-quiet" data-action="ev-export">⤓ ${t('ev_export')}</button></div>
       </div>
     </div>
   </div>`;
@@ -2175,7 +2236,9 @@ function paintMgrDash() {
         const withDone = pool.map(m => verifiedCompetency(m.state || {})).filter(v => v.done > 0);
         const tv = withDone.reduce((a, v) => a + v.verified, 0), td = withDone.reduce((a, v) => a + v.done, 0);
         const vp = td ? Math.round(tv / td * 100) : 0;
-        return `<div class="mgr-hero"><div class="mh-num">${vp}<small>%</small></div><div class="mh-lbl">Verified competency</div><div class="mh-sub">${tv}/${td} completed courses verified (scenario + delayed recall)</div></div>`;
+        const rates = pool.map(m => applicationRate(m.state || {})).filter(Boolean);
+        const ap = rates.length ? Math.round(rates.reduce((a, r) => a + r.applied, 0) / rates.reduce((a, r) => a + r.total, 0) * 100) : null;
+        return `<div class="mgr-hero"><div class="mh-num">${vp}<small>%</small></div><div class="mh-lbl">Verified competency</div><div class="mh-sub">${tv}/${td} completed courses verified${ap != null ? ` · 🎯 ${ap}% applied on the job` : ''}</div></div>`;
       })()}
     </div>
     <div class="mgr-pace"><div class="ob-eyebrow" style="margin-bottom:8px;">Hours vs the pacing line</div>${pacingChartSVG(pool)}
@@ -2788,6 +2851,7 @@ function renderProgress() {
       <p class="sect-sub">${t('story_sub')}</p>
       <div id="storyBody">${S.learnStory && S.learnStory.text && S.learnStory.lang === S.lang ? `<p class="story-text">${esc(S.learnStory.text)}</p><button class="link-quiet" data-action="story-gen">${t('story_refresh')}</button>` : `<button class="btn btn-glass btn-sm" data-action="story-gen">${t('story_btn')}</button>`}</div>
     </div>
+    ${transferPanelHTML()}
     ${verifiedPanelHTML()}
     ${compliancePanelHTML()}
     ${readinessSectionHTML()}
@@ -2906,6 +2970,9 @@ function computeNudges() {
   const lv = levelFor(S.xp);
   const rank = myRank();
   const nl = nextLesson();
+  /* transfer loop: an application check-in is due — the highest-value nudge there is */
+  const due = dueApplicationChecks();
+  if (due.length) out.push({ id: 'appcheck', icon: '🎯', title: t('nudge_appcheck_t'), body: t('nudge_appcheck_b').replace('{c}', ctitle(courseById(due[0].courseId)) || ''), route: '#/progress' });
   if (rank.total >= 2) {
     if (rank.ahead) out.push({ id: 'board', icon: '🌿', title: t('nudge_board_t'), body: t('nudge_board_b').replace('{name}', rank.ahead.name.split(' ')[0]).replace('{xp}', rank.ahead.xp - S.xp), route: '#/progress' });
     else out.push({ id: 'top', icon: '🌟', title: t('nudge_top_t'), body: t('nudge_top_b'), route: '#/progress' });
@@ -3849,7 +3916,12 @@ function showTakeaways(c, mod, next) {
     $('#takeList').innerHTML += `<div class="take-extra">
       ${ratingStarsHTML(next.courseId)}
       <button class="btn btn-glass btn-sm" data-action="cert-dl" data-id="${next.courseId}">🎓 ${t('cert_dl')}</button>
-    </div>`;
+    </div>
+    ${(S.intentions || {})[next.courseId] ? '' : `<div class="intent-box">
+      <div class="ob-eyebrow">🌱 ${t('intent_h')}</div>
+      <p class="pre-sub">${t('intent_sub')}</p>
+      <div class="ask-row"><input class="auth-input" id="intentText" maxlength="140" placeholder="${t('intent_ph')}"><button class="btn btn-primary btn-sm" data-action="intent-save" data-id="${next.courseId}">${t('intent_save')}</button></div>
+    </div>`}`;
   }
   const tq = $('#takeQuiz');
   if (tq) { tq.style.display = next && next.kind === 'course-done' ? '' : 'none'; tq.textContent = t('take_quiz'); }
@@ -4452,6 +4524,24 @@ document.addEventListener('click', e => {
     case 'ru-annex': downloadRUannex(); break;
     case 'art4-pack': downloadArt4Pack(true); break;
     case 'art4-self': downloadArt4Pack(false); break;
+    case 'ev-export': downloadEvidenceExport(); break;
+    case 'intent-save': {
+      const txt = ($('#intentText') && $('#intentText').value || '').trim();
+      if (!txt) { toast(t('intent_ph'), '🌱'); break; }
+      (S.intentions = S.intentions || {})[el.dataset.id] = { text: txt, at: Date.now(), checks: {} };
+      ledgerAppend('intention_set', { courseId: el.dataset.id, text: txt.slice(0, 140) });
+      save(); el.closest('.intent-box').innerHTML = `<p class="pre-sub">🌱 ${t('intent_saved')}</p>`;
+      break;
+    }
+    case 'app-check': {
+      const cid2 = el.dataset.id, day = +el.dataset.day, applied = el.dataset.applied === '1';
+      const it = (S.intentions || {})[cid2]; if (!it) break;
+      (it.checks = it.checks || {})[day] = true;
+      ledgerAppend('application_checkin', { courseId: cid2, day, applied });
+      save(); render();
+      toast(applied ? t('appcheck_bravo') : t('appcheck_ok'), applied ? '🎉' : '🌱');
+      break;
+    }
     case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
     case 'member-detail': openMemberDetail(el.dataset.uid); break;
     case 'mdet-close': { const mv = $('#mdetModal'); if (mv) mv.remove(); break; }

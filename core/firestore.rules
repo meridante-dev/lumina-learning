@@ -51,6 +51,23 @@ service cloud.firestore {
                      || isSuper()
                      || isCompanyAdminOf(docCompany(resource.data.profile)) );
       allow write: if request.auth != null && request.auth.uid == uid;
+
+      // ---- Evidence ledger (server truth): APPEND-ONLY. Learning events are
+      // immutable facts — create is allowed, update/delete NEVER, so the record
+      // is genuinely tamper-evident on the server, not just client-side.
+      match /events/{eventId} {
+        allow create: if request.auth != null && request.auth.uid == uid;
+        allow read:   if request.auth != null && (request.auth.uid == uid || isSuper());
+        allow update, delete: if false;
+      }
+      // ---- Chain anchors: the ledger's head hash pinned to SERVER time.
+      // Back-dating becomes detectable: an anchor's recordedAt is authoritative.
+      match /anchors/{anchorId} {
+        allow create: if request.auth != null && request.auth.uid == uid
+                      && request.resource.data.recordedAt == request.time;
+        allow read:   if request.auth != null && (request.auth.uid == uid || isSuper());
+        allow update, delete: if false;
+      }
     }
 
     // ---- Org/tenant config (AI keys etc): same-company read, company-admin write.

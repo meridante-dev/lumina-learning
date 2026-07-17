@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidence Verifier — independent learning-record check</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --bg:#101410; --card:#1a211b; --line:rgba(235,240,232,.14); --text:#f2f4ef; --dim:#b9c2b4; --ok:#8fd0a0; --bad:#e08a76; --accent:#c8a45d; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: var(--bg); color: var(--text); min-height:100vh; display:grid; place-items:center; padding:32px 16px; }
+  .wrap { width:min(720px,100%); }
+  h1 { font-size:28px; font-weight:600; }
+  .sub { color:var(--dim); font-size:14.5px; line-height:1.6; margin:10px 0 26px; font-family: Helvetica, Arial, sans-serif; }
+  .drop { border:2px dashed var(--line); border-radius:16px; padding:44px 24px; text-align:center; color:var(--dim); cursor:pointer; transition:border-color .2s; font-family:Helvetica,Arial,sans-serif; }
+  .drop:hover, .drop.over { border-color: var(--accent); color: var(--text); }
+  .drop input { display:none; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:24px 26px; margin-top:22px; display:none; }
+  .verdict { font-size:22px; font-weight:600; display:flex; align-items:center; gap:10px; }
+  .verdict.ok { color:var(--ok); } .verdict.bad { color:var(--bad); }
+  .facts { margin-top:16px; font-family:Helvetica,Arial,sans-serif; font-size:13.5px; color:var(--dim); line-height:2; }
+  .facts b { color:var(--text); font-weight:600; }
+  .how { margin-top:28px; font-size:12.5px; color:var(--dim); font-family:Helvetica,Arial,sans-serif; line-height:1.7; border-top:1px solid var(--line); padding-top:16px; }
+  code { background:rgba(255,255,255,.07); padding:1px 6px; border-radius:5px; font-size:11.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Evidence Verifier</h1>
+  <p class="sub">Independently verify an exported learning-evidence file. The check runs <b>entirely in your
+  browser</b> — nothing is uploaded, and it does not depend on the platform that issued the file. Each event is
+  hashed (SHA-256) together with the hash of the previous event; if any event was altered, inserted, or removed
+  after the fact, the chain below will break.</p>
+
+  <label class="drop" id="drop">
+    Drop an <b>evidence-*.json</b> file here, or click to choose one
+    <input type="file" id="file" accept="application/json,.json">
+  </label>
+
+  <div class="card" id="result">
+    <div class="verdict" id="verdict"></div>
+    <div class="facts" id="facts"></div>
+  </div>
+
+  <p class="how"><b>How it works:</b> for every event <code>i</code>, the verifier recomputes
+  <code>sha256(JSON(event minus hash))</code> and requires it to equal <code>event.hash</code>, and requires
+  <code>event.prevHash == hash(event i−1)</code> (the first event chains from <code>"genesis"</code>).
+  Any SHA-256 implementation can reproduce this check without this page. Server-side, events are additionally
+  stored append-only (create-only security rules) with server-authoritative timestamps.</p>
+</div>
+<script>
+const drop = document.getElementById('drop'), fileIn = document.getElementById('file');
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+drop.addEventListener('drop', e => { e.preventDefault(); drop.classList.remove('over'); if (e.dataTransfer.files[0]) check(e.dataTransfer.files[0]); });
+fileIn.addEventListener('change', () => { if (fileIn.files[0]) check(fileIn.files[0]); });
+
+async function sha(s) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+}
+async function check(file) {
+  const out = document.getElementById('result'), v = document.getElementById('verdict'), f = document.getElementById('facts');
+  out.style.display = 'block'; v.className = 'verdict'; v.textContent = 'Verifying…'; f.innerHTML = '';
+  let data;
+  try { data = JSON.parse(await file.text()); } catch (e) { v.className = 'verdict bad'; v.textContent = '✕ Not a valid evidence file'; return; }
+  const L = data.events || [];
+  if (!Array.isArray(L) || !L.length) { v.className = 'verdict bad'; v.textContent = '✕ No events in file'; return; }
+  let prev = 'genesis', broken = null;
+  for (let i = 0; i < L.length; i++) {
+    const ev = L[i];
+    const { hash, ...core } = ev;
+    if (ev.prevHash !== prev || await sha(JSON.stringify(core)) !== hash) { broken = i; break; }
+    prev = hash;
+  }
+  const headOk = !broken && (!data.headHash || data.headHash === prev);
+  const types = {};
+  L.forEach(e => { types[e.type] = (types[e.type] || 0) + 1; });
+  if (broken === null && headOk) {
+    v.className = 'verdict ok'; v.textContent = '✓ Chain intact — record is internally consistent';
+  } else {
+    v.className = 'verdict bad';
+    v.textContent = broken !== null ? `✕ Chain BROKEN at event ${broken + 1} of ${L.length} — the record was altered` : '✕ Head hash does not match the chain';
+  }
+  f.innerHTML = `
+    <b>${(data.learner || 'Unknown learner')}</b> · ${(data.platform || 'unknown platform')} · exported ${data.exportedAt ? new Date(data.exportedAt).toLocaleString() : '—'}<br>
+    <b>${L.length}</b> events · first ${new Date(L[0].at).toLocaleDateString()} · last ${new Date(L[L.length - 1].at).toLocaleDateString()}<br>
+    ${Object.entries(types).map(([k, n]) => `${k.replace(/_/g, ' ')}: <b>${n}</b>`).join(' · ')}<br>
+    head hash <code>${(prev || '').slice(0, 20)}…</code>`;
+}
+</script>
+</body>
+</html>

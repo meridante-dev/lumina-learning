@@ -2207,3 +2207,13 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .vc-how { font-size: 12.5px; color: var(--text-dim); line-height: 1.55; max-width: 560px; }
 .vc-ledger { margin-top: 4px; font-size: 12px; letter-spacing: .02em; color: var(--text-faint); }
 .pre-sub { font-size: 13px; color: var(--text-dim); margin: 4px 0 10px; line-height: 1.5; }
+
+/* ===== transfer loop (R2-18): intention capture + application check-ins ===== */
+.intent-box { margin-top: 18px; padding: 16px 18px; background: rgba(166,195,165,.06); border: 1px solid rgba(166,195,165,.2); border-radius: 14px; text-align: left; }
+.intent-box .ask-row { display: flex; gap: 10px; margin-top: 10px; }
+.intent-box .auth-input { flex: 1; }
+.intent-panel .intent-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.intent-panel .intent-row:last-child { border-bottom: none; }
+.intent-info { flex: 1; min-width: min(260px, 100%); font-size: 14px; }
+.intent-info span { display: block; color: var(--text-dim); font-size: 13px; font-style: italic; margin-top: 3px; }
+.intent-btns { display: flex; gap: 8px; }
