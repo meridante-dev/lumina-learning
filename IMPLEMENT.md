@@ -74,7 +74,24 @@ restore the previous set. The app tolerates either state, so a rollback breaks n
 
 ---
 
-## Step 2 · OpenTimestamps anchoring 🤖 ⏱ ~half a day
+## Step 2 · OpenTimestamps anchoring — ✅ DONE (2026-07-17, live edr78 / bel6)
+
+> **Shipped and proven.** `core/ots.js` — our own ~250-line implementation (the npm library is
+> Node-only: 33 MB, `require('fs')`, 107 browser-bundling errors). Not trusted, **tested**
+> (`core/ots.test.js`, oracle = the reference library): byte-identical round-trip + matching
+> semantics on all 13 reference fixtures · RIPEMD-160 vs all 9 published vectors · real proofs
+> verified against real Bitcoin blocks 358391 & 523364 · negative controls (bit-flip, foreign
+> proof, tampered .ots, pending overclaim) all correctly rejected · the deployed **minified**
+> build re-checked against a real block.
+> The oracle caught two real bugs: refusing RIPEMD-160 (made genuine proofs unverifiable) and a
+> single unsupported op aborting the whole walk (reported "no Bitcoin proof" for a proof that had
+> one). Both fixed.
+> **Disclosed limits:** head stamped at most **once daily** (the chain is linked — one proof covers
+> everything behind it; events after the newest stamp rest on server time until the next).
+> Ethereum paths reported, not verified. Proves *not back-dated*, never *true*.
+
+<details><summary>original plan (kept for reference)</summary>
+
 
 **What it buys:** today the record is provable against *our database*. After this, each chain
 head is provable against the **Bitcoin blockchain** — no trust in EdenRise required at all.
@@ -105,6 +122,8 @@ Plan:
 prove it's *true*. Sales copy must say "provably not back-dated", never "provably real".
 
 **Blocked by:** step 1 (anchors need to exist server-side first).
+
+</details>
 
 ---
 
