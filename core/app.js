@@ -83,6 +83,75 @@ async function ledgerVerify(L = S.ledger || []) {
   return { ok: true, events: L.length };
 }
 
+/* ---- Bitcoin anchoring (OpenTimestamps) ------------------------------
+   The chain proves internal consistency; the server pins it to OUR clock.
+   Neither stops us, in principle, from having written the whole thing today.
+   An OpenTimestamps proof closes that: the head hash is committed into a
+   Bitcoin block, so the record is provably NOT back-dated — checkable by
+   anyone, against the blockchain, with us switched off. Free, keyless.
+
+   We stamp AT MOST ONCE A DAY, not once per anchor: the chain is linked, so
+   one proof of the head proves every event behind it existed by then. Events
+   after the newest stamp rest on server time until the next one. That is a
+   deliberate, disclosed limit — cheap for us, and courteous to calendars that
+   are run as a public good.
+
+   Works for signed-out learners too: this needs no account, only the chain. */
+const OTS_EVERY = 24 * 3600e3;      /* stamp the head at most daily        */
+const OTS_RIPE  = 2 * 3600e3;       /* a calendar needs a block first (~1-2h) */
+const b64 = b => btoa(String.fromCharCode.apply(null, b));
+const unb64 = s => new Uint8Array(atob(s).split('').map(c => c.charCodeAt(0)));
+
+async function otsMaintain() {
+  if (!window.OTS || !navigator.onLine) return false;
+  const L = S.ledger || []; if (!L.length) return false;
+  const head = L[L.length - 1]; if (!head || !head.hash) return false;
+  const recs = (S.ots = S.ots || []);
+  let changed = false;
+
+  /* 1 · upgrade anything still waiting on a block */
+  for (const rec of recs) {
+    if (rec.status === 'confirmed') continue;
+    if (Date.now() - new Date(rec.at).getTime() < OTS_RIPE) continue;
+    try {
+      const { digest, tree } = OTS.parseFile(unb64(rec.ots));
+      const up = await OTS.upgrade(tree, digest);
+      if (!up.changed) continue;
+      rec.ots = b64(OTS.fileBytes(digest, tree));
+      if (up.info.complete) { rec.status = 'confirmed'; rec.height = up.info.bitcoin[0].height; }
+      changed = true;
+    } catch (e) { /* calendar down / not in a block yet — retry next time */ }
+  }
+
+  /* 2 · stamp the current head if it has moved and the day has turned */
+  const newest = recs[recs.length - 1];
+  const due = !newest || (newest.head !== head.hash && Date.now() - new Date(newest.at).getTime() > OTS_EVERY);
+  if (due) {
+    try {
+      const digest = OTS.unhex(head.hash);
+      const { tree, calendars } = await OTS.stamp(digest);
+      recs.push({ head: head.hash, count: L.length, at: new Date().toISOString(), ots: b64(OTS.fileBytes(digest, tree)), status: 'pending', calendars });
+      changed = true;
+    } catch (e) { /* offline or every calendar down — try again later */ }
+  }
+
+  /* 3 · keep it small: the newest confirmed proof already covers everything
+     behind it, so old confirmed proofs are redundant. Keep the last confirmed
+     plus any still-pending ones. */
+  if (recs.length > 6) {
+    const lastConfirmed = recs.filter(r => r.status === 'confirmed').pop();
+    S.ots = recs.filter(r => r.status !== 'confirmed' || r === lastConfirmed).slice(-6);
+    changed = true;
+  }
+  if (changed) save();
+  return changed;
+}
+/* the newest proof, preferring a confirmed one */
+function otsBest() {
+  const r = S.ots || [];
+  return r.filter(x => x.status === 'confirmed').pop() || r[r.length - 1] || null;
+}
+
 /* ---- R2-5 · Verified-Competency — the metric above raw completion ----
    A course is VERIFIED only when the ledger holds: completion AND a passed
    scenario/application item AND a delayed (≥7 days) retrieval pass. */
@@ -1400,7 +1469,11 @@ function downloadEvidenceExport() {
     learner: displayName(),
     events: L,
     headHash: L.length ? L[L.length - 1].hash : null,
-    note: 'Append-only SHA-256 hash-chained learning record. Verify at /verify.html or with any RFC-6234 SHA-256 implementation: hash_i = sha256(JSON(event_i minus hash)), event_i.prevHash must equal hash_{i-1}.'
+    /* Bitcoin proofs, as standard detached OpenTimestamps files (base64). Each
+       proves its `head` hash existed by a given block. Not our format: decode
+       one to <name>.ots and `ots verify` it, or drop it on opentimestamps.org. */
+    timestamps: (S.ots || []).map(r => ({ head: r.head, eventsAtStamp: r.count, stampedAt: r.at, status: r.status, bitcoinBlock: r.height || null, otsBase64: r.ots })),
+    note: 'Append-only SHA-256 hash-chained learning record. Verify at /verify.html or with any RFC-6234 SHA-256 implementation: hash_i = sha256(JSON(event_i minus hash)), event_i.prevHash must equal hash_{i-1}. A "timestamps" entry whose status is "confirmed" additionally proves that head hash existed at/before its Bitcoin block — i.e. the record was not back-dated. It does not attest that the underlying learning claims are true.'
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -1425,11 +1498,25 @@ function verifiedPanelHTML() {
         <div class="vc-how">${t('vc_how')}</div>
         ${(() => { const ar = applicationRate(); return ar ? `<div class="vc-how">🎯 ${t('vc_applied').replace('{a}', ar.applied).replace('{t}', ar.total)}</div>` : ''; })()}
         <div class="vc-ledger" id="vcLedger">🔐 ${events} ${t('vc_events')} · <span class="vc-chk">…</span> · <button class="link-quiet" data-action="ev-export">⤓ ${t('ev_export')}</button></div>
+        <div class="vc-how" id="vcOts">${otsLineHTML()}</div>
       </div>
     </div>
   </div>`;
 }
+/* One honest line about the strongest claim we can currently make. Never
+   promises more than the proof in hand actually supports. */
+function otsLineHTML() {
+  const r = otsBest();
+  if (!r) return `⛓ ${t('ots_none')}`;
+  if (r.status === 'confirmed') return `⛓ ${t('ots_confirmed').replace('{b}', r.height)}`;
+  return `⏳ ${t('ots_pending')}`;
+}
 async function paintLedgerCheck() {
+  /* stamp/upgrade quietly in the background, then refresh the line if it moved */
+  otsMaintain().then(changed => {
+    const o = document.getElementById('vcOts');
+    if (changed && o) o.innerHTML = otsLineHTML();
+  });
   const el = document.querySelector('#vcLedger .vc-chk'); if (!el) return;
   const r = await ledgerVerify();
   el.textContent = r.ok ? t('vc_intact') : t('vc_broken');

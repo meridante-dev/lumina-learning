@@ -168,6 +168,24 @@ window.EdenCloud = {
           recordedAt: serverTimestamp()
         }).catch(() => {});
       }
+      /* Bitcoin proofs → create-only mirror. Doc id includes the status, so an
+         upgraded proof lands as a NEW doc instead of mutating the pending one
+         (updates are forbidden by design, and a swapped proof would be exactly
+         the thing this whole layer exists to make impossible). */
+      for (const rec of (st.ots || [])) {
+        if (!rec.ots) continue;
+        const id = rec.head.slice(0, 32) + '-' + (rec.status === 'confirmed' ? 'btc' : 'pending');
+        const key = 'eden-ots-put-' + u.uid + '-' + id;
+        if (localStorage.getItem(key)) continue;          /* already mirrored */
+        try {
+          await setDoc(doc(db, 'users', u.uid, 'proofs', id), {
+            headHash: rec.head, eventsAtStamp: rec.count, status: rec.status,
+            bitcoinBlock: rec.height || null, ots: rec.ots,
+            stampedAt: rec.at, recordedAt: serverTimestamp()
+          });
+          localStorage.setItem(key, '1');
+        } catch (e) { /* rules not live / already there → harmless, retry later */ }
+      }
     } catch (e) { /* never let ledger sync break the app */ }
     finally { window.__ledgerSyncBusy = false; }
   },

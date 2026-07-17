@@ -68,6 +68,17 @@ service cloud.firestore {
         allow read:   if request.auth != null && (request.auth.uid == uid || isSuper());
         allow update, delete: if false;
       }
+      // ---- Bitcoin proofs (OpenTimestamps). Create-only like everything else
+      // in the evidence path. A proof is SELF-verifying: a forged one simply
+      // fails against the blockchain, so these rules only need to guarantee
+      // that a stored proof is never quietly swapped or removed later.
+      // An upgraded (block-confirmed) proof is written as a NEW doc — never an
+      // update — because immutability here is worth more than tidiness.
+      match /proofs/{proofId} {
+        allow create: if request.auth != null && request.auth.uid == uid;
+        allow read:   if request.auth != null && (request.auth.uid == uid || isSuper());
+        allow update, delete: if false;
+      }
     }
 
     // ---- Org/tenant config (AI keys etc): same-company read, company-admin write.

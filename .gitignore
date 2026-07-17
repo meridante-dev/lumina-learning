@@ -17,3 +17,5 @@ dist/
 *.log
 .env
 .env.local
+CLAUDE.md
+FOR-THE-LOOP.md

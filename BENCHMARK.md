@@ -15,7 +15,8 @@ Lumina now ships exactly that stack — most incumbents ship a reporting UI inst
 |---|---|---|---|---|
 | Append-only learning-event record | ✅ hash-chained (SHA-256), client + create-only Firestore | audit log (internal) | audit log (internal) | reports |
 | Tamper-evidence an auditor can check | ✅ chain breaks on any edit | vendor-trust | vendor-trust | vendor-trust |
-| **Verify WITHOUT the vendor** | ✅ `verify.html` + documented algorithm | ❌ | ❌ | ❌ |
+| **Verify WITHOUT the vendor** | ✅ `verify.html` + documented algorithm + standard `.ots` | ❌ | ❌ | ❌ |
+| **Anchored in Bitcoin (not back-datable)** | ✅ OpenTimestamps, verified vs the chain | ❌ | ❌ | ❌ |
 | Client-owned evidence export | ✅ one-click JSON per learner | CSV/report exports | CSV | CSV |
 | Verified-Competency (completion + scenario + delayed recall) | ✅ first-class metric | ❌ (completion-centric) | ❌ | ❌ |
 | On-the-job application rate (L3 seed) | ✅ 7/14/30-day check-ins | partial (surveys, enterprise) | partial | ❌ |
@@ -43,9 +44,18 @@ outcome none of them export: *provable* learning.
 ## The anchoring ladder (honesty about our own tamper-evidence)
 1. ✅ **Today:** client hash chain (internal consistency) + server create-only mirror + chain-head anchors
    pinned to Firestore **server time** (back-dating detectable). *Requires rules deploy.*
-2. **Next:** [OpenTimestamps](https://opentimestamps.org/) Bitcoin anchoring of chain heads — verified
-   feasible fully in-browser (free calendars, no keys, [JS lib](https://github.com/opentimestamps/javascript-opentimestamps)).
-   Then the record is provable against a public blockchain, not just our database.
+2. ✅ **SHIPPED (edr78):** [OpenTimestamps](https://opentimestamps.org/) Bitcoin anchoring of chain heads.
+   The head hash is committed into a Bitcoin block, so the record is provably **not back-dated** — checkable
+   against the public blockchain with us switched off. Own ~250-line implementation (`core/ots.js`): the npm
+   library is Node-only (33 MB, `require('fs')`, will not bundle for a browser). Correctness is not asserted,
+   it is **tested** (`core/ots.test.js`): byte-identical round-trip + matching semantics vs the reference
+   library across all 13 of its fixtures, RIPEMD-160 against all 9 published vectors, real proofs verified
+   against real Bitcoin blocks (358391 / 523364), and negative controls (bit-flip, foreign proof, tampered
+   .ots) all correctly rejected. Exported `.ots` files are standard — `ots verify` and opentimestamps.org
+   confirm them without our software.
+   *Limits, stated deliberately:* we stamp the head **at most once a day** (the chain is linked, so one proof
+   covers everything behind it; events after the newest stamp rest on server time until the next). Ethereum
+   attestation paths are reported, not verified.
 3. **Later:** RFC-3161 TSA countersignatures via a Cloudflare Worker (pairs with the hosting migration).
 
 _Rule for sales copy: never claim more than the tier that is actually deployed._
