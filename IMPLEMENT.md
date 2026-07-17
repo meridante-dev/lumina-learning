@@ -127,7 +127,21 @@ prove it's *true*. Sales copy must say "provably not back-dated", never "provabl
 
 ---
 
-## Step 3 · Manager-confirm on application check-ins 🤖 ⏱ ~2–3 hours
+## Step 3 · Manager-confirm on application check-ins — ✅ DONE (2026-07-17, live edr79 / bel7)
+
+> **Built as the separate manager chain** (the recommended option, approved). Each manager keeps
+> their own hash chain referencing the learner's check-in BY HASH — two independent, cross-checkable
+> records, so a learner's ledger keeps exactly one author. Verified in-browser: a confirmation
+> leaves the learner's ledger untouched; the manager chain validates; self and "not yet" claims
+> never enter the queue; the metric splits self-reported vs confirmed instead of averaging them.
+> Rules 10/10 via the rules test API — including **you can never confirm yourself** and a
+> **back-dated confirmation is refused** (`recordedAt == request.time`).
+> **Honest limit (in the code):** without per-user signing keys, the copy in a learner's export is
+> a copy, not a signature — checkable against the manager's chain, both create-only server-side.
+> Full PKI is the next rung if a buyer ever demands it.
+
+<details><summary>original plan (kept for reference)</summary>
+
 
 **What it buys:** right now the application rate is *self-reported* — a learner says "I applied
 it". That's a soft L3. One tap from a manager turns it into confirmed evidence, which is what
@@ -149,6 +163,8 @@ work and much more defensible. **I'd recommend the separate chain** — tell me 
 and I'll do the simple version.
 
 **Blocked by:** nothing. Can run in parallel with step 2.
+
+</details>
 
 ---
 
