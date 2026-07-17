@@ -81,6 +81,24 @@ service cloud.firestore {
       }
     }
 
+    // ---- Manager confirmations (R2-18b): "I saw them apply it on the job".
+    // Deliberately a SEPARATE record from the learner's ledger — a learner's
+    // append-only chain must keep exactly one author, so a manager's verdict
+    // lives on the manager's own chain and references the learner's event by
+    // hash. This doc is the shareable cross-reference between the two.
+    // Create-only, and you can never confirm YOURSELF.
+    match /confirmations/{confirmId} {
+      allow create: if request.auth != null
+                    && request.resource.data.byUid == request.auth.uid
+                    && request.resource.data.subjectUid != request.auth.uid
+                    && isAdminOfDoc(request.resource.data)
+                    && request.resource.data.recordedAt == request.time;
+      allow read:   if request.auth != null && (
+                      request.auth.uid == resource.data.subjectUid
+                      || sameCompany(resource.data) || isSuper() );
+      allow update, delete: if false;
+    }
+
     // ---- Org/tenant config (AI keys etc): same-company read, company-admin write.
     // 'org' is the legacy edenrise doc; per-tenant docs are keyed by companyId.
     match /config/{cid} {

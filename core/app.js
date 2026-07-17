@@ -1439,7 +1439,98 @@ function dueApplicationChecks(st = S) {
 function applicationRate(st = S) {
   const L = (st.ledger || []).filter(e => e.type === 'application_checkin');
   if (!L.length) return null;
-  return { applied: L.filter(e => e.applied).length, total: L.length, pct: Math.round(L.filter(e => e.applied).length / L.length * 100) };
+  const applied = L.filter(e => e.applied);
+  /* Confirmations are counted from the MANAGER's chain, mirrored into the
+     learner's state as copies. A copy is only ever a claim; the manager's own
+     chain is the original. Both hashes travel in the export so an auditor can
+     hold the two records side by side — which is the whole point of keeping
+     them separate. */
+  const conf = (st.confirmations || []).filter(c => c.verdict === 'confirmed');
+  const confirmedHashes = new Set(conf.map(c => c.learnerEventHash));
+  const confirmed = applied.filter(e => confirmedHashes.has(e.hash)).length;
+  return {
+    applied: applied.length, total: L.length, pct: Math.round(applied.length / L.length * 100),
+    confirmed, confirmedPct: applied.length ? Math.round(confirmed / applied.length * 100) : 0
+  };
+}
+
+/* ---- R2-18b · The manager's chain -----------------------------------
+   A learner saying "I applied it" is self-report. A manager confirming it is
+   evidence. The tempting shortcut is to append the confirmation onto the
+   learner's chain — but then their record has two authors, and "the learner's
+   own append-only record" quietly stops being true. We keep a SEPARATE chain
+   per manager instead: it references the learner's event BY HASH, so the two
+   records are independently verifiable and cross-checkable, and neither can be
+   edited to agree with the other after the fact.
+
+   Being straight about the limit: without per-user signing keys, a mirrored
+   confirmation inside a learner's export is a copy, not a signature. It is
+   checkable against the manager's chain, and the server keeps both create-only
+   — enough to make quiet tampering detectable, short of full PKI. */
+async function mgrAppend(type, data = {}) {
+  const M = (S.mgr = S.mgr || []);
+  const core = Object.assign({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+    brandId: BRAND.id || 'edenrise', type, at: new Date().toISOString(),
+    prevHash: M.length ? M[M.length - 1].hash : 'genesis'
+  }, data);
+  const hash = await _ledgerSha(JSON.stringify(core));
+  const ev = Object.assign(core, { hash });
+  M.push(ev); save();
+  return ev;
+}
+/* Check-ins where the learner claims they applied it and no manager has ruled
+   yet. Only 'applied' claims need confirming — "not yet" is already honest. */
+function pendingConfirmations(members) {
+  const out = [];
+  const mine = S.mgr || [];
+  const ruled = new Set(mine.map(e => e.learnerEventHash));
+  for (const m of (members || [])) {
+    if (!m.uid || m.uid === (S.profile || {}).uid) continue;      /* never yourself */
+    const L = ((m.state || {}).ledger) || [];
+    const intents = (m.state || {}).intentions || {};
+    for (const e of L) {
+      if (e.type !== 'application_checkin' || !e.applied || !e.hash) continue;
+      if (ruled.has(e.hash)) continue;
+      out.push({
+        uid: m.uid, name: (m.profile || {}).name || (m.profile || {}).username || 'Learner',
+        courseId: e.courseId, day: e.day, at: e.at, hash: e.hash,
+        text: (intents[e.courseId] || {}).text || ''
+      });
+    }
+  }
+  return out.sort((a, b) => new Date(b.at) - new Date(a.at));
+}
+async function confirmApplication(hash, verdict) {
+  const p = (pendingConfirmations(adminMembers) || []).find(x => x.hash === hash);
+  if (!p) return;
+  const ev = await mgrAppend('application_confirmed', {
+    subjectUid: p.uid, learnerEventHash: p.hash, courseId: p.courseId, day: p.day || null, verdict
+  });
+  try {
+    await window.EdenCloud.confirmApplication({
+      subjectUid: p.uid, learnerEventHash: p.hash, courseId: p.courseId,
+      verdict, mgrEvent: ev
+    });
+  } catch (e) { /* offline / rules not live — the manager chain still holds it */ }
+  toast(t(verdict === 'confirmed' ? 'mconf_done' : 'mconf_noted'), verdict === 'confirmed' ? '✅' : '📝');
+  const w = document.getElementById('mgrConfirm');
+  if (w) w.outerHTML = confirmPanelHTML();
+}
+function confirmPanelHTML() {
+  const pend = pendingConfirmations(adminMembers);
+  if (!pend.length) return '<div id="mgrConfirm"></div>';
+  return `<div class="admin-section intent-panel" id="mgrConfirm">
+    <h2>✅ ${t('mconf_h')}</h2>
+    <p class="sect-sub">${t('mconf_sub')}</p>
+    ${pend.slice(0, 12).map(p => `<div class="intent-row">
+      <div class="intent-info"><b>${esc(p.name)}</b> · ${esc(ctitle(courseById(p.courseId)) || p.courseId)}${p.text ? `<span>“${esc(p.text)}”</span>` : ''}</div>
+      <div class="intent-btns">
+        <button class="btn btn-primary btn-sm" data-action="app-confirm" data-id="${p.hash}">${t('mconf_yes')}</button>
+        <button class="btn btn-ghost btn-sm" data-action="app-deny" data-id="${p.hash}">${t('mconf_no')}</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
 }
 function transferPanelHTML() {
   const due = dueApplicationChecks();
@@ -1473,6 +1564,11 @@ function downloadEvidenceExport() {
        proves its `head` hash existed by a given block. Not our format: decode
        one to <name>.ots and `ots verify` it, or drop it on opentimestamps.org. */
     timestamps: (S.ots || []).map(r => ({ head: r.head, eventsAtStamp: r.count, stampedAt: r.at, status: r.status, bitcoinBlock: r.height || null, otsBase64: r.ots })),
+    /* Manager verdicts about this learner. COPIES: the original lives on the
+       manager's own chain (mgrEventHash identifies it there). An auditor who
+       wants certainty asks the manager for their export and checks the hashes
+       line up — that is exactly why the two chains are kept apart. */
+    confirmations: (S.confirmations || []).map(c => ({ learnerEventHash: c.learnerEventHash, courseId: c.courseId, verdict: c.verdict, by: c.byName || '', mgrEventHash: c.mgrEventHash, at: c.at })),
     note: 'Append-only SHA-256 hash-chained learning record. Verify at /verify.html or with any RFC-6234 SHA-256 implementation: hash_i = sha256(JSON(event_i minus hash)), event_i.prevHash must equal hash_{i-1}. A "timestamps" entry whose status is "confirmed" additionally proves that head hash existed at/before its Bitcoin block — i.e. the record was not back-dated. It does not attest that the underlying learning claims are true.'
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -1496,7 +1592,13 @@ function verifiedPanelHTML() {
       <div class="ready-rows" style="gap:6px;">
         <div class="between"><span class="sk-name">${t('vc_of').replace('{v}', v.verified).replace('{d}', v.done)}</span></div>
         <div class="vc-how">${t('vc_how')}</div>
-        ${(() => { const ar = applicationRate(); return ar ? `<div class="vc-how">🎯 ${t('vc_applied').replace('{a}', ar.applied).replace('{t}', ar.total)}</div>` : ''; })()}
+        ${(() => { const ar = applicationRate(); if (!ar) return '';
+          const self = `<div class="vc-how">🎯 ${t('vc_applied').replace('{a}', ar.applied).replace('{t}', ar.total)} <span style="opacity:.6">(${t('vc_selfrep')})</span></div>`;
+          /* self-reported and manager-confirmed are DIFFERENT claims and are
+             shown as different lines. Averaging them would quietly inflate the
+             stronger one. */
+          const conf = ar.applied ? `<div class="vc-how">✅ ${t('vc_confirmed').replace('{c}', ar.confirmed).replace('{a}', ar.applied)}</div>` : '';
+          return self + conf; })()}
         <div class="vc-ledger" id="vcLedger">🔐 ${events} ${t('vc_events')} · <span class="vc-chk">…</span> · <button class="link-quiet" data-action="ev-export">⤓ ${t('ev_export')}</button></div>
         <div class="vc-how" id="vcOts">${otsLineHTML()}</div>
       </div>
@@ -2305,6 +2407,7 @@ function paintMgrDash() {
   const expired = pool.reduce((a, m) => a + memberRecertIssues(m).filter(r => r.state === 'expired').length, 0);
   const q = attentionQueue(pool);
   el.innerHTML = `
+  ${confirmPanelHTML()}
   <div class="admin-section" style="margin-top:18px;">
     <h2>🛡 Compliance command</h2>
     <p class="sect-sub">The team's mandatory 40h continuous training — Código do Trabalho art. 131.º. Live, prorated, exportable.</p>
@@ -4612,6 +4715,8 @@ document.addEventListener('click', e => {
     case 'art4-pack': downloadArt4Pack(true); break;
     case 'art4-self': downloadArt4Pack(false); break;
     case 'ev-export': downloadEvidenceExport(); break;
+    case 'app-confirm': confirmApplication(id, 'confirmed'); break;
+    case 'app-deny': confirmApplication(id, 'not_seen'); break;
     case 'intent-save': {
       const txt = ($('#intentText') && $('#intentText').value || '').trim();
       if (!txt) { toast(t('intent_ph'), '🌱'); break; }

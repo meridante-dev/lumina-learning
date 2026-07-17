@@ -20,6 +20,7 @@ Lumina now ships exactly that stack — most incumbents ship a reporting UI inst
 | Client-owned evidence export | ✅ one-click JSON per learner | CSV/report exports | CSV | CSV |
 | Verified-Competency (completion + scenario + delayed recall) | ✅ first-class metric | ❌ (completion-centric) | ❌ | ❌ |
 | On-the-job application rate (L3 seed) | ✅ 7/14/30-day check-ins | partial (surveys, enterprise) | partial | ❌ |
+| **Manager-confirmed application** (not self-report) | ✅ separate manager chain, cross-referenced by hash | ❌ | ❌ | ❌ |
 | PT 40h legal artifacts (Art. 131.º, RU Anexo C) | ✅ native | ❌ | ❌ | ❌ |
 | **EU AI Act Art.4 path + evidence pack** | ✅ (enforcement 2 Aug 2026) | ❌ (content marketplace only) | ❌ | ❌ |
 | White-label + own domain | ✅ standard (per instance) | enterprise add-on | add-on | higher tiers |

@@ -120,6 +120,7 @@ window.EdenCloud = {
       lastSeen: serverTimestamp(), updatedAt: serverTimestamp()
     }, { merge: true }).catch(() => {});
     window.EdenCloud.syncLedger();
+    window.EdenCloud.pullConfirmations();
   },
   /* ---- evidence ledger → server truth --------------------------------------
      Mirrors S.ledger events into users/{uid}/events (create-only rules) and pins
@@ -130,6 +131,25 @@ window.EdenCloud = {
      stops the batch and the cursor stays put — nothing is lost, retried on the
      next flush. Cursor lives OUTSIDE the state blob so syncing never mutates
      the chain it is syncing. */
+  /* Mirror manager verdicts about ME into my own state, so my export can show
+     them (as copies — the manager's chain remains the original). */
+  async pullConfirmations() {
+    if (window.__pullConfBusy) return; window.__pullConfBusy = true;
+    try {
+      const list = await window.EdenCloud.listConfirmations();
+      if (!list.length) return;
+      const st = localState();
+      const have = new Set((st.confirmations || []).map(c => c.mgrEventHash));
+      const add = list.filter(c => !have.has(c.mgrEventHash))
+        .map(c => ({ learnerEventHash: c.learnerEventHash, courseId: c.courseId, verdict: c.verdict,
+                     byName: c.byName || '', byUid: c.byUid, mgrEventHash: c.mgrEventHash, at: c.at }));
+      if (!add.length) return;
+      st.confirmations = (st.confirmations || []).concat(add);
+      localStorage.setItem(KEY, JSON.stringify(st));
+      if (window.S) { S.confirmations = st.confirmations; if (window.render) render(); }
+    } catch (e) { /* not live yet — harmless */ }
+    finally { window.__pullConfBusy = false; }
+  },
   async syncLedger() {
     const u = auth.currentUser; if (!u) return;
     if (window.__ledgerSyncBusy) return; window.__ledgerSyncBusy = true;
@@ -188,6 +208,32 @@ window.EdenCloud = {
       }
     } catch (e) { /* never let ledger sync break the app */ }
     finally { window.__ledgerSyncBusy = false; }
+  },
+  /* ---- manager confirmations (R2-18b) ---------------------------------
+     A company-scoped, create-only record. The manager's OWN chain is the
+     original; this doc is the shareable cross-reference, carrying the hash of
+     the manager's chain event AND the learner's, so the two records can be
+     checked against each other by anyone holding both. */
+  async confirmApplication({ subjectUid, learnerEventHash, courseId, verdict, mgrEvent }) {
+    const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
+    if (u.uid === subjectUid) throw new Error('self-confirm');   /* also refused by rules */
+    const st = localState(), p = st.profile || {};
+    const id = learnerEventHash.slice(0, 32) + '-' + u.uid.slice(0, 8);
+    await setDoc(doc(db, 'confirmations', id), {
+      subjectUid, learnerEventHash, courseId, verdict,
+      byUid: u.uid, byName: p.name || p.username || (u.email || '').split('@')[0], byEmail: u.email || '',
+      companyId: cid(),
+      mgrEventHash: mgrEvent.hash, mgrPrevHash: mgrEvent.prevHash, at: mgrEvent.at,
+      recordedAt: serverTimestamp()
+    });
+  },
+  /* the learner pulls confirmations ABOUT them into their own record */
+  async listConfirmations() {
+    const u = auth.currentUser; if (!u) return [];
+    try {
+      const snap = await getDocs(query(collection(db, 'confirmations'), where('subjectUid', '==', u.uid)));
+      return snap.docs.map(d => d.data());
+    } catch (e) { return []; }
   },
   async saveOrgConfig(cfg) {
     if (!auth.currentUser) throw new Error('not-signed-in');
