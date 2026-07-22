@@ -28,6 +28,18 @@ const firebaseConfig = (window.BRAND && window.BRAND.firebase) || {
   measurementId: 'G-SWLQKTVJQS'
 };
 
+/* A white-label brand ships with a PLACEHOLDER Firebase key until its own
+   project is stood up (see brands/<id>/brand.js). Detect that so the app
+   degrades to an honest guest-only state — a returning learner tapping
+   "Sign in" should never hit a raw Firebase error like
+   `auth/api-key-not-valid`. This makes "not wired yet" a designed state, not a
+   crash, and it is the same guard every future client benefits from. */
+const BACKEND_READY = (() => {
+  const k = firebaseConfig && firebaseConfig.apiKey;
+  if (!k || k.length < 20) return false;
+  return !/DEMO|PLACEHOLDER|YOUR_?API|TODO|XXXX|CHANGE_?ME|EXAMPLE/i.test(k);
+})();
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 let db;
@@ -506,7 +518,19 @@ async function loadOrgConfig() {
 }
 
 /* ---------- auth state ---------- */
+/* Backend not wired → never touch Firebase auth (its calls would throw). Run
+   guest-only, and let the UI show an honest "preview mode" note. */
+if (!BACKEND_READY) {
+  try { console.info('[auth] backend not configured for this brand — running in local preview mode'); } catch (e) {}
+  const mode = localStorage.getItem(MODE);
+  if (mode === 'firebase') localStorage.setItem(MODE, 'guest');   /* a stale flag from another instance */
+  document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem(MODE) === 'guest') { hideGate(); if (window.EdenApp) window.EdenApp.maybeOnboard(); }
+    else showGate();
+  });
+}
 onAuthStateChanged(auth, async user => {
+  if (!BACKEND_READY) return;              /* handled above */
   if (user) {
     localStorage.setItem(MODE, 'firebase');
     /* enter IMMEDIATELY — sync happens behind the app, not in front of the user */
@@ -586,6 +610,26 @@ if (document.readyState !== 'loading') wire();
 function wire() {
   const g = gate(); if (!g || g.dataset.wired) return; g.dataset.wired = '1';
   translateGate();
+
+  /* Backend not wired → this instance cannot authenticate. Hide the sign-in
+     options and say so plainly, rather than letting a tap fail with a raw
+     Firebase error. Guest ("explore") stays, so the demo is fully walkable. */
+  if (!BACKEND_READY) {
+    ['#authGoogle', '#authForm', '#authToggle', '#authOr', '.auth-divider'].forEach(sel => {
+      const el = g.querySelector(sel); if (el) el.style.display = 'none';
+    });
+    const acad = (window.BRAND && window.BRAND.academy) || 'the academy';
+    const sub = g.querySelector('#authSub');
+    if (sub) sub.textContent = isPT()
+      ? `Pré-visualização: explore ${acad} neste dispositivo. As contas ativam-se quando o backend for ligado.`
+      : `Preview: explore ${acad} on this device. Accounts turn on once the backend is connected.`;
+    const gbtn = g.querySelector('#authGuest');
+    if (gbtn) {
+      gbtn.textContent = isPT() ? `Explorar ${acad} →` : `Explore ${acad} →`;
+      gbtn.addEventListener('click', () => { localStorage.setItem(MODE, 'guest'); hideGate(); if (window.EdenApp) window.EdenApp.maybeOnboard(); });
+    }
+    return;   /* skip the cloud handlers entirely */
+  }
 
   $('#authGoogle').addEventListener('click', async () => {
     showErr(''); setBusy(true);
