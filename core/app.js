@@ -72,6 +72,29 @@ function ledgerAppend(type, data = {}) {
   return _ledgerChain;
 }
 /* walk the chain recomputing every hash — any tamper breaks it */
+/* ---- error beacon -----------------------------------------------------
+   Breakage currently reaches us via a team member's WhatsApp screenshot. This
+   captures runtime errors into a small ring buffer on the learner's state, so
+   it rides the EXISTING cloud sync (no new endpoint, no rules change) and an
+   admin reading member state sees what actually broke, on which brand/version.
+   Capped and deduped — a render-loop error must not flood anyone's state doc. */
+(function () {
+  function logErr(kind, msg, src) {
+    try {
+      if (typeof S === 'undefined' || !S) return;
+      const rec = { k: kind, m: String(msg).slice(0, 300), s: String(src || '').slice(0, 120),
+                    at: new Date().toISOString(), v: (window.BRAND && BRAND.id) || '?' };
+      const E = (S._errs = S._errs || []);
+      const last = E[E.length - 1];
+      if (last && last.m === rec.m) { last.n = (last.n || 1) + 1; last.at = rec.at; }
+      else { E.push(rec); if (E.length > 15) E.splice(0, E.length - 15); }
+      save();
+    } catch (e) { /* the beacon must never itself break the app */ }
+  }
+  window.addEventListener('error', e => logErr('err', e.message, (e.filename || '') + ':' + (e.lineno || '')));
+  window.addEventListener('unhandledrejection', e => logErr('rej', (e.reason && (e.reason.message || e.reason)) || 'unhandled rejection', ''));
+})();
+
 async function ledgerVerify(L = S.ledger || []) {
   let prev = 'genesis';
   for (const ev of L) {
@@ -2875,7 +2898,7 @@ function lvSave() {
 
 /* ----- Phase 5: Company (tenant self-service) ----- */
 function adminCompanyHTML() {
-  const co = window.EdenCompany || { id: 'edenrise', name: 'EdenRise', adminEmails: [] };
+  const co = window.EdenCompany || { id: (BRAND.id || 'edenrise'), name: (BRAND.name || 'EdenRise'), adminEmails: [] };
   const invite = co.inviteCode ? `${location.origin}${location.pathname}?join=${co.inviteCode}` : '';
   return `<div class="admin-section">
     <h2>🏢 ${esc(co.name || co.id)}</h2>
@@ -3917,7 +3940,9 @@ function maybePretest(c, mod) {
   if (mod !== 0) return;
   if (coursePct(c.id) > 0 || isDone(c.id)) return;
   if ((S.ledger || []).some(e => e.type === 'pretest' && e.courseId === c.id)) return;
-  const qs = courseQuizFor(c);
+  /* own-quiz only — a pretest asking bank questions unrelated to this course
+     (the old courseQuizFor fallthrough) is worse than no pretest at all */
+  const qs = courseOwnQuiz(c);
   if (!Array.isArray(qs) || qs.length < 2) return;
   const pick = [qs[0], qs[1]];
   const ov = $('#ckOv'); if (!ov) return;
@@ -3978,10 +4003,20 @@ function clearCheckpoint() {
   const ov = $('#ckOv'); if (ov) { ov.classList.remove('on'); ov.innerHTML = ''; }
   if (vimeoPlayer) { try { vimeoPlayer.destroy(); } catch (e) {} vimeoPlayer = null; }
 }
-function checkpointQuestion(c, mod) {
+/* Course-SPECIFIC questions only (the course's own quiz — never QUIZ_BANK).
+   Interrupting a lesson is only earned when the question is about THAT course:
+   pausing a leadership video to ask about soil regeneration teaches people to
+   resent the player. Category/default banks remain fine for the *post-course*
+   quiz, where the learner chose to be quizzed — but they never gate playback. */
+function courseOwnQuiz(c) {
   const cq = (typeof COURSE_QUIZ !== 'undefined' && COURSE_QUIZ[c.id]) || c.quiz;
-  const qs = cq ? (cq[_lang() === 'pt' ? 'pt' : 'en'] || cq.en || cq) : null;
-  return (Array.isArray(qs) && qs.length) ? qs[mod % qs.length] : null;
+  if (!cq) return null;
+  const qs = cq[_lang() === 'pt' ? 'pt' : 'en'] || cq.en || cq;
+  return (Array.isArray(qs) && qs.length) ? qs : null;
+}
+function checkpointQuestion(c, mod) {
+  const qs = courseOwnQuiz(c);
+  return qs ? qs[mod % qs.length] : null;
 }
 function armCheckpoint(c, mod) {
   const key = c.id + ':' + mod;

@@ -70,11 +70,15 @@ function showErr(msg) { const e = $('#authErr'); if (e) { e.textContent = msg ||
 function localState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
 /* ---- multi-tenant helpers ---- */
 const SUPERADMINS = (window.BRAND && window.BRAND.superadmins) || ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'];
-const cid = () => ((localState().profile || {}).companyId) || 'edenrise';
+/* The founding tenant of THIS deployment = the active brand. On the EdenRise
+   project that is 'edenrise'; on a white-label's own project (e.g. Belong) new
+   learners must be stamped with THEIR company, not the founding brand's. */
+const BRAND_ID = (window.BRAND && window.BRAND.id) || 'edenrise';
+const cid = () => ((localState().profile || {}).companyId) || BRAND_ID;
 const isSuperEmail = e => SUPERADMINS.includes((e || '').trim().toLowerCase());
 const metaDocId = c => (c || cid()) === 'edenrise' ? '__meta' : '__meta_' + (c || cid());
 /* legacy docs without companyId belong to 'edenrise' */
-const ofCompany = (obj, c) => ((obj.companyId || 'edenrise') === (c || cid()));
+const ofCompany = (obj, c) => ((obj.companyId || BRAND_ID) === (c || cid()));
 /* merge instead of clobber — earned things take the best of both devices */
 function mergeStates(cloud, local) {
   if (!cloud) return local;
@@ -121,13 +125,13 @@ window.EdenCloud = {
     setDoc(doc(db, 'users', u.uid), { state: st, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
     /* public board entry — the real leaderboard everyone can read */
     const p = st.profile || {};
-    if (!p.companyId) p.companyId = 'edenrise';   /* tenant stamp (founding tenant default) */
+    if (!p.companyId) p.companyId = BRAND_ID;   /* tenant stamp (founding tenant of this deployment) */
     const name = p.name || (p.email ? p.email.split('@')[0] : 'Learner');
     setDoc(doc(db, 'leaderboard', u.uid), {
       name, username: p.username || '',
       initials: name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'ER',
       xp: st.xp || 0, streak: st.streak || 0, level: st.xp != null ? st.xp : 0,
-      joinedAt: p.joinedAt || null, dept: p.dept || null, companyId: p.companyId || 'edenrise',
+      joinedAt: p.joinedAt || null, dept: p.dept || null, companyId: p.companyId || BRAND_ID,
       weekStart: st.weekStart || null, weekBaseXp: st.weekBaseXp || 0,
       lastSeen: serverTimestamp(), updatedAt: serverTimestamp()
     }, { merge: true }).catch(() => {});
@@ -196,7 +200,7 @@ window.EdenCloud = {
       if (head && head.hash) {
         await setDoc(doc(db, 'users', u.uid, 'anchors', head.hash), {
           headHash: head.hash, count: L.length,
-          brandId: head.brandId || 'edenrise',
+          brandId: head.brandId || BRAND_ID,
           recordedAt: serverTimestamp()
         }).catch(() => {});
       }

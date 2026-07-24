@@ -262,6 +262,54 @@ const COURSE_HOOKS_PT = {
   'community-land': ['Ninguém cuida sozinho.', 'Baldios, conselhos e cuidado partilhado por um chão partilhado.']
 };
 const COURSE_QUIZ = {
+  /* The flagship — 19 questions, INDEX-ALIGNED to the 19 modules (checkpoint
+     picks qs[mod]), so every in-video pause asks about THIS lesson. EN mirrors
+     PT. Module 8 (ESIP) is a bridge question until the acronym's content is
+     confirmed — do not guess at it. */
+  'alignment-journey': {
+    en: [
+      { q: 'The Alignment Journey is built around six inner shifts. What are they designed to change first?', opts: ['The mindset you bring to the work and to each other', 'The tools you use on the land', 'Your daily schedule', 'How you are paid'], a: 0 },
+      { q: 'You arrive and find a job has gone wrong. Which response is "above the line"?', opts: ['Ask: what here can I own and help fix?', 'Work out who is to blame first', 'Explain why it could not have been you', 'Say nothing and move on'], a: 0 },
+      { q: 'According to the course, operating above the line is best described as…', opts: ['A moment-to-moment choice anyone can make', 'A personality type some people have', 'Positive thinking that ignores real problems', 'A technique reserved for managers'], a: 0 },
+      { q: 'Which trio marks BELOW-the-line thinking?', opts: ['Blame, excuses, denial', 'Ownership, accountability, responsibility', 'Goals, plans, reviews', 'Body, soul, spirit'], a: 0 },
+      { q: 'Mid-conversation you catch yourself below the line. What is the first move?', opts: ['Notice it, and choose to step back above the line', 'Push your point harder', 'Apologise for everything and withdraw', 'Change the subject'], a: 0 },
+      { q: 'In "No failure, only feedback", a mistake is treated as…', opts: ['Information to learn from', 'Proof you are not suited to the work', 'Something to keep quiet', 'Someone else\'s fault'], a: 0 },
+      { q: 'A teammate tries a new approach and it does not work. The no-failure response is to…', opts: ['Ask together what the attempt just taught you', 'Agree to avoid risks from now on', 'Note who approved it', 'Lower the standard so it counts as a win'], a: 0 },
+      { q: 'When a team genuinely adopts "no failure, only feedback", what becomes easier?', opts: ['Trying new approaches openly', 'Hiding mistakes', 'Avoiding hard conversations', 'Working alone'], a: 0 },
+      { q: 'The journey works on mindset before it turns to goals. Why that order?', opts: ['Goals set from below-the-line thinking collapse into blame and excuses', 'Goals are less important than attitude', 'Mindset is easier, so it comes first', 'The order does not matter'], a: 0 },
+      { q: 'Why does goal-setting sit in the middle of the journey rather than the start?', opts: ['A clear, owned mindset gives goals a foundation to stand on', 'It was the only slot left', 'Goals only matter for leaders', 'To leave time for paperwork'], a: 0 },
+      { q: 'Which of these is a goal rather than a wish?', opts: ['"Plant the north beds by 15 March — I own it"', '"Get better at farming"', '"Hopefully improve this year"', '"Someone should fix the irrigation"'], a: 0 },
+      { q: 'What time horizon does the journey use for a goal cycle?', opts: ['90 days', 'One week', 'One year', 'Five years'], a: 0 },
+      { q: 'You have listed everything you want to achieve. What does the course ask next?', opts: ['Narrow the list to your top 5 and focus there', 'Attempt all of them at once', 'Pick only the easiest ones', 'Hand the list to your manager'], a: 0 },
+      { q: 'A 90-day goal has stalled at day 30. The journey-consistent response is to…', opts: ['Review it above the line: what can I own and adjust?', 'Quietly drop it', 'Blame the season', 'Wait until the next cycle'], a: 0 },
+      { q: 'How does the journey frame fear?', opts: ['A normal signal you are at your growth edge — not a stop sign', 'A weakness to hide from the team', 'A reason to stop', 'Something experienced people no longer feel'], a: 0 },
+      { q: 'You are offered a responsibility that scares you. The Beyond-Fear move is to…', opts: ['Name the fear and take the step anyway, with support', 'Decline until you feel fully ready', 'Pretend you feel no fear', 'Ask someone else to take it'], a: 0 },
+      { q: 'What is the problem with waiting until fear disappears before acting?', opts: ['It rarely does — action comes first, confidence follows', 'Nothing; waiting is safest', 'Fear always vanishes within days', 'Others will act for you'], a: 0 },
+      { q: 'Why does the journey end with body, soul and spirit?', opts: ['Lasting performance needs the whole person cared for, not just skills', 'To fill remaining time', 'It is only about physical fitness', 'It replaces the other five shifts'], a: 0 },
+      { q: 'Weeks of tiredness are dragging your work down. The whole-person response is to…', opts: ['Treat rest and inner life as part of the work, not a reward after it', 'Push through and hope', 'Hide it from the team', 'Care only for the body and ignore the rest'], a: 0 }
+    ],
+    pt: [
+      { q: 'O Percurso de Alinhamento assenta em seis mudanças interiores. O que procuram mudar primeiro?', opts: ['A mentalidade que trazemos para o trabalho e uns para os outros', 'As ferramentas que usamos na terra', 'O horário do dia', 'A forma de pagamento'], a: 0 },
+      { q: 'Chega e encontra um trabalho que correu mal. Qual é a resposta "acima da linha"?', opts: ['Perguntar: o que posso assumir e ajudar a resolver?', 'Descobrir primeiro de quem é a culpa', 'Explicar porque não podia ter sido você', 'Não dizer nada e seguir'], a: 0 },
+      { q: 'Segundo o curso, viver acima da linha é sobretudo…', opts: ['Uma escolha de momento a momento, ao alcance de qualquer pessoa', 'Um tipo de personalidade', 'Pensamento positivo que ignora problemas reais', 'Uma técnica só para chefias'], a: 0 },
+      { q: 'Que trio marca o pensamento ABAIXO da linha?', opts: ['Culpa, desculpas, negação', 'Posse, responsabilidade, compromisso', 'Metas, planos, revisões', 'Corpo, alma, espírito'], a: 0 },
+      { q: 'A meio de uma conversa, dá por si abaixo da linha. Qual é o primeiro passo?', opts: ['Perceber, e escolher voltar para cima da linha', 'Insistir com mais força', 'Pedir desculpa por tudo e retrair-se', 'Mudar de assunto'], a: 0 },
+      { q: 'Em "Não há fracasso, só feedback", um erro é tratado como…', opts: ['Informação para aprender', 'Prova de que não serve para o trabalho', 'Algo a esconder', 'Culpa de outra pessoa'], a: 0 },
+      { q: 'Um colega tenta uma abordagem nova e não resulta. A resposta "só feedback" é…', opts: ['Perguntar juntos o que a tentativa acabou de ensinar', 'Combinar evitar riscos daqui em diante', 'Registar quem aprovou', 'Baixar a fasquia para contar como vitória'], a: 0 },
+      { q: 'Quando uma equipa adota a sério "não há fracasso, só feedback", o que se torna mais fácil?', opts: ['Experimentar abertamente novas abordagens', 'Esconder erros', 'Evitar conversas difíceis', 'Trabalhar sozinho'], a: 0 },
+      { q: 'O percurso trabalha a mentalidade antes de passar às metas. Porquê essa ordem?', opts: ['Metas definidas abaixo da linha desmoronam-se em culpa e desculpas', 'As metas importam menos do que a atitude', 'A mentalidade é mais fácil, por isso vem primeiro', 'A ordem é indiferente'], a: 0 },
+      { q: 'Porque é que definir metas surge a meio do percurso e não no início?', opts: ['Uma mente clara e assumida dá às metas uma base onde assentar', 'Era o único espaço livre', 'Metas só interessam a chefias', 'Para sobrar tempo para papelada'], a: 0 },
+      { q: 'Qual destas é uma meta e não um desejo?', opts: ['"Plantar os canteiros norte até 15 de março — assumo eu"', '"Ficar melhor na agricultura"', '"Oxalá melhore este ano"', '"Alguém devia arranjar a rega"'], a: 0 },
+      { q: 'Que horizonte de tempo usa o percurso para um ciclo de metas?', opts: ['90 dias', 'Uma semana', 'Um ano', 'Cinco anos'], a: 0 },
+      { q: 'Já listou tudo o que quer alcançar. O que pede o curso a seguir?', opts: ['Reduzir a lista às 5 principais e concentrar-se aí', 'Tentar tudo ao mesmo tempo', 'Escolher só as mais fáceis', 'Entregar a lista ao responsável'], a: 0 },
+      { q: 'Uma meta de 90 dias está parada ao dia 30. A resposta coerente com o percurso é…', opts: ['Revê-la acima da linha: o que posso assumir e ajustar?', 'Deixá-la cair em silêncio', 'Culpar a estação', 'Esperar pelo próximo ciclo'], a: 0 },
+      { q: 'Como é que o percurso encara o medo?', opts: ['Um sinal normal de que está no limite do seu crescimento — não um sinal de paragem', 'Uma fraqueza a esconder da equipa', 'Uma razão para parar', 'Algo que os experientes já não sentem'], a: 0 },
+      { q: 'É-lhe oferecida uma responsabilidade que assusta. O passo "Para lá do Medo" é…', opts: ['Nomear o medo e dar o passo na mesma, com apoio', 'Recusar até se sentir totalmente pronto', 'Fingir que não sente medo', 'Pedir a outro que assuma'], a: 0 },
+      { q: 'Qual é o problema de esperar que o medo desapareça antes de agir?', opts: ['Raramente desaparece — a ação vem primeiro, a confiança depois', 'Nenhum; esperar é o mais seguro', 'O medo passa sempre em poucos dias', 'Outros agirão por si'], a: 0 },
+      { q: 'Porque termina o percurso com corpo, alma e espírito?', opts: ['Desempenho duradouro exige cuidar da pessoa inteira, não só das competências', 'Para preencher o tempo restante', 'É apenas sobre forma física', 'Substitui as outras cinco mudanças'], a: 0 },
+      { q: 'Semanas de cansaço estão a pesar no trabalho. A resposta de pessoa-inteira é…', opts: ['Tratar o descanso e a vida interior como parte do trabalho, não um prémio no fim', 'Aguentar e esperar que passe', 'Escondê-lo da equipa', 'Cuidar só do corpo e ignorar o resto'], a: 0 }
+    ]
+  },
   'ai-literacy': {
     en: [
       { q: 'The Academy AI gives you a confident, detailed answer about a legal deadline. What is the right next move?', opts: ['Trust it — it sounded specific and confident', 'Check it against the official source before acting on it', 'Ask the AI to repeat it to confirm', 'Share it with the team immediately'], a: 1 },
