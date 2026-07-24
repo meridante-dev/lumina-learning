@@ -2217,3 +2217,7 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .intent-info { flex: 1; min-width: min(260px, 100%); font-size: 14px; }
 .intent-info span { display: block; color: var(--text-dim); font-size: 13px; font-style: italic; margin-top: 3px; }
 .intent-btns { display: flex; gap: 8px; }
+
+/* auth-gate privacy link */
+.auth-privacy { display:block; text-align:center; margin-top:14px; font-size:11.5px; color:var(--dim, #9aa598); text-decoration:none; opacity:.75; }
+.auth-privacy:hover { opacity:1; text-decoration:underline; }

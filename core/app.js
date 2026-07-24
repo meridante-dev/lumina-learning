@@ -917,7 +917,7 @@ function openDigest(id) {
     el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
   }
   const m = d.media;
-  const video = m ? (m.type === 'vimeo' ? `<div class="post-embed-live"><iframe src="https://player.vimeo.com/video/${m.id}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`
+  const video = m ? (m.type === 'vimeo' ? `<div class="post-embed-live"><iframe src="https://player.vimeo.com/video/${m.id}?dnt=1" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`
     : m.type === 'youtube' ? `<div class="post-embed-live"><iframe src="https://www.youtube-nocookie.com/embed/${m.id}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`
     : m.type === 'mp4' ? `<video controls playsinline style="width:100%;border-radius:12px;" src="${esc(m.src)}"></video>` : '') : '';
   $('#digBody').innerHTML = `
@@ -3909,7 +3909,7 @@ function openPlayer(courseId, mod) {
   } else if (media && media.type === 'vimeo') {
     videoEl.style.display = 'none';
     vimeoWrap.classList.add('on');
-    vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?${media.h ? 'h=' + media.h + '&' : ''}title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&player_id=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${cmods(c)[mod]}"></iframe>`;
+    vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?${media.h ? 'h=' + media.h + '&' : ''}title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&dnt=1&player_id=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${cmods(c)[mod]}"></iframe>`;
     armCheckpoint(c, mod);
   } else {
     videoEl.src = c.video || vidFor(courseId, mod);
@@ -4856,7 +4856,7 @@ document.addEventListener('click', e => {
     case 'member-card': showMemberCard(el); break;
     case 'embed-play': {
       const [kind, vid] = el.dataset.embed.split(':');
-      const src = kind === 'yt' ? `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1` : `https://player.vimeo.com/video/${vid}?autoplay=1`;
+      const src = kind === 'yt' ? `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1` : `https://player.vimeo.com/video/${vid}?autoplay=1&dnt=1`;
       const wrap = document.createElement('div'); wrap.className = 'post-embed-live';
       wrap.innerHTML = `<iframe src="${src}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>`;
       el.replaceWith(wrap);

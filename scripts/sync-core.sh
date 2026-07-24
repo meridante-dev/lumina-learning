@@ -14,7 +14,7 @@
 #
 # What it does:
 #   SYNCS   core/app.js core/auth.js core/brandkit.js core/styles.css
-#           core/ots.js core/ots.test.js verify.html
+#           core/ots.js core/ots.test.js verify.html privacy.html
 #   RULES   copies core/firestore.rules but PRESERVES the target's isSuper()
 #           email allowlist (extracted before, re-inserted after)
 #   CHECKS  data.js — warns on divergence, never auto-copies (i18n additions
@@ -33,7 +33,7 @@ TGT="$(cd "$TGT" && pwd)"
 echo "core sync: $SRC → $TGT"
 
 # 1 · plain syncs
-for f in core/app.js core/auth.js core/brandkit.js core/styles.css core/ots.js core/ots.test.js verify.html; do
+for f in core/app.js core/auth.js core/brandkit.js core/styles.css core/ots.js core/ots.test.js verify.html privacy.html; do
   cp "$SRC/$f" "$TGT/$f"
   echo "  ✓ $f"
 done

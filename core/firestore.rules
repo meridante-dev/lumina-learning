@@ -107,10 +107,11 @@ service cloud.firestore {
       allow write: if isSuper() || isCompanyAdminOf(cid == 'org' ? 'edenrise' : cid);
     }
 
-    // ---- Public leaderboard: own row writes. Read stays public for now
-    // (guest community view); entries carry companyId and clients scope queries.
+    // ---- Leaderboard: own row writes. Reads require sign-in (GDPR: learner
+    // names/streaks must not be world-readable; guests see an empty board —
+    // the client already degrades gracefully).
     match /leaderboard/{uid} {
-      allow read: if true;
+      allow read: if request.auth != null;
       allow write: if request.auth != null && request.auth.uid == uid;
     }
 
@@ -136,10 +137,11 @@ service cloud.firestore {
                     && (resource.data.authorUid == request.auth.uid || isAdminOfDoc(resource.data));
     }
 
-    // ---- Community forum: reads public for now (guest onboarding); posts carry
-    // companyId and clients scope queries. Author edits own; tenant admin moderates.
+    // ---- Community forum: reads require sign-in (GDPR — author names are
+    // personal data). Posts carry companyId; clients scope queries. Author
+    // edits own; tenant admin moderates.
     match /forum_posts/{postId} {
-      allow read: if true;
+      allow read: if request.auth != null;
       allow create: if request.auth != null
                     && request.resource.data.authorUid == request.auth.uid;
       allow update: if request.auth != null && (
@@ -153,7 +155,7 @@ service cloud.firestore {
                     && (resource.data.authorUid == request.auth.uid || isAdminOfDoc(resource.data));
 
       match /replies/{replyId} {
-        allow read: if true;
+        allow read: if request.auth != null;
         allow create: if request.auth != null
                       && request.resource.data.authorUid == request.auth.uid;
         allow update: if request.auth != null && (
