@@ -1673,6 +1673,7 @@ function compliancePanelHTML() {
     ${log.length ? `<div class="comp-log">${log.slice(0, 8).map(e => `<div class="comp-row"><span class="cl-t">${esc(e.title || '')}</span><span class="cl-meta">${dateFmt(e.at)} · ${e.hours}${t('comp_h_unit')} ${e.confirmed ? '· ✓' : ''}</span></div>`).join('')}</div>` : `<p class="empty-note" style="text-align:left;padding:6px 0;">${t('comp_none')}</p>`}
     ${log.length ? `<div class="row wrapf gap-3" style="margin-top:16px;">
       <button class="btn btn-primary btn-sm" data-action="comp-cert">🎓 ${t('comp_cert_btn')}</button>
+      <button class="btn btn-glass btn-sm" data-action="hour-log">📒 ${t('hourlog_btn')}</button>
       <button class="btn btn-glass btn-sm" data-action="comp-register">⤓ ${t('comp_reg_btn')}</button>
       <button class="btn btn-glass btn-sm" data-action="art4-self">🤖 ${t('art4_btn')}</button>
     </div>` : ''}
@@ -1821,6 +1822,194 @@ function renderJourney(id) {
     <div class="jstages">${stages}</div>
   </div>${footerHTML()}</div>`;
 }
+
+/* ================= Premium certificates (print-grade) =================
+   The canvas PNGs stay for legacy, but the primary certificate is now a
+   print-window document: vector-crisp at any size, themed from the live brand
+   tokens, saved as PDF by the browser. Three tiers, honestly distinguished:
+     · Course / Journey  — completion certificates
+     · Compliance annual — the 40h record certificate (NIF + verify code)
+     · VERIFIED          — the top tier, only issuable when the ledger holds
+       completion + applied scenario + delayed retrieval; carries the evidence
+       hash and the public verifier URL, so the paper points at the proof.
+   Wording rule (legal/TRAINING-RECORDS-LEGAL.md): these are INTERNAL training
+   certificates from the employer — they must never imply certified-entity
+   (DGERT) professional certification. The footer says so on every tier. */
+function brandVar(name, fb) {
+  try { const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return v || fb; } catch (e) { return fb; }
+}
+function openPrintDoc(html) {
+  const w = window.open('', '_blank');
+  if (!w) { toast(t('cert_popup'), 'ℹ️'); return; }
+  w.document.write(html); w.document.close();
+}
+function certFooterNote() {
+  return _lang() === 'pt'
+    ? 'Certificado interno de formação, emitido pela entidade no âmbito da formação contínua (art. 131.º do Código do Trabalho). Não constitui certificação profissional emitida por entidade formadora certificada.'
+    : 'Internal training certificate, issued by the organisation within continuous workplace training (PT Labour Code art. 131). It is not a professional certification issued by an accredited training entity.';
+}
+function buildCertHTML(o) {
+  const accent = brandVar('--accent', '#c8a45d');
+  const pt = _lang() === 'pt';
+  return `<!doctype html><html lang="${pt ? 'pt' : 'en'}"><head><meta charset="utf-8"><title>${esc(o.docTitle)}</title>
+<style>
+  @page { size: A4 landscape; margin: 0; }
+  * { margin:0; padding:0; box-sizing:border-box; print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  body { font-family: Georgia, 'Times New Roman', serif; background:#efece4; display:grid; place-items:center; min-height:100vh; }
+  .sheet { width:297mm; height:210mm; background:#faf8f2; position:relative; padding:16mm 20mm; display:flex; flex-direction:column; align-items:center; text-align:center; }
+  .frame { position:absolute; inset:7mm; border:2.5px solid ${accent}; }
+  .frame::after { content:''; position:absolute; inset:2.5mm; border:.6px solid #1c242033; }
+  .logo { height:15mm; margin:8mm 0 4mm; display:flex; align-items:center; gap:4mm; justify-content:center; }
+  .logo svg { height:15mm; width:auto; }
+  .brand { font-family:Helvetica,Arial,sans-serif; letter-spacing:.34em; font-size:10.5px; color:#4c554e; text-transform:uppercase; }
+  .eyebrow { font-family:Helvetica,Arial,sans-serif; letter-spacing:.42em; font-size:12px; color:${accent}; text-transform:uppercase; margin-top:7mm; }
+  ${o.tier ? `.tier { margin-top:3mm; font-family:Helvetica,Arial,sans-serif; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#faf8f2; background:${accent}; padding:1.6mm 6mm; border-radius:99px; }` : ''}
+  .who { font-size:40px; margin-top:6mm; color:#161d18; font-weight:600; }
+  .did { font-size:14.5px; color:#57605a; margin-top:3.5mm; font-family:Helvetica,Arial,sans-serif; }
+  .what { font-size:27px; color:#161d18; margin-top:2.5mm; max-width:210mm; line-height:1.25; }
+  .meta { font-family:Helvetica,Arial,sans-serif; font-size:12.5px; color:#57605a; margin-top:5mm; letter-spacing:.05em; }
+  .meta b { color:#161d18; }
+  ${o.evidence ? `.ev { margin-top:4mm; font-family:'Courier New',monospace; font-size:10px; color:#6a736c; line-height:1.7; } .ev b { color:#3c453e; font-family:Helvetica,Arial,sans-serif; }` : ''}
+  .sig { margin-top:auto; margin-bottom:6mm; display:flex; width:100%; justify-content:space-between; align-items:flex-end; font-family:Helvetica,Arial,sans-serif; font-size:11px; color:#57605a; }
+  .sig .line { border-top:1px solid #1c2420; padding-top:2mm; width:62mm; text-align:center; }
+  .note { position:absolute; bottom:9.5mm; left:20mm; right:20mm; font-family:Helvetica,Arial,sans-serif; font-size:8px; color:#8b938c; line-height:1.45; }
+  .print { position:fixed; top:12px; right:12px; font-family:Helvetica,Arial,sans-serif; background:#161d18; color:#fff; border:0; border-radius:8px; padding:9px 16px; cursor:pointer; font-size:13px; }
+  @media print { .print { display:none; } body { background:#faf8f2; } }
+</style></head><body>
+<button class="print" onclick="print()">⤓ ${pt ? 'Imprimir / Guardar PDF' : 'Print / Save as PDF'}</button>
+<div class="sheet">
+  <div class="frame"></div>
+  <div class="logo">${(window.BRAND && BRAND.logoSvg) || ((document.querySelector('.logo-mark svg') || {}).outerHTML || '')}</div>
+  <div class="brand">${esc(brandAcademy())}</div>
+  <div class="eyebrow">${esc(o.eyebrow)}</div>
+  ${o.tier ? `<div class="tier">★ ${esc(o.tier)}</div>` : ''}
+  <div class="who">${esc(o.who)}</div>
+  <div class="did">${esc(o.did)}</div>
+  <div class="what">${esc(o.what)}</div>
+  <div class="meta">${o.meta}</div>
+  ${o.evidence ? `<div class="ev">${o.evidence}</div>` : ''}
+  <div class="sig"><div>${esc(o.code || '')}</div><div class="line">${esc(companyName())}</div></div>
+  <div class="note">${certFooterNote()}${o.extraNote ? ' · ' + o.extraNote : ''}</div>
+</div></body></html>`;
+}
+function certIdentity() { const pf = S.profile || {}; return pf.name || pf.username || (pf.email || '').split('@')[0] || 'Learner'; }
+function fmtCertDate(d) {
+  const pt = _lang() === 'pt';
+  const M = pt ? ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro']
+               : ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return d.getDate() + (pt ? ' de ' : ' ') + M[d.getMonth()] + (pt ? ' de ' : ', ') + d.getFullYear();
+}
+function premiumCourseCert(courseId) {
+  const c = courseById(courseId); if (!c || !isDone(courseId)) return;
+  const pt = _lang() === 'pt', h = Math.round(courseMins(c) / 6) / 10;
+  openPrintDoc(buildCertHTML({
+    docTitle: (pt ? 'Certificado — ' : 'Certificate — ') + ctitle(c),
+    eyebrow: pt ? 'Certificado de Conclusão' : 'Certificate of Completion',
+    who: certIdentity(),
+    did: pt ? 'concluiu com aproveitamento o percurso de formação' : 'has successfully completed the training course',
+    what: ctitle(c),
+    meta: `${h}h · <b>${fmtCertDate(certDate(c.id))}</b>`,
+  }));
+  ledgerAppend('cert_issued', { courseId, kind: 'course' });
+}
+function premiumJourneyCert(id) {
+  const j = JOURNEYS.find(x => x.id === id); if (!j) return;
+  const pt = _lang() === 'pt';
+  const doneAt = new Date((S.journeysDone && S.journeysDone[id]) || Date.now());
+  const hours = Math.round(j.stages.reduce((a, st) => { const c = courseById(st.course); return a + (c ? courseMins(c) : 0); }, 0) / 6) / 10;
+  openPrintDoc(buildCertHTML({
+    docTitle: (pt ? 'Certificado de Percurso — ' : 'Journey Certificate — ') + tjour(j, 'title'),
+    eyebrow: pt ? 'Certificado de Percurso' : 'Journey Certificate',
+    who: certIdentity(),
+    did: pt ? `concluiu o percurso completo (${j.stages.length} etapas)` : `has completed the full journey (${j.stages.length} stages)`,
+    what: tjour(j, 'title'),
+    meta: `${hours}h · <b>${fmtCertDate(doneAt)}</b>`,
+  }));
+  ledgerAppend('cert_issued', { journeyId: id, kind: 'journey' });
+}
+async function premiumComplianceCert() {
+  const pf = S.profile || {};
+  if (!pf.nif) { toast(t('comp_nif_prompt'), '🪪'); location.hash = '#/profile'; return; }
+  const pt = _lang() === 'pt', y = complianceYear();
+  const code = await complianceVerifyCode(pf, y, S.trainingLog);
+  ledgerAppend('cert_issued', { year: y, code, kind: 'compliance' });
+  const h = trainingHours(S.trainingLog || []);
+  openPrintDoc(buildCertHTML({
+    docTitle: (pt ? 'Certificado de Formação Contínua ' : 'Continuous Training Certificate ') + y,
+    eyebrow: pt ? 'Formação Contínua · ' + y : 'Continuous Training · ' + y,
+    who: certIdentity(),
+    did: (pt ? 'NIF ' : 'Tax ID ') + pf.nif + (pt ? ' · realizou no ano de ' + y : ' · completed in ' + y),
+    what: (pt ? `${h} horas de formação registada` : `${h} hours of recorded training`),
+    meta: (pt ? 'Meta legal: <b>40h/ano</b> (art. 131.º CT)' : 'Legal target: <b>40h/yr</b> (PT Labour Code 131)'),
+    code: (pt ? 'Código de verificação: ' : 'Verification code: ') + code,
+  }));
+}
+/* THE top tier — only exists when the ledger proves it. */
+function downloadVerifiedCert(courseId) {
+  const c = courseById(courseId);
+  if (!c || !courseVerified(courseId)) { toast(t('vcert_locked'), '🔒'); return; }
+  const pt = _lang() === 'pt';
+  const L = S.ledger || [];
+  const doneAt = (S.progress[courseId] || {}).doneAt;
+  const ret = L.find(e => e.type === 'delayed_retrieval_pass' && e.courseId === courseId);
+  const days = ret && doneAt ? Math.floor((new Date(ret.at) - doneAt) / 864e5) : 7;
+  const mgr = (S.confirmations || []).find(x => x.courseId === courseId && x.verdict === 'confirmed');
+  const head = L.length ? L[L.length - 1].hash : '';
+  const verifyUrl = new URL('verify.html', location.href).href;
+  const evRows = [
+    pt ? '✓ Conclusão integral do percurso' : '✓ Full course completion',
+    pt ? '✓ Exercício de aplicação aprovado' : '✓ Applied scenario passed',
+    (pt ? `✓ Retenção verificada ${days} dias após a conclusão` : `✓ Retention verified ${days} days after completion`),
+    mgr ? (pt ? `✓ Aplicação no trabalho confirmada pela chefia (${esc(mgr.byName || '')})` : `✓ On-the-job application confirmed by manager (${esc(mgr.byName || '')})`) : null
+  ].filter(Boolean);
+  openPrintDoc(buildCertHTML({
+    docTitle: (pt ? 'Competência Verificada — ' : 'Verified Competency — ') + ctitle(c),
+    eyebrow: pt ? 'Certificado de Competência' : 'Competency Certificate',
+    tier: pt ? 'Competência Verificada' : 'Verified Competency',
+    who: certIdentity(),
+    did: pt ? 'demonstrou competência verificada em' : 'has demonstrated verified competency in',
+    what: ctitle(c),
+    meta: `${Math.round(courseMins(c) / 6) / 10}h · <b>${fmtCertDate(certDate(courseId))}</b>`,
+    evidence: `<b>${pt ? 'Evidência' : 'Evidence'}:</b> ${evRows.join(' · ')}<br>${pt ? 'registo' : 'record'} ${esc((head || '').slice(0, 24))}… · ${pt ? 'verificável em' : 'verifiable at'} ${esc(verifyUrl)}`,
+    extraNote: pt ? 'A camada «verificada» assenta no registo de evidência encadeado e ancorado publicamente do titular.'
+                  : 'The “verified” tier rests on the holder’s hash-chained, publicly anchored evidence record.',
+  }));
+  ledgerAppend('cert_issued', { courseId, kind: 'verified' });
+}
+/* ---- Registo Individual de Formação — the learner's legal hour log ---- */
+function downloadHourLog() {
+  const pt = _lang() === 'pt', pf = S.profile || {}, y = complianceYear();
+  const accent = brandVar('--accent', '#c8a45d');
+  const rows = (S.trainingLog || []).filter(e => new Date(e.at).getFullYear() === y)
+    .sort((a, b) => new Date(a.at) - new Date(b.at));
+  const total = trainingHours(rows);
+  const tr = rows.map(e => { const c = courseById(e.courseId);
+    return `<tr><td>${new Date(e.at).toLocaleDateString(pt ? 'pt-PT' : 'en-GB')}</td><td>${esc(c ? ctitle(c) : e.courseId)}</td><td>${esc(e.kind || (pt ? 'e-learning' : 'e-learning'))}</td><td style="text-align:right">${e.hours || 0}h</td></tr>`; }).join('');
+  openPrintDoc(`<!doctype html><html lang="${pt ? 'pt' : 'en'}"><head><meta charset="utf-8"><title>${pt ? 'Registo Individual de Formação' : 'Individual Training Log'} ${y}</title>
+<style>
+  @page { size: A4; margin: 16mm; }
+  * { box-sizing:border-box; print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  body { font-family: Helvetica, Arial, sans-serif; color:#1c2420; line-height:1.55; font-size:12.5px; max-width:760px; margin:24px auto; padding:0 16px; }
+  h1 { font-family: Georgia, serif; font-size:22px; border-bottom:2.5px solid ${accent}; padding-bottom:8px; }
+  .id { margin:12px 0 18px; color:#57605a; } .id b { color:#1c2420; }
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:#57605a; border-bottom:1.5px solid #1c2420; padding:6px 8px; }
+  td { padding:7px 8px; border-bottom:.6px solid #d8d5cb; }
+  .tot { margin-top:14px; font-size:14px; } .tot b { font-size:18px; }
+  .foot { margin-top:26px; font-size:9px; color:#8b938c; line-height:1.5; }
+  .print { position:fixed; top:12px; right:12px; background:#161d18; color:#fff; border:0; border-radius:8px; padding:9px 16px; cursor:pointer; font-size:13px; }
+  @media print { .print { display:none; } body { margin:0; } }
+</style></head><body>
+<button class="print" onclick="print()">⤓ ${pt ? 'Imprimir / Guardar PDF' : 'Print / Save as PDF'}</button>
+<h1>${pt ? 'Registo Individual de Formação' : 'Individual Training Log'} · ${y}</h1>
+<div class="id">${pt ? 'Trabalhador' : 'Worker'}: <b>${esc(certIdentity())}</b>${pf.nif ? ' · NIF <b>' + esc(pf.nif) + '</b>' : ''}${pf.dept ? ' · ' + esc(tdept(pf.dept)) : ''} · ${esc(companyName())} · ${esc(brandAcademy())}</div>
+<table><thead><tr><th>${pt ? 'Data' : 'Date'}</th><th>${pt ? 'Ação de formação' : 'Training action'}</th><th>${pt ? 'Modalidade' : 'Mode'}</th><th style="text-align:right">${pt ? 'Horas' : 'Hours'}</th></tr></thead>
+<tbody>${tr || `<tr><td colspan="4" style="color:#8b938c">${pt ? 'Sem registos neste ano.' : 'No entries this year.'}</td></tr>`}</tbody></table>
+<div class="tot">${pt ? 'Total do ano' : 'Year total'}: <b>${total}h</b> / ${pt ? 'meta legal' : 'legal target'} ${complianceTarget(pf) || 40}h (art. 131.º CT)</div>
+<div class="foot">${pt ? 'Registo gerado pela plataforma a partir do diário de eventos de aprendizagem do titular (encadeado criptograficamente). Documento de apoio ao registo de formação do empregador — art. 131.º/132.º do Código do Trabalho.' : 'Generated by the platform from the holder’s cryptographically chained learning-event record. Supporting document for the employer’s training register — PT Labour Code arts. 131–132.'}</div>
+</body></html>`);
+}
+
 function downloadJourneyCert(id) {
   const j = JOURNEYS.find(x => x.id === id); if (!j) return;
   const key = 'journey-' + id;
@@ -1982,6 +2171,7 @@ function certsSectionHTML() {
         <div class="cert-art"><span>✦</span><b>${esc(ctitle(c))}</b><span class="cert-d">${certDate(c.id).toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { month: 'short', year: 'numeric' })}</span></div>
         <div class="cert-actions">
           <button class="btn btn-glass btn-sm" data-action="cert-dl" data-id="${c.id}">⤓ ${t('cert_dl')}</button>
+          ${courseVerified(c.id) ? `<button class="btn btn-primary btn-sm" data-action="vcert" data-id="${c.id}">★ ${t('vcert_btn')}</button>` : ''}
           <a class="btn btn-glass btn-sm" href="${linkedInCertUrl(c)}" target="_blank" rel="noopener">in ${t('cert_li')}</a>
         </div>
       </div>`).join('')}</div>` : `<p class="empty-note" style="text-align:left;padding:8px 0;">${t('cert_none')}</p>`}
@@ -3749,6 +3939,16 @@ function setLang(l) {
   const ai = $('#aiPanel'); if (ai) { const inp = $('#aiInput'); if (inp) inp.placeholder = t('ask_anything'); }
   if (tutorPanel && tutorPanel.classList.contains('open')) { const m = $('#aiMsgs'); if (m) m.innerHTML = ''; tutorHistory = []; tutorGreet(); }
 }
+/* EAA/a11y: every focusable action element activates with Enter/Space, not
+   just clicks — one delegated handler instead of per-element wiring. */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const el = e.target;
+  if (el && el.getAttribute && el.getAttribute('tabindex') === '0'
+      && (el.dataset.action || el.dataset.ck !== undefined || el.classList.contains('q-opt') || el.getAttribute('role') === 'button')) {
+    e.preventDefault(); el.click();
+  }
+});
 document.addEventListener('click', e => { const lb = e.target.closest('.lang-btn'); if (lb) setLang(lb.dataset.lang); });
 
 /* ---------- GSAP motion (graceful + never leaves content hidden) ---------- */
@@ -4706,7 +4906,7 @@ document.addEventListener('click', e => {
     case 'lv-add': readLiveRows(); liveDraft.push({ title: '', host: '', when: '', desc: '', live: false }); render(); break;
     case 'lv-del': readLiveRows(); liveDraft.splice(+el.dataset.idx, 1); render(); break;
     case 'lv-save': lvSave(); break;
-    case 'cert-dl': downloadCert(id); break;
+    case 'cert-dl': premiumCourseCert(id); break;
     case 'mis-submit': submitMission(id); break;
     case 'mis-claim': claimMission(id, el.dataset.course); break;
     case 'mis-review': EdenMissions.review(id, el.dataset.ok === '1').then(() => { toast(el.dataset.ok === '1' ? '🌾 Approved' : 'Declined', el.dataset.ok === '1' ? '✓' : '－'); initAdmin(); }); break;
@@ -4744,11 +4944,13 @@ document.addEventListener('click', e => {
     case 'flash-next': flashNext(); break;
     case 'flash-close': $('#flashModal').classList.remove('open'); break;
     case 'open-journey': location.hash = '#/journey/' + id; break;
-    case 'jour-cert': downloadJourneyCert(id); break;
+    case 'jour-cert': premiumJourneyCert(id); break;
     case 'ai-digest': generateCockpitDigest(); break;
-    case 'comp-cert': downloadTrainingCert(); break;
+    case 'comp-cert': premiumComplianceCert(); break;
     case 'comp-register': downloadTrainingRegister(); break;
     case 'ru-annex': downloadRUannex(); break;
+    case 'vcert': downloadVerifiedCert(id); break;
+    case 'hour-log': downloadHourLog(); break;
     case 'art4-pack': downloadArt4Pack(true); break;
     case 'art4-self': downloadArt4Pack(false); break;
     case 'ev-export': downloadEvidenceExport(); break;

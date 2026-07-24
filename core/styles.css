@@ -2226,3 +2226,7 @@ html.os-android body { text-rendering: optimizeLegibility; }
 .auth-notice { font-size:11px; color:var(--dim,#9aa598); line-height:1.5; margin:0 0 12px; text-align:center; opacity:.85; }
 .auth-notice a { color:inherit; text-decoration:underline; }
 .ai-disclosure { font-size:10.5px; color:var(--dim,#9aa598); opacity:.7; margin-top:2px; }
+
+/* EAA/a11y pass */
+:focus-visible { outline: 2px solid var(--accent, #c8a45d); outline-offset: 2px; border-radius: 4px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
