@@ -45,6 +45,10 @@ but `getAnalytics` is never called — verified), advertising, sale of data, spe
 | 5 | Google Fonts loaded remotely → learner IP to Google on every load (see German case law) | Medium | ⚠ OPEN — self-host fonts (touches typography across brands; schedule deliberately) |
 | 6 | EdenRise Firestore **region unverified** (Belong confirmed EU). If US-region, the "EU data residency" sales claim is false for the founding instance | **High for the claim** | ⚠ OPEN — verify in console (Project settings → default GCP resource location); if not EU, either migrate (export/import) or scope the claim to new instances until then |
 | 7 | Privacy contact address is a placeholder — João hasn't chosen the support/privacy email | Medium | ⚠ OPEN (blocks final policy text) |
+| 8 | **Google sign-in recorded no consent** — only the email form wrote `consent/consentAt`; Google users had no demonstrable consent (Art. 7(1)) | High | ✅ FIXED — consent notice + privacy link now precede every entry path on the gate; first sign-in records `consent, consentAt, consentVia` for ALL providers |
+| 9 | **Cross-tenant reads**: leaderboard fetched ALL companies' rows (client-side filter only); forum reads unscoped — contradicting the isolation promised in the DPA | High | ✅ FIXED — queries are company-scoped and rules enforce `docCompany == myCompany()` (supers exempt). Residual: reply-reads are auth-only (discoverable only via company-scoped parents); EdenRise legacy docs missing `companyId` vanish from feeds until backfill (blocked on EdenRise reauth) |
+| 10 | Tutor was labeled "EdenRise Tutor" — not obviously AI (AI Act **Art. 50** transparency) | Medium | ✅ FIXED — renamed "AI Tutor"/"Tutor de IA" + permanent disclosure line in the panel ("answers can be wrong; verify what matters") |
+| 11 | No provider identification (imprint, DL 7/2004 art. 10.º) | Medium | ✅ template added to privacy.html §7 — entity fields pending (same blocker as #7) |
 
 ## The append-only vs. Art. 17 resolution (worth understanding once)
 The product's value is an immutable record; GDPR grants erasure. These do not conflict:

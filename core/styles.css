@@ -2221,3 +2221,8 @@ html.os-android body { text-rendering: optimizeLegibility; }
 /* auth-gate privacy link */
 .auth-privacy { display:block; text-align:center; margin-top:14px; font-size:11.5px; color:var(--dim, #9aa598); text-decoration:none; opacity:.75; }
 .auth-privacy:hover { opacity:1; text-decoration:underline; }
+
+/* GDPR consent notice + AI Act disclosure */
+.auth-notice { font-size:11px; color:var(--dim,#9aa598); line-height:1.5; margin:0 0 12px; text-align:center; opacity:.85; }
+.auth-notice a { color:inherit; text-decoration:underline; }
+.ai-disclosure { font-size:10.5px; color:var(--dim,#9aa598); opacity:.7; margin-top:2px; }

@@ -260,7 +260,13 @@ window.EdenCloud = {
     setDoc(doc(db, 'leaderboard', u.uid), { lastSeen: serverTimestamp() }, { merge: true }).catch(() => {});
   },
   async listBoard() {
-    const snap = await getDocs(collection(db, 'leaderboard'));
+    /* SERVER-scoped to the caller's company (was: fetch-all + client filter —
+       which let any signed-in user of another tenant read every name on the
+       platform; the DPA promises isolation, so the QUERY must enforce it).
+       Superadmins keep the unfiltered view, then scope client-side. */
+    const u = auth.currentUser;
+    const base = collection(db, 'leaderboard');
+    const snap = await getDocs(u && isSuperEmail(u.email) ? base : query(base, where('companyId', '==', cid())));
     return snap.docs.map(d => Object.assign({ uid: d.id }, d.data())).filter(r => ofCompany(r));
   },
   async signOut() {
@@ -396,7 +402,8 @@ window.EdenForum = {
   me() { return authorStub(); },
   // live feed of a channel; cb receives an array of posts (sorted newest-activity first)
   subscribeChannel(channel, cb) {
-    const q = query(collection(db, 'forum_posts'), where('channel', '==', channel));
+    /* company-scoped at the QUERY (rules enforce it server-side) */
+    const q = query(collection(db, 'forum_posts'), where('channel', '==', channel), where('companyId', '==', cid()));
     return onSnapshot(q, snap => {
       const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(p => ofCompany(p));
       posts.sort((a, b) => (ms(b.lastActivity) || ms(b.createdAt)) - (ms(a.lastActivity) || ms(a.createdAt)));
@@ -556,7 +563,15 @@ onAuthStateChanged(auth, async user => {
       /* the profile write is bookkeeping — deferred so it never blocks entry */
       setTimeout(() => {
         const payload = { profile, updatedAt: serverTimestamp() };
-        if (!data) { payload.state = localState(); payload.createdAt = serverTimestamp(); }
+        if (!data) {
+          payload.state = localState(); payload.createdAt = serverTimestamp();
+          /* GDPR: record consent for EVERY first sign-in, not just the email
+             form. The auth gate shows the notice + privacy link beside every
+             entry path; continuing is the affirmative action (Art. 4(11) /
+             Art. 7 — we must be able to DEMONSTRATE it, hence the record). */
+          payload.consent = true; payload.consentAt = serverTimestamp();
+          payload.consentVia = profile.provider || 'password';
+        }
         setDoc(doc(db, 'users', user.uid), payload, { merge: true }).catch(() => {});
       }, 400);
     } catch (e) { console.error('[auth] sync failed', e); }

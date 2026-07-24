@@ -3725,6 +3725,8 @@ function syncChrome() {
   const search = $('#navSearch'); if (search) search.innerHTML = `⌕&nbsp; ${t('search_ph')} <kbd>⌘K</kbd>`;
   const org = $('#orgChip'); if (org) org.innerHTML = `<span class="org-dot"></span>${brandName()} · ${BRAND.wordSub || 'Academy'}`;
   const tn = $('#aiTitle'); if (tn) tn.textContent = t('tutor_name');
+  /* AI Act Art. 50: people must know they are talking to AI — said plainly, always visible */
+  const td = $('#aiDisclosure'); if (td) td.textContent = t('tutor_ai_note');
   $$('.quick-row .quick[data-tk]').forEach(b => { b.textContent = t(b.dataset.tk); });
   const inp = $('#aiInput'); if (inp) inp.placeholder = t('ask_anything');
   const stEl = $('#tutorStatus'); if (stEl && !aiKey()) stEl.textContent = t('tutor_demo');
