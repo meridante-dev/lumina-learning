@@ -2230,3 +2230,13 @@ html.os-android body { text-rendering: optimizeLegibility; }
 /* EAA/a11y pass */
 :focus-visible { outline: 2px solid var(--accent, #c8a45d); outline-offset: 2px; border-radius: 4px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+
+/* Touch devices have no real hover — without this, a tap leaves cards stuck in
+   their lifted state (sticky hover). Lift/reveal effects become hover-only;
+   taps still activate normally. */
+@media (hover: none) {
+  .card:hover { transform: none; box-shadow: none; border-color: var(--line, rgba(231,237,227,.12)); }
+  .card:hover .thumb .big-icon { transform: none; }
+  .card:hover .card-actions { opacity: 0; transform: translateY(6px); }
+  .live-card:hover { transform: none; border-color: var(--line, rgba(231,237,227,.12)); }
+}

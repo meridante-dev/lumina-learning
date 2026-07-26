@@ -4088,9 +4088,19 @@ function resetStages() {
   soonStage.classList.remove('on');
   videoEl.style.display = ''; videoEl.pause(); try { videoEl.removeAttribute('src'); videoEl.load(); } catch (e) {}
 }
+/* Mobile back-button contract: opening the full-screen player pushes a history
+   sentinel, so BACK closes the player instead of exiting the app — the single
+   most common way a phone user leaves a lesson. ESC and ✕ consume the sentinel
+   so the history stack never drifts. */
+let _playerPushed = false, _popClosing = false;
+window.addEventListener('popstate', () => {
+  if (_popClosing) return;
+  if (typeof playerEl !== 'undefined' && playerEl.classList.contains('open')) { _playerPushed = false; closePlayer(true); }
+});
 function openPlayer(courseId, mod) {
   const c = courseById(courseId);
   if (!c) return;
+  try { history.pushState({ overlay: 'player' }, ''); _playerPushed = true; } catch (e) {}
   if (mod == null) mod = (prog(courseId) && !isDone(courseId)) ? (prog(courseId).mod || 0) : 0;
   mod = Math.min(mod, c.modules.length - 1);
   const media = modMedia(c, mod);
@@ -4179,7 +4189,14 @@ function maybePretest(c, mod) {
   };
   drawOne();
 }
-function closePlayer() {
+function closePlayer(fromPop) {
+  /* if WE pushed the sentinel and the close came from ✕/ESC, consume it so the
+     next BACK doesn't mysteriously do nothing */
+  if (_playerPushed && !fromPop) {
+    _playerPushed = false; _popClosing = true;
+    try { history.back(); } catch (e) {}
+    setTimeout(() => { _popClosing = false; }, 120);
+  }
   playerEl.classList.remove('open');
   $('#notesDrawer').classList.remove('open');
   resetStages();
