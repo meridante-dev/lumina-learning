@@ -51,7 +51,7 @@ try {   /* IndexedDB cache: repeat visits read state instantly, offline included
 const persistenceReady = setPersistence(auth, indexedDBLocalPersistence)
   .catch(() => setPersistence(auth, browserLocalPersistence)).catch(() => {});
 /* Complete a Google redirect sign-in if we're returning from one (mobile/PWA flow). */
-getRedirectResult(auth).catch(() => {});
+if (BACKEND_READY) getRedirectResult(auth).catch(() => {});
 
 const KEY = 'edenrise-state-v2';
 const MODE = 'eden-auth-mode';          // 'firebase' | 'guest' | 'out'
@@ -122,10 +122,12 @@ window.EdenCloud = {
     const u = auth.currentUser; if (!u) return;
     if (pushTimer) { clearTimeout(pushTimer); pushTimer = null; }
     const st = localState();
-    setDoc(doc(db, 'users', u.uid), { state: st, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
-    /* public board entry — the real leaderboard everyone can read */
+    /* tenant stamp FIRST, so it reaches the user-doc write below (it previously
+       ran after setDoc had captured st — the stamp only ever hit the leaderboard) */
     const p = st.profile || {};
-    if (!p.companyId) p.companyId = BRAND_ID;   /* tenant stamp (founding tenant of this deployment) */
+    if (!p.companyId) { p.companyId = BRAND_ID; st.profile = p; }
+    /* top-level profile.companyId is what the rules' myCompany() reads — keep it in step */
+    setDoc(doc(db, 'users', u.uid), { state: st, profile: { companyId: p.companyId }, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
     const name = p.name || (p.email ? p.email.split('@')[0] : 'Learner');
     setDoc(doc(db, 'leaderboard', u.uid), {
       name, username: p.username || '',
@@ -160,8 +162,12 @@ window.EdenCloud = {
         .map(c => ({ learnerEventHash: c.learnerEventHash, courseId: c.courseId, verdict: c.verdict,
                      byName: c.byName || '', byUid: c.byUid, mgrEventHash: c.mgrEventHash, at: c.at }));
       if (!add.length) return;
-      st.confirmations = (st.confirmations || []).concat(add);
-      localStorage.setItem(KEY, JSON.stringify(st));
+      /* merge into a FRESH read and touch only this key — writing the stale
+         full snapshot could clobber concurrent XP/progress writes */
+      const fresh = localState();
+      const have2 = new Set((fresh.confirmations || []).map(c => c.mgrEventHash));
+      fresh.confirmations = (fresh.confirmations || []).concat(add.filter(c => !have2.has(c.mgrEventHash)));
+      localStorage.setItem(KEY, JSON.stringify(fresh));
       if (window.S) { S.confirmations = st.confirmations; if (window.render) render(); }
     } catch (e) { /* not live yet — harmless */ }
     finally { window.__pullConfBusy = false; }
@@ -282,9 +288,17 @@ window.EdenCloud = {
   /* GDPR: erase the Firestore doc, the auth account, and this device's copy */
   async deleteAccount() {
     const u = auth.currentUser; if (!u) throw new Error('not-signed-in');
+    const backup = localState();               /* for rollback if auth deletion fails */
     await deleteDoc(doc(db, 'users', u.uid));
     await deleteDoc(doc(db, 'leaderboard', u.uid)).catch(() => {});
-    await deleteUser(u);                       /* throws auth/requires-recent-login if stale */
+    try {
+      await deleteUser(u);                     /* throws auth/requires-recent-login if stale */
+    } catch (e) {
+      /* auth account survived — restore the data so the account isn't left
+         half-deleted (docs gone, login alive). The user re-auths and retries. */
+      await setDoc(doc(db, 'users', u.uid), { state: backup, profile: { companyId: (backup.profile || {}).companyId || BRAND_ID }, updatedAt: serverTimestamp() }, { merge: true }).catch(() => {});
+      throw e;
+    }
     localStorage.removeItem(KEY);
     localStorage.setItem(MODE, 'out');
     setTimeout(() => location.reload(), 900);
@@ -300,7 +314,22 @@ window.EdenCloud = {
     await deleteDoc(doc(db, 'courses', id));
   },
   async listCourses() {
-    const snap = await getDocs(collection(db, 'courses'));
+    /* A collection-wide list can't be proven against per-doc read rules, so it
+       was denied for everyone but supers (and silently swallowed). Split into
+       provable queries: the global catalog (companyId == null) for all, plus
+       the caller's tenant set when signed in. Supers keep the full view. */
+    const u = auth.currentUser;
+    let docs;
+    if (u && isSuperEmail(u.email)) {
+      docs = (await getDocs(collection(db, 'courses'))).docs;
+    } else {
+      let pub = { docs: [] };
+      try { pub = await getDocs(query(collection(db, 'courses'), where('companyId', '==', null))); } catch (e) {}
+      let mine = { docs: [] };
+      if (u) { try { mine = await getDocs(query(collection(db, 'courses'), where('companyId', '==', cid()))); } catch (e) {} }
+      docs = [...pub.docs, ...mine.docs];
+    }
+    const snap = { docs };
     const out = { courses: [], meta: null, digests: [] };
     const myMeta = metaDocId();
     snap.docs.forEach(d => {
@@ -429,10 +458,12 @@ window.EdenForum = {
   },
   /* all official broadcasts across channels (equality-only where — no index needed) */
   async listOfficial() {
-    const snap = await getDocs(query(collection(db, 'forum_posts'), where('official', '==', true)));
-    const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(p => ofCompany(p));
-    posts.sort((a, b) => (ms(b.createdAt) || 0) - (ms(a.createdAt) || 0));
-    return posts;
+    try {
+      const snap = await getDocs(query(collection(db, 'forum_posts'), where('official', '==', true), where('companyId', '==', cid())));
+      const posts = snap.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(p => ofCompany(p));
+      posts.sort((a, b) => (ms(b.createdAt) || 0) - (ms(a.createdAt) || 0));
+      return posts;
+    } catch (e) { return []; }   /* guests / rules propagating — official rail degrades to empty */
   },
   async addReply(postId, body) {
     if (!auth.currentUser) throw new Error('not-signed-in');
@@ -492,11 +523,17 @@ window.EdenMissions = {
   },
   async listMine() {
     const u = auth.currentUser; if (!u) return [];
-    const snap = await getDocs(query(collection(db, 'missions'), where('authorUid', '==', u.uid)));
-    return snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+    try {
+      const snap = await getDocs(query(collection(db, 'missions'), where('authorUid', '==', u.uid)));
+      return snap.docs.map(d => Object.assign({ id: d.id }, d.data()));
+    } catch (e) { return []; }
   },
   async listPending() {
-    const snap = await getDocs(query(collection(db, 'missions'), where('status', '==', 'pending')));
+    const u = auth.currentUser; if (!u) return [];
+    const q0 = isSuperEmail(u.email)
+      ? query(collection(db, 'missions'), where('status', '==', 'pending'))
+      : query(collection(db, 'missions'), where('status', '==', 'pending'), where('companyId', '==', cid()));
+    const snap = await getDocs(q0).catch(() => ({ docs: [] }));
     const list = snap.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(m => ofCompany(m));
     list.sort((a, b) => (ms(a.createdAt) || 0) - (ms(b.createdAt) || 0));
     return list;
@@ -513,6 +550,7 @@ window.EdenMissions = {
 
 /* load team-published courses + studio meta for everyone (guests included) */
 (function loadCustomCourses(tries) {
+  if (!BACKEND_READY) return;                  /* placeholder key — nothing to load */
   window.EdenCloud.listCourses().then(({ courses, meta, digests }) => {
     if (!window.EdenApp) return;
     if (meta && window.EdenApp.applyMeta) window.EdenApp.applyMeta(meta);
@@ -550,7 +588,12 @@ onAuthStateChanged(auth, async user => {
       uid: user.uid, email: user.email || '',
       name: user.displayName || (user.email ? user.email.split('@')[0] : 'Learner'),
       photo: user.photoURL || '',
-      provider: (user.providerData[0] && user.providerData[0].providerId) || 'password'
+      provider: (user.providerData[0] && user.providerData[0].providerId) || 'password',
+      /* CRITICAL: the security rules' myCompany() reads THIS top-level map —
+         not state.profile. Without companyId here, every company-scoped rule
+         compares against null and every non-super read is denied. (Found in
+         the release audit; masked for supers by the isSuper() short-circuit.) */
+      companyId: (localState().profile || {}).companyId || BRAND_ID
     };
     stampProfileLocal(profile);
     if (window.EdenApp) window.EdenApp.applyProfile(profile);

@@ -5084,7 +5084,6 @@ document.addEventListener('click', e => {
     }
     case 'show-login': document.documentElement.setAttribute('data-gate', 'on'); break;
     case 'signout': if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); break;
-    case 'toast-msg': toast(msg, 'ℹ️'); break;
     case 'privacy-note': toast(t('comm_privacy'), '🔒'); break;
     case 'nudge':
       if (el.dataset.uid) emailNudgeMember(el.dataset.uid, el);

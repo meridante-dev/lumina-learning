@@ -119,17 +119,24 @@ service cloud.firestore {
     // ---- Courses: global catalog docs (companyId == null) are public;
     // tenant-published docs are same-company only. Admin-of-tenant writes.
     match /courses/{courseId} {
+      // Global catalog (companyId == null) is world-readable AND list-provable
+      // via where('companyId','==',null); tenant courses via the company query.
+      // The missing-field branch keeps legacy single-doc reads working.
       allow read: if !('companyId' in resource.data)
                   || resource.data.companyId == null
-                  || sameCompany(resource.data)
-                  || isSuper();
+                  || isSuper()
+                  || (request.auth != null && docCompany(resource.data) == myCompany());
       allow create, update, delete: if isSuper()
                   || isCompanyAdminOf(docCompany(request.resource.data));
     }
 
     // ---- Field Missions: same-company; author submits/updates own; company admin reviews.
     match /missions/{missionId} {
-      allow read: if request.auth != null && (sameCompany(resource.data) || isSuper());
+      // author branch makes listMine (where authorUid==uid) provable — without
+      // it a learner could not read their OWN submitted missions
+      allow read: if request.auth != null && (
+                     resource.data.authorUid == request.auth.uid
+                     || sameCompany(resource.data) || isSuper());
       allow create: if request.auth != null
                     && request.resource.data.authorUid == request.auth.uid;
       allow update: if request.auth != null
