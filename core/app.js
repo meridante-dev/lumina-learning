@@ -3886,10 +3886,35 @@ function render() {
     };
   }
   initMotion();
+  armReveals();
 }
 /* covers download only as their cards approach the viewport (~1.4MB saved on Library) */
 const loadBg = el => { el.style.backgroundImage = `url('${el.dataset.bg}')`; el.removeAttribute('data-bg'); };
 let ioEverFired = false;
+/* Scroll reveal (Dream Motion cadence). The hidden class is applied by THIS
+   script, never in the markup — if JS fails or the observer is unavailable,
+   content simply renders visible. Sections reveal once, then stay. */
+let _revealObs = null;
+function armReveals() {
+  if (!('IntersectionObserver' in window)) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!_revealObs) {
+    _revealObs = new IntersectionObserver(es => {
+      es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); _revealObs.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+  }
+  document.querySelectorAll('#app .admin-section, #app .rail, #app .prog-top').forEach(el => {
+    if (el.dataset.rev) return;
+    el.dataset.rev = '1';
+    const r = el.getBoundingClientRect();
+    if (r.top < innerHeight * 0.92) { el.classList.add('will-reveal', 'in'); return; } /* already on screen: no flash */
+    el.classList.add('will-reveal');
+    _revealObs.observe(el);
+  });
+}
+/* headless/screenshot safety: forceVisible() must also settle reveals */
+const _oldForceVisible = typeof forceVisible === 'function' ? forceVisible : null;
+
 const bgObserver = ('IntersectionObserver' in window) ? new IntersectionObserver(entries => {
   ioEverFired = true;
   entries.forEach(e => { if (e.isIntersecting) { loadBg(e.target); bgObserver.unobserve(e.target); } });
@@ -3955,6 +3980,8 @@ const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: r
 const BLOCK_SEL = '.hero-content > *, .hero-side, .pillar, .rail-section, .path-banner, .stats, .module-list, .admin-section, .chart-card, .live-card, .two-col';
 function forceVisible() {
   document.querySelectorAll(BLOCK_SEL).forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+  /* scroll-reveal blocks settle too — otherwise a screenshot shows empty space */
+  document.querySelectorAll('.will-reveal').forEach(el => el.classList.add('in'));
 }
 /* GSAP loads on demand — desktop only, never on phones (bandwidth + battery) */
 let motionLibsState = 0; /* 0 none · 1 loading · 2 ready */

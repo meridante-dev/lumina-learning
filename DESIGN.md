@@ -88,6 +88,27 @@ Additions to the laws:
 which reads like a glitch on an empty cockpit. Correct behaviour, wrong weight — dim it when a real
 empty state is expected.
 
+## Pass 3 — "cinematic depth" (Dream Motion adaptation, 2026-07-26)
+
+Reference: the Dream Motion Framer template (AI-SaaS landing page). Its *structure* was adopted, not
+its layout or its cool palette — it is a marketing funnel (hero → showcase → bento → pricing → FAQ
+→ CTA) and this is an app. What transferred:
+
+| Template idea | How it landed here |
+|---|---|
+| Bento grid | Progress top row is now a composed 6-column bento: one large feature tile (level/XP) + four tiles of **varied** widths (364/175/175/364). No markup change — `.prog-mini` uses `display: contents` so its children join the parent grid. |
+| Cinematic stage light | `body::before` paints a warm key light (top-left), a secondary fill (top-right) and a floor bounce, all from **brand tokens** (`--accent`, `--accent-2`) so Belong inherits terracotta automatically. `body::after` adds a gentle vignette. |
+| Glass surfaces | Elevated panels are `linear-gradient` + `backdrop-filter: blur()` + a 6% white hairline — light, not outline. |
+| Section rhythm | `.admin-section` margin 64 → **96px**; section headers 22 → 30px. |
+| Showcase framing | The hero's AI-path panel became glass with a deep shadow, so it reads as a floating product surface. |
+| Scroll choreography | IntersectionObserver reveals on sections/rails. **The hidden class is applied by script**, never in markup — if JS fails nothing is invisible. `forceVisible()` settles them so screenshots stay truthful. Reduced-motion opts out entirely. |
+
+**Law 16 · A bento is not a box farm.** Pass 1 removed *many uniform small* boxes. A bento returns
+surfaces deliberately: **few, large, varied, made of light**. Uniformity is the enemy, not the tile.
+
+**Law 17 · Depth comes from light, not from borders.** Gradient washes, blur and shadow do the work
+that 172 outlines used to attempt.
+
 ## Where the laws live in code
 - `core/styles.css` — two appended blocks: **PREMIUM LAYER** and **PREMIUM LAYER 2**. Reversible by
   deletion; nothing above them was rewritten except mechanical scale-snapping.

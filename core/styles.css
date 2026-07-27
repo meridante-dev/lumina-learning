@@ -2414,3 +2414,98 @@ html.os-android body { text-rendering: optimizeLegibility; }
 /* the team table separates by rows, not by an outer frame */
 .team-table { background: none; border-color: transparent; }
 .team-table th { border-bottom-color: var(--line); }
+
+/* ============================================================================
+   PREMIUM LAYER 4 — "cinematic depth" (Dream Motion adaptation)
+   Brief: take the template's ORGANISING ideas — bento composition, big section
+   rhythm, showcase framing, gradient stage-light — while keeping each brand's
+   warm hue and the app's navigation. Everything below uses brand TOKENS
+   (--accent/--glow/--bg), so Belong inherits terracotta automatically.
+   Note on law 2: bento tiles bring surfaces back deliberately. The original sin
+   was MANY UNIFORM SMALL boxes; a bento is FEW, LARGE, VARIED tiles made of
+   light rather than outlines. That is the distinction we hold.
+   ========================================================================= */
+
+/* 1 · THE STAGE — a warm gradient light behind the content, vignette at edges.
+   This is what makes the template feel cinematic rather than flat-dark. */
+body::before {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    /* the key light — warm, high and slightly left, like a stage wash */
+    radial-gradient(90% 55% at 38% -8%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 62%),
+    /* fill light — the secondary brand hue, opposite corner */
+    radial-gradient(70% 50% at 100% 6%, color-mix(in srgb, var(--accent-2, var(--accent)) 15%, transparent), transparent 60%),
+    /* floor bounce — keeps the lower half from going dead flat */
+    radial-gradient(120% 60% at 50% 108%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%);
+}
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  /* gentle vignette — enough to focus the centre, never enough to flatten it */
+  background: radial-gradient(150% 110% at 50% 42%, transparent 58%, rgba(0,0,0,.42));
+}
+#app, .topnav, .ai-fab, .ai-panel { position: relative; z-index: 1; }
+
+/* 2 · GLASS — elevated surfaces are light, not outlines */
+.bento-tile, .level-card, .chart-card, .mgr-hero, .prof-card, .pulse-card {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.012)) !important;
+  border: 1px solid rgba(255,255,255,.06) !important;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-radius: 14px;
+}
+
+/* 3 · BENTO — Progress top row becomes a composed grid, not four equal boxes.
+   No markup change: .prog-mini becomes transparent to the grid. */
+.prog-top {
+  grid-template-columns: repeat(6, 1fr);
+  grid-auto-rows: minmax(112px, auto);
+  gap: 14px;
+}
+.level-card { grid-column: 1 / span 3; grid-row: 1 / span 2; }
+.prog-mini { display: contents; }
+.prog-mini .stat {
+  padding: 20px 22px !important;
+  display: flex; flex-direction: column; justify-content: center;
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01)) !important;
+  border: 1px solid rgba(255,255,255,.055) !important;
+  border-radius: 14px; backdrop-filter: blur(12px);
+}
+.prog-mini .stat:nth-child(1) { grid-column: 4 / span 2; grid-row: 1; }
+.prog-mini .stat:nth-child(2) { grid-column: 6;          grid-row: 1; }
+.prog-mini .stat:nth-child(3) { grid-column: 4;          grid-row: 2; }
+.prog-mini .stat:nth-child(4) { grid-column: 5 / span 2; grid-row: 2; }
+.prog-mini .stat .num { font-size: 30px; }
+
+/* 4 · SECTION RHYTHM — the template breathes; so do we */
+.admin-section { margin-top: 96px; }
+.admin-section > h2 { font-size: 30px; letter-spacing: -.02em; }
+
+/* 5 · SHOWCASE FRAMING — hero art gets stage light, side panel becomes glass */
+.hero-side {
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.015)) !important;
+  border: 1px solid rgba(255,255,255,.07) !important;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 40px 90px rgba(0,0,0,.45);
+}
+.hero-eyebrow { color: var(--accent); }
+
+/* 6 · GALLERY — Library cards get air and a lift into the light */
+.grid, .lib-grid { gap: 30px 24px; }
+.card { transition: transform .45s cubic-bezier(.2,.8,.2,1), filter .45s; }
+@media (hover: hover) {
+  .card:hover { transform: translateY(-6px); }
+  .card:hover .thumb { filter: brightness(1.1) saturate(1.05); box-shadow: 0 30px 60px rgba(0,0,0,.5); }
+}
+
+/* 7 · SCROLL REVEAL — the hidden state is added BY SCRIPT (.will-reveal), so if
+   JS never runs nothing is ever invisible. Respects reduced-motion. */
+.will-reveal { opacity: 0; transform: translateY(22px); }
+.will-reveal.in { opacity: 1; transform: none; transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+@media (prefers-reduced-motion: reduce) { .will-reveal, .will-reveal.in { opacity: 1; transform: none; transition: none; } }
+
+@media (max-width: 900px) {
+  .prog-top { grid-template-columns: repeat(2, 1fr); }
+  .level-card { grid-column: 1 / span 2; grid-row: auto; }
+  .prog-mini .stat:nth-child(n) { grid-column: auto; grid-row: auto; }
+  .admin-section { margin-top: 64px; }
+}
