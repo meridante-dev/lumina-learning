@@ -346,8 +346,9 @@ function cardHTML(c, opts = {}) {
      communicated by position in the rail. Highest-signal wins: what the learner
      MUST do > what the AI chose > what's new. Everything else is noise. */
   const chips = [];
+  /* "AI PATH" was on 5 of 6 cards — a label on everything carries no
+     information. Only genuinely rare, actionable states earn the one chip. */
   if (c.required) chips.push(`<span class="chip">${t('assigned_tag')}</span>`);
-  else if (c.ai) chips.push(`<span class="chip ai">${t('ai_path_chip')}</span>`);
   else if (c.isNew) chips.push(`<span class="chip">${t('new')}</span>`);
   /* status reads as text, not as another bubble */
   let foot = '';
@@ -547,7 +548,7 @@ function renderLive() {
           <span class="live-when">${s.live ? `🔴 ${s.viewers} ${t('watching')}` : s.when}</span>
           ${s.live
             ? `<button class="btn btn-primary btn-sm" data-action="join-live" data-id="${s.id}">${t('join_now')}</button>`
-            : `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12px;color:var(--text-faint);font-weight:600;">${t('remind_me')}</span><div class="toggle ${S.reminders.includes(s.id) ? 'on' : ''}" data-action="remind" data-id="${s.id}"></div></div>${s.date ? `<button class="btn btn-glass btn-sm" data-action="cal-ics" data-id="${s.id}">📅 ${t('cal_add')}</button>` : ''}`}
+            : `<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12px;color:var(--text-faint);font-weight:600;">${t('remind_me')}</span><div class="toggle ${S.reminders.includes(s.id) ? 'on' : ''}" data-action="remind" data-id="${s.id}"></div></div>${s.date ? `<button class="btn btn-glass btn-sm" data-action="cal-ics" data-id="${s.id}">${t('cal_add')}</button>` : ''}`}
         </div>
       </div>`).join('')}
   </div>${footerHTML()}</div>`;
@@ -1193,7 +1194,7 @@ function skillHeatmapHTML() {
   if (!adminMembers || !adminMembers.length) return '';
   const heat = v => v >= 60 ? 'h3' : v >= 30 ? 'h2' : v > 0 ? 'h1' : 'h0';
   return `<div class="admin-section"><h2> Team skills heatmap</h2>
-    <p class="sect-sub">Where the team is strong, and where the gaps are — completion-weighted per skill.</p>
+    <p class="sect-sub">Strengths and gaps.</p>
     <div class="heat-scroll"><table class="heat-table">
       <thead><tr><th></th>${SKILLS.map(s => `<th>${s.en}</th>`).join('')}</tr></thead>
       <tbody>${(filteredMembers() || []).map(m => `<tr><td>${esc((m.profile && m.profile.name) || 'Learner')}</td>
@@ -2458,7 +2459,7 @@ function intelHTML() {
   const qs = teamQuestions();
   return `<div class="admin-section">
     <h2>💬 What the team is asking</h2>
-    <p class="sect-sub">Every Ask-the-Academy and tutor question, anonymised — the raw signal for what training to build next.</p>
+    <p class="sect-sub">Anonymised. What to build next.</p>
     ${qs.length ? qs.slice(0, 10).map(x => `<div class="intel-q"><span class="n">${timeAgo({ seconds: (x.at || 0) / 1000 })}</span><span>${esc(x.q)}</span></div>`).join('') : `<p class="empty-note" style="text-align:left;padding:8px 0;">No questions logged yet — they appear as the team uses Ask the Academy and the tutor.</p>`}
     ${qs.length >= 3 ? `<button class="btn btn-glass btn-sm" data-action="intel-gaps" style="margin-top:12px;">✦ Find content gaps</button><div id="gapResults"></div>` : ''}
   </div>
@@ -2467,7 +2468,7 @@ function intelHTML() {
     if (!flags.length) return '';
     return `<div class="admin-section">
     <h2>⚑ Flagged quiz questions</h2>
-    <p class="sect-sub">Questions the team marked as possibly wrong — review them, and fix the course content or quiz where needed.</p>
+    <p class="sect-sub">Flagged as possibly wrong.</p>
     ${flags.slice(0, 10).map(f => { const c = courseById(f.courseId); return `<div class="intel-q"><span class="n">${c ? esc(ctitle(c)) : ''}${f.ai ? ' · ✦AI' : ''}</span><span>${esc(f.q)}</span></div>`; }).join('')}
   </div>`; })()}
   <div class="admin-section">
@@ -2552,7 +2553,7 @@ function paintTrends() {
 }
 function studioTabsHTML() {
   const tabs = [['cockpit', 'People'], ['content', 'Content'], ['broadcasts', 'Broadcasts'], ['digests', 'Digests'], ['live', 'Live sessions'], ['company', 'Company'], ['settings', 'Settings']];
-  if (isSuperAdmin()) tabs.push(['companies', 'Companies ✦']);
+  if (isSuperAdmin()) tabs.push(['companies', 'Companies']);
   return `<div class="comm-pills studio-tabs">${tabs.map(([id, label]) =>
     `<button class="ch-item ${adminTab === id ? 'active' : ''}" data-action="admin-tab" data-tab="${id}"><span>${label}</span></button>`).join('')}</div>`;
 }
@@ -2623,7 +2624,7 @@ function paintMgrDash() {
   ${confirmPanelHTML()}
   <div class="admin-section" style="margin-top:18px;">
     <h2>Training hours</h2>
-    <p class="sect-sub">The team's mandatory 40h continuous training — Código do Trabalho art. 131.º. Live, prorated, exportable.</p>
+    <p class="sect-sub">40h a year · art. 131.º</p>
     <span class="badge ${tenPct ? 'mg-ok' : 'mg-bad'}" style="margin-top:10px;display:inline-flex;">${tenPct ? '● Art. 131.º/5 · ≥10% trained ✓' : '⚠ Art. 131.º/5 · <10% of workforce trained'}</span>
     <div class="mgr-heroes">
       <div class="mgr-hero"><div class="jour-ring" style="--sz:74px;background:conic-gradient(${teamPct >= 50 ? 'var(--accent-2)' : 'var(--warn, #d9b38c)'} ${teamPct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${teamPct}%</span></div>
@@ -2780,7 +2781,7 @@ function adminCockpitHTML() {
     <div id="cockpitComp"></div>
     <div class="admin-section">
       <h2> Field Missions review</h2>
-      <p class="sect-sub">Members' real-world proof, waiting for your eyes. Approve to release their XP.</p>
+      <p class="sect-sub">Approve to release XP.</p>
       <div id="missionQueue"><p class="empty-note" style="text-align:left;padding:8px 0;">Loading…</p></div>
     </div>
     ${adminMembers ? intelHTML() : '<div id="intelWrap"></div>'}
@@ -2820,7 +2821,7 @@ function adminContentHTML() {
   }).join('');
   return `<div class="admin-section">
     <h2>All courses</h2>
-    <p class="sect-sub">Everything on the platform. Edit copy, modules and videos in both languages — changes publish to the whole team instantly.</p>
+    <p class="sect-sub">Edits publish instantly.</p>
     <div class="content-table">${rows}</div>
   </div>
   <div class="admin-section">
@@ -3051,7 +3052,7 @@ function adminLiveHTML() {
     </div>`).join('');
   return `<div class="admin-section">
     <h2>Live schedule</h2>
-    <p class="sect-sub">What members see on the Live page and in the community sidebar. Save publishes instantly to everyone — guests included.</p>
+    <p class="sect-sub">Publishes instantly to everyone.</p>
     <div id="lvRows">${rows || `<p class="empty-note" style="text-align:left;">No sessions scheduled.</p>`}</div>
     <div class="ce-actions">
       <button class="btn btn-glass btn-sm" data-action="lv-add">+ Add session</button>
@@ -3091,7 +3092,7 @@ function adminCompanyHTML() {
   const invite = co.inviteCode ? `${location.origin}${location.pathname}?join=${co.inviteCode}` : '';
   return `<div class="admin-section">
     <h2>🏢 ${esc(co.name || co.id)}</h2>
-    <p class="sect-sub">Your company's identity — it brands the academy and, importantly, the legal training documents.</p>
+    <p class="sect-sub">Brands the academy and its legal documents.</p>
     <div class="ce-two">
       <div class="field"><label>Company name</label><input class="auth-input" id="coName" value="${attr(co.name || '')}"></div>
       <div class="field"><label>NIF</label><input class="auth-input" id="coNif" inputmode="numeric" maxlength="9" value="${attr(co.nif || '')}"></div>
@@ -3500,12 +3501,12 @@ function sidebarHTML() {
   const live = liveList()[0];
   return `<aside class="comm-pulse">
     <div class="pulse-card">
-      <h4>🏆 ${t('comm_top')}</h4>
+      <h4>${t('comm_top')}</h4>
       ${board.length ? board.slice(0, 5).map((m, i) => `<div class="pulse-row" data-action="member-card" data-uid="${m.uid}"><span class="pr-n">${i + 1}</span>${memberDot(m)}<span class="pr-name">${esc((m.name || '').split(' ')[0])}</span><span class="pr-xp">${m.xp || 0} XP</span></div>`).join('') : `<p class="pulse-empty">${t('comm_no_members')}</p>`}
     </div>
     ${online.length ? `<div class="pulse-card"><h4>🟢 ${t('comm_online')}</h4><div class="pulse-avas">${online.slice(0, 8).map(memberDot).join('')}</div></div>` : ''}
     ${newest.length ? `<div class="pulse-card"><h4> ${t('comm_newest')}</h4>${newest.map(m => `<div class="pulse-row" data-action="member-card" data-uid="${m.uid}">${memberDot(m)}<span class="pr-name">${esc(m.name || '')}</span></div>`).join('')}</div>` : ''}
-    ${live ? `<div class="pulse-card"><h4>📅 ${t('comm_next_live')}</h4><div class="pulse-live" data-action="goto" data-route="#/live"><b>${esc(live.title)}</b><span>${live.live ? '🔴 LIVE' : esc(live.when)}</span></div></div>` : ''}
+    ${live ? `<div class="pulse-card"><h4>${t('comm_next_live')}</h4><div class="pulse-live" data-action="goto" data-route="#/live"><b>${esc(live.title)}</b><span>${live.live ? 'LIVE' : esc(live.when)}</span></div></div>` : ''}
     <button class="link-quiet" data-action="comm-channel" data-ch="__members" style="padding:4px 6px;">${t('comm_all_members')}</button>
   </aside>`;
 }
@@ -3562,15 +3563,15 @@ function postCardHTML(p) {
   return `<article class="post ${isDisc ? 'is-disc' : ''} ${p.pinned ? 'pinned' : ''}"${isDisc ? ` data-action="comm-open" data-id="${p.id}"` : ''}>
     <div class="post-av" data-action="member-card" data-handle="${esc(p.authorHandle || '')}">${esc(p.authorInitials || 'ER')}</div>
     <div class="post-main">
-      <div class="post-head">${p.official ? `<span class="off-badge">✦ ${brandName()} · ${t('comm_official')}</span>` : ''}${p.pinned ? `<span class="pin-badge">\ud83d\udccc ${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle" data-action="member-card" data-handle="${esc(p.authorHandle)}">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">\u00b7 ${timeAgo(p.createdAt)}</span></div>
+      <div class="post-head">${p.official ? `<span class="off-badge">✦ ${brandName()} · ${t('comm_official')}</span>` : ''}${p.pinned ? `<span class="pin-badge">${t('comm_pinned')}</span>` : ''}<b>${esc(p.authorName || 'Learner')}</b>${p.authorHandle ? `<span class="post-handle" data-action="member-card" data-handle="${esc(p.authorHandle)}">@${esc(p.authorHandle)}</span>` : ''}<span class="post-time">\u00b7 ${timeAgo(p.createdAt)}</span></div>
       ${isDisc ? `<div class="post-title">${esc(p.title)}</div>` : ''}
       <div class="post-body">${richBody(p.body)}</div>
       ${pollHTML(p)}
       <div class="post-foot">
         <button class="post-act ${liked ? 'liked' : ''}" data-action="comm-like" data-id="${p.id}">\u2665 <span>${p.likes || 0}</span></button>
         ${reactionRowHTML(p)}
-        ${isDisc ? `<span class="post-act soft">\ud83d\udcac ${rc} ${rc === 1 ? t('comm_reply_one') : t('comm_replies')}</span>` : ''}
-        ${isAdmin() ? `<button class="post-act" data-action="comm-pin" data-id="${p.id}">\ud83d\udccc ${p.pinned ? t('comm_unpin') : t('comm_pin')}</button>` : ''}
+        ${isDisc ? `<span class="post-act soft">${rc} ${rc === 1 ? t('comm_reply_one') : t('comm_replies')}</span>` : ''}
+        ${isAdmin() ? `<button class="post-act" data-action="comm-pin" data-id="${p.id}">${p.pinned ? t('comm_unpin') : t('comm_pin')}</button>` : ''}
         ${canModerate(p) ? `<button class="post-act danger" data-action="comm-del" data-id="${p.id}">\u2715 ${t('comm_delete')}</button>` : ''}
       </div>
     </div>
@@ -3591,7 +3592,7 @@ function replyHTML(r, postId) {
   </div>`;
 }
 function composerHTML(isReply) {
-  if (!forumCanPost()) return `<div class="comm-signin"><span>\ud83c\udf31 ${t('comm_signin_post')}</span><button class="btn btn-primary btn-sm" data-action="show-login">${t('prof_signin')}</button></div>`;
+  if (!forumCanPost()) return `<div class="comm-signin"><span>${t('comm_signin_post')}</span><button class="btn btn-primary btn-sm" data-action="show-login">${t('prof_signin')}</button></div>`;
   const me = EdenForum.me();
   if (isReply) {
     return `<div class="composer reply-composer">

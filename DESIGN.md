@@ -68,6 +68,26 @@ in the UI.
 **12 · Never brag about the mechanism.** "Featured Program · Curated for you by AI" became
 **"For you"**. Users care what it does for them, not how it was made.
 
+## Pass 2 — Library, Community, cockpit (2026-07-26)
+
+| Surface | Before | After |
+|---|---|---|
+| Library | 110 boxes, 58 chips, "AI PATH" on 5/6 cards, subtitle bragging "sequenced by EdenRise AI" | artwork-led cards (no frame), text-tab filters, **0** badge noise, subtitle "24 courses" |
+| Community | 4 stacked sidebar boxes, channel rail styled 4 different ways, composer wrapping a bordered input | **3 visible borders**, one rail treatment, hairline-separated sidebar |
+| Cockpit (Admin › People) | boxed manager tiles each holding a ring, "🛡 Compliance command", 8 verbose subtitles | de-boxed metrics, **"Training hours"**, subtitles tightened, "Companies ✦" → "Companies" |
+
+Additions to the laws:
+- **13 · A label on everything is not a label.** "AI PATH" appeared on nearly every card, so it
+  carried no information. A chip must mark the exception, never the rule.
+- **14 · The artwork is the card.** Course cards have no background and no border — the poster
+  provides the visual mass, the text sits on the page (Netflix). Hover brightens the art.
+- **15 · Filters are navigation, not buttons.** Text tabs with one accent underline for the active
+  one; never a row of 11 pills.
+
+**Known nit (not fixed):** the no-data placeholder is an em-dash rendered at display size (42px),
+which reads like a glitch on an empty cockpit. Correct behaviour, wrong weight — dim it when a real
+empty state is expected.
+
 ## Where the laws live in code
 - `core/styles.css` — two appended blocks: **PREMIUM LAYER** and **PREMIUM LAYER 2**. Reversible by
   deletion; nothing above them was rewritten except mechanical scale-snapping.
