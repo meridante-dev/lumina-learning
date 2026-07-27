@@ -25,7 +25,17 @@ const fmtMins = m => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60 ? (m % 60) + 'm'
 const fmtYm = ym => { const [y, m] = String(ym).split('-'); const M = _lang() === 'pt' ? ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'] : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; return (M[+m - 1] || m) + ' ' + y; };
 const courseStale = c => !c.updated || (Date.now() - new Date(c.updated + '-01T12:00:00').getTime() > 366 * 864e5);
 const vidFor = (id, mod) => VIDS[(id.length * 7 + mod * 3) % VIDS.length];
-const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+/* Escapes for BOTH text and attribute contexts. The previous version handled
+   only & and <, so any attr="${esc(v)}" could be broken out of with a quote,
+   and it threw outright on non-strings. */
+/* Courses can be deleted or spliced out of CATALOG while intentions, nudges and
+   assignments still reference their id. ctitle() dereferences c.id immediately,
+   so an unguarded ctitle(courseById(id)) threw and took the entire page render
+   with it. Always resolve a possibly-missing course through this. */
+const titleOf = id => { const c = (typeof courseById === 'function') && courseById(id); return (c && ctitle(c)) || id || ''; };
+const esc = s => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 /* active white-label brand (from brandkit.js); EdenRise values are the fallback */
 const BRAND = (typeof window !== 'undefined' && window.BRAND) || {};
 const brandName = () => BRAND.name || 'EdenRise';
@@ -505,6 +515,7 @@ function renderLibrary() {
     <p class="page-sub">${CATALOG.length} ${t('courses_tended')}</p>
     <div class="lib-search">⌕ <input id="libSearch" placeholder="${t('filter_library')}" value="${esc(libQuery)}"></div>
     <div class="filter-row">${cats.map(c => `<button class="filter-chip ${c === libFilter ? 'active' : ''}" data-action="lib-filter" data-cat="${c}">${c === 'All' ? t('all') : tcat(c)}</button>`).join('')}</div>
+    <button class="link-quiet lib-ask" data-action="ai-missing">${t('missing_ask')}</button>
     <div class="grid">${list.map(c => cardHTML(c)).join('')}</div>
     ${list.length ? '' : `<p class="empty-note">${t('nothing_matches')}</p>`}
   </div>${footerHTML()}</div>`;
@@ -1225,7 +1236,14 @@ function complianceTarget(pf) {
   pf = pf || S.profile || {};
   const fte = pf.fte != null ? pf.fte : 1;
   let frac = 1;
-  if (pf.hireDate) { const h = new Date(pf.hireDate); if (!isNaN(h) && h.getFullYear() === complianceYear()) frac = Math.max(0, 12 - h.getMonth()) / 12; }
+  if (pf.hireDate) {
+    /* Parse the yyyy-mm-dd input as a LOCAL date. `new Date('2026-01-01')` is
+       parsed as UTC midnight, which reads back as 31 Dec in any timezone west
+       of UTC — the year check then failed and prorating was skipped entirely
+       on a legally reported figure. */
+    const [hy, hm] = String(pf.hireDate).split('-').map(Number);
+    if (hy && hm && hy === complianceYear()) frac = (12 - (hm - 1)) / 12;
+  }
   return Math.round(40 * fte * frac);
 }
 function trainingHours(log) {
@@ -1234,8 +1252,9 @@ function trainingHours(log) {
 }
 /* expected hours by today if pacing evenly across the year (the ~1h/week line) */
 function trainingPace(target) {
-  const now = new Date(), start = new Date(now.getFullYear(), 0, 1);
-  return Math.round(target * ((now - start) / (365 * 864e5)) * 10) / 10;
+  const now = new Date(), y = now.getFullYear();
+  const start = new Date(y, 0, 1), end = new Date(y + 1, 0, 1);
+  return Math.round(target * ((now - start) / (end - start)) * 10) / 10;
 }
 /* ===== Compliance Phase 2: legal documents (DRAFT wording — pending lawyer sign-off, SPEC §6/§9) ===== */
 /* company identity comes from window.EdenCompany (Phase 5); helpers above */
@@ -1564,7 +1583,7 @@ function transferPanelHTML() {
     <h2>${t('appcheck_h')}</h2>
     <p class="sect-sub sub-auto">${t('appcheck_sub')}</p>
     ${due.map(d => `<div class="intent-row">
-      <div class="intent-info"><b>${esc(ctitle(courseById(d.courseId)) || d.courseId)}</b> · ${t('appcheck_day').replace('{d}', d.day)}<span>“${esc(d.text)}”</span></div>
+      <div class="intent-info"><b>${esc(titleOf(d.courseId))}</b> · ${t('appcheck_day').replace('{d}', d.day)}<span>“${esc(d.text)}”</span></div>
       <div class="intent-btns">
         <button class="btn btn-primary btn-sm" data-action="app-check" data-id="${d.courseId}" data-day="${d.day}" data-applied="1">✓ ${t('appcheck_yes')}</button>
         <button class="btn btn-glass btn-sm" data-action="app-check" data-id="${d.courseId}" data-day="${d.day}" data-applied="0">${t('appcheck_no')}</button>
@@ -3218,7 +3237,7 @@ function renderProgress() {
   const nudge = board.length < 2
     ? `<div class="nudge-line">${svgIcon('sprout')}<span>${t('board_grow')}</span></div>`
     : (rank.ahead
-      ? `<div class="nudge-line">${svgIcon('bird')}<span><b>${rank.ahead.name.split(' ')[0]}</b> ${t('xp_ahead_1')} <b>${rank.ahead.xp - S.xp} XP</b> ${t('xp_ahead_2')}</span></div>`
+      ? `<div class="nudge-line">${svgIcon('bird')}<span><b>${esc(String(rank.ahead.name || 'Someone').split(' ')[0])}</b> ${t('xp_ahead_1')} <b>${rank.ahead.xp - S.xp} XP</b> ${t('xp_ahead_2')}</span></div>`
       : `<div class="nudge-line">${svgIcon('sun')}<span>${t('top_board')}</span></div>`);
 
   return `<div class="page"><div class="page-pad">
@@ -3289,10 +3308,10 @@ function renderProgress() {
         ${board.map((r, i) => `
           <div class="board-row ${r.me ? 'me' : ''}">
             <span class="board-rank">${i + 1}</span>
-            <span class="mi t-grad-${r.grad}">${r.initials}</span>
-            <span class="board-name">${r.name}${r.me ? ` <span class="you-tag">${t('you')}</span>` : ''}</span>
-            <span class="board-bar"><span class="fill" style="width:${Math.round(r.xp / maxXp * 100)}%"></span></span>
-            <span class="board-xp">${r.xp.toLocaleString()} XP</span>
+            <span class="mi t-grad-${r.grad}">${esc(r.initials || '')}</span>
+            <span class="board-name">${esc(r.name || 'Learner')}${r.me ? ` <span class="you-tag">${t('you')}</span>` : ''}</span>
+            <span class="board-bar"><span class="fill" style="width:${Math.round(Number(r.xp || 0) / maxXp * 100)}%"></span></span>
+            <span class="board-xp">${Number(r.xp || 0).toLocaleString()} XP</span>
           </div>`).join('')}
       </div>
     </div>
@@ -3374,7 +3393,7 @@ function computeNudges() {
   const nl = nextLesson();
   /* transfer loop: an application check-in is due — the highest-value nudge there is */
   const due = dueApplicationChecks();
-  if (due.length) out.push({ id: 'appcheck', icon: '', title: t('nudge_appcheck_t'), body: t('nudge_appcheck_b').replace('{c}', ctitle(courseById(due[0].courseId)) || ''), route: '#/progress' });
+  if (due.length) out.push({ id: 'appcheck', icon: '', title: t('nudge_appcheck_t'), body: t('nudge_appcheck_b').replace('{c}', titleOf(due[0].courseId)), route: '#/progress' });
   if (rank.total >= 2) {
     if (rank.ahead) out.push({ id: 'board', icon: '', title: t('nudge_board_t'), body: t('nudge_board_b').replace('{name}', rank.ahead.name.split(' ')[0]).replace('{xp}', rank.ahead.xp - S.xp), route: '#/progress' });
     else out.push({ id: 'top', icon: '', title: t('nudge_top_t'), body: t('nudge_top_b'), route: '#/progress' });
@@ -3887,6 +3906,7 @@ function render() {
   }
   initMotion();
   armReveals();
+  animateCounters();
 }
 /* covers download only as their cards approach the viewport (~1.4MB saved on Library) */
 const loadBg = el => { el.style.backgroundImage = `url('${el.dataset.bg}')`; el.removeAttribute('data-bg'); };
@@ -3895,6 +3915,37 @@ let ioEverFired = false;
    script, never in the markup — if JS fails or the observer is unavailable,
    content simply renders visible. Sections reveal once, then stay. */
 let _revealObs = null;
+/* Numbers ARRIVE rather than appear — a 900ms ease-out count on the bento and
+   stat metrics. Purely visual: the DOM text ends at exactly the real value, and
+   anything non-numeric (an em-dash placeholder, "1h 12m") is left untouched. */
+function animateCounters(root) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  (root || document).querySelectorAll('#app .stat .num, #app .mgr-hero .mh-num').forEach(el => {
+    if (el.dataset.counted) return;
+    const raw = el.textContent.trim();
+    const m = raw.match(/^(\D*?)([\d.,]+)(.*)$/);   /* prefix, number, suffix */
+    if (!m) return;
+    const target = parseFloat(m[2].replace(/,/g, ''));
+    if (!isFinite(target) || target <= 0) return;
+    el.dataset.counted = '1';
+    const dec = (m[2].split('.')[1] || '').length;
+    const grouped = m[2].includes(',');
+    const t0 = performance.now(), dur = 900;
+    const fmt = v => {
+      const f = dec ? v.toFixed(dec) : String(Math.round(v));
+      return grouped ? Number(f).toLocaleString(_lang() === 'pt' ? 'pt-PT' : 'en-GB') : f;
+    };
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur);
+      const e = 1 - Math.pow(1 - p, 3);            /* easeOutCubic */
+      el.textContent = m[1] + fmt(target * e) + m[3];
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = raw;                   /* land on the exact original */
+    };
+    requestAnimationFrame(step);
+  });
+}
+
 function armReveals() {
   if (!('IntersectionObserver' in window)) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -3903,7 +3954,14 @@ function armReveals() {
       es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); _revealObs.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
   }
-  document.querySelectorAll('#app .admin-section, #app .rail, #app .prog-top').forEach(el => {
+  /* GSAP/ScrollTrigger already choreographs .admin-section/.rail on desktop.
+     Running BOTH made two systems fight over the same opacity (class vs inline
+     style) and could flash a section blank before GSAP took over. When GSAP is
+     present it owns those; this observer then covers only what GSAP doesn't
+     (the bento) and acts as the full fallback on mobile, where GSAP never loads. */
+  const gsapOwnsSections = !!(window.gsap && window.ScrollTrigger);
+  const sel = gsapOwnsSections ? '#app .prog-top' : '#app .admin-section, #app .rail, #app .prog-top';
+  document.querySelectorAll(sel).forEach(el => {
     if (el.dataset.rev) return;
     el.dataset.rev = '1';
     const r = el.getBoundingClientRect();
@@ -3977,7 +4035,12 @@ document.addEventListener('click', e => { const lb = e.target.closest('.lang-btn
 
 /* ---------- GSAP motion (graceful + never leaves content hidden) ---------- */
 const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-const BLOCK_SEL = '.hero-content > *, .hero-side, .pillar, .rail-section, .path-banner, .stats, .module-list, .admin-section, .chart-card, .live-card, .two-col';
+/* '.page' leads this list deliberately: it carries `animation: pageIn .4s both`,
+   so if animation frames stall (throttled/background tab, frozen rAF) it holds
+   the from-state — opacity 0 — and the ENTIRE screen renders blank. Verified
+   in a frozen-frame environment: animationPlayState 'running', currentTime 0,
+   computed opacity 0 on a 1425x3632 container. The safety net must cover it. */
+const BLOCK_SEL = '.page, .hero-content > *, .hero-side, .pillar, .rail-section, .path-banner, .stats, .module-list, .admin-section, .chart-card, .live-card, .two-col';
 function forceVisible() {
   document.querySelectorAll(BLOCK_SEL).forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
   /* scroll-reveal blocks settle too — otherwise a screenshot shows empty space */
@@ -4033,7 +4096,7 @@ function initMotion() {
     setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 250);
   }
   /* hard guarantee: nothing stays invisible, even if rAF is frozen */
-  setTimeout(forceVisible, 2600);
+  setTimeout(forceVisible, 1200);
 }
 
 /* ---------- player ---------- */
@@ -4506,7 +4569,7 @@ function drawQuiz() {
       <h3>${pass ? 'Verified ✓' : 'Almost there'}</h3>
       <p class="m-sub">${pass
         ? `Skill verified and added to your profile. The AI just unlocked the next step of your path.`
-        : `Below 70% — the AI re-queued the tricky module in <b>${c.title}</b> for review. It happens to the best of us.`}</p>
+        : `Below 70% — the AI re-queued the tricky module in <b>${esc(c.title)}</b> for review. It happens to the best of us.`}</p>
       <div class="q-foot" style="justify-content:center;">
         <button class="btn btn-primary btn-sm" data-action="quiz-close">${pass ? 'Continue' : 'Review module'}</button>
       </div></div>`;
@@ -4606,7 +4669,7 @@ function drawPalette(q) {
   palIdx = 0;
   let html = '';
   if (courses.length) html += `<div class="palette-group">Courses</div>` + courses.map(c =>
-    `<div class="palette-item" data-pal="course:${c.id}"><span class="pi-icon t-grad-${c.grad}">${svgIcon(c.icon)}</span><div><div>${c.title}</div><div class="pi-meta">${c.cat} · ${fmtMins(courseMins(c))} · ★ ${c.rating}</div></div></div>`).join('');
+    `<div class="palette-item" data-pal="course:${c.id}"><span class="pi-icon t-grad-${c.grad}">${svgIcon(c.icon)}</span><div><div>${esc(c.title)}</div><div class="pi-meta">${esc(c.cat)} · ${fmtMins(courseMins(c))} · ★ ${c.rating}</div></div></div>`).join('');
   if (acts.length) html += `<div class="palette-group">Actions</div>` + acts.map((a, i) =>
     `<div class="palette-item" data-pal="act:${PALETTE_ACTIONS.indexOf(a)}"><span class="pi-icon" style="background:var(--surface-2)">${a.icon}</span><div>${a.t}</div></div>`).join('');
   if (q && aiKey()) html += `<div class="palette-group">✦</div><div class="palette-item" data-pal="ask:${esc(q)}"><span class="pi-icon" style="background:var(--surface-2)">✦</span><div>${t('ask_more')}“${esc(q)}”</div></div>`;
@@ -4793,7 +4856,7 @@ function tutorRespond(text) {
   /* quiz launches stay native — they open the real quiz modal */
   if (t0.includes('quiz')) {
     const id = currentCourseId();
-    botSay(`Loading a checkpoint quiz for <b>${id ? courseById(id).title : 'your current course'}</b>… 3 questions, adaptive. Good luck`);
+    botSay(`Loading a checkpoint quiz for <b>${esc(id ? titleOf(id) : 'your current course')}</b>… 3 questions, adaptive. Good luck`);
     setTimeout(() => openQuiz(id || 'leading-data'), 900);
     return;
   }
@@ -4901,7 +4964,7 @@ document.addEventListener('click', e => {
     case 'ai-overview': {
       const c = courseById(id);
       setTutorOpen(true);
-      botSay(`<b>${c.title}</b> — AI overview: ${c.desc} You'd be joining ${c.learners} fellow stewards (★ ${c.rating}). Given your goal (<b>${S.goal}</b>), I'd slot it ${inPath(id) ? 'right where it already is in your path' : 'after your current course'}. Want me to add it?`);
+      botSay(`<b>${esc(c.title)}</b> — AI overview: ${c.desc} You'd be joining ${c.learners} fellow stewards (★ ${c.rating}). Given your goal (<b>${S.goal}</b>), I'd slot it ${inPath(id) ? 'right where it already is in your path' : 'after your current course'}. Want me to add it?`);
       break;
     }
     case 'ai-open': setTutorOpen(true); break;
@@ -5136,7 +5199,7 @@ document.addEventListener('click', e => {
     case 'assign': {
       const courseId = $('#asgCourse').value, team = $('#asgTeam').value, due = $('#asgDue').value || '';
       const assignments = activeAssignments().concat([{ id: 'asg-' + courseId + '-' + team, courseId, team, due }]);
-      saveAssignments(assignments, `Assigned “${courseById(courseId).title}”`);
+      saveAssignments(assignments, `Assigned “${titleOf(courseId)}”`);
       break;
     }
     case 'unassign': {
