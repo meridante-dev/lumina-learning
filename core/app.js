@@ -201,7 +201,7 @@ const displayName = () => (S.profile && S.profile.name)
   || (_lang() === 'pt' ? 'amigo' : 'friend');
 const firstName = () => displayName().trim().split(/\s+/)[0];
 const userHandle = () => (S.profile && S.profile.username) || '';
-const userInitials = () => displayName().trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || '🌱';
+const userInitials = () => displayName().trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || '';
 const slugHandle = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '').slice(0, 20);
 const suggestHandle = () => { const p = S.profile || {}; return slugHandle(p.username) || slugHandle(p.name) || slugHandle((p.email || '').split('@')[0]) || 'learner'; };
 /* admin access — only these accounts see Analytics + Admin */
@@ -213,7 +213,7 @@ const isAdmin = () => isSuperAdmin() || ((window.EdenCompany && EdenCompany.admi
 const companyName = () => (window.EdenCompany && EdenCompany.name) || 'EdenRise';
 const companyNif = () => (window.EdenCompany && EdenCompany.nif) || '';
 
-function toast(msg, icon = '✨') {
+function toast(msg, icon = '') {
   const t = document.createElement('div');
   t.className = 'toast';
   t.innerHTML = `<span>${icon}</span><span>${msg}</span>`;
@@ -277,7 +277,7 @@ function celebrateLevel(idx) {
   if (document.querySelector('.levelup')) return;
   const el = document.createElement('div');
   el.className = 'levelup';
-  el.innerHTML = `<div class="levelup-card"><div class="levelup-ring">🌿</div><div class="levelup-eyebrow">${_lang() === 'pt' ? 'Novo nível' : 'Level up'}</div><div class="levelup-name">${tlevel(idx)}</div></div>`;
+  el.innerHTML = `<div class="levelup-card"><div class="levelup-ring"></div><div class="levelup-eyebrow">${_lang() === 'pt' ? 'Novo nível' : 'Level up'}</div><div class="levelup-name">${tlevel(idx)}</div></div>`;
   document.body.appendChild(el);
   setTimeout(() => el.classList.add('leave'), 2300);
   setTimeout(() => el.remove(), 2900);
@@ -300,7 +300,7 @@ function badgeEarned(id) {
 function checkBadges(silent) {
   let earned = [];
   BADGES.forEach(b => { if (!S.badges.includes(b.id) && badgeEarned(b.id)) { S.badges.push(b.id); earned.push(b); } });
-  if (earned.length) { save(); if (!silent) earned.forEach((b, i) => setTimeout(() => toast(`Badge earned — ${b.title} 🏅`, '🏅'), 500 + i * 900)); }
+  if (earned.length) { save(); if (!silent) earned.forEach((b, i) => setTimeout(() => toast(`Badge earned — ${b.title}`, ''), 500 + i * 900)); }
 }
 let boardCache = null;   /* real members, from the leaderboard collection */
 let boardScope = 'all';
@@ -340,18 +340,20 @@ function updateXpChip() {
 function cardHTML(c, opts = {}) {
   const pct = coursePct(c.id);
   const p = prog(c.id);
+  /* ONE chip, never a cloud of them. The card previously stacked up to SEVEN
+     (rank, ai, assigned/chosen, team goal, new, module x/y) — and the module
+     chip merely repeated the progress bar directly beneath it. Rank is already
+     communicated by position in the rail. Highest-signal wins: what the learner
+     MUST do > what the AI chose > what's new. Everything else is noise. */
   const chips = [];
-  if (opts.rank) chips.push(`<span class="chip">#${opts.rank} ${t('this_week_rank')}</span>`);
-  if (c.ai) chips.push(`<span class="chip ai">${t('ai_path_chip')}</span>`);
   if (c.required) chips.push(`<span class="chip">${t('assigned_tag')}</span>`);
-  else if (inPath(c.id)) chips.push(`<span class="chip choice">${t('chosen_tag')}</span>`);
-  if (c.teamGoal) chips.push(`<span class="chip">${t('team_goal')}</span>`);
-  if (c.isNew) chips.push(`<span class="chip">${t('new')}</span>`);
-  if (p && !p.done) chips.push(`<span class="chip">${t('module')} ${(p.mod || 0) + 1}/${c.modules.length}</span>`);
+  else if (c.ai) chips.push(`<span class="chip ai">${t('ai_path_chip')}</span>`);
+  else if (c.isNew) chips.push(`<span class="chip">${t('new')}</span>`);
+  /* status reads as text, not as another bubble */
   let foot = '';
   if (pct > 0 && pct < 100) foot = `<div class="card-progress"><div class="fill" style="width:${pct}%"></div></div>`;
-  if (isDone(c.id)) foot = `<span class="due ok">✓ ${t('completed')}${p.cert ? ' · ' + t('cert_issued') : ` · ${p.score || 90}%`}</span>`;
-  else if (c.due) foot += `<span class="due">⏰ ${c.due}</span>`;
+  if (isDone(c.id)) foot = `<span class="card-status done">✓ ${t('completed')}${p.cert ? ' · ' + t('cert_issued') : ''}</span>`;
+  else if (c.due) foot += `<span class="card-status due-soon">${c.due}</span>`;
   return `
   <article class="card" data-action="open-course" data-id="${c.id}">
     <div class="card-actions">
@@ -432,29 +434,29 @@ function renderHome() {
     ${featured.poster ? `<div class="hero-art" style="background-image:url('${featured.poster}')"></div>` : ''}
     <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div>
     <div class="hero-content">
-      <span class="hero-eyebrow"><span class="pulse-dot"></span>${t('featured_eyebrow')}</span>
+      <span class="hero-eyebrow">${t('featured_eyebrow')}</span>
       <h1>${words.join(' ')} <span class="grad-text">${lastWord}</span></h1>
+      <!-- THREE facts, like a Netflix billboard. Was five plus a boxed chip:
+           goal-match, modules, duration, level, CERTIFIED. Level and the
+           certified badge are on the course page where they matter. -->
       <div class="hero-meta">
-        <span class="match">✦ ${t('match_goal')} · ${tgoal(S.goal)}</span><span class="sep"></span>
         <span>${featured.modules.length} ${t('modules')}</span><span class="sep"></span>
         <span>${fmtMins(courseMins(featured))}</span><span class="sep"></span>
-        <span>${t(featured.level) || featured.level}</span>
-        <span class="badge-hd">${t('certified')}</span>
+        <span class="match">${t('match_goal')} · ${tgoal(S.goal)}</span>
       </div>
-      <p class="desc"><span class="hook-line">${chook(featured)}</span> ${chooksub(featured)}</p>
+      <!-- ONE line, not two. The hook sells; the sub-hook repeated it. -->
+      <p class="desc"><span class="hook-line">${chook(featured)}</span></p>
       <div class="hero-actions">
         <button class="btn btn-primary" data-action="play" data-id="${featured.id}">▶&nbsp; ${fp && fp.mod != null ? `${t('resume_module')} ${fp.mod + 1}` : t('start_learning')}</button>
-        <button class="btn btn-glass" data-action="ai-overview" data-id="${featured.id}">✦&nbsp; ${t('ai_overview')}</button>
-        <button class="btn btn-glass" data-action="toggle-path" data-id="${featured.id}">${inPath(featured.id) ? t('in_my_path') : t('my_path')}</button>
+        <button class="btn btn-glass" data-action="open-course" data-id="${featured.id}">${t('course_details') || 'Details'}</button>
       </div>
       <div class="hero-progress">
         <div class="track"><div class="fill" style="width:${coursePct(featured.id)}%"></div></div>
         <span>${coursePct(featured.id)}% ${t('complete')} · ${t('est')} ${fmtMins(Math.round(courseMins(featured) * (100 - coursePct(featured.id)) / 100))} ${t('left')}</span>
       </div>
-      <button class="link-quiet" data-action="ai-missing">${t('missing_ask')}</button>
     </div>
     <aside class="hero-side">
-      <h4><span class="ai-spark">✦</span> ${t('your_ai_path')}</h4>
+      <h4>${t('your_ai_path')}</h4>
       ${heroSide}
     </aside>
   </header>
@@ -478,7 +480,7 @@ function renderHome() {
     </div>
     ${pathStepperHTML()}
     <div class="path-banner-foot">
-      <div class="why">💡 <span><b>${t('why_order')}</b>&nbsp; ${PATH_RATIONALES[S.rationaleIdx % PATH_RATIONALES.length]}</span></div>
+      <div class="why"> <span><b>${t('why_order')}</b>&nbsp; ${PATH_RATIONALES[S.rationaleIdx % PATH_RATIONALES.length]}</span></div>
     </div>
   </section>
   <section class="stats">
@@ -646,12 +648,12 @@ function renderCourse(id) {
           <p class="desc">${chooksub(c)} ${cdesc(c)}</p>
           <div class="hero-actions">
             <button class="btn btn-primary" data-action="play" data-id="${id}">▶&nbsp; ${isDone(id) ? t('rewatch') : p ? `${t('resume_module')} ${(p.mod || 0) + 1}` : t('start_course')}</button>
-            <button class="btn btn-glass" data-action="quiz" data-id="${id}">🎯&nbsp; ${t('quiz_me')}</button>
+            <button class="btn btn-glass" data-action="quiz" data-id="${id}">&nbsp; ${t('quiz_me')}</button>
             <button class="btn btn-glass" data-action="ai-overview" data-id="${id}">✦&nbsp; ${t('ai_overview')}</button>
             <button class="btn btn-glass" data-action="toggle-path" data-id="${id}">${inPath(id) ? t('in_my_path') : t('my_path')}</button>
           </div>
           ${coursePct(id) > 0 && !isDone(id) ? `<div class="hero-progress"><div class="track"><div class="fill" style="width:${coursePct(id)}%"></div></div><span>${coursePct(id)}% ${t('complete')}</span></div>` : ''}
-          ${isDone(id) ? (() => { const rs = recertState(c); return `<div class="hero-progress"><span class="due ${rs && rs.st !== 'ok' ? '' : 'ok'}" style="margin:0;">${rs && rs.st === 'expired' ? '🛡 ' + t('comp_expired') + ' — ' + t('comp_renew').toLowerCase() : rs && rs.st === 'expiring' ? '🛡 ' + t('comp_expiring') + ' (' + rs.days + 'd)' : '✓ ' + t('completed') + (p.score ? ' · ' + t('scored') + ' ' + p.score + '%' : '')}</span></div>`; })() : ''}
+          ${isDone(id) ? (() => { const rs = recertState(c); return `<div class="hero-progress"><span class="due ${rs && rs.st !== 'ok' ? '' : 'ok'}" style="margin:0;">${rs && rs.st === 'expired' ? ' ' + t('comp_expired') + ' — ' + t('comp_renew').toLowerCase() : rs && rs.st === 'expiring' ? ' ' + t('comp_expiring') + ' (' + rs.days + 'd)' : '✓ ' + t('completed') + (p.score ? ' · ' + t('scored') + ' ' + p.score + '%' : '')}</span></div>`; })() : ''}
         </div>
       </div>
     </div>
@@ -702,12 +704,12 @@ function composeMemberNudge(m) {
   if (nextId) {
     const course = titleInLang(nextId, lang);
     return lang === 'pt'
-      ? { lang, title: `Está a crescer bem, ${name} 🌿`, body: `Já completou ${pct}% do seu percurso — um passo de cada vez, como a terra gosta. O próximo capítulo é <b>${course}</b>. Dez minutos tranquilos chegam.` }
-      : { lang, title: `You're growing well, ${name} 🌿`, body: `You're ${pct}% of the way along your path — one step at a time, the way the land likes it. Your next chapter is <b>${course}</b>. Ten quiet minutes is all it takes.` };
+      ? { lang, title: `Está a crescer bem, ${name}`, body: `Já completou ${pct}% do seu percurso — um passo de cada vez, como a terra gosta. O próximo capítulo é <b>${course}</b>. Dez minutos tranquilos chegam.` }
+      : { lang, title: `You're growing well, ${name}`, body: `You're ${pct}% of the way along your path — one step at a time, the way the land likes it. Your next chapter is <b>${course}</b>. Ten quiet minutes is all it takes.` };
   }
   return lang === 'pt'
-    ? { lang, title: `O bosque sente a sua falta, ${name} 🌿`, body: `O seu percurso está à sua espera, sem pressa. Quando tiver dez minutos, há sempre algo novo a crescer na ${brandAcademy()}.` }
-    : { lang, title: `The grove misses you, ${name} 🌿`, body: `Your path is waiting, no rush at all. Whenever you have ten minutes, there's always something new growing at ${brandAcademy()}.` };
+    ? { lang, title: `O bosque sente a sua falta, ${name}`, body: `O seu percurso está à sua espera, sem pressa. Quando tiver dez minutos, há sempre algo novo a crescer na ${brandAcademy()}.` }
+    : { lang, title: `The grove misses you, ${name}`, body: `Your path is waiting, no rush at all. Whenever you have ten minutes, there's always something new growing at ${brandAcademy()}.` };
 }
 async function emailNudgeMember(uid, btn) {
   if (!mailReady()) return toast(t('mail_not_connected'), 'ℹ️');
@@ -722,8 +724,8 @@ async function emailNudgeMember(uid, btn) {
   try {
     const n = composeMemberNudge(m);
     const r = await sendMail({ kind: 'nudge', to: email, name: (m.profile && m.profile.name) || '', lang: n.lang, title: n.title, body: n.body });
-    if (r.ok) toast(t('mail_sent'), '🌿');
-    else if (r.error === 'rate-limited') toast(t('mail_rate_limited'), '🌿');
+    if (r.ok) toast(t('mail_sent'), '');
+    else if (r.error === 'rate-limited') toast(t('mail_rate_limited'), '');
     else toast(t('mail_failed'), '⚠️');
   } catch (e) { toast(t('mail_failed'), '⚠️'); }
   if (btn) { btn.disabled = false; btn.textContent = 'Nudge'; }
@@ -888,7 +890,7 @@ function studioPublish() {
   EdenCloud.saveCourse(c).then(() => {
     studioDraft = null;
     EdenApp.applyCustomCourses(null, c);   /* optimistic add */
-    toast(t('studio_published'), '🌿');
+    toast(t('studio_published'), '');
     render();
   }).catch(() => toast(t('studio_failed'), '⚠️'));
 }
@@ -937,7 +939,6 @@ function adminDigestsHTML() {
     </div>`).join('');
   return `<div class="admin-section">
     <h2>Publish a digest</h2>
-    <p class="sect-sub">The Monday routine drafts the script to your inbox — paste the narrative here (and the video link once your editor delivers). It appears on everyone's home instantly.</p>
     <div class="studio">
       <div class="ce-two">
         <div class="field"><label>Department</label><select id="dgDept">${DEPTS.map(d => `<option value="${d.key}">${d.en}</option>`).join('')}</select></div>
@@ -970,7 +971,7 @@ function digPublish() {
   EdenCloud.saveDigest(clean).then(() => {
     digestsCache = [clean, ...digestsCache.filter(x => x.id !== clean.id)];
     $('#dgTitle').value = ''; $('#dgBody').value = ''; $('#dgVideo').value = '';
-    toast('Digest published to everyone 📺', '🌿'); render();
+    toast('Digest published to everyone 📺', ''); render();
   }).catch(() => toast('Could not publish — are the Firestore rules published?', '⚠️'));
 }
 
@@ -1011,7 +1012,7 @@ function tourShow(i) {
     <div class="tour-btns">
       ${tourIdx > 0 ? `<button class="link-quiet" data-action="tour-back">← ${t('tour_back')}</button>` : `<button class="link-quiet" data-action="tour-end">${t('tour_skip')}</button>`}
       <span style="flex:1"></span>
-      <button class="btn btn-primary btn-sm" data-action="${last ? 'tour-end' : 'tour-next'}">${last ? t('tour_finish') : t('tour_next')} ${last ? '🌱' : '→'}</button>
+      <button class="btn btn-primary btn-sm" data-action="${last ? 'tour-end' : 'tour-next'}">${last ? t('tour_finish') : t('tour_next')} ${last ? '' : '→'}</button>
     </div>`;
   const primary = card.querySelector('.btn-primary'); if (primary) primary.focus({ preventScroll: true });
   if (el) {
@@ -1050,7 +1051,7 @@ addEventListener('beforeinstallprompt', e => {
 });
 function pwaBarHTML(ios) {
   return `<div class="pwa-bar" id="pwaBar">
-    <span class="pwa-ic">🌱</span>
+    <span class="pwa-ic"></span>
     <div class="pwa-txt"><b>${t('pwa_t')}</b><span>${ios ? t('pwa_ios') : t('pwa_b')}</span></div>
     ${ios ? '' : `<button class="btn btn-primary btn-sm" data-action="pwa-install">${t('pwa_btn')}</button>`}
     <button class="modal-x" style="position:static;" data-action="pwa-dismiss" aria-label="Dismiss">✕</button>
@@ -1084,9 +1085,9 @@ async function seedDemo() {
   const iso = d => d.toISOString().slice(0, 16);
   const fmtDay = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' }) + ' · 16:00';
   try {
-    await EdenForum.createPost({ channel: 'intro', kind: 'discussion', title: 'Welcome to the ' + brandAcademy() + ' community 🌱', body: 'This is where we learn together — ask anything, share what the land is teaching you, and celebrate each other\u2019s wins. Warm welcome from the whole team!', official: true, pinned: true });
+    await EdenForum.createPost({ channel: 'intro', kind: 'discussion', title: 'Welcome to the ' + brandAcademy() + ' community', body: 'This is where we learn together — ask anything, share what the land is teaching you, and celebrate each other\u2019s wins. Warm welcome from the whole team!', official: true, pinned: true });
     await EdenForum.createPost({ channel: 'wins', kind: 'message', body: 'First compost pile turned using the layering from the course — look at this heat! https://picsum.photos/seed/edencompost/800/500.jpg' });
-    await EdenForum.createPost({ channel: 'general', kind: 'discussion', title: 'Where should the next work party focus?', body: 'Vote below — we\u2019ll bring tools and lunch either way 🌿', poll: { options: ['The east swales', 'Food forest mulching', 'The nursery beds'], votes: {} } });
+    await EdenForum.createPost({ channel: 'general', kind: 'discussion', title: 'Where should the next work party focus?', body: 'Vote below — we\u2019ll bring tools and lunch either way', poll: { options: ['The east swales', 'Food forest mulching', 'The nursery beds'], votes: {} } });
     const live = [
       { id: 'live-soil-clinic', title: 'Field Hours: Live Soil Clinic', host: 'Marta Oliveira · Head of Regeneration', when: fmtDay(next(4)), date: iso(next(4)), desc: 'Bring a photo or sample of your soil — read live, with the first three things to do.', live: false, viewers: 0, grad: 7, icon: 'sprout' },
       { id: 'live-founder-ama', title: 'Founder AMA: Why Regeneration', host: 'João Amaral · Founder', when: fmtDay(next(8)), date: iso(next(8)), desc: 'Unfiltered Q&A on building EdenRise and stewarding land in the Baixo Alentejo.', live: false, viewers: 0, grad: 1, icon: 'tree' }
@@ -1094,7 +1095,7 @@ async function seedDemo() {
     const assignments = activeAssignments().concat([{ id: 'asg-living-soil-land', courseId: 'living-soil', team: 'land', due: new Date(Date.now() + 14 * day).toISOString().slice(0, 10) }]);
     await EdenCloud.saveMeta(Object.assign({}, studioMeta, { live, assignments }));
     studioMeta = Object.assign({}, studioMeta, { live, assignments });
-    toast('Demo content seeded 🌿', '✓'); render();
+    toast('Demo content seeded', '✓'); render();
   } catch (e) { console.error('[seed]', e); toast('Seeding failed — are the Firestore rules published?', '⚠️'); }
 }
 
@@ -1174,7 +1175,7 @@ function skillScores() {
 function skillsSectionHTML() {
   const rows = skillScores().filter(s => s.touched > 0);
   if (!rows.length) return '';
-  return `<div class="admin-section"><h2>${t('skills_h')}</h2><p class="sect-sub">${t('skills_sub')}</p>
+  return `<div class="admin-section"><h2>${t('skills_h')}</h2><p class="sect-sub sub-auto">${t('skills_sub')}</p>
     <div class="skill-list">${rows.sort((a, b) => b.score - a.score).map(s => `
       <div class="skill-row"><span class="sk-name">${tskill(s.key)}</span>
         <div class="track"><div class="fill" style="width:${s.score}%"></div></div>
@@ -1191,7 +1192,7 @@ function memberSkillScores(state) {
 function skillHeatmapHTML() {
   if (!adminMembers || !adminMembers.length) return '';
   const heat = v => v >= 60 ? 'h3' : v >= 30 ? 'h2' : v > 0 ? 'h1' : 'h0';
-  return `<div class="admin-section"><h2>🧭 Team skills heatmap</h2>
+  return `<div class="admin-section"><h2> Team skills heatmap</h2>
     <p class="sect-sub">Where the team is strong, and where the gaps are — completion-weighted per skill.</p>
     <div class="heat-scroll"><table class="heat-table">
       <thead><tr><th></th>${SKILLS.map(s => `<th>${s.en}</th>`).join('')}</tr></thead>
@@ -1289,7 +1290,7 @@ async function downloadTrainingCert() {
   ledgerAppend('cert_issued', { year: complianceYear(), code });
   trainingCertCanvas(pf, complianceYear(), code).toBlob(b => {
     const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `certificado-formacao-${pf.nif || 'x'}-${complianceYear()}.png`;
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); toast(t('comp_cert_dl'), '🎓');
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); toast(t('comp_cert_dl'), '');
   }, 'image/png');
 }
 function csvBlob(rows, name) {
@@ -1544,8 +1545,8 @@ function confirmPanelHTML() {
   const pend = pendingConfirmations(adminMembers);
   if (!pend.length) return '<div id="mgrConfirm"></div>';
   return `<div class="admin-section intent-panel" id="mgrConfirm">
-    <h2>✅ ${t('mconf_h')}</h2>
-    <p class="sect-sub">${t('mconf_sub')}</p>
+    <h2>${t('mconf_h')}</h2>
+    <p class="sect-sub sub-auto">${t('mconf_sub')}</p>
     ${pend.slice(0, 12).map(p => `<div class="intent-row">
       <div class="intent-info"><b>${esc(p.name)}</b> · ${esc(ctitle(courseById(p.courseId)) || p.courseId)}${p.text ? `<span>“${esc(p.text)}”</span>` : ''}</div>
       <div class="intent-btns">
@@ -1559,8 +1560,8 @@ function transferPanelHTML() {
   const due = dueApplicationChecks();
   if (!due.length) return '';
   return `<div class="admin-section intent-panel">
-    <h2>🎯 ${t('appcheck_h')}</h2>
-    <p class="sect-sub">${t('appcheck_sub')}</p>
+    <h2>${t('appcheck_h')}</h2>
+    <p class="sect-sub sub-auto">${t('appcheck_sub')}</p>
     ${due.map(d => `<div class="intent-row">
       <div class="intent-info"><b>${esc(ctitle(courseById(d.courseId)) || d.courseId)}</b> · ${t('appcheck_day').replace('{d}', d.day)}<span>“${esc(d.text)}”</span></div>
       <div class="intent-btns">
@@ -1608,21 +1609,21 @@ function verifiedPanelHTML() {
   if (!v.done) return '';
   const events = (S.ledger || []).length;
   return `<div class="admin-section vc-panel">
-    <h2>🏅 ${t('vc_title')}</h2>
-    <p class="sect-sub">${t('vc_sub')}</p>
+    <h2>${t('vc_title')}</h2>
+    <p class="sect-sub sub-auto">${t('vc_sub')}</p>
     <div class="ready-wrap">
       <div class="jour-ring lg" style="background:conic-gradient(${v.pct >= 100 ? 'var(--accent-2)' : 'var(--accent)'} ${v.pct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${v.pct}%<small style="font-size:11px">${t('vc_ring')}</small></span></div>
       <div class="ready-rows" style="gap:6px;">
         <div class="between"><span class="sk-name">${t('vc_of').replace('{v}', v.verified).replace('{d}', v.done)}</span></div>
         <div class="vc-how">${t('vc_how')}</div>
         ${(() => { const ar = applicationRate(); if (!ar) return '';
-          const self = `<div class="vc-how">🎯 ${t('vc_applied').replace('{a}', ar.applied).replace('{t}', ar.total)} <span style="opacity:.6">(${t('vc_selfrep')})</span></div>`;
+          const self = `<div class="vc-how"> ${t('vc_applied').replace('{a}', ar.applied).replace('{t}', ar.total)} <span style="opacity:.6">(${t('vc_selfrep')})</span></div>`;
           /* self-reported and manager-confirmed are DIFFERENT claims and are
              shown as different lines. Averaging them would quietly inflate the
              stronger one. */
           const conf = ar.applied ? `<div class="vc-how">✅ ${t('vc_confirmed').replace('{c}', ar.confirmed).replace('{a}', ar.applied)}</div>` : '';
           return self + conf; })()}
-        <div class="vc-ledger" id="vcLedger">🔐 ${events} ${t('vc_events')} · <span class="vc-chk">…</span> · <button class="link-quiet" data-action="ev-export">⤓ ${t('ev_export')}</button></div>
+        <div class="vc-ledger" id="vcLedger">${events} ${t('vc_events')} · <span class="vc-chk">…</span> · <button class="link-quiet" data-action="ev-export">⤓ ${t('ev_export')}</button></div>
         <div class="vc-how" id="vcOts">${otsLineHTML()}</div>
       </div>
     </div>
@@ -1632,9 +1633,9 @@ function verifiedPanelHTML() {
    promises more than the proof in hand actually supports. */
 function otsLineHTML() {
   const r = otsBest();
-  if (!r) return `⛓ ${t('ots_none')}`;
-  if (r.status === 'confirmed') return `⛓ ${t('ots_confirmed').replace('{b}', r.height)}`;
-  return `⏳ ${t('ots_pending')}`;
+  if (!r) return `${t('ots_none')}`;
+  if (r.status === 'confirmed') return `${t('ots_confirmed').replace('{b}', r.height)}`;
+  return `${t('ots_pending')}`;
 }
 async function paintLedgerCheck() {
   /* stamp/upgrade quietly in the background, then refresh the line if it moved */
@@ -1657,12 +1658,12 @@ function compliancePanelHTML() {
   const behind = done < pace - 1;
   const dateFmt = ts => new Date(ts).toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'short' });
   return `<div class="admin-section comp-panel">
-    <h2>🛡 ${t('comp_h')} · ${complianceYear()}</h2>
-    <p class="sect-sub">${t('comp_sub')}</p>
+    <h2> ${t('comp_h')} · ${complianceYear()}</h2>
+    <p class="sect-sub sub-auto">${t('comp_sub')}</p>
     <div class="ready-wrap">
       <div class="jour-ring lg" style="background:conic-gradient(${behind ? 'var(--warn, #d9b38c)' : 'var(--accent-2)'} ${pct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${done}<small style="font-size:11px">/${target}h</small></span></div>
       <div class="ready-rows" style="gap:6px;">
-        <div class="between"><span class="sk-name">${t('comp_done')}</span><b>${done} ${t('comp_h_unit')}</b></div>
+        <div class="between"><span class="sk-name">${t('comp_done')}</span> <b>${done} ${t('comp_h_unit')}</b></div>
         <div class="between"><span class="sk-name">${t('comp_target')}</span><b>${target} ${t('comp_h_unit')}</b></div>
         <div class="between"><span class="sk-name">${t('comp_left')}</span><b>${Math.max(0, Math.round((target - done) * 10) / 10)} ${t('comp_h_unit')}</b></div>
         <div class="comp-status ${behind ? 'behind' : 'ok'}">${behind ? `⚠ ${t('comp_behind')} · ${t('comp_pace_by')} ${pace}h` : `● ${t('comp_ontrack')}`}</div>
@@ -1672,8 +1673,8 @@ function compliancePanelHTML() {
     <div class="ob-eyebrow" style="margin-top:16px;">${t('comp_log')}</div>
     ${log.length ? `<div class="comp-log">${log.slice(0, 8).map(e => `<div class="comp-row"><span class="cl-t">${esc(e.title || '')}</span><span class="cl-meta">${dateFmt(e.at)} · ${e.hours}${t('comp_h_unit')} ${e.confirmed ? '· ✓' : ''}</span></div>`).join('')}</div>` : `<p class="empty-note" style="text-align:left;padding:6px 0;">${t('comp_none')}</p>`}
     ${log.length ? `<div class="row wrapf gap-3" style="margin-top:16px;">
-      <button class="btn btn-primary btn-sm" data-action="comp-cert">🎓 ${t('comp_cert_btn')}</button>
-      <button class="btn btn-glass btn-sm" data-action="hour-log">📒 ${t('hourlog_btn')}</button>
+      <button class="btn btn-primary btn-sm" data-action="comp-cert"> ${t('comp_cert_btn')}</button>
+      <button class="btn btn-glass btn-sm" data-action="hour-log"> ${t('hourlog_btn')}</button>
       <button class="btn btn-glass btn-sm" data-action="comp-register">⤓ ${t('comp_reg_btn')}</button>
       <button class="btn btn-glass btn-sm" data-action="art4-self">🤖 ${t('art4_btn')}</button>
     </div>` : ''}
@@ -1685,7 +1686,7 @@ function readinessSectionHTML() {
   if (!r) return '';
   const recs = CATALOG.filter(c => skillsOf(c).includes(r.gap.key) && !isDone(c.id)).slice(0, 2);
   return `<div class="admin-section">
-    <h2>🧭 ${t('ready_h')}</h2><p class="sect-sub">${t('ready_sub')}</p>
+    <h2>${t('ready_h')}</h2><p class="sect-sub sub-auto">${t('ready_sub')}</p>
     <div class="ready-wrap">
       <div class="jour-ring lg" style="background:conic-gradient(var(--accent) ${r.overall * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${r.overall}%</span></div>
       <div class="ready-rows">${r.rows.sort((a, b) => a.ready - b.ready).map(x => `
@@ -1727,8 +1728,7 @@ function complianceHTML() {
       <div class="ct"><b>${esc(c.title)}</b><span>renews every ${c.recertMonths}mo · ${per.length} certified${expired.length ? ` · <em class="asg-over">${expired.length} expired (${expired.map(x => x.name.split(' ')[0]).join(', ')})</em>` : ''}${expiring.length ? ` · ${expiring.length} expiring soon` : ''}</span></div>
       <span class="pub-chip ${expired.length ? 'draft' : 'live'}">${expired.length ? 'ACTION' : 'OK'}</span></div>`;
   }).join('');
-  return `<div class="admin-section"><h2>🛡 Compliance</h2>
-    <p class="sect-sub">Recurring certifications — who's current, who needs a renewal nudge.</p>${rows}</div>`;
+  return `<div class="admin-section"><h2> Compliance</h2>${rows}</div>`;
 }
 
 /* ================= AI Cockpit digest ================= */
@@ -1748,7 +1748,7 @@ async function generateCockpitDigest() {
     el.innerHTML = `<div class="digest-card">
       <div class="ob-eyebrow">✦ This week</div>
       <h3>${esc(j.headline || '')}</h3>
-      ${(j.wins || []).map(w => `<p class="dg-row">🌿 ${esc(w)}</p>`).join('')}
+      ${(j.wins || []).map(w => `<p class="dg-row"> ${esc(w)}</p>`).join('')}
       ${(j.attention || []).map(w => `<p class="dg-row">👀 ${esc(w)}</p>`).join('')}
       <p class="dg-action"><b>→</b> ${esc(j.action || '')}</p>
     </div>`;
@@ -1773,13 +1773,13 @@ function journeyCardHTML(j) {
   return `<div class="jour-card" data-action="open-journey" data-id="${j.id}" role="button" tabindex="0">
     <span class="ci lg t-grad-${j.grad}">${svgIcon(j.icon)}</span>
     <div class="ct"><b>${esc(tjour(j, 'title'))}</b><span>${esc(tjour(j, 'desc'))}</span>
-      <div class="jour-meta">${j.stages.length} ${t('jour_stage').toLowerCase()}s · +${j.xp} XP · 🎓</div></div>
+      <div class="jour-meta">${j.stages.length} ${t('jour_stage').toLowerCase()}s · +${j.xp} XP ·</div></div>
     <div class="jour-ring" style="background:conic-gradient(var(--accent) ${pr.pct * 3.6}deg, rgba(231,237,227,.12) 0)"><span>${pr.pct}%</span></div>
   </div>`;
 }
 function journeysSectionHTML() {
   return `<div class="admin-section" style="border:none;padding-top:0;">
-    <h2>${t('jour_h')}</h2><p class="sect-sub">${t('jour_sub')}</p>
+    <h2>${t('jour_h')}</h2><p class="sect-sub sub-auto">${t('jour_sub')}</p>
     ${JOURNEYS.map(journeyCardHTML).join('')}
   </div>`;
 }
@@ -1805,7 +1805,7 @@ function renderJourney(id) {
       <div class="jinfo">
         <span class="jkind">${t('jour_stage')} ${i + 1}${st.capstone ? ` · ${t('jour_capstone')}` : ''}${st.mission ? ` <em>${t('jour_mission_tag')}</em>` : ''}</span>
         <b>${esc(ctitle(c))}</b>
-        <span class="jsub">${fmtMins(courseMins(c))} · ${coursePct(c.id)}%${st.mission ? ' · 🌾' : ''}</span>
+        <span class="jsub">${fmtMins(courseMins(c))} · ${coursePct(c.id)}%${st.mission ? ' ·' : ''}</span>
       </div>
       ${done ? '' : active ? '<span class="jgo">→</span>' : '<span class="jgo">🔒</span>'}
     </div>`;
@@ -1818,7 +1818,7 @@ function renderJourney(id) {
       <p class="page-sub" style="margin:6px 0 0;">${esc(tjour(j, 'desc'))}</p></div>
     </div>
     <div class="hero-progress" style="max-width:420px;margin:18px 0 6px;"><div class="track"><div class="fill" style="width:${pr.pct}%"></div></div><span>${pr.done}/${pr.total} · ${pr.pct}% ${t('jour_progress')}</span></div>
-    ${complete ? `<div class="jour-done">🎓 ${t('jour_done')} · +${j.xp} XP <button class="btn btn-glass btn-sm" data-action="jour-cert" data-id="${j.id}">⤓ ${t('jour_cert')}</button></div>` : ''}
+    ${complete ? `<div class="jour-done"> ${t('jour_done')} · +${j.xp} XP <button class="btn btn-glass btn-sm" data-action="jour-cert" data-id="${j.id}">⤓ ${t('jour_cert')}</button></div>` : ''}
     <div class="jstages">${stages}</div>
   </div>${footerHTML()}</div>`;
 }
@@ -2023,7 +2023,7 @@ function downloadJourneyCert(id) {
     const url = URL.createObjectURL(b);
     const a = document.createElement('a'); a.href = url; a.download = `edenrise-journey-${id}.png`;
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    toast(t('jour_cert'), '🎓');
+    toast(t('jour_cert'), '');
   }, 'image/png');
 }
 
@@ -2063,7 +2063,7 @@ function openFlash() {
     const el = document.createElement('div');
     el.className = 'take-overlay'; el.id = 'flashModal'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true');
     el.innerHTML = `<div class="take-card flash-wrap"><button class="modal-x" data-action="flash-close" aria-label="Close">✕</button>
-      <div class="ob-eyebrow">🃏 ${t('flash_h')}</div><div id="flashBody"></div></div>`;
+      <div class="ob-eyebrow"> ${t('flash_h')}</div><div id="flashBody"></div></div>`;
     document.body.appendChild(el);
     el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
   }
@@ -2077,7 +2077,7 @@ function flashNext() {
     $('#flashModal').classList.remove('open');
     const day = new Date().toISOString().slice(0, 10);
     if (S.flashDay !== day) { S.flashDay = day; save(); awardXp(10, t('flash_h')); }
-    else toast(t('flash_done'), '🌱');
+    else toast(t('flash_done'), '');
     return;
   }
   flashIdx++; flashFlipped = false;
@@ -2151,7 +2151,7 @@ function downloadCert(courseId) {
     const url = URL.createObjectURL(b);
     const a = document.createElement('a'); a.href = url; a.download = `edenrise-certificate-${courseId}.png`;
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    toast(t('cert_dl'), '🎓');
+    toast(t('cert_dl'), '');
   }, 'image/png');
 }
 function linkedInCertUrl(c) {
@@ -2164,8 +2164,8 @@ function linkedInCertUrl(c) {
 function certsSectionHTML() {
   const done = CATALOG.filter(c => isDone(c.id));
   return `<div class="admin-section">
-    <h2>🎓 ${t('certs_h')}</h2>
-    <p class="sect-sub">${t('certs_sub')}</p>
+    <h2>${t('certs_h')}</h2>
+    <p class="sect-sub sub-auto">${t('certs_sub')}</p>
     ${done.length ? `<div class="cert-grid">${done.map(c => `
       <div class="cert-card">
         <div class="cert-art"><span>✦</span><b>${esc(ctitle(c))}</b><span class="cert-d">${certDate(c.id).toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { month: 'short', year: 'numeric' })}</span></div>
@@ -2195,7 +2195,7 @@ function missionCardHTML(c) {
   let body;
   if (!(S.profile && S.profile.uid)) body = `<p class="mis-note">${t('mis_signin')}</p>`;
   else if (st && st.status === 'approved' && st.claimed) body = `<p class="mis-ok">✓ ${t('mis_done')} · +${m.xp} XP</p>`;
-  else if (st && st.status === 'approved') body = `<button class="btn btn-primary btn-sm" data-action="mis-claim" data-id="${st.id}" data-course="${c.id}">🌾 ${t('mis_claim')} +${m.xp} XP</button>`;
+  else if (st && st.status === 'approved') body = `<button class="btn btn-primary btn-sm" data-action="mis-claim" data-id="${st.id}" data-course="${c.id}"> ${t('mis_claim')} +${m.xp} XP</button>`;
   else if (st && st.status === 'pending') body = `<p class="mis-note">${t('mis_pending')}</p>`;
   else body = `${st && st.status === 'declined' ? `<p class="mis-note warn">${t('mis_declined')}</p>` : ''}
     <textarea class="comm-input" id="misNote" rows="2" placeholder="${t('mis_note_ph')}"></textarea>
@@ -2206,8 +2206,8 @@ function missionCardHTML(c) {
       <button class="btn btn-primary btn-sm" data-action="mis-submit" data-id="${c.id}">${t('mis_submit')}</button>
     </div>`;
   return `<div class="admin-section mission-card">
-    <h2>🌾 ${t('mis_h')} <span class="mis-xp">+${m.xp} XP</span></h2>
-    <p class="sect-sub">${t('mis_sub')}</p>
+    <h2> ${t('mis_h')} <span class="mis-xp">+${m.xp} XP</span></h2>
+    <p class="sect-sub sub-auto">${t('mis_sub')}</p>
     <div class="mis-brief"><b>${esc(m.title)}</b><p>${esc(m.brief)}</p></div>
     ${body}
   </div>`;
@@ -2259,7 +2259,7 @@ function submitMission(courseId) {
   if (!note && !misPhotoData) { if ($('#misNote')) $('#misNote').focus(); return; }
   EdenMissions.submit({ courseId, note, photo: misPhotoData }).then(() => {
     misPhotoData = '';
-    toast(t('mis_pending'), '🌾');
+    toast(t('mis_pending'), '');
     loadMyMissions(); render();
   }).catch(() => toast(_lang() === 'pt' ? 'Não foi possível submeter' : 'Could not submit', '⚠️'));
 }
@@ -2299,7 +2299,7 @@ function openCoach(courseId) {
   if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
   ensureCoachModal();
   coach = { courseId, sc, msgs: [{ role: 'assistant', content: sc.opening }], busy: false, done: false };
-  $('#coachEyebrow').textContent = `🎭 ${t('coach_h')} · ${sc.persona}`;
+  $('#coachEyebrow').textContent = ` ${t('coach_h')} · ${sc.persona}`;
   $('#coachTitle').textContent = sc.title;
   $('#coachGoal').textContent = `${t('coach_goal')}: ${sc.goal}`;
   $('#coachBox').placeholder = t('coach_ph');
@@ -2348,7 +2348,7 @@ async function coachFinish() {
     (S.coachDone || (S.coachDone = {}))[coach.courseId] = Date.now(); save();
     $('#coachChat').innerHTML += `<div class="coach-score"><b>${t('coach_score')}</b>
       ${j.scores.map(s => `<div class="cs-row"><span>${esc(s.dim)}</span><span class="cs-stars">${'★'.repeat(s.score)}${'☆'.repeat(5 - s.score)}</span><em>${esc(s.note || '')}</em></div>`).join('')}
-      <p class="cs-tip">💡 ${esc(j.tip || '')}</p>
+      <p class="cs-tip"> ${esc(j.tip || '')}</p>
       <button class="btn btn-glass btn-sm" data-action="coach-again" data-id="${coach.courseId}">↺ ${t('coach_again')}</button></div>`;
     $('#coachChat').scrollTop = $('#coachChat').scrollHeight;
     $('#coachInputRow').style.display = 'none';
@@ -2364,8 +2364,8 @@ function coachCardHTML(c) {
   const sc = roleplayFor(c.id); if (!sc) return '';
   const done = S.coachDone && S.coachDone[c.id];
   return `<div class="admin-section coach-invite">
-    <h2>🎭 ${t('coach_h')}</h2>
-    <p class="sect-sub">${t('coach_sub')}</p>
+    <h2> ${t('coach_h')}</h2>
+    <p class="sect-sub sub-auto">${t('coach_sub')}</p>
     <div class="mis-brief"><b>${esc(sc.title)}</b><p>${esc(sc.goal)}</p></div>
     <button class="btn btn-primary btn-sm" data-action="coach-open" data-id="${c.id}">${done ? '↺ ' + t('coach_again') : t('coach_start')}</button>
   </div>`;
@@ -2449,7 +2449,7 @@ function paintMissions(list) {
       <button class="btn btn-primary btn-sm" data-action="mis-review" data-id="${m.id}" data-ok="1">✓ Approve</button>
       <button class="btn btn-glass btn-sm" data-action="mis-review" data-id="${m.id}" data-ok="0">Decline</button>
     </div>`;
-  }).join('') : `<p class="empty-note" style="text-align:left;padding:8px 0;">No missions waiting — the queue is clear 🌿</p>`;
+  }).join('') : `<p class="empty-note" style="text-align:left;padding:8px 0;">No missions waiting — the queue is clear</p>`;
 }
 function teamQuestions() {
   return (filteredMembers() || []).flatMap(m => (m.state.askLog || [])).sort((a, b) => (b.at || 0) - (a.at || 0));
@@ -2471,7 +2471,7 @@ function intelHTML() {
     ${flags.slice(0, 10).map(f => { const c = courseById(f.courseId); return `<div class="intel-q"><span class="n">${c ? esc(ctitle(c)) : ''}${f.ai ? ' · ✦AI' : ''}</span><span>${esc(f.q)}</span></div>`; }).join('')}
   </div>`; })()}
   <div class="admin-section">
-    <h2>✦ Ask the Cockpit</h2>
+    <h2>Ask about your team</h2>
     <p class="sect-sub">Your admin assistant — ask anything about the team in plain language: “who’s behind?”, “what should I assign the Land team?”, “who’s ready for leadership?”</p>
     <div class="cockpit-chat">
       <div class="coach-chat" id="ckChat" style="display:none;"></div>
@@ -2497,7 +2497,7 @@ async function findContentGaps() {
       <span class="ci t-grad-4">${svgIcon('seed')}</span>
       <div class="ct"><b>${esc(g.course)}</b><span>${esc(g.theme)} — ${esc(g.evidence)}</span></div>
       <button class="btn btn-primary btn-sm" data-action="gap-draft" data-title="${attr(g.course)}">Draft it ✦</button>
-    </div>`).join('') || `<p class="empty-note" style="text-align:left;padding:8px 0;">No real gaps found — the library covers what the team is asking 🌿</p>`;
+    </div>`).join('') || `<p class="empty-note" style="text-align:left;padding:8px 0;">No real gaps found — the library covers what the team is asking</p>`;
   } catch (e) { el.innerHTML = `<div class="auth-err on">Could not analyse — try again.</div>`; }
 }
 let ckHistory = [];
@@ -2574,12 +2574,12 @@ function attentionQueue(pool) {
   return pool.map(m => {
     const s = memberSummary(m);
     const reasons = [];
-    memberRecertIssues(m).forEach(r => reasons.push({ sev: r.state === 'expired' ? 3 : 2, txt: r.state === 'expired' ? `🛡 ${r.course} expired` : `🛡 ${r.course} expires in ${r.days}d` }));
+    memberRecertIssues(m).forEach(r => reasons.push({ sev: r.state === 'expired' ? 3 : 2, txt: r.state === 'expired' ? ` ${r.course} expired` : ` ${r.course} expires in ${r.days}d` }));
     const pace = trainingPace(s.compTarget);
     if (s.compHours < pace - 2) reasons.push({ sev: 2, txt: `⏱ ${s.compHours}h of ~${Math.round(pace)}h expected (40h pace)` });
-    if (s.days == null) reasons.push({ sev: 1, txt: '😴 never active' });
-    else if (s.days >= 10) reasons.push({ sev: 1, txt: `😴 inactive ${s.days}d` });
-    if (s.pathPct < 35) reasons.push({ sev: 1, txt: `🌱 path at ${s.pathPct}%` });
+    if (s.days == null) reasons.push({ sev: 1, txt: ' never active' });
+    else if (s.days >= 10) reasons.push({ sev: 1, txt: ` inactive ${s.days}d` });
+    if (s.pathPct < 35) reasons.push({ sev: 1, txt: ` path at ${s.pathPct}%` });
     return { s, reasons, score: reasons.reduce((a, r) => a + r.sev, 0) };
   }).filter(x => x.reasons.length).sort((a, b) => b.score - a.score);
 }
@@ -2622,7 +2622,7 @@ function paintMgrDash() {
   el.innerHTML = `
   ${confirmPanelHTML()}
   <div class="admin-section" style="margin-top:18px;">
-    <h2>🛡 Compliance command</h2>
+    <h2>Training hours</h2>
     <p class="sect-sub">The team's mandatory 40h continuous training — Código do Trabalho art. 131.º. Live, prorated, exportable.</p>
     <span class="badge ${tenPct ? 'mg-ok' : 'mg-bad'}" style="margin-top:10px;display:inline-flex;">${tenPct ? '● Art. 131.º/5 · ≥10% trained ✓' : '⚠ Art. 131.º/5 · <10% of workforce trained'}</span>
     <div class="mgr-heroes">
@@ -2641,7 +2641,7 @@ function paintMgrDash() {
         const vp = td ? Math.round(tv / td * 100) : 0;
         const rates = pool.map(m => applicationRate(m.state || {})).filter(Boolean);
         const ap = rates.length ? Math.round(rates.reduce((a, r) => a + r.applied, 0) / rates.reduce((a, r) => a + r.total, 0) * 100) : null;
-        return `<div class="mgr-hero"><div class="mh-num">${vp}<small>%</small></div><div class="mh-lbl">Verified competency</div><div class="mh-sub">${tv}/${td} completed courses verified${ap != null ? ` · 🎯 ${ap}% applied on the job` : ''}</div></div>`;
+        return `<div class="mgr-hero"><div class="mh-num">${vp}<small>%</small></div><div class="mh-lbl">Verified competency</div><div class="mh-sub">${tv}/${td} completed courses verified${ap != null ? ` · ${ap}% applied on the job` : ''}</div></div>`;
       })()}
     </div>
     <div class="mgr-pace"><div class="ob-eyebrow" style="margin-bottom:8px;">Hours vs the pacing line</div>${pacingChartSVG(pool)}
@@ -2652,7 +2652,7 @@ function paintMgrDash() {
         <span class="avatar">${esc(x.s.initials)}</span>
         <div class="grow"><b>${esc(x.s.name)}</b><div class="mgr-reasons">${x.reasons.slice(0, 3).map(r => `<span class="chip" style="font-size:11px;">${r.txt}</span>`).join('')}</div></div>
         <button class="btn btn-glass btn-sm" data-action="nudge" data-uid="${esc(x.s.uid)}" data-name="${esc(x.s.name)}">Nudge</button>
-      </div>`).join('') : `<p class="empty-note" style="text-align:left;padding:6px 0;">Nobody needs attention — the whole team is on pace 🌿</p>`}
+      </div>`).join('') : `<p class="empty-note" style="text-align:left;padding:6px 0;">Nobody needs attention — the whole team is on pace</p>`}
   </div>`;
 }
 
@@ -2679,7 +2679,7 @@ function openMemberDetail(uid) {
         <div class="between"><span class="sk-name">40h status</span><b>${s.compHours >= s.compTarget ? '✓ complete' : s.compHours >= pace - 2 ? '● on track' : '⚠ behind pace'}</b></div>
         <div class="between"><span class="sk-name">Courses done</span><b>${s.coursesDone}</b></div>
         <div class="between"><span class="sk-name">Level · streak</span><b>Lv ${s.level} · ${s.streak}d</b></div>
-        ${issues.length ? `<div class="comp-status behind">🛡 ${issues.map(i => `${esc(i.course)} ${i.state === 'expired' ? 'expired' : 'expires in ' + i.days + 'd'}`).join(' · ')}</div>` : ''}
+        ${issues.length ? `<div class="comp-status behind"> ${issues.map(i => `${esc(i.course)} ${i.state === 'expired' ? 'expired' : 'expires in ' + i.days + 'd'}`).join(' · ')}</div>` : ''}
       </div></div>
     <div class="ob-eyebrow" style="margin-top:16px;">Training log · ${complianceYear()}</div>
     ${log.length ? `<div class="comp-log">${log.slice(0, 8).map(e => `<div class="comp-row"><span class="cl-t">${esc(e.title || '')}</span><span class="cl-meta">${new Date(e.at).toLocaleDateString('pt-PT')} · ${e.hours}h</span></div>`).join('')}</div>` : `<p class="empty-note" style="text-align:left;padding:6px 0;">No credited hours yet.</p>`}
@@ -2766,7 +2766,7 @@ function adminCockpitHTML() {
         <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
         <div style="display:flex;gap:8px;align-items:center;">
           <select id="ckDept" class="ck-dept"><option value="">All departments</option>${DEPTS.map(d => `<option value="${d.key}" ${cockpitDept === d.key ? 'selected' : ''}>${d.en}</option>`).join('')}</select>
-          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex">🛡 ${t('ru_annex_btn')}</button><button class="btn btn-glass btn-sm" data-action="art4-pack" title="EU AI Act Art. 4 — AI-literacy evidence">🤖 ${t('art4_btn')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="retention" title="${t('gdpr_retention')}">📄 RGPD·1</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="art30" title="${t('gdpr_art30')}">📄 RGPD·2</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="dpa" title="${t('gdpr_dpa')}">📄 RGPD·3</button>
+          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex"> ${t('ru_annex_btn')}</button><button class="btn btn-glass btn-sm" data-action="art4-pack" title="EU AI Act Art. 4 — AI-literacy evidence">🤖 ${t('art4_btn')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="retention" title="${t('gdpr_retention')}">📄 RGPD·1</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="art30" title="${t('gdpr_art30')}">📄 RGPD·2</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="dpa" title="${t('gdpr_dpa')}">📄 RGPD·3</button>
         </div>
       </div>
       <div class="team-table"><table>
@@ -2779,14 +2779,13 @@ function adminCockpitHTML() {
     <div id="cockpitHeat"></div>
     <div id="cockpitComp"></div>
     <div class="admin-section">
-      <h2>🌾 Field Missions review</h2>
+      <h2> Field Missions review</h2>
       <p class="sect-sub">Members' real-world proof, waiting for your eyes. Approve to release their XP.</p>
       <div id="missionQueue"><p class="empty-note" style="text-align:left;padding:8px 0;">Loading…</p></div>
     </div>
     ${adminMembers ? intelHTML() : '<div id="intelWrap"></div>'}
     <div class="admin-section">
       <h2>Assign learning</h2>
-      <p class="sect-sub">Assignments appear on each learner's home with the due date.</p>
       <div class="composer">
         <div class="field"><label>Course</label>
           <select id="asgCourse">${CATALOG.map(c => `<option value="${c.id}">${esc(c.title)}</option>`).join('')}</select></div>
@@ -2814,7 +2813,7 @@ function adminContentHTML() {
     return `<div class="content-row">
       <span class="ci t-grad-${c.grad}">${svgIcon(c.icon)}</span>
       <div class="ct"><b>${esc(ctitle(c))}</b><span>${tcat(c.cat)} · ${c.modules.length} ${t('modules')} · ${fmtMins(courseMins(c))}${r ? ` · ★ ${r.avg} (${r.n})` : ''}</span></div>
-      <span class="pub-chip ${courseStale(c) ? 'draft' : 'live'}" title="Content freshness — re-dated on every save">${courseStale(c) ? '⏳ review due' : '✓ ' + fmtYm(c.updated)}</span>
+      <span class="pub-chip ${courseStale(c) ? 'draft' : 'live'}" title="Content freshness — re-dated on every save">${courseStale(c) ? 'review due' : '✓ ' + fmtYm(c.updated)}</span>
       <span class="pub-chip ${cls}">${label}</span>
       <button class="btn btn-glass btn-sm" data-action="ce-open" data-id="${c.id}">✎ Edit</button>
     </div>`;
@@ -2826,7 +2825,7 @@ function adminContentHTML() {
   </div>
   <div class="admin-section">
     <h2>${t('studio_title')}</h2>
-    <p class="sect-sub">${t('studio_sub')}</p>
+    <p class="sect-sub sub-auto">${t('studio_sub')}</p>
     <div class="studio">
       <div class="ce-two">
         <div class="field"><label>Source type</label><select id="stMode">
@@ -2914,7 +2913,7 @@ function courseEditorHTML() {
     <div class="ce-two">
       <div class="field"><label>Resources — one per line: Label | https://url</label><textarea class="comm-input" rows="2" data-ce="resourcesRaw" placeholder="Soil worksheet | https://…">${esc(e.resourcesRaw)}</textarea></div>
       <div class="field" style="display:flex;align-items:flex-end;gap:18px;padding-bottom:6px;flex-wrap:wrap;"><label class="lv-check" style="margin:0;"><input type="checkbox" id="ceSeq" ${e.sequential ? 'checked' : ''}> 🔒 Sequential — modules unlock in order</label>
-      <label class="lv-check" style="margin:0;">🛡 Recertify every <input class="auth-input ce-mins" id="ceRecert" type="number" min="0" max="60" value="${attr(e.recertMonths || '')}" placeholder="0" style="width:64px;padding:6px 8px;"> months</label></div>
+      <label class="lv-check" style="margin:0;"> Recertify every <input class="auth-input ce-mins" id="ceRecert" type="number" min="0" max="60" value="${attr(e.recertMonths || '')}" placeholder="0" style="width:64px;padding:6px 8px;"> months</label></div>
     </div>
     <h3 class="ce-h3">Modules <span class="sect-sub" style="display:inline;font-weight:400;">— paste a Vimeo or YouTube link and the player wires it automatically</span></h3>
     <div id="ceMods">${modRows}</div>
@@ -2968,7 +2967,7 @@ function ceSave() {
   EdenCloud.saveCourse(clean).then(() => {
     EdenApp.applyCustomCourses(null, clean);
     editingCourse = null;
-    toast('Course published to the whole team', '🌿');
+    toast('Course published to the whole team', '');
     render();
   }).catch(err => { console.error('[studio]', err); toast('Could not save — are the Firestore rules published?', '⚠️'); });
 }
@@ -3125,7 +3124,6 @@ let companiesCache = null;
 function adminCompaniesHTML() {
   return `<div class="admin-section">
     <h2>✦ Companies</h2>
-    <p class="sect-sub">Every tenant on the platform. Create a company, hand its admin the invite link, activate when they subscribe.</p>
     <div id="coList">${companiesCache ? companiesListHTML() : '<div class="skel" style="height:44px;"></div>'}</div>
   </div>
   <div class="admin-section">
@@ -3173,7 +3171,7 @@ function adminSettingsHTML() {
     </div>
     <div class="org-key" style="margin-top:14px;">
       <div class="notif-info"><b>Demo content</b><span>Seed a welcome broadcast, a wins post with photo, a poll, two dated live sessions and one assignment — so the platform demos inhabited.</span></div>
-      <button class="btn btn-glass btn-sm" data-action="seed-demo">🌿 Seed demo content</button>
+      <button class="btn btn-glass btn-sm" data-action="seed-demo"> Seed demo content</button>
     </div>
     <div class="org-key" style="margin-top:14px;">
       <div class="notif-info"><b>${t('orgkey_title')}</b><span>${t('orgkey_sub')} Key prefix picks the provider: AIza=Gemini · sk-ant=Claude · sk-or=OpenRouter · gsk_=Groq · sk-=OpenAI/DeepSeek.</span></div>
@@ -3242,16 +3240,16 @@ function renderProgress() {
         </div>
       </div>
       <div class="prog-mini">
-        <div class="stat"><div class="num">${S.streak}d</div><div class="lbl">${t('learning_streak')}</div><div class="delta">${t('keep_alive')}</div></div>
+        <div class="stat"><div class="num">${S.streak}d</div><div class="lbl">${t('learning_streak')}</div></div>
         <div class="stat"><div class="num">#${rank.rank}</div><div class="lbl">${t('board_rank')}</div><div class="delta">${t('of')} ${rank.total} ${t('this_week').toLowerCase()}</div></div>
-        <div class="stat"><div class="num">${S.badges.length}<span style="font-size:18px;color:var(--text-faint)">/${BADGES.length}</span></div><div class="lbl">${t('badges_earned')}</div><div class="delta">${S.badges.length ? t('nice_work') : t('earn_first')}</div></div>
+        <div class="stat"><div class="num">${S.badges.length}<span style="font-size:18px;color:var(--text-faint)">/${BADGES.length}</span></div><div class="lbl">${t('badges_earned')}</div></div>
         <div class="stat"><div class="num">${doneCount}</div><div class="lbl">${t('courses_finished')}</div><div class="delta">${S.quizzesPassed} ${t('skills_verified').toLowerCase()}</div></div>
       </div>
     </div>
 
     <div class="admin-section story-card">
-      <h2>✦ ${t('story_h')}</h2>
-      <p class="sect-sub">${t('story_sub')}</p>
+      <h2>${t('story_h')}</h2>
+      <p class="sect-sub sub-auto">${t('story_sub')}</p>
       <div id="storyBody">${S.learnStory && S.learnStory.text && S.learnStory.lang === S.lang ? `<p class="story-text">${esc(S.learnStory.text)}</p><button class="link-quiet" data-action="story-gen">${t('story_refresh')}</button>` : `<button class="btn btn-glass btn-sm" data-action="story-gen">${t('story_btn')}</button>`}</div>
     </div>
     ${transferPanelHTML()}
@@ -3260,13 +3258,13 @@ function renderProgress() {
     ${readinessSectionHTML()}
     ${skillsSectionHTML()}
     ${certsSectionHTML()}
-    <div class="admin-section"><h2>🃏 ${t('flash_h')}</h2><p class="sect-sub">${t('flash_sub')}</p>
-      ${(S.missedQ || []).length ? `<p class="missed-note">🎯 ${(S.missedQ || []).length} ${t('flash_missed_n')}</p>` : ''}
+    <div class="admin-section"><h2>${t('flash_h')}</h2><p class="sect-sub sub-auto">${t('flash_sub')}</p>
+      ${(S.missedQ || []).length ? `<p class="missed-note"> ${(S.missedQ || []).length} ${t('flash_missed_n')}</p>` : ''}
       <button class="btn btn-glass btn-sm" data-action="flash-open">${t('flash_open')}</button></div>
 
     <div class="admin-section">
       <h2>${t('badges_h')}</h2>
-      <p class="sect-sub">${t('badges_sub')}</p>
+      <p class="sect-sub sub-auto">${t('badges_sub')}</p>
       <div class="badge-grid">
         ${BADGES.map(b => { const got = S.badges.includes(b.id); return `
           <div class="badge ${got ? 'got' : 'locked'}">
@@ -3279,7 +3277,7 @@ function renderProgress() {
 
     <div class="admin-section">
       <h2>${t('leaders_board')}</h2>
-      <p class="sect-sub">${t('board_sub')}</p>
+      <p class="sect-sub sub-auto">${t('board_sub')}</p>
       <div class="board-scope">
         <button class="rx ${boardScope === 'all' ? 'on' : ''}" data-action="board-scope" data-v="all">${t('board_all')}</button>
         <button class="rx ${boardScope === 'week' ? 'on' : ''}" data-action="board-scope" data-v="week">${t('board_week')}</button>
@@ -3300,7 +3298,7 @@ function renderProgress() {
 
     <div class="admin-section">
       <h2>${t('your_path_to')} ${tgoal(S.goal)}</h2>
-      <p class="sect-sub">${t('path_points')}</p>
+      <p class="sect-sub sub-auto">${t('path_points')}</p>
       ${pathStepperHTML()}
     </div>
   </div>${footerHTML()}</div>`;
@@ -3338,9 +3336,9 @@ function dailyQuestion() {
 function dailyDropHTML() {
   const d = dailyQuestion();
   if (!d) return '';
-  if (d.answered) return `<section class="daily done"><div class="daily-head"><span class="daily-ic">🌱</span><div><b>${t('daily_title')}</b><span class="daily-sub">${d.correct ? t('daily_correct') : t('daily_wrong')} · ${t('daily_tomorrow')}</span></div><span class="daily-streak">🔥 ${S.streak || 0} ${t('daily_streak')}</span></div></section>`;
+  if (d.answered) return `<section class="daily done"><div class="daily-head"><span class="daily-ic"></span><div><b>${t('daily_title')}</b><span class="daily-sub">${d.correct ? t('daily_correct') : t('daily_wrong')} · ${t('daily_tomorrow')}</span></div><span class="daily-streak">🔥 ${S.streak || 0} ${t('daily_streak')}</span></div></section>`;
   return `<section class="daily" id="dailyDrop">
-    <div class="daily-head"><span class="daily-ic">🌱</span><div><b>${t('daily_title')}</b><span class="daily-sub">${t('daily_sub')} · ${t('daily_from')} ${ctitle(d.c)}</span></div><span class="daily-streak">🔥 ${S.streak || 0} ${t('daily_streak')}</span></div>
+    <div class="daily-head"><span class="daily-ic"></span><div><b>${t('daily_title')}</b><span class="daily-sub">${t('daily_sub')} · ${t('daily_from')} ${ctitle(d.c)}</span></div><span class="daily-streak">🔥 ${S.streak || 0} ${t('daily_streak')}</span></div>
     <div class="daily-q">${d.q.q}</div>
     <div class="daily-opts">${d.q.opts.map((o, i) => `<button class="daily-opt" data-action="daily-answer" data-opt="${i}" data-a="${d.q.a}">${o}</button>`).join('')}</div>
   </section>`;
@@ -3375,16 +3373,16 @@ function computeNudges() {
   const nl = nextLesson();
   /* transfer loop: an application check-in is due — the highest-value nudge there is */
   const due = dueApplicationChecks();
-  if (due.length) out.push({ id: 'appcheck', icon: '🎯', title: t('nudge_appcheck_t'), body: t('nudge_appcheck_b').replace('{c}', ctitle(courseById(due[0].courseId)) || ''), route: '#/progress' });
+  if (due.length) out.push({ id: 'appcheck', icon: '', title: t('nudge_appcheck_t'), body: t('nudge_appcheck_b').replace('{c}', ctitle(courseById(due[0].courseId)) || ''), route: '#/progress' });
   if (rank.total >= 2) {
-    if (rank.ahead) out.push({ id: 'board', icon: '🌿', title: t('nudge_board_t'), body: t('nudge_board_b').replace('{name}', rank.ahead.name.split(' ')[0]).replace('{xp}', rank.ahead.xp - S.xp), route: '#/progress' });
-    else out.push({ id: 'top', icon: '🌟', title: t('nudge_top_t'), body: t('nudge_top_b'), route: '#/progress' });
+    if (rank.ahead) out.push({ id: 'board', icon: '', title: t('nudge_board_t'), body: t('nudge_board_b').replace('{name}', rank.ahead.name.split(' ')[0]).replace('{xp}', rank.ahead.xp - S.xp), route: '#/progress' });
+    else out.push({ id: 'top', icon: '', title: t('nudge_top_t'), body: t('nudge_top_b'), route: '#/progress' });
   }
-  if (lv.next != null && lv.toNext <= 140) out.push({ id: 'level', icon: '🌱', title: t('nudge_level_t'), body: t('nudge_level_b').replace('{xp}', lv.toNext).replace('{lvl}', tlevel(lv.idx + 1)), route: '#/library' });
+  if (lv.next != null && lv.toNext <= 140) out.push({ id: 'level', icon: '', title: t('nudge_level_t'), body: t('nudge_level_b').replace('{xp}', lv.toNext).replace('{lvl}', tlevel(lv.idx + 1)), route: '#/library' });
   if (S.streak > 0) out.push({ id: 'streak', icon: '🔥', title: t('nudge_streak_t').replace('{n}', S.streak), body: t('nudge_streak_b'), route: nl ? nl.route : '#/library' });
   if (nl) out.push({ id: 'lesson', icon: '▶', title: t('nudge_lesson_t'), body: t('nudge_lesson_b').replace('{mod}', nl.mod).replace('{course}', nl.course), route: nl.route });
   const done = CATALOG.filter(c => isDone(c.id)).length;
-  if (done === 2 && !(S.badges || []).includes('grove')) out.push({ id: 'badge', icon: '🏅', title: t('nudge_badge_t'), body: t('nudge_badge_b'), route: '#/library' });
+  if (done === 2 && !(S.badges || []).includes('grove')) out.push({ id: 'badge', icon: '', title: t('nudge_badge_t'), body: t('nudge_badge_b'), route: '#/library' });
   /* spaced repetition — finished courses resurface at 3/7/30-day windows */
   const inWindow = d => (d >= 3 && d <= 4) || (d >= 7 && d <= 9) || (d >= 28 && d <= 34);
   const refresh = Object.entries(S.progress)
@@ -3394,9 +3392,9 @@ function computeNudges() {
     .sort((a, b) => a.days - b.days)[0];
   CATALOG.filter(c => c.recertMonths).forEach(c => {
     const rs = recertState(c);
-    if (rs && rs.st !== 'ok') out.push({ id: 'recert-' + c.id, icon: '🛡', title: t('nudge_recert_t'), body: t('nudge_recert_b').replace('{course}', ctitle(c)).replace('{when}', rs.st === 'expired' ? t('comp_expired').toLowerCase() : t('comp_expiring').toLowerCase()), route: '#/course/' + c.id });
+    if (rs && rs.st !== 'ok') out.push({ id: 'recert-' + c.id, icon: '', title: t('nudge_recert_t'), body: t('nudge_recert_b').replace('{course}', ctitle(c)).replace('{when}', rs.st === 'expired' ? t('comp_expired').toLowerCase() : t('comp_expiring').toLowerCase()), route: '#/course/' + c.id });
   });
-  if (refresh) out.push({ id: 'refresh', icon: '🌱', title: t('nudge_refresh_t'), body: t('nudge_refresh_b').replace('{course}', ctitle(courseById(refresh.id))).replace('{n}', refresh.days), route: '#/course/' + refresh.id });
+  if (refresh) out.push({ id: 'refresh', icon: '', title: t('nudge_refresh_t'), body: t('nudge_refresh_b').replace('{course}', ctitle(courseById(refresh.id))).replace('{n}', refresh.days), route: '#/course/' + refresh.id });
   return out.slice(0, 5);
 }
 function notifPrefs() { return (S.profile && S.profile.notify) || {}; }
@@ -3433,7 +3431,7 @@ function welcomeNudge() {
   const ns = computeNudges(); if (!ns.length) return;
   if (notifPrefs().push && !fireBrowserNudge()) { /* permission lost */ }
   const top = ns[0];
-  setTimeout(() => toast(`${top.icon} ${top.body}`, '🌱'), 1400);
+  setTimeout(() => toast(`${top.icon} ${top.body}`, ''), 1400);
 }
 async function toggleNotif(ch) {
   const prof = S.profile = S.profile || {};
@@ -3451,7 +3449,7 @@ async function toggleNotif(ch) {
   /* one-time warm welcome when email nudges turn on — also proves the pipeline */
   if (ch === 'email' && notify.email && mailReady() && prof.email) {
     sendMail({ kind: 'optin', to: prof.email, name: prof.name || '', lang: _lang() })
-      .then(r => { if (r.ok) toast(t('mail_optin_sent'), '🌿'); })
+      .then(r => { if (r.ok) toast(t('mail_optin_sent'), ''); })
       .catch(() => {});
   }
 }
@@ -3506,7 +3504,7 @@ function sidebarHTML() {
       ${board.length ? board.slice(0, 5).map((m, i) => `<div class="pulse-row" data-action="member-card" data-uid="${m.uid}"><span class="pr-n">${i + 1}</span>${memberDot(m)}<span class="pr-name">${esc((m.name || '').split(' ')[0])}</span><span class="pr-xp">${m.xp || 0} XP</span></div>`).join('') : `<p class="pulse-empty">${t('comm_no_members')}</p>`}
     </div>
     ${online.length ? `<div class="pulse-card"><h4>🟢 ${t('comm_online')}</h4><div class="pulse-avas">${online.slice(0, 8).map(memberDot).join('')}</div></div>` : ''}
-    ${newest.length ? `<div class="pulse-card"><h4>🌱 ${t('comm_newest')}</h4>${newest.map(m => `<div class="pulse-row" data-action="member-card" data-uid="${m.uid}">${memberDot(m)}<span class="pr-name">${esc(m.name || '')}</span></div>`).join('')}</div>` : ''}
+    ${newest.length ? `<div class="pulse-card"><h4> ${t('comm_newest')}</h4>${newest.map(m => `<div class="pulse-row" data-action="member-card" data-uid="${m.uid}">${memberDot(m)}<span class="pr-name">${esc(m.name || '')}</span></div>`).join('')}</div>` : ''}
     ${live ? `<div class="pulse-card"><h4>📅 ${t('comm_next_live')}</h4><div class="pulse-live" data-action="goto" data-route="#/live"><b>${esc(live.title)}</b><span>${live.live ? '🔴 LIVE' : esc(live.when)}</span></div></div>` : ''}
     <button class="link-quiet" data-action="comm-channel" data-ch="__members" style="padding:4px 6px;">${t('comm_all_members')}</button>
   </aside>`;
@@ -3697,7 +3695,7 @@ function submitPost() {
     if (opts.length >= 2) poll = { options: opts.slice(0, 4), votes: {} };
   }
   EdenForum.createPost({ channel: commChannel, kind: title ? 'discussion' : 'message', title, body, poll })
-    .then(() => { if ($('#commTitle')) $('#commTitle').value = ''; if ($('#commBody')) $('#commBody').value = ''; toast(t('comm_posted'), '🌿'); })
+    .then(() => { if ($('#commTitle')) $('#commTitle').value = ''; if ($('#commBody')) $('#commBody').value = ''; toast(t('comm_posted'), ''); })
     .catch(() => toast(_lang() === 'pt' ? 'Não foi possível publicar' : 'Could not post', '⚠️'));
 }
 function submitReply() {
@@ -3719,7 +3717,7 @@ function renderProfile() {
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">${t('prof_title')}</h1>
     <p class="page-sub">${t('prof_sub')}</p>
-    ${isGuest ? `<div class="prof-guest">🌱 <span>${t('prof_guest')}</span><button class="btn btn-primary btn-sm" data-action="show-login">${t('prof_signin')}</button></div>` : ''}
+    ${isGuest ? `<div class="prof-guest"> <span>${t('prof_guest')}</span><button class="btn btn-primary btn-sm" data-action="show-login">${t('prof_signin')}</button></div>` : ''}
     <div class="prof-card">
       <div class="prof-avatar ${p.photo ? 'has-photo' : ''}"${p.photo ? ` style="background-image:url('${esc(p.photo)}')"` : ''}>${p.photo ? '' : userInitials()}</div>
       <div class="prof-id">
@@ -3753,7 +3751,7 @@ function renderProfile() {
     </div>
     <div class="admin-section">
       <h2>${t('notif_title')}</h2>
-      <p class="sect-sub">${t('notif_sub')}</p>
+      <p class="sect-sub sub-auto">${t('notif_sub')}</p>
       <div class="notif-row"><div class="notif-info"><b>${t('notif_browser')}</b><span>${t('notif_browser_d')}</span></div><div class="toggle ${notify.push ? 'on' : ''}" data-action="notif-toggle" data-ch="push" role="switch" aria-checked="${notify.push ? 'true' : 'false'}" tabindex="0"></div></div>
       <div class="notif-row"><div class="notif-info"><b>${t('notif_email')}</b><span>${t('notif_email_d')}${mailReady() ? '' : ` · <em>${t('notif_soon')}</em>`}</span></div><div class="toggle ${notify.email ? 'on' : ''}" data-action="notif-toggle" data-ch="email" role="switch" aria-checked="${notify.email ? 'true' : 'false'}" tabindex="0"></div></div>
       <div class="notif-row"><div class="notif-info"><b>${t('notif_whatsapp')}</b><span>${t('notif_whatsapp_d')} · <em>${t('notif_soon')}</em></span></div><div class="toggle ${notify.whatsapp ? 'on' : ''}" data-action="notif-toggle" data-ch="whatsapp" role="switch" aria-checked="${notify.whatsapp ? 'true' : 'false'}" tabindex="0"></div></div>
@@ -3761,12 +3759,12 @@ function renderProfile() {
     </div>
     <div class="admin-section">
       <h2>🔒 ${t('trust_title')}</h2>
-      <p class="sect-sub">${t('trust_sub')}</p>
+      <p class="sect-sub sub-auto">${t('trust_sub')}</p>
       <ul class="trust-list">
         <li>👁 ${t('trust_sees')}</li>
         <li>📚 ${t('trust_grounded')}</li>
-        <li>🤝 ${t('trust_visible')}</li>
-        <li>🧠 ${t('trust_thinking')}</li>
+        <li> ${t('trust_visible')}</li>
+        <li> ${t('trust_thinking')}</li>
       </ul>
       <details class="trust-peek">
         <summary>👁 ${t('trust_peek')}</summary>
@@ -3776,7 +3774,7 @@ function renderProfile() {
     </div>
     <div class="admin-section">
       <h2>${t('gdpr_title')}</h2>
-      <p class="sect-sub">${t('gdpr_sub')}${isGuest ? ' ' + t('gdpr_guest_note') : ''}</p>
+      <p class="sect-sub sub-auto">${t('gdpr_sub')}${isGuest ? ' ' + t('gdpr_guest_note') : ''}</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-glass" data-action="gdpr-export">⤓ ${t('gdpr_export')}</button>
         <button class="btn btn-glass danger-btn" data-action="gdpr-delete">✕ ${t('gdpr_delete')}</button>
@@ -3811,11 +3809,11 @@ async function deleteMyAccount() {
   const isGuest = !(S.profile && S.profile.uid);
   if (isGuest || !(window.EdenCloud && EdenCloud.deleteAccount)) {
     localStorage.removeItem('edenrise-state-v2'); localStorage.removeItem('eden-auth-mode');
-    toast(t('gdpr_deleted'), '🌿'); setTimeout(() => location.reload(), 900); return;
+    toast(t('gdpr_deleted'), ''); setTimeout(() => location.reload(), 900); return;
   }
   try {
     await EdenCloud.deleteAccount();
-    toast(t('gdpr_deleted'), '🌿');
+    toast(t('gdpr_deleted'), '');
   } catch (e) {
     if (String(e && e.code).includes('requires-recent-login')) toast(t('gdpr_recent_login'), 'ℹ️');
     else toast(t('mail_failed'), '⚠️');
@@ -4130,7 +4128,7 @@ function openPlayer(courseId, mod) {
 
   $('#playerTitle').textContent = ctitle(c);
   $('#playerSub').textContent = `${t('module')} ${mod + 1} ${t('of')} ${c.modules.length} · ${cmods(c)[mod]}`;
-  const pg = $('#playerGoal'); if (pg) { const goal = (takeawaysFor(c, mod) || [])[0] || ''; pg.textContent = goal ? `🎯 ${t('lesson_goal')}: ${goal}` : ''; }
+  const pg = $('#playerGoal'); if (pg) { const goal = (takeawaysFor(c, mod) || [])[0] || ''; pg.textContent = goal ? ` ${t('lesson_goal')}: ${goal}` : ''; }
   $('#playerPills').innerHTML = c.modules.map((m, i) => {
     const p = prog(courseId);
     const mm = modMedia(c, i);
@@ -4162,7 +4160,7 @@ function maybePretest(c, mod) {
   const drawOne = () => {
     const q = pick[idx];
     ov.innerHTML = `<div class="ck-card">
-      <div class="ob-eyebrow">🌱 ${t('pre_h')} · ${idx + 1}/2</div>
+      <div class="ob-eyebrow"> ${t('pre_h')} · ${idx + 1}/2</div>
       <p class="pre-sub">${t('pre_sub')}</p>
       <div class="ck-q">${esc(q.q)}</div>
       ${q.opts.map((o, i) => `<div class="q-opt" data-ck="${i}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
@@ -4180,7 +4178,7 @@ function maybePretest(c, mod) {
     $('#preNext').addEventListener('click', () => {
       idx++;
       if (idx < pick.length) drawOne();
-      else { ledgerAppend('pretest', { courseId: c.id, score: Math.round(right / pick.length * 100) }); ov.classList.remove('on'); ov.innerHTML = ''; toast(t('pre_done'), '🌱'); }
+      else { ledgerAppend('pretest', { courseId: c.id, score: Math.round(right / pick.length * 100) }); ov.classList.remove('on'); ov.innerHTML = ''; toast(t('pre_done'), ''); }
     });
     $('#preSkip').addEventListener('click', () => {
       ledgerAppend('pretest', { courseId: c.id, score: null, skipped: true });
@@ -4259,7 +4257,7 @@ function showCheckpoint(q, c) {
   const ov = $('#ckOv'); if (!ov) return;
   let answered = false;
   ov.innerHTML = `<div class="ck-card">
-    <div class="ob-eyebrow">🎯 ${t('ck_h')} · ${esc(ctitle(c))}</div>
+    <div class="ob-eyebrow"> ${t('ck_h')} · ${esc(ctitle(c))}</div>
     <div class="ck-q">${esc(q.q)}</div>
     ${q.opts.map((o, i) => `<div class="q-opt" data-ck="${i}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
     <div class="ck-foot"><span class="ck-note" id="ckNote"></span><button class="btn btn-primary btn-sm" id="ckGo" style="display:none;">▶ ${t('ck_continue')}</button></div>
@@ -4359,10 +4357,10 @@ function showTakeaways(c, mod, next) {
   if (next && next.kind === 'course-done') {
     $('#takeList').innerHTML += `<div class="take-extra">
       ${ratingStarsHTML(next.courseId)}
-      <button class="btn btn-glass btn-sm" data-action="cert-dl" data-id="${next.courseId}">🎓 ${t('cert_dl')}</button>
+      <button class="btn btn-glass btn-sm" data-action="cert-dl" data-id="${next.courseId}"> ${t('cert_dl')}</button>
     </div>
     ${(S.intentions || {})[next.courseId] ? '' : `<div class="intent-box">
-      <div class="ob-eyebrow">🌱 ${t('intent_h')}</div>
+      <div class="ob-eyebrow"> ${t('intent_h')}</div>
       <p class="pre-sub">${t('intent_sub')}</p>
       <div class="ask-row"><input class="auth-input" id="intentText" maxlength="140" placeholder="${t('intent_ph')}"><button class="btn btn-primary btn-sm" data-action="intent-save" data-id="${next.courseId}">${t('intent_save')}</button></div>
     </div>`}`;
@@ -4377,7 +4375,7 @@ function resolveTakeaways(toQuiz) {
   if (!n) return;
   if (toQuiz && n.courseId) { closePlayer(); setTimeout(() => openQuiz(n.courseId), 250); return; }   /* watch → assess loop */
   if (n.kind === 'next') openPlayer(n.courseId, n.mod);
-  else if (n.kind === 'soon') { closePlayer(); setTimeout(() => toast(_lang() === 'pt' ? 'É tudo por agora — o resto da jornada está a caminho 🌱' : 'That’s every lesson available so far — the rest of the journey is coming soon 🌱', '🌱'), 400); }
+  else if (n.kind === 'soon') { closePlayer(); setTimeout(() => toast(_lang() === 'pt' ? 'É tudo por agora — o resto da jornada está a caminho' : 'That’s every lesson available so far — the rest of the journey is coming soon', ''), 400); }
   else if (n.kind === 'course-done') {
     closePlayer();
     setTimeout(() => { openTutorWith(`${_lang() === 'pt' ? 'Terminou' : 'You finished'} <b>${ctitle(courseById(n.courseId))}</b> — ${_lang() === 'pt' ? 'quer o teste de certificação agora? São 3 perguntas.' : 'want the certification quiz now? It’s 3 questions.'}`, ['Quiz me now', 'Build me a path']); }, 700);
@@ -4399,7 +4397,7 @@ function completeModule(courseId, mod) {
     p.done = true; p.pct = 100; delete p.mod;
     p.doneAt = p.doneAt || Date.now();   /* spaced-repetition anchor */
     save();
-    toast(`${_lang() === 'pt' ? 'Curso concluído' : 'Course complete'}: ${ctitle(c)} 🎉`, '🏆');
+    toast(`${_lang() === 'pt' ? 'Curso concluído' : 'Course complete'}: ${ctitle(c)}`, '🏆');
     awardXp(XP.module + XP.course, 'course complete');
     checkBadges();
     showTakeaways(c, mod, { kind: 'course-done', courseId });
@@ -4531,10 +4529,10 @@ function drawQuiz() {
 /* ---------- command palette ---------- */
 const PALETTE_ACTIONS = [
   { t: 'Go to Library', icon: '📚', run: () => location.hash = '#/library' },
-  { t: 'Go to Paths', icon: '🧭', run: () => location.hash = '#/paths' },
+  { t: 'Go to Paths', icon: '', run: () => location.hash = '#/paths' },
   { t: 'Go to Live sessions', icon: '🔴', run: () => location.hash = '#/live' },
-  { t: 'Go to Analytics', icon: '📊', run: () => location.hash = '#/analytics' },
-  { t: 'Quiz me on my current course', icon: '🎯', run: () => openQuiz(currentCourseId() || 'leading-data') },
+  { t: 'Go to Analytics', icon: '', run: () => location.hash = '#/analytics' },
+  { t: 'Quiz me on my current course', icon: '', run: () => openQuiz(currentCourseId() || 'leading-data') },
   { t: 'Ask the AI tutor', icon: '✦', run: () => setTutorOpen(true) },
   { t: 'Regenerate my AI path', icon: '↺', run: () => regenPath() }
 ];
@@ -4632,11 +4630,11 @@ function tutorGreet() {
   const p = c && prog(c.id);
   const pt = _lang() === 'pt';
   if (c && p && !p.done) botSay(pt
-    ? `Olá ${firstName()} 👋 Está ${coursePct(c.id)}% em <b>${ctitle(c)}</b> — de momento em “${cmods(c)[p.mod || 0]}”. Quer um resumo de 30 segundos, ou faço-lhe um teste?`
-    : `Hey ${firstName()} 👋 You're ${coursePct(c.id)}% through <b>${ctitle(c)}</b> — currently on “${cmods(c)[p.mod || 0]}”. Want a 30-second recap, or shall I quiz you?`);
+    ? `Olá ${firstName()} Está ${coursePct(c.id)}% em <b>${ctitle(c)}</b> — de momento em “${cmods(c)[p.mod || 0]}”. Quer um resumo de 30 segundos, ou faço-lhe um teste?`
+    : `Hey ${firstName()} You're ${coursePct(c.id)}% through <b>${ctitle(c)}</b> — currently on “${cmods(c)[p.mod || 0]}”. Want a 30-second recap, or shall I quiz you?`);
   else botSay(pt
-    ? `Olá ${firstName()} 👋 Posso resumir qualquer curso, testá-lo, ou reconstruir o seu percurso. Vejo o seu progresso e o seu objetivo (<b>${tgoal(S.goal)}</b>) — pergunte-me o que quiser.`
-    : `Hey ${firstName()} 👋 I can summarize any course, quiz you, or rebuild your learning path. I can see your progress and your goal (<b>${tgoal(S.goal)}</b>) — ask me anything.`);
+    ? `Olá ${firstName()} Posso resumir qualquer curso, testá-lo, ou reconstruir o seu percurso. Vejo o seu progresso e o seu objetivo (<b>${tgoal(S.goal)}</b>) — pergunte-me o que quiser.`
+    : `Hey ${firstName()} I can summarize any course, quiz you, or rebuild your learning path. I can see your progress and your goal (<b>${tgoal(S.goal)}</b>) — ask me anything.`);
 }
 function openTutorWith(html, quicks) {
   setTutorOpen(true);
@@ -4767,7 +4765,7 @@ function tutorRespond(text) {
   /* quiz launches stay native — they open the real quiz modal */
   if (t0.includes('quiz')) {
     const id = currentCourseId();
-    botSay(`Loading a checkpoint quiz for <b>${id ? courseById(id).title : 'your current course'}</b>… 3 questions, adaptive. Good luck 🎯`);
+    botSay(`Loading a checkpoint quiz for <b>${id ? courseById(id).title : 'your current course'}</b>… 3 questions, adaptive. Good luck`);
     setTimeout(() => openQuiz(id || 'leading-data'), 900);
     return;
   }
@@ -4781,8 +4779,8 @@ function scriptedRespond(text) {
   const title = c ? ctitle(c) : '';
   const mods = c ? cmods(c) : [];
   if (t0.includes('quiz') || t0.includes('teste')) {
-    botSay(pt ? `A preparar um teste de verificação para <b>${c ? title : 'o seu curso atual'}</b>… 3 perguntas, adaptativo. Boa sorte 🎯`
-              : `Loading a checkpoint quiz for <b>${c ? title : 'your current course'}</b>… 3 questions, adaptive. Good luck 🎯`);
+    botSay(pt ? `A preparar um teste de verificação para <b>${c ? title : 'o seu curso atual'}</b>… 3 perguntas, adaptativo. Boa sorte`
+              : `Loading a checkpoint quiz for <b>${c ? title : 'your current course'}</b>… 3 questions, adaptive. Good luck`);
     setTimeout(() => openQuiz(id || 'leading-data'), 900); return;
   }
   if (t0.includes('summar') || t0.includes('recap') || t0.includes('resum')) {
@@ -4796,8 +4794,8 @@ function scriptedRespond(text) {
     setTimeout(regenPath, 800); return;
   }
   if (t0.includes('explain') || t0.includes('new') || t0.includes('explica')) {
-    botSay(c ? (pt ? `Claro — imagine <b>${title.toLowerCase()}</b> como aprender a conduzir: os primeiros módulos são espelhos-e-cinto, os do meio são trânsito real, e o final é o exame de condução. Está a ${coursePct(c.id) || 0}% — em pleno “trânsito real”. 🚗`
-                    : `Sure — imagine <b>${title.toLowerCase()}</b> as learning to drive: the early modules are mirrors-and-seatbelt basics, the middle ones are real traffic, and the capstone is your driving test. You're ${coursePct(c.id) || 0}% in — solidly “real traffic”. 🚗`)
+    botSay(c ? (pt ? `Claro — imagine <b>${title.toLowerCase()}</b> como aprender a conduzir: os primeiros módulos são espelhos-e-cinto, os do meio são trânsito real, e o final é o exame de condução. Está a ${coursePct(c.id) || 0}% — em pleno “trânsito real”.`
+                    : `Sure — imagine <b>${title.toLowerCase()}</b> as learning to drive: the early modules are mirrors-and-seatbelt basics, the middle ones are real traffic, and the capstone is your driving test. You're ${coursePct(c.id) || 0}% in — solidly “real traffic”.`)
              : (pt ? `Com todo o gosto — abra qualquer curso e explico-o do zero.` : `Happy to — open any course and I'll explain it from zero.`)); return;
   }
   if (t0.includes('due') || t0.includes('deadline') || t0.includes('assigned') || t0.includes('prazo')) {
@@ -4891,7 +4889,7 @@ document.addEventListener('click', e => {
       EdenCloud.saveOrgConfig({ aiKey: k, aiModel: mdl, aiModelHeavy: mdlH }).then(() => {
         window.EdenOrg = Object.assign({}, window.EdenOrg, { aiKey: k, aiModel: mdl, aiModelHeavy: mdlH });
         syncTutorStatus();
-        toast(t('orgkey_saved'), '🌿');
+        toast(t('orgkey_saved'), '');
       }).catch(() => toast(t('mail_failed'), '⚠️'));
       break;
     }
@@ -4926,7 +4924,7 @@ document.addEventListener('click', e => {
     case 'cert-dl': premiumCourseCert(id); break;
     case 'mis-submit': submitMission(id); break;
     case 'mis-claim': claimMission(id, el.dataset.course); break;
-    case 'mis-review': EdenMissions.review(id, el.dataset.ok === '1').then(() => { toast(el.dataset.ok === '1' ? '🌾 Approved' : 'Declined', el.dataset.ok === '1' ? '✓' : '－'); initAdmin(); }); break;
+    case 'mis-review': EdenMissions.review(id, el.dataset.ok === '1').then(() => { toast(el.dataset.ok === '1' ? ' Approved' : 'Declined', el.dataset.ok === '1' ? '✓' : '－'); initAdmin(); }); break;
     case 'coach-open': openCoach(id); break;
     case 'coach-close': $('#coachModal').classList.remove('open'); break;
     case 'coach-send': coachSend(); break;
@@ -4935,7 +4933,7 @@ document.addEventListener('click', e => {
     case 'rate': {
       (S.ratings || (S.ratings = {}))[id] = +el.dataset.n; save();
       const blk = el.closest('.rate-block'); if (blk) { const w = document.createElement('div'); w.innerHTML = ratingStarsHTML(id); blk.replaceWith(w.firstElementChild); }
-      toast(t('rate_thanks'), '🌿');
+      toast(t('rate_thanks'), '');
       break;
     }
     case 'cal-ics': { const s = liveList().find(x => x.id === id); if (s) icsForSession(s); break; }
@@ -4975,10 +4973,10 @@ document.addEventListener('click', e => {
     case 'app-deny': confirmApplication(id, 'not_seen'); break;
     case 'intent-save': {
       const txt = ($('#intentText') && $('#intentText').value || '').trim();
-      if (!txt) { toast(t('intent_ph'), '🌱'); break; }
+      if (!txt) { toast(t('intent_ph'), ''); break; }
       (S.intentions = S.intentions || {})[el.dataset.id] = { text: txt, at: Date.now(), checks: {} };
       ledgerAppend('intention_set', { courseId: el.dataset.id, text: txt.slice(0, 140) });
-      save(); el.closest('.intent-box').innerHTML = `<p class="pre-sub">🌱 ${t('intent_saved')}</p>`;
+      save(); el.closest('.intent-box').innerHTML = `<p class="pre-sub"> ${t('intent_saved')}</p>`;
       break;
     }
     case 'app-check': {
@@ -4987,7 +4985,7 @@ document.addEventListener('click', e => {
       (it.checks = it.checks || {})[day] = true;
       ledgerAppend('application_checkin', { courseId: cid2, day, applied });
       save(); render();
-      toast(applied ? t('appcheck_bravo') : t('appcheck_ok'), applied ? '🎉' : '🌱');
+      toast(applied ? t('appcheck_bravo') : t('appcheck_ok'), applied ? '' : '');
       break;
     }
     case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
@@ -5100,11 +5098,11 @@ document.addEventListener('click', e => {
       break;
     }
     case 'show-login': document.documentElement.setAttribute('data-gate', 'on'); break;
-    case 'signout': if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); break;
+    case 'signout': if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', ''); break;
     case 'privacy-note': toast(t('comm_privacy'), '🔒'); break;
     case 'nudge':
       if (el.dataset.uid) emailNudgeMember(el.dataset.uid, el);
-      else toast(`Nudge queued for ${el.dataset.name} — sends once email/WhatsApp delivery is connected`, '👋');
+      else toast(`Nudge queued for ${el.dataset.name} — sends once email/WhatsApp delivery is connected`, '');
       break;
     case 'export-members': exportMembersCSV(); break;
     case 'assign': {
@@ -5248,7 +5246,7 @@ function drawOnboard() {
   if (ob.step === 0) {
     body.innerHTML = `
       <div class="ob-eyebrow">${t('ob_step')} 1 ${t('of')} 3 · ${t('ob_welcome')}</div>
-      <div class="ob-title">${t('ob_hi')} ${firstName()} 🌱</div>
+      <div class="ob-title">${t('ob_hi')} ${firstName()}</div>
       <p class="ob-sub">${t('ob_pick_handle')}</p>
       <div class="ob-handle"><span>@</span><input id="obUsername" class="ob-input" maxlength="20" autocomplete="off" placeholder="${suggestHandle()}" value="${esc((ob.username || '').replace(/^@/, ''))}"></div>
       <p class="ob-sub" style="margin-top:16px;">${t('ob_role_q')}</p>
@@ -5329,7 +5327,7 @@ $('#avatarMenu').addEventListener('click', e => {
   if (b.dataset.m === 'profile') location.hash = '#/profile';
   if (b.dataset.m === 'onboard') startOnboarding();
   if (b.dataset.m === 'reset') { localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); }
-  if (b.dataset.m === 'signout') { if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', '👋'); }
+  if (b.dataset.m === 'signout') { if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', ''); }
 });
 
 /* ---------- bridge for the Firebase auth module (auth.js) ---------- */
@@ -5442,7 +5440,7 @@ if (S.profile && S.profile.uid && !S.profile.joinedAt) { S.profile.joinedAt = Da
 
 /* ---------- resilience: offline awareness + sync flush ---------- */
 addEventListener('offline', () => toast(t('offline_note'), '📴'));
-addEventListener('online', () => { save(); toast(t('online_note'), '🌿'); });
+addEventListener('online', () => { save(); toast(t('online_note'), ''); });
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden' && window.EdenCloud && EdenCloud.flush) EdenCloud.flush();
 });
