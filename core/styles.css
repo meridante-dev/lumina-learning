@@ -3033,3 +3033,78 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
 }
 /* a field the form is complaining about */
 .field-bad { border-color: color-mix(in srgb, #e0a08a 70%, transparent) !important; }
+
+/* ══ PREMIUM LAYER 15 — the billboard, and the row that took its place ══════
+   The hero carried a five-item path panel beside a 64px headline: two things
+   competing to be the first thing read, on the screen that has one job. The
+   billboard is now one title, three facts, one action and the progress of the
+   course you are actually on — and the path became a row underneath, read left
+   to right like everything else on the page. */
+.hero-content { max-width: 780px; }
+.hero-side { display: none; }               /* moved out; kept for any brand that still renders it */
+
+.path-row-section { margin-top: 40px; }
+.path-row {
+  display: grid; grid-auto-flow: column; grid-auto-columns: minmax(190px, 1fr);
+  gap: 12px; overflow-x: auto; scroll-snap-type: x proximity;
+  /* without this the snap aligns the first tile to the container edge and
+     scrolls straight past the gutter — the row starts 72px left of its own
+     heading even though the padding is correct */
+  scroll-padding-inline: var(--edge);
+  /* the section is already full-bleed and .rail-head carries the gutter, so a
+     negative margin here double-counted it and pulled the first step to x=0,
+     72px left of its own heading */
+  padding: 2px var(--edge) 6px;
+  scrollbar-width: none;
+}
+.path-row::-webkit-scrollbar { display: none; }
+.pstep {
+  position: relative; scroll-snap-align: start; text-align: left;
+  display: grid; gap: 3px; padding: 14px 16px 16px;
+  background: color-mix(in srgb, var(--bg) 78%, #fff 3%);
+  border: 0; border-radius: 12px; cursor: pointer; font-family: var(--font-body);
+  transition: transform .34s var(--lift), background .3s;
+}
+.pstep:hover, .pstep:focus-visible { transform: translateY(-3px); background: color-mix(in srgb, var(--accent) 8%, var(--bg)); }
+.pstep.locked { cursor: default; opacity: .5; }
+.pstep.locked:hover { transform: none; background: color-mix(in srgb, var(--bg) 78%, #fff 3%); }
+.pstep-n {
+  width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 11px; font-weight: 700; color: var(--text-dim);
+  background: color-mix(in srgb, #fff 8%, transparent);
+}
+.pstep.done .pstep-n { color: var(--on-cta); background: var(--cta); }
+.pstep.current .pstep-n { color: var(--on-cta); background: var(--cta); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent); }
+.pstep-t { font-size: 13px; font-weight: 600; color: var(--text); margin-top: 6px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pstep-s { font-size: 11px; color: var(--text-faint); }
+.pstep-bar { display: block; height: 2px; border-radius: 2px; margin-top: 8px;
+  background: color-mix(in srgb, #fff 10%, transparent); overflow: hidden; }
+.pstep-bar i { display: block; height: 100%; background: var(--accent); }
+@media (max-width: 640px) { .path-row { grid-auto-columns: 78%; } }
+
+/* ── the row, the way a streaming service does it ──────────────────────────
+   A hovered card lifts ABOVE its neighbours and shows what it is, instead of
+   the whole row staying flat and making you click to find out. The scroll
+   container needs vertical room for that, and the cards at each end grow
+   inward so nothing expands off-screen. */
+.rail { padding-block: 16px 22px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card { transition: transform .38s var(--lift), filter .38s var(--lift); will-change: transform; }
+  .card:hover, .card:focus-within { transform: scale(1.055) translateY(-4px); z-index: 5; }
+  .card:first-child:hover, .card:first-child:focus-within { transform-origin: left center; }
+  .card:last-child:hover,  .card:last-child:focus-within  { transform-origin: right center; }
+  /* everything else in the row recedes a little — the row gets a focal point */
+  .rail:hover .card:not(:hover) { filter: brightness(.72) saturate(.9); }
+  .rail:hover .card:not(:hover) .thumb { transform: none; }
+}
+/* the paddles: only while the row is hovered, and only when it can move */
+.rail-arrow { opacity: 0; transition: opacity .22s ease, background .22s ease; }
+@media (hover: hover) {
+  .rail-section:hover .rail-arrow { opacity: 1; }
+}
+.rail-arrow:focus-visible { opacity: 1; }
+/* the continue-watching bar: thicker and in the accent, so a half-finished
+   course is legible from across the row */
+.card-progress { height: 3px; border-radius: 3px; background: color-mix(in srgb, #fff 12%, transparent); }
+.card-progress .fill { background: var(--accent); }

@@ -433,6 +433,33 @@ function pathStepperHTML() {
 }
 
 /* ---------- pages ---------- */
+
+/* ---- your path, as a row ------------------------------------------------
+   It used to be an aside inside the hero, which put a five-item list beside a
+   64px headline and made the first screen argue with itself. As a row it reads
+   left to right like everything else on this page, the current step is the one
+   with the light on it, and locked steps stop pretending to be clickable. */
+function pathRowHTML() {
+  const steps = S.path.slice(0, 6).map(id => {
+    const c = courseById(id); if (!c) return '';
+    const st = pathStatus(id), p = prog(id), pct = coursePct(id);
+    const n = S.path.indexOf(id) + 1;
+    const sub = st === 'done' ? t('completed')
+      : st === 'current' ? `${pct}% · ${fmtMins(Math.round(courseMins(c) * (100 - pct) / 100))} ${t('left')}`
+      : t('unlocks_after');
+    return `<${st === 'locked' ? 'div' : 'button'} class="pstep ${st}"${st === 'locked' ? ' aria-disabled="true"' : ` data-action="open-course" data-id="${id}"`}>
+      <span class="pstep-n">${st === 'done' ? '✓' : n}</span>
+      <span class="pstep-t">${esc(ctitle(c))}</span>
+      <span class="pstep-s">${sub}</span>
+      ${st === 'current' ? `<span class="pstep-bar"><i style="width:${pct}%"></i></span>` : ''}
+    </${st === 'locked' ? 'div' : 'button'}>`;
+  }).filter(Boolean).join('');
+  if (!steps) return '';
+  return `<section class="rail-section path-row-section">
+    <div class="rail-head"><h2>${t('your_path')}</h2><a class="see-all" href="#/paths">${t('see_all')}</a></div>
+    <div class="path-row">${steps}</div>
+  </section>`;
+}
 function renderHome() {
   const featured = S.path.map(courseById).filter(Boolean).find(c => !isDone(c.id))   /* real, existing, not-done path course */
     || CATALOG.find(c => c.featured && !isDone(c.id)) || CATALOG.find(c => !isDone(c.id))
@@ -492,12 +519,9 @@ function renderHome() {
         <span>${coursePct(featured.id)}% ${t('complete')} · ${t('est')} ${fmtMins(Math.round(courseMins(featured) * (100 - coursePct(featured.id)) / 100))} ${t('left')}</span>
       </div>
     </div>
-    <aside class="hero-side">
-      <h4>${t('your_ai_path')}</h4>
-      ${heroSide}
-    </aside>
   </header>
   <div class="hero-divider" aria-hidden="true"></div>
+  ${pathRowHTML()}
   ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
   ${featuredCourses.length ? railHTML(t('featured_h'), t('featured_sub'), featuredCourses.map(c => cardHTML(c))) : ''}
   ${dailyDropHTML()}
@@ -5160,7 +5184,11 @@ document.addEventListener('click', e => {
       if (failed) location.hash = '#/course/' + quiz.courseId;
       render(); break;
     }
-    case 'rail': el.parentElement.querySelector('.rail').scrollBy({ left: +dir * 640, behavior: 'smooth' }); break;
+    case 'rail': {
+      const rail = el.parentElement.querySelector('.rail');
+      if (rail) rail.scrollBy({ left: +dir * Math.max(280, rail.clientWidth - 120), behavior: 'smooth' });
+      break;
+    }
     case 'regen-path': regenPath(); break;
     case 'remind':
       el.classList.toggle('on');
