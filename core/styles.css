@@ -3331,3 +3331,52 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
             mask-image: linear-gradient(180deg, transparent 30%, #000 72%);
   }
 }
+
+/* ══ PREMIUM LAYER 19 — sharpness, and one line instead of a box ════════════
+   The blurred second layer was smearing the poster's baked lettering into grey
+   blobs behind the headline, and the Ken Burns zoom was upscaling a 1400×932
+   asset past its own resolution. Both gone: a course can now ship `heroArt` —
+   a pre-cropped photograph with no lettering in it — and the drift is small
+   enough that the image is never asked for pixels it does not have. */
+.hero-art.blurred { display: none; }
+.hero-art {
+  background-position: 62% 46%;
+  image-rendering: auto;
+  backface-visibility: hidden;          /* keeps the transform on the GPU crisp */
+}
+@keyframes kenBurns {
+  from { transform: scale(1.02) translate3d(0, 0, 0); }
+  to   { transform: scale(1.07) translate3d(-.9%, -.7%, 0); }
+}
+/* the copy still needs its own darkness — now the only thing between the text
+   and the photograph, so it does the work alone */
+.hero::before {
+  background: linear-gradient(88deg,
+    color-mix(in srgb, var(--bg) 97%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 88%, transparent) 34%,
+    color-mix(in srgb, var(--bg) 55%, transparent) 58%,
+    transparent 82%);
+  inset: 0 18% 0 0;
+}
+
+/* Ask: one line. It was a bordered card wrapping a heading, a subtitle, an
+   input and a filled button — four elements to say "type here". */
+.ask-line-wrap { padding-top: 4px; padding-bottom: 4px; }
+.ask-line {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 4px 12px; border-bottom: 1px solid var(--line);
+  transition: border-color .25s var(--e-out);
+}
+.ask-line:focus-within { border-bottom-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+.ask-line .ask-ic { color: var(--accent); font-size: 15px; line-height: 1; }
+.ask-line input {
+  flex: 1; background: none; border: 0; outline: none; padding: 6px 0;
+  font: 400 16px/1.4 var(--font-body); color: var(--text);
+}
+.ask-line input::placeholder { color: var(--text-faint); }
+.ask-go {
+  background: none; border: 0; cursor: pointer; padding: 4px 6px;
+  color: var(--text-faint); font-size: 17px; line-height: 1;
+  transition: color .2s var(--e-out), transform .2s var(--e-out);
+}
+.ask-line:focus-within .ask-go, .ask-go:hover { color: var(--accent); transform: translateX(2px); }

@@ -569,8 +569,7 @@ function renderHome() {
   return `<div class="page">
   <header class="hero">
     <div class="hero-bg"></div><div class="hero-grid"></div>
-    ${featured.poster ? `<div class="hero-art" style="background-image:url('${featured.poster}')"></div>
-    <div class="hero-art blurred" style="background-image:url('${featured.poster}')" aria-hidden="true"></div>` : ''}
+    ${(featured.heroArt || featured.poster) ? `<div class="hero-art" style="background-image:url('${featured.heroArt || featured.poster}')"></div>` : ''}
     <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div>
     <div class="hero-content">
       <span class="hero-eyebrow">${t('featured_eyebrow')}</span>
@@ -1304,11 +1303,10 @@ async function openAsk(q) {
   }
 }
 function askBarHTML() {
-  return `<section class="page-pad" style="padding-top:0;"><div class="ask-bar">
-    <div class="ask-ic">✦</div>
-    <div class="ask-main"><b>${t('ask_h')}</b><span>${t('ask_sub')}</span>
-      <div class="ask-row"><input class="auth-input" id="askInput" placeholder="${t('ask_ph')}"><button class="btn btn-primary btn-sm" data-action="ask-go">${t('ask_go')}</button></div>
-    </div>
+  return `<section class="page-pad ask-line-wrap"><div class="ask-line">
+    <span class="ask-ic">✦</span>
+    <input id="askInput" placeholder="${t('ask_ph')}" aria-label="${t('ask_h')}">
+    <button class="ask-go" data-action="ask-go" aria-label="${t('ask_go')}">→</button>
   </div></section>`;
 }
 
