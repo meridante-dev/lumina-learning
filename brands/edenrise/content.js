@@ -202,7 +202,7 @@ const CATALOG = [
   }
 ];
 /* designed brand covers — every course ships with art (land-team-journey keeps its filmed cover) */
-CATALOG.forEach(c => { if (!c.poster) c.poster = 'media/covers/' + c.id + '.webp'; });
+CATALOG.forEach(c => { if (!c.poster) c.poster = 'media/covers/' + c.id + '.svg'; });
 const LIVE_SESSIONS = [
   { id: 'live-now', title: 'Field Hours: Live Soil Clinic', host: 'Marta Oliveira · Head of Regeneration', when: 'LIVE NOW', live: true, viewers: 47, grad: 7, icon: 'sprout', desc: 'Bring a photo or sample of your soil — Marta reads it live and prescribes the first three things to do.' },
   { id: 'exec-ama', title: 'Founder AMA: Why Regeneration', host: 'João Amaral · Founder', when: 'Fri 14:00 WET', grad: 1, icon: 'tree', desc: 'Unfiltered Q&A on building EdenRise and stewarding land in the Baixo Alentejo.' },

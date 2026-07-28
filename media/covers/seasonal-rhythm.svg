@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-label="Wellbeing">
+  <defs>
+    <linearGradient id="w" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(101 .5 .5)">
+      <stop offset="0" stop-color="#c8a45d" stop-opacity=".30"/>
+      <stop offset=".55" stop-color="#a6c3a5" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#0e140f" stop-opacity="1"/>
+    </linearGradient>
+    <radialGradient id="v" cx=".5" cy=".45" r=".78">
+      <stop offset=".55" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".55"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="#0e140f"/>
+  <rect width="1280" height="720" fill="url(#w)"/>
+  <g transform="translate(248,109) scale(0.92)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="380" cy="280" r="150" stroke="#c8a45d" stroke-width="20"/>
+      <circle cx="380" cy="280" r="230" stroke="#a6c3a5" stroke-width="12" opacity=".55"/>
+      <path d="M380 130 C300 220 300 340 380 430 C460 340 460 220 380 130Z" stroke="#a6c3a5" stroke-width="18"/></g>
+  <rect width="1280" height="720" fill="url(#v)"/>
+</svg>

@@ -566,7 +566,7 @@ function renderPaths() {
     ${pathStepperHTML()}
   </section>
   <div class="page-pad" style="padding-top:26px;">${journeysSectionHTML()}</div>
-  ${railHTML('Courses in this path', 'In AI-planned order', S.path.map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
+  ${railHTML('Courses in this path', 'In order', S.path.map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
   ${railHTML('Suggested next paths', 'Based on your goal & org needs', ['regen-design', 'capstone-land', 'community-land', 'seasonal-rhythm'].map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
   ${footerHTML()}</div>`;
 }
@@ -4105,8 +4105,8 @@ function loadMotionLibs() {
   if (motionLibsState || innerWidth <= 1024 || reduceMotion) return;
   motionLibsState = 1;
   const add = s => new Promise(r => { const el = document.createElement('script'); el.src = s; el.onload = r; el.onerror = r; document.head.appendChild(el); });
-  add('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js')
-    .then(() => add('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'))
+  add('vendor/gsap.min.js')
+    .then(() => add('vendor/ScrollTrigger.min.js'))
     .then(() => { motionLibsState = 2; initMotion(); });
 }
 let _motionRoute = null;
@@ -5711,7 +5711,7 @@ window.EdenApp = {
       }
       list.forEach(put);
     }
-    CATALOG.forEach(c => { if (!c.poster && !c.custom) c.poster = 'media/covers/' + c.id + '.webp'; });
+    CATALOG.forEach(c => { if (!c.poster && !c.custom) c.poster = 'media/covers/' + c.id + '.svg'; });
     render();
   },
   /* studio meta from Firestore (live-sessions schedule etc.) */
@@ -5763,7 +5763,11 @@ if (S.profile && S.profile.uid && !S.profile.joinedAt) { S.profile.joinedAt = Da
 /* ---------- resilience: offline awareness + sync flush ---------- */
 addEventListener('offline', () => toast(t('offline_note'), '📴'));
 addEventListener('online', () => { save(); toast(t('online_note'), ''); });
+/* frames are throttled in a background tab, so a reveal can be left half-faded
+   with the safety net already spent. Re-settle whenever the tab comes back. */
+addEventListener('pageshow', () => { try { forceVisible(); } catch (e) {} });
 document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') { try { forceVisible(); } catch (e) {} }
   if (document.visibilityState === 'hidden' && window.EdenCloud && EdenCloud.flush) EdenCloud.flush();
 });
 /* service worker — offline app shell + cached art */
