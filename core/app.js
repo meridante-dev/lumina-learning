@@ -22,7 +22,15 @@ const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const courseById = id => CATALOG.find(c => c.id === id);
 const prog = id => S.progress[id];
-const coursePct = id => { const p = prog(id); return p ? (p.done ? 100 : (p.pct || 0)) : 0; };
+const tookPretest = id => (S.ledger || []).some(e => e.type === 'pretest' && e.courseId === id);
+const coursePct = id => {
+  const p = prog(id);
+  if (p && p.done) return 100;
+  const pct = p ? (p.pct || 0) : 0;
+  const c = courseById(id), n = (c && c.modules) ? c.modules.length : 0;
+  const endowed = (n && tookPretest(id)) ? Math.round(100 / (n + 1)) : 0;   /* step 1 of n+1 */
+  return Math.max(pct, endowed);
+};
 const isDone = id => !!(prog(id) && prog(id).done);
 const inPath = id => S.path.includes(id);
 const courseMins = c => c.moduleDurations ? c.moduleDurations.reduce((a, b) => a + (b || 12), 0) : c.modules.length * 12;
@@ -324,7 +332,7 @@ function checkBadges(silent) {
   if (earned.length) { save(); if (!silent) earned.forEach((b, i) => setTimeout(() => toast(`Badge earned — ${b.title}`, ''), 500 + i * 900)); }
 }
 let boardCache = null;   /* real members, from the leaderboard collection */
-let boardScope = 'all';
+let boardScope = 'week';
 function leaderboard() {
   touchWeekXp();
   const wk = weekKey();
@@ -490,12 +498,12 @@ function renderHome() {
     </aside>
   </header>
   <div class="hero-divider" aria-hidden="true"></div>
+  ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
   ${featuredCourses.length ? railHTML(t('featured_h'), t('featured_sub'), featuredCourses.map(c => cardHTML(c))) : ''}
   ${dailyDropHTML()}
   ${assignmentCardsHTML()}
   ${askBarHTML()}
   ${digestsSectionHTML()}
-  ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
   ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
   <section class="path-banner">
     <div class="shimmer"></div>
@@ -3892,6 +3900,14 @@ function makeFocusable(root) {
   });
 }
 function render() {
+  /* One line of cross-route continuity. renderNow() is fully synchronous, so
+     the transition captures a clean before/after with no extra bookkeeping. */
+  if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    try { document.startViewTransition(() => renderNow()); return; } catch (e) { /* fall through */ }
+  }
+  renderNow();
+}
+function renderNow() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
   if ((route === 'analytics' || route === 'admin') && !isAdmin()) { location.hash = '#/home'; return; }
@@ -4503,8 +4519,42 @@ function showTakeaways(c, mod, next) {
   const tq = $('#takeQuiz');
   if (tq) { tq.style.display = next && next.kind === 'course-done' ? '' : 'none'; tq.textContent = t('take_quiz'); }
   $('#takeModal').classList.add('open');
+  armUpNext(next);
+}
+/* ---- up-next auto-advance ------------------------------------------------
+   Only for a real next lesson: never auto-advance into a quiz, a locked
+   "coming soon", or the end of a course. Any keypress, click or hover cancels
+   it — an auto-advance a learner cannot stop is a dark pattern, not a feature. */
+let upNextTimer = null;
+function clearUpNext() {
+  if (upNextTimer) { clearInterval(upNextTimer); upNextTimer = null; }
+  const b = $('#takeGo'); if (b && b.dataset.label) { b.textContent = b.dataset.label; delete b.dataset.label; }
+  const ring = $('#upNextRing'); if (ring) ring.remove();
+}
+function armUpNext(next) {
+  clearUpNext();
+  if (!next || next.kind !== 'next') return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const btn = $('#takeGo'); if (!btn) return;
+  btn.dataset.label = btn.textContent;
+  let left = 5;
+  const paint = () => { btn.textContent = `${btn.dataset.label} · ${left}`; };
+  paint();
+  upNextTimer = setInterval(() => {
+    left--;
+    if (left <= 0) { clearUpNext(); resolveTakeaways(); return; }
+    paint();
+  }, 1000);
+  const cancel = () => { clearUpNext(); off(); };
+  const off = () => {
+    ['keydown', 'pointerdown', 'wheel'].forEach(ev => removeEventListener(ev, cancel, true));
+    const m = $('#takeModal'); if (m) m.removeEventListener('pointerover', cancel);
+  };
+  ['keydown', 'pointerdown', 'wheel'].forEach(ev => addEventListener(ev, cancel, true));
+  const m = $('#takeModal'); if (m) m.addEventListener('pointerover', cancel);
 }
 function resolveTakeaways(toQuiz) {
+  clearUpNext();
   $('#takeModal').classList.remove('open');
   const n = pendingNext; pendingNext = null;
   if (!n) return;
@@ -5321,6 +5371,22 @@ $('#palette').addEventListener('click', e => { if (e.target === $('#palette')) c
 $('#quizModal').addEventListener('click', e => { if (e.target === $('#quizModal')) { $('#quizModal').classList.remove('open'); render(); } });
 $('#takeModal').addEventListener('click', e => { if (e.target === $('#takeModal')) resolveTakeaways(); });
 
+/* Skip link. It cannot navigate by href: this is a HASH router, so clicking
+   an href="#app" would set location.hash to '#app', which parses as a route
+   and silently sends the user home. Move focus manually and leave the URL
+   alone — which is also what a screen-reader user expects. */
+(() => {
+  const sk = document.querySelector('.skip-link');
+  if (!sk) return;
+  sk.addEventListener('click', e => {
+    e.preventDefault();
+    const m = document.getElementById('app');
+    if (!m) return;
+    m.setAttribute('tabindex', '-1');
+    m.focus({ preventScroll: false });
+    m.addEventListener('blur', () => m.removeAttribute('tabindex'), { once: true });
+  });
+})();
 addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
   if (e.key === 'Escape') {
@@ -5549,7 +5615,7 @@ window.EdenApp = {
       }
       list.forEach(put);
     }
-    CATALOG.forEach(c => { if (!c.poster && !c.custom) c.poster = 'media/covers/' + c.id + '.jpg'; });
+    CATALOG.forEach(c => { if (!c.poster && !c.custom) c.poster = 'media/covers/' + c.id + '.webp'; });
     render();
   },
   /* studio meta from Firestore (live-sessions schedule etc.) */

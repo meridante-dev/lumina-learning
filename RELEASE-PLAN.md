@@ -124,7 +124,7 @@ only metric that decides renewals. In loop order:
 | Dir | What | Why it's next |
 |---|---|---|
 | #6 | **Per-lesson drop-off bar** | Turns completion into something debuggable — shows exactly where learners quit |
-| #7 | **At-risk rule engine + nudges** | Disco: 12.6% self-paced vs 80%+ supported completion |
+| #7 | **At-risk rule engine + nudges** | JMIR Formative Research 2023 (AB-BA crossover, n=39 adults): reminders naming the learner's CURRENT and TARGET page raised on-time completion 53% -> 64%. Short + specific + progress-anchored; effects decay with repetition, so trigger them, don't schedule them |
 | #3 | **Socratic tutor prompt** (answer-refusal, step-gating) | Harvard RCT: +0.73–1.3 SD from *prompt pedagogy, not model size* — nearly free |
 | #5 | **Post-completion review surface** | Spaced retrieval; also defends against the −17% "metacognitive laziness" AI-help trap |
 | #2 | Onboarding commitment + streak freeze | Loss-aversion mechanics, no backend |
@@ -132,7 +132,9 @@ only metric that decides renewals. In loop order:
 | #10 | Department Digest → auto-course | The genuine differentiator; no incumbent turns live org data into a weekly course |
 
 **Backlog worth naming:** cohort/scheduled-start mode is the single strongest completion mechanic
-found (~80% vs ~15%), but it's structural (scheduling + social layer) — a v2 conversation.
+found, but it's structural (scheduling + social layer) — a v2 conversation. NB: the vendor cohort
+numbers behind that claim are unauditable; cite Reich & Ruiperez-Valiente (Science 2019, 3.13% vs 46%
+verified) for the commitment effect instead.
 
 ---
 

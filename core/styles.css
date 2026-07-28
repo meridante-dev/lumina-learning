@@ -2758,3 +2758,42 @@ body::before { animation: stageDrift 22s ease-in-out infinite; will-change: tran
 .stat .delta        { opacity: 1; color: var(--text-dim); }
 .stat .delta.warn   { opacity: 1; }
 .admin-section > .sect-sub { opacity: 1; color: var(--text-dim); }
+
+/* ====== PREMIUM LAYER 10 — WCAG 2.2 AA, and the transition between routes ======
+   Built to 2.2 rather than 2.1 deliberately: EN 301 549 v4 (WCAG 2.2 AA) is
+   expected in the OJEU around Oct 2026, so building to 2.1 today means redoing
+   the work inside a year — and an enterprise buyer's VPAT question is asked at
+   procurement, not after. */
+
+/* 2.4.1 Bypass Blocks — the first control a keyboard user meets */
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 1000;
+  padding: 10px 16px; border-radius: 8px;
+  background: var(--cta); color: var(--on-cta);
+  font: 600 13px/1 var(--font-body); text-decoration: none;
+  transition: top .18s cubic-bezier(.2,.8,.2,1);
+}
+.skip-link:focus { top: 12px; outline: 2px solid var(--text); outline-offset: 2px; }
+
+/* 2.4.11 Focus Not Obscured — the nav is fixed, so tabbing into content parked
+   focus underneath it. There was no vertical scroll-padding anywhere. */
+html { scroll-padding-top: 92px; }
+
+/* 2.5.8 Target Size (Minimum) — 24x24 CSS px. Measured failures: .lang-btn
+   ~21px (~19px under the mobile override), .ai-gear ~22px, .ar-x ~18px. */
+.lang-btn, .ai-gear, .assignment-row .ar-x, .rx {
+  min-width: 24px; min-height: 24px;
+}
+.ai-gear { display: inline-flex; align-items: center; justify-content: center; }
+@media (max-width: 640px) { .lang-btn { min-height: 24px; padding: 5px 9px; } }
+
+/* Route transition: short, and it never runs under reduced motion because the
+   JS guard skips startViewTransition entirely. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vtOut .16s cubic-bezier(.2,.8,.2,1) both; }
+  ::view-transition-new(root) { animation: vtIn  .24s cubic-bezier(.2,.8,.2,1) both; }
+}
+@keyframes vtOut { to { opacity: 0; } }
+@keyframes vtIn  { from { opacity: 0; transform: translateY(8px); } }
+/* the skip target takes programmatic focus; it must not draw a stray ring */
+main#app:focus { outline: none; }
