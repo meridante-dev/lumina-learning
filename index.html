@@ -6,7 +6,7 @@
 <title>EdenRise Academy — Regenerative Living, Learned</title>
 <meta name="description" content="EdenRise Academy — learn regenerative living, land stewardship and the rhythm of the land, guided by adaptive AI learning paths and a personal AI tutor.">
 <meta name="theme-color" content="#0e140f">
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=edr98">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=edr99">
 <meta property="og:title" content="EdenRise Academy — Regenerative Living, Learned">
 <meta property="og:description" content="Where nature leads, the land heals, and stewardship shapes everything we learn.">
 <meta property="og:type" content="website">
@@ -29,11 +29,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link id="brandFonts" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="brands/edenrise/brand.js?v=edr98"></script>
-<script src="brands/_example/brand.js?v=edr98"></script>
-<script src="core/brandkit.js?v=edr98"></script>
-<script src="core/ots.js?v=edr98"></script>
-<link rel="stylesheet" href="core/styles.css?v=edr98">
+<script src="brands/edenrise/brand.js?v=edr99"></script>
+<script src="brands/_example/brand.js?v=edr99"></script>
+<script src="core/brandkit.js?v=edr99"></script>
+<script src="core/ots.js?v=edr99"></script>
+<link rel="stylesheet" href="core/styles.css?v=edr99">
 <script>try{var m=localStorage.getItem('eden-auth-mode');document.documentElement.setAttribute('data-gate',(m==='guest'||m==='firebase')?'off':'on');}catch(e){document.documentElement.setAttribute('data-gate','on');}</script>
 </head>
 <body>
@@ -203,13 +203,8 @@
 <!-- AI TUTOR -->
 <div class="ai-panel" id="aiPanel">
   <div class="ai-panel-head">
-    <span class="ai-spark" style="width:30px;height:30px;border-radius:10px;font-size:14px;">✦</span>
-    <div style="flex:1;">
-      <div class="title" id="aiTitle">EdenRise Tutor</div>
-      <div class="ai-disclosure" id="aiDisclosure"></div>
-      <div class="status" id="tutorStatus">● Demo mode · scripted replies</div>
-    </div>
-    <button class="quick" id="tutorSettingsBtn" title="Tutor settings" aria-label="Tutor settings">⚙</button>
+    <div class="title" id="aiTitle">EdenRise Tutor</div>
+    <button class="ai-gear" id="tutorSettingsBtn" title="Tutor settings" aria-label="Tutor settings">⚙</button>
   </div>
   <div class="tutor-settings" id="tutorSettings">
     <div class="ts-title">✦ Connect real AI</div>
@@ -224,26 +219,32 @@
       <button class="btn btn-primary btn-sm" id="apiKeySave">Save</button>
       <button class="btn btn-glass btn-sm" id="apiKeyClear">Use demo mode</button>
     </div>
+    <!-- the five answering styles live here now: a real choice, but not five
+         chips in the way of every conversation -->
+    <div class="ts-sub" id="tsModesLabel">How it answers</div>
+    <div class="tmode-row" id="tutorModes" role="tablist" aria-label="Tutor mode">
+      <button class="tmode" data-action="tutor-mode" data-mode="hint" data-tk="mode_hint">Hint</button>
+      <button class="tmode" data-action="tutor-mode" data-mode="coach" data-tk="mode_coach">Coach</button>
+      <button class="tmode on" data-action="tutor-mode" data-mode="explain" data-tk="mode_explain">Explain</button>
+      <button class="tmode" data-action="tutor-mode" data-mode="practice" data-tk="mode_practice">Practice</button>
+      <button class="tmode" data-action="tutor-mode" data-mode="teach" data-tk="mode_teach">Teach the AI</button>
+    </div>
+    <div class="status" id="tutorStatus">● Demo mode · scripted replies</div>
   </div>
   <div class="ai-msgs" id="aiMsgs"></div>
-  <div class="tmode-row" id="tutorModes" role="tablist" aria-label="Tutor mode">
-    <button class="tmode" data-action="tutor-mode" data-mode="hint" data-tk="mode_hint">💡 Hint</button>
-    <button class="tmode" data-action="tutor-mode" data-mode="coach" data-tk="mode_coach">🧭 Coach</button>
-    <button class="tmode on" data-action="tutor-mode" data-mode="explain" data-tk="mode_explain">📖 Explain</button>
-    <button class="tmode" data-action="tutor-mode" data-mode="practice" data-tk="mode_practice">🎯 Practice</button>
-    <button class="tmode" data-action="tutor-mode" data-mode="teach" data-tk="mode_teach">🎓 Teach the AI</button>
-  </div>
-  <div class="grounded-note" id="groundedNote">🔒 Answers come only from your courses</div>
   <div class="quick-row">
-    <button class="quick" data-intent="summarize" data-tk="summarize_course">Summarize this course</button>
-    <button class="quick" data-intent="quiz" data-tk="quiz_now">Quiz me now</button>
+    <button class="quick" data-intent="summarize" data-tk="summarize_course">Summarize</button>
+    <button class="quick" data-intent="quiz" data-tk="quiz_now">Quiz me</button>
     <button class="quick" data-intent="due" data-tk="whats_due">What's due?</button>
-    <button class="quick" data-intent="path" data-tk="build_path">Build me a path</button>
+    <button class="quick" data-intent="path" data-tk="build_path">Build a path</button>
   </div>
   <div class="ai-input-row">
     <input class="ai-input" id="aiInput" placeholder="Ask anything about your land or courses…">
     <button class="ai-send" id="aiSend" aria-label="Send message">↑</button>
   </div>
+  <!-- AI Act Art. 50 disclosure + grounding, in one quiet line instead of two
+       badges in the header. Reads "Demo · scripted replies" until a key is set. -->
+  <div class="ai-foot" id="tutorFoot"></div>
 </div>
 <button class="ai-fab" id="aiFab" title="EdenRise Tutor" aria-label="Open EdenRise Tutor"><span class="inner">✦</span></button>
 
@@ -270,10 +271,10 @@
 
 <div id="toasts"></div>
 
-<script src="brands/edenrise/content.js?v=edr98"></script>
-<script src="data.js?v=edr98"></script>
-<script src="core/app.js?v=edr98"></script>
-<script type="module" src="core/auth.js?v=edr98"></script>
+<script src="brands/edenrise/content.js?v=edr99"></script>
+<script src="data.js?v=edr99"></script>
+<script src="core/app.js?v=edr99"></script>
+<script type="module" src="core/auth.js?v=edr99"></script>
 <script>
 /* Safety net: if the Firebase module can't load (blocked CDN, offline), make sure
    the "continue as guest" button still dismisses the gate so no one is stuck. */

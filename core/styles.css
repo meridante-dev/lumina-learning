@@ -2638,3 +2638,51 @@ body::before { animation: stageDrift 22s ease-in-out infinite; will-change: tran
 .board-row { grid-template-columns: 28px 34px minmax(0,1fr) 120px auto; }
 /* a very long full name must not overflow the A4 certificate sheet */
 .cert-sheet .who, .who { max-width: 100%; overflow-wrap: anywhere; }
+
+/* ================== PREMIUM LAYER 7 — the tutor, quieted ==================
+   The panel opened with four stacked text blocks in its head (a spark tile, the
+   name, the AI note, a demo badge), then five mode chips, then a lock line, and
+   only then the conversation. Six things to read before you could ask anything.
+   Now: the name, one greeting, four quiet suggestions, the input, one footnote.
+   Nothing was deleted — the modes moved behind the gear, and the AI/demo
+   disclosure moved into the footnote where it is still always visible. */
+.ai-panel-head { padding: 15px 18px 8px; border-bottom: 0; gap: 8px; }
+.ai-panel-head .title {
+  flex: 1; font-family: var(--font-body); font-size: 11px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--text-faint);
+}
+.ai-gear {
+  background: none; border: 0; padding: 4px; line-height: 1; cursor: pointer;
+  font-size: 14px; color: var(--text-faint); opacity: .65;
+  transition: opacity .2s, color .2s;
+}
+.ai-gear:hover { opacity: 1; color: var(--accent); }
+
+/* the greeting is a line of type, not a chat bubble */
+.ai-msgs { padding: 4px 20px 12px; }
+.ai-hello {
+  font-family: var(--font-display); font-size: 27px; line-height: 1.25;
+  color: var(--text); margin: auto 0; padding: 10px 0;
+}
+@media (max-width: 480px) { .ai-hello { font-size: 23px; } }
+
+/* suggestions: text, not five more pills — and gone once you're talking */
+.quick-row { padding: 0 20px 12px; gap: 7px 16px; }
+.quick {
+  background: none; border: 0; padding: 0; font-size: 12.5px; font-weight: 500;
+  color: var(--text-faint);
+}
+.quick:hover { background: none; border-color: transparent; color: var(--accent); }
+.ai-panel.has-msgs .quick-row { display: none; }
+
+.ai-foot {
+  padding: 0 18px 13px; font-size: 10.5px; line-height: 1.4;
+  color: var(--text-faint); opacity: .7;
+}
+/* modes + live/demo status, relocated into the settings sheet */
+.tutor-settings .ts-sub {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--text-faint); margin: 16px 0 8px;
+}
+.tutor-settings .tmode-row { padding: 0; }
+.tutor-settings .status { font-size: 11px; font-weight: 600; color: var(--accent-2); margin-top: 14px; }

@@ -3997,8 +3997,14 @@ function syncChrome() {
   const search = $('#navSearch'); if (search) search.innerHTML = `⌕&nbsp; ${t('search_ph')} <kbd>⌘K</kbd>`;
   const org = $('#orgChip'); if (org) org.innerHTML = `<span class="org-dot"></span>${brandName()} · ${BRAND.wordSub || 'Academy'}`;
   const tn = $('#aiTitle'); if (tn) tn.textContent = t('tutor_name');
-  /* AI Act Art. 50: people must know they are talking to AI — said plainly, always visible */
-  const td = $('#aiDisclosure'); if (td) td.textContent = t('tutor_ai_note');
+  /* AI Act Art. 50: people must know they are talking to AI — said plainly,
+     always visible. One line under the input, not a badge stack in the head. */
+  if (typeof syncTutorFoot === 'function') syncTutorFoot();
+  const ml = $('#tsModesLabel'); if (ml) ml.textContent = t('how_answers');
+  /* the five mode chips were never re-labelled on a language switch — they sat
+     in English inside a Portuguese panel */
+  if (typeof syncTutorModesUI === 'function') syncTutorModesUI();
+  const hi = $('#aiHello'); if (hi) hi.textContent = t('ai_hello');
   $$('.quick-row .quick[data-tk]').forEach(b => { b.textContent = t(b.dataset.tk); });
   const inp = $('#aiInput'); if (inp) inp.placeholder = t('ask_anything');
   const stEl = $('#tutorStatus'); if (stEl && !aiKey()) stEl.textContent = t('tutor_demo');
@@ -4019,7 +4025,12 @@ function setLang(l) {
   S.lang = l; save(); render();
   const st = $('#tutorStatus'); if (st && st.textContent.includes('Demo') || st && st.textContent.includes('demo')) st.textContent = t('tutor_demo');
   const ai = $('#aiPanel'); if (ai) { const inp = $('#aiInput'); if (inp) inp.placeholder = t('ask_anything'); }
-  if (tutorPanel && tutorPanel.classList.contains('open')) { const m = $('#aiMsgs'); if (m) m.innerHTML = ''; tutorHistory = []; tutorGreet(); }
+  if (tutorPanel && tutorPanel.classList.contains('open')) {
+    const m = $('#aiMsgs'); if (m) m.innerHTML = '';
+    tutorHistory = [];
+    tutorPanel.classList.remove('has-msgs');  /* back to the clean opening state */
+    tutorGreet();
+  }
 }
 /* EAA/a11y: every focusable action element activates with Enter/Space, not
    just clicks — one delegated handler instead of per-element wiring. */
@@ -4702,7 +4713,14 @@ function currentCourseId() {
   if (playing) return playing.courseId;
   return S.path.find(x => !isDone(x)) || null;
 }
+/* The greeting line and the four suggestions exist to answer "what do I even
+   ask?". The moment a conversation starts they are noise, so they leave. */
+function tutorEngaged() {
+  const h = $('#aiHello'); if (h) h.remove();
+  if (tutorPanel) tutorPanel.classList.add('has-msgs');
+}
 function addMsg(html, who) {
+  tutorEngaged();
   const div = document.createElement('div');
   div.className = 'msg ' + who; div.innerHTML = html;
   $('#aiMsgs').appendChild(div);
@@ -4710,22 +4728,22 @@ function addMsg(html, who) {
   return div;
 }
 function botSay(html, delay = 700) {
+  tutorEngaged();
   const t = document.createElement('div');
   t.className = 'msg bot typing'; t.innerHTML = '<span></span><span></span><span></span>';
   $('#aiMsgs').appendChild(t); $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   setTimeout(() => { t.classList.remove('typing'); t.innerHTML = html; $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight; }, delay);
 }
+/* One line, no bubble. The old greeting recited the learner's percentage, their
+   current module and their goal before they had asked anything — the tutor
+   knows all of that; it does not need to prove it in a paragraph. */
 function tutorGreet() {
-  const id = currentCourseId();
-  const c = id && courseById(id);
-  const p = c && prog(c.id);
-  const pt = _lang() === 'pt';
-  if (c && p && !p.done) botSay(pt
-    ? `Olá ${firstName()} Está ${coursePct(c.id)}% em <b>${ctitle(c)}</b> — de momento em “${cmods(c)[p.mod || 0]}”. Quer um resumo de 30 segundos, ou faço-lhe um teste?`
-    : `Hey ${firstName()} You're ${coursePct(c.id)}% through <b>${ctitle(c)}</b> — currently on “${cmods(c)[p.mod || 0]}”. Want a 30-second recap, or shall I quiz you?`);
-  else botSay(pt
-    ? `Olá ${firstName()} Posso resumir qualquer curso, testá-lo, ou reconstruir o seu percurso. Vejo o seu progresso e o seu objetivo (<b>${tgoal(S.goal)}</b>) — pergunte-me o que quiser.`
-    : `Hey ${firstName()} I can summarize any course, quiz you, or rebuild your learning path. I can see your progress and your goal (<b>${tgoal(S.goal)}</b>) — ask me anything.`);
+  const m = $('#aiMsgs');
+  if (!m || $('#aiHello')) return;
+  const h = document.createElement('div');
+  h.className = 'ai-hello'; h.id = 'aiHello';
+  h.textContent = t('ai_hello');
+  m.appendChild(h);
 }
 function openTutorWith(html, quicks) {
   setTutorOpen(true);
@@ -5282,8 +5300,16 @@ function syncTutorModesUI() {
   document.querySelectorAll('#tutorModes .tmode').forEach(b => { b.classList.toggle('on', b.dataset.mode === (S.tutorMode || 'explain')); const k = b.dataset.tk; if (k) b.textContent = t(k); b.title = t('mode_tip_' + b.dataset.mode); });
   const g = $('#groundedNote'); if (g) g.textContent = '🔒 ' + t('grounded_note');
 }
+/* The single line under the input: AI disclosure, grounding and demo-vs-live
+   honesty in one place. In demo mode it says so — replies are scripted, and a
+   learner must never mistake that for a real model answering. */
+function syncTutorFoot() {
+  const f = $('#tutorFoot');
+  if (f) f.textContent = t(aiKey() ? 'tutor_foot_live' : 'tutor_foot_demo');
+}
 function syncTutorStatus() {
   syncTutorModesUI();
+  syncTutorFoot();
   const orgOnly = !S.apiKey && aiKey();
   const prov = llmProviderOf(aiKey(), aiModel());
   const label = { gemini: 'Gemini', anthropic: 'Claude', openrouter: 'OpenRouter', groq: 'Groq', deepseek: 'DeepSeek', mistral: 'Mistral', openai: 'OpenAI' }[prov] || 'AI';
