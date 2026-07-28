@@ -3952,6 +3952,7 @@ function renderNow() {
     };
   }
   initMotion();
+  syncOverlayFocus();   /* backstop: never leave #app inert */
   armReveals();
   animateCounters();
 }
@@ -5507,7 +5508,15 @@ new MutationObserver(muts => {
     const t = m.target;
     if (t.nodeType === 1 && (t.matches(OVERLAY_SEL) || t.querySelector?.(OVERLAY_SEL))) { syncOverlayFocus(); return; }
   }
-}).observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true, childList: true });
+}).observe(document.body, { attributes: true, attributeFilter: ['class', 'style'], subtree: true, childList: true });
+/* The auth gate opens and closes by an ATTRIBUTE on <html>, not a class. Watching
+   only classes meant `inert` could be applied when the gate appeared and never
+   removed when it went — and inert on #app makes the entire application
+   non-interactive and invisible to hit-testing. Watch the attribute too, and
+   re-check after every render as a backstop: a focus helper must never be able
+   to leave the app dead. */
+new MutationObserver(syncOverlayFocus)
+  .observe(document.documentElement, { attributes: true, attributeFilter: ['data-gate'] });
 
 /* Skip link. It cannot navigate by href: this is a HASH router, so clicking
    an href="#app" would set location.hash to '#app', which parses as a route

@@ -2905,3 +2905,102 @@ nav.topnav { padding: 14px var(--edge); }
    and an off-scale half-pixel size besides (law 5) */
 .ai-foot { font-size: 11px; }
 .quick { font-size: 13px; }
+
+/* ═════ PREMIUM LAYER 13 — breathe, lift, move ═════════════════════════════
+   Three intents, one pass.
+
+   BREATHE. Not "more empty space" — better rhythm. The hero was 88vh with the
+   first course card at y=928 on an 860px screen: on a catalogue product the
+   whole first screen proved nothing and the rails still ended 188px short of
+   the column. Air goes INSIDE the content (line-height, gaps, padding) while
+   the hero gives back enough height for a card to peek.
+
+   LIFT. One elevation ramp instead of eleven ad-hoc shadows, built from light
+   rather than outlines (law 17).
+
+   MOVE. Transform and opacity only, hover-capable pointers only, and every bit
+   of it off under prefers-reduced-motion. */
+
+:root {
+  /* one ramp: rest → hover → floating */
+  --e1: 0 2px 10px rgba(0,0,0,.28);
+  --e2: 0 14px 38px rgba(0,0,0,.42);
+  --e3: 0 30px 80px rgba(0,0,0,.55);
+  --lift: cubic-bezier(.2,.9,.25,1);
+}
+
+/* ---- breathe ---- */
+.hero { min-height: 72vh; }                    /* a card now peeks above the fold */
+.hero-copy, .hero-inner { padding-bottom: 8px; }
+.page-pad { padding-top: 118px; }
+section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran together */
+.rail-head { margin-bottom: 20px; }
+.page-sub { line-height: 1.65; }
+.card-body { padding: 18px 0 22px; }
+.card-body h3 { margin-bottom: 6px; letter-spacing: -.005em; }
+.msg, .prose, .course-desc, .trust-list li { line-height: 1.62; }
+
+/* the rails held exactly three 300px cards and stopped 188px short of the
+   content column, with a "See all →" implying more. Fluid cards let a fourth
+   peek, which is what tells a human the row scrolls. */
+.rail { gap: 20px; scroll-snap-type: x proximity; scroll-padding-left: var(--edge); }
+.card { scroll-snap-align: start; }
+@media (min-width: 1025px) { .card { flex: 0 0 calc((100% - 60px) / 3.4); } }
+@media (min-width: 641px) and (max-width: 1024px) { .card { flex: 0 0 calc((100% - 20px) / 2.3); } }
+
+/* ---- lift ---- */
+.tutor-settings, .avatar-menu, .palette, .notes-drawer, .ai-panel { box-shadow: var(--e3); }
+.bento-tile, .level-card, .prog-top .stat, .chart-card { box-shadow: var(--e1); }
+
+/* ---- move ---- */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card { transition: transform .42s var(--lift); }
+  .card:hover, .card:focus-within { transform: translateY(-6px); }
+  .card .thumb { transition: transform .55s var(--lift), box-shadow .42s var(--lift); }
+  .card:hover .thumb, .card:focus-within .thumb { transform: scale(1.035); box-shadow: var(--e2); }
+
+  /* the whole row drifts a hair under the cursor — reads as depth, costs one
+     transform */
+  .rail-section:hover .rail-head h2 { transform: translateX(2px); }
+  .rail-head h2 { transition: transform .5s var(--lift); }
+
+  .btn { transition: transform .28s var(--lift), box-shadow .28s var(--lift), background .2s; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--e2), inset 0 1px 0 rgba(255,255,255,.3); }
+  .btn:active { transform: translateY(0) scale(.985); }
+
+  /* filter tabs: the underline slides in from the left instead of blinking */
+  .filter-chip { position: relative; }
+  .filter-chip::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 1.5px;
+    background: var(--accent); transform: scaleX(0); transform-origin: left;
+    transition: transform .34s var(--lift);
+  }
+  .filter-chip:hover::after { transform: scaleX(.35); }
+  .filter-chip.active::after { transform: scaleX(1); }
+
+  .mod-pill, .quick, .tmode, .ch-item { transition: transform .26s var(--lift), color .2s, background .2s; }
+  .mod-pill:hover, .ch-item:hover { transform: translateX(2px); }
+}
+/* the active filter's underline now comes from ::after, so drop the inset
+   shadow that was doing the same job twice */
+.filter-chip.active { box-shadow: none; }
+
+@media (max-width: 640px) {
+  .page-pad { padding-top: 96px; }
+  section.rail-section { margin-top: 52px; }
+  .hero { min-height: 64vh; }
+}
+
+/* A rail with three cards ended 218px short of the content column with a
+   "See all →" next to it implying more — the fluid width above only helps a
+   rail that actually overflows. When there is no fourth card, the row has
+   nothing to scroll to: let the cards fill the width and take the dead scroll
+   arrows out of the tab order and off the screen. (:has() finally earns its
+   keep — the stylesheet had not used it once despite 92% support.) */
+@media (min-width: 1025px) {
+  /* exactly three: fill the row. One or two: a card that stretches to 1120px
+     is not "breathing", it is a billboard — keep those at poster size. */
+  .rail:has(.card:nth-child(3)):not(:has(.card:nth-child(4))) .card { flex: 1 1 0; min-width: 0; max-width: 420px; }
+  .rail:not(:has(.card:nth-child(3))) .card { flex: 0 0 calc((100% - 60px) / 3.4); }
+}
+.rail-section:not(:has(.card:nth-child(4))) .rail-arrow { display: none; }
