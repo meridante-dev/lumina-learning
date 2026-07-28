@@ -4742,8 +4742,18 @@ function tutorGreet() {
   if (!m || $('#aiHello')) return;
   const h = document.createElement('div');
   h.className = 'ai-hello'; h.id = 'aiHello';
-  h.textContent = t('ai_hello');
+  /* word-by-word so the line resolves instead of appearing — textContent per
+     span, never innerHTML, because this string is translated content */
+  t('ai_hello').split(' ').forEach((w, i) => {
+    const s = document.createElement('span');
+    s.className = 'w'; s.style.setProperty('--i', i); s.textContent = w;
+    h.appendChild(s);
+    h.appendChild(document.createTextNode(' '));
+  });
   m.appendChild(h);
+  /* same guarantee as the page reveals: if frames stall, the greeting must not
+     be left at opacity 0 — a blank panel is worse than no animation */
+  setTimeout(() => h.classList.add('settled'), 900);
 }
 function openTutorWith(html, quicks) {
   setTutorOpen(true);

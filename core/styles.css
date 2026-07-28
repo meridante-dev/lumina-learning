@@ -2658,13 +2658,44 @@ body::before { animation: stageDrift 22s ease-in-out infinite; will-change: tran
 }
 .ai-gear:hover { opacity: 1; color: var(--accent); }
 
-/* the greeting is a line of type, not a chat bubble */
+/* the greeting is a line of type, not a chat bubble. It sits in its own pool of
+   light, resolves word by word, and the empty panel closes up around it —
+   an opening line, not a paragraph floating in a tall empty box. */
 .ai-msgs { padding: 4px 20px 12px; }
+.ai-panel:not(.has-msgs) .ai-msgs { min-height: 0; }
 .ai-hello {
-  font-family: var(--font-display); font-size: 27px; line-height: 1.25;
-  color: var(--text); margin: auto 0; padding: 10px 0;
+  margin: 0; padding: 26px 0 20px;
+  font-family: var(--font-display); font-size: 30px; line-height: 1.14;
+  letter-spacing: -.015em; color: var(--text);
 }
-@media (max-width: 480px) { .ai-hello { font-size: 23px; } }
+/* the same signature the hero headline uses — last word warm and italic — so
+   the tutor reads as part of the product, not a chat widget bolted onto it.
+   (A gradient-clipped line was tried first: the animated word spans inherit
+   the transparent text-fill but not the container's gradient, so it paints
+   nothing at all.) */
+.ai-hello .w:last-of-type {
+  font-style: italic;
+  color: color-mix(in srgb, var(--accent-2) 72%, var(--text));
+}
+/* the light it sits in — painted on the container, not as an oversized
+   pseudo-element: negative insets inside a scrollable box gave the panel a
+   horizontal scrollbar, and z-index:-1 hid the glow behind the panel itself */
+.ai-panel:not(.has-msgs) .ai-msgs {
+  background: radial-gradient(52% 58% at 24% 44%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 72%);
+}
+.ai-hello .w {
+  display: inline-block;
+  opacity: 0; filter: blur(9px); transform: translateY(9px);
+  animation: helloWordIn .62s cubic-bezier(.2,.8,.2,1) both;
+  animation-delay: calc(var(--i) * 58ms);
+}
+@keyframes helloWordIn { to { opacity: 1; filter: blur(0); transform: none; } }
+/* insurance: never leave the line invisible if animation never runs */
+.ai-hello.settled .w { opacity: 1 !important; filter: none !important; transform: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .ai-hello .w { animation: none; opacity: 1; filter: none; transform: none; }
+}
+@media (max-width: 480px) { .ai-hello { font-size: 25px; padding: 20px 0 16px; } }
 
 /* suggestions: text, not five more pills — and gone once you're talking */
 .quick-row { padding: 0 20px 12px; gap: 7px 16px; }
