@@ -3380,3 +3380,14 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
   transition: color .2s var(--e-out), transform .2s var(--e-out);
 }
 .ask-line:focus-within .ask-go, .ask-go:hover { color: var(--accent); transform: translateX(2px); }
+
+/* ── nav: a destination label must never wrap. "My learning" was breaking onto
+   two lines and shoving the row out of alignment. ── */
+.nav-links a { white-space: nowrap; }
+.nav-links { gap: 2px; }
+@media (min-width: 1025px) and (max-width: 1180px) {
+  .nav-links a { padding: 7px 10px; font-size: 12.5px; }
+}
+/* the course page's quiet third and fourth choices */
+.course-quiet { display: flex; gap: 18px; align-items: center; margin-top: 12px; flex-basis: 100%; }
+.course-quiet .link-quiet { font-size: 13px; }

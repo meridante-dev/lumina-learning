@@ -9,7 +9,7 @@
 const CATALOG = [
   {
     id: 'land-team-journey', title: 'Above the Line', cat: 'Leadership', grad: 4, icon: 'compass',
-    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line-cover.webp', updated: '2026-07',
+    level: 'All levels', rating: 4.9, learners: 340, ai: true, featured: true, poster: 'media/above-below-line-cover.webp', heroArt: 'media/covers/land-team-journey-hero.webp', updated: '2026-07',
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
     modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Attention to Detail', 'Total Responsibility', 'A Learner for Life', "Don't Assume, Clarify", 'The Benchmark of Excellence'],
     moduleDurations: [5, 5, 4, 3, 3, 4, 4],   /* real Vimeo lengths: 5:06 4:29 4:05 3:27 3:27 4:15 3:38 */
@@ -145,7 +145,7 @@ const CATALOG = [
   },
   {
     id: 'fire-truck-training', title: 'Fire Truck Training', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12, featured: true, updated: '2026-07',
-    level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/fire-truck-training.webp',
+    level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/fire-truck-training.webp', heroArt: 'media/covers/fire-truck-training-hero.webp',
     desc: 'Hands-on operation of the land’s fire truck — start it, drive it, fill it, and put water exactly where it’s needed. When fire season comes, everyone should know how to move water.',
     modules: ['Starting & Driving the Truck', 'Filling the Water Tank', 'Off-Road, Pump & Spray', 'Power, Safety & the Drill'],
     moduleDurations: [6, 10, 10, 9],   /* real Vimeo lengths: 5:55 10:11 9:49 9:28 */

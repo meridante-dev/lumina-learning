@@ -790,10 +790,18 @@ function renderCourse(id) {
           <p class="course-hook">${chook(c)}</p>
           <p class="desc">${chooksub(c)} ${cdesc(c)}</p>
           <div class="hero-actions">
+            <!-- ONE primary. It was four co-equal buttons — play, quiz, overview,
+                 add-to-path — so the page could not answer "what now?". The
+                 secondary is the honest second choice for the state you are in;
+                 the rest are quiet text, present but not competing. -->
             <button class="btn btn-primary" data-action="play" data-id="${id}">▶&nbsp; ${isDone(id) ? t('rewatch') : p ? `${t('resume_module')} ${(p.mod || 0) + 1}` : t('start_course')}</button>
-            <button class="btn btn-glass" data-action="quiz" data-id="${id}">&nbsp; ${t('quiz_me')}</button>
-            <button class="btn btn-glass" data-action="ai-overview" data-id="${id}">✦&nbsp; ${t('ai_overview')}</button>
-            <button class="btn btn-glass" data-action="toggle-path" data-id="${id}">${inPath(id) ? t('in_my_path') : t('my_path')}</button>
+            ${isDone(id)
+              ? `<button class="btn btn-glass" data-action="quiz" data-id="${id}">${t('quiz_me')}</button>`
+              : `<button class="btn btn-glass" data-action="toggle-path" data-id="${id}">${inPath(id) ? t('in_my_path') : t('my_path')}</button>`}
+            <div class="course-quiet">
+              ${isDone(id) ? `<button class="link-quiet" data-action="toggle-path" data-id="${id}">${inPath(id) ? t('in_my_path') : t('my_path')}</button>` : `<button class="link-quiet" data-action="quiz" data-id="${id}">${t('quiz_me')}</button>`}
+              <button class="link-quiet" data-action="ai-overview" data-id="${id}">${t('ai_overview')}</button>
+            </div>
           </div>
           ${coursePct(id) > 0 && !isDone(id) ? `<div class="hero-progress"><div class="track"><div class="fill" style="width:${coursePct(id)}%"></div></div><span>${coursePct(id)}% ${t('complete')}</span></div>` : ''}
           ${isDone(id) ? (() => { const rs = recertState(c); return `<div class="hero-progress"><span class="due ${rs && rs.st !== 'ok' ? '' : 'ok'}" style="margin:0;">${rs && rs.st === 'expired' ? ' ' + t('comp_expired') + ' — ' + t('comp_renew').toLowerCase() : rs && rs.st === 'expiring' ? ' ' + t('comp_expiring') + ' (' + rs.days + 'd)' : '✓ ' + t('completed') + (p.score ? ' · ' + t('scored') + ' ' + p.score + '%' : '')}</span></div>`; })() : ''}
