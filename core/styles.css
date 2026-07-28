@@ -2875,3 +2875,33 @@ nav.topnav { padding: 14px var(--edge); }
 /* a metric that is still loading shows its shape, not an em-dash pretending
    to be a value */
 .skel-num { display: inline-block; width: 62px; height: 30px; border-radius: 8px; vertical-align: middle; }
+
+/* ===== PREMIUM LAYER 12 — what a hostile review found in the tab order =====
+   The closed tutor panel is opacity:0 + pointer-events:none but still
+   display:flex, so it contributed 7 tab stops on every route — including
+   behind the login gate, where a keyboard user tabbed through a chat box they
+   could not see. Visibility removes it from the tab order and keeps the
+   transition (unlike display:none). */
+.ai-panel { visibility: hidden; }
+.ai-panel.open { visibility: visible; }
+
+/* The wordmark overflowed its own box on a phone and collided with the
+   language switch: "EDENRISE" renders 143px inside an 85px box, and the EN
+   chip starts at x=139 — 44px of overlap. On Belong the final G sits under it.
+   This is a white-label product; the tenant's name cannot be broken. */
+@media (max-width: 640px) {
+  .logo { min-width: 0; flex: 1 1 auto; overflow: hidden; }
+  .logo-word { min-width: 0; overflow: hidden; }
+  .er-name { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .er-sub { display: none; }
+}
+/* The floating tutor button sat on top of every rail's "See all" link — tapping
+   the link opened the tutor. */
+@media (max-width: 640px) {
+  .rail-section:last-of-type, .page > section:last-of-type { padding-bottom: 96px; }
+  .ai-fab { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+}
+/* the AI Act Art. 50 disclosure was the smallest text in the product at 10.5px,
+   and an off-scale half-pixel size besides (law 5) */
+.ai-foot { font-size: 11px; }
+.quick { font-size: 13px; }

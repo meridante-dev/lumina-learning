@@ -1080,7 +1080,12 @@ function maybeTour() {
   if (window.__tourShown || !S.onboarded || S.tourDone) return;
   if ((location.hash || '#/home').indexOf('#/home') !== 0 && location.hash !== '') return;
   window.__tourShown = true;
-  setTimeout(startTour, 1400);
+  setTimeout(() => {
+    /* never over the player, a quiz, onboarding or any other overlay */
+    if (document.querySelector('.player-overlay.open, .modal-backdrop.open, .take-overlay.open, .onboard-overlay.open, .ck-ov.on')) return;
+    if ((location.hash || '#/home').indexOf('#/home') !== 0 && location.hash !== '') return;
+    startTour();
+  }, 1400);
 }
 
 /* ================= PWA install nudge ================= */
@@ -4185,8 +4190,12 @@ function startSim(c, mod) {
     }
     if (sim.t >= sim.dur) {
       stopSim();
-      if (playing) completeModule(playing.courseId, playing.mod);
-      else simFill.style.width = '100%';
+      simFill.style.width = '100%';
+      /* deliberately does NOT call completeModule(): no watched video, no
+         evidence, therefore no ledger event and no training hours. The learner
+         can still mark the lesson complete by hand, which records an honest
+         self-declaration rather than a machine-generated one. */
+      if (playing) toast(t('sim_no_credit'), 'ℹ️');
     }
   }, 250);
 }
@@ -4247,6 +4256,7 @@ function openPlayer(courseId, mod) {
   mod = Math.min(mod, c.modules.length - 1);
   const media = modMedia(c, mod);
   clearCheckpoint();
+  watchedSeconds = 0;
   playing = { courseId, mod };
   if (!prog(courseId)) S.progress[courseId] = { mod, pct: 0 };
   resetStages();
@@ -4488,7 +4498,20 @@ videoEl.addEventListener('timeupdate', () => {
     clearTimeout(saveTimer); saveTimer = setTimeout(save, 800);
   }
 });
-videoEl.addEventListener('ended', () => { if (playing) completeModule(playing.courseId, playing.mod); });
+videoEl.addEventListener('ended', () => {
+  if (!playing) return;
+  /* a lesson counts when it was watched, not when the playhead reached the end:
+     scrubbing to 99% must not mint a compliance hour */
+  const d = videoEl.duration || 0, w = watchedSeconds;
+  if (d && w < d * 0.75) { toast(t('watch_more'), 'ℹ️'); return; }
+  completeModule(playing.courseId, playing.mod);
+});
+/* measured watch time — only accrues while the tab is visible and the video is
+   actually advancing, which is the same discipline S.mins already uses */
+let watchedSeconds = 0;
+videoEl.addEventListener('timeupdate', () => {
+  if (!videoEl.paused && document.visibilityState === 'visible') watchedSeconds += 0.25;
+});
 
 /* "what you take with you" — 3 key learnings shown at each module's end (peak-end moment) */
 function takeawaysFor(c, mod) {
@@ -4684,17 +4707,32 @@ function drawQuiz() {
     <div class="ob-eyebrow">${t('quiz_q')} ${quiz.idx + 1} ${t('quiz_of')} ${quiz.qs.length} · ${ctitle(c)}${quiz.ai ? ` &nbsp;<span style="color:var(--accent)">${t('quiz_ai_tag')}</span>` : ''}</div>
     <div class="ob-title" style="font-size:24px;margin-top:6px;">${q.q}</div>
     <div style="margin-top:18px;">
-    ${q.opts.map((o, i) => `<div class="q-opt" data-opt="${i}"><span class="radio"></span><span>${o}</span></div>`).join('')}
-    </div>
+    <div role="radiogroup" aria-label="${esc(q.q)}">
+    ${q.opts.map((o, i) => `<div class="q-opt" data-opt="${i}" role="radio" aria-checked="false" tabindex="${i === 0 ? 0 : -1}"><span class="radio"></span><span>${o}</span></div>`).join('')}
+    </div></div>
     <div class="q-foot">
       <button class="ob-skip" data-action="quiz-close">Exit</button>
       <button class="ob-skip q-flag" data-action="quiz-flag" title="${t('quiz_flag_tip')}" aria-label="${t('quiz_flag_tip')}">⚑</button>
       <span style="flex:1"></span>
       <button class="btn btn-primary btn-sm" id="quizNext" disabled style="opacity:.5">Check answer</button>
     </div>`;
+  /* arrow keys move between options and Space/Enter selects — the roving
+     tabindex pattern a radiogroup is required to implement */
+  const opts = [...box.querySelectorAll('.q-opt')];
+  const focusOpt = i => { const n = (i + opts.length) % opts.length;
+    opts.forEach((o, j) => o.setAttribute('tabindex', j === n ? '0' : '-1'));
+    opts[n].focus(); };
+  opts.forEach((el, i) => {
+    el.addEventListener('keydown', e => {
+      if (['ArrowDown', 'ArrowRight'].includes(e.key)) { e.preventDefault(); focusOpt(i + 1); }
+      else if (['ArrowUp', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); focusOpt(i - 1); }
+      else if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); el.click(); }
+    });
+  });
   box.querySelectorAll('.q-opt').forEach(el => el.addEventListener('click', () => {
     if (quiz.answered) return;
-    box.querySelectorAll('.q-opt').forEach(x => x.classList.remove('sel'));
+    box.querySelectorAll('.q-opt').forEach(x => { x.classList.remove('sel'); x.setAttribute('aria-checked', 'false'); });
+    el.setAttribute('aria-checked', 'true');
     el.classList.add('sel'); quiz.sel = +el.dataset.opt;
     const btn = $('#quizNext'); btn.disabled = false; btn.style.opacity = 1;
   }));
@@ -5432,9 +5470,13 @@ $('#takeModal').addEventListener('click', e => { if (e.target === $('#takeModal'
    and applies `inert` to everything else — which is what <dialog>.showModal()
    does internally: background untabbable, focus moved in, focus restored on
    close. Escape already works app-wide. */
-const OVERLAY_SEL = '.take-overlay, .modal-backdrop, .palette-backdrop, .onboard-overlay, .ck-ov, .member-card-pop';
+const OVERLAY_SEL = '.take-overlay, .modal-backdrop, .palette-backdrop, .onboard-overlay, .ck-ov, .member-card-pop, .auth-gate, .tour-ov';
 let _inertBy = null, _focusReturn = null;
 function _overlayVisible() {
+  if (document.documentElement.getAttribute('data-gate') === 'on') {
+    const g = document.querySelector('.auth-gate');
+    if (g && g.getBoundingClientRect().height > 0) return g;
+  }
   return [...document.querySelectorAll(OVERLAY_SEL)]
     .find(el => (el.classList.contains('open') || el.classList.contains('on')) && el.getBoundingClientRect().height > 0) || null;
 }
