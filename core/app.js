@@ -604,7 +604,7 @@ function renderAnalytics() {
   const certs = CATALOG.filter(c => isDone(c.id));
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">Analytics</h1>
-    <p class="page-sub">Your learning, measured — every number here is real.</p>
+    <p class="page-sub">${t('analytics_sub')}</p>
     <section class="stats" style="margin:28px 0 0;">
       <div class="stat"><div class="num">${S.streak || 0}d</div><div class="lbl">${t('learning_streak')}</div><div class="delta">${S.bestStreak ? t('stats_best') + ' ' + S.bestStreak + 'd' : t('no_data')}</div></div>
       <div class="stat"><div class="num">${fmtMins(weekMinutes())}</div><div class="lbl">${t('this_week')}</div><div class="delta">${week[6].v ? '▲ ' + week[6].v + 'm ' + t('stats_today') : t('no_data')}</div></div>
@@ -2819,7 +2819,7 @@ function adminCockpitHTML() {
         <div><h2>Team</h2><p class="sect-sub">Your real members, sorted by who needs attention. “Nudge” pings their next lesson.</p></div>
         <div style="display:flex;gap:8px;align-items:center;">
           <select id="ckDept" class="ck-dept"><option value="">All departments</option>${DEPTS.map(d => `<option value="${d.key}" ${cockpitDept === d.key ? 'selected' : ''}>${d.en}</option>`).join('')}</select>
-          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex"> ${t('ru_annex_btn')}</button><button class="btn btn-glass btn-sm" data-action="art4-pack" title="EU AI Act Art. 4 — AI-literacy evidence">🤖 ${t('art4_btn')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="retention" title="${t('gdpr_retention')}">📄 RGPD·1</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="art30" title="${t('gdpr_art30')}">📄 RGPD·2</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="dpa" title="${t('gdpr_dpa')}">📄 RGPD·3</button>
+          <button class="btn btn-glass btn-sm" data-action="export-members">⤓ Export CSV</button><button class="btn btn-glass btn-sm" data-action="ru-annex"> ${t('ru_annex_btn')}</button><button class="btn btn-glass btn-sm" data-action="art4-pack" title="EU AI Act Art. 4 — AI-literacy evidence">${t('art4_btn')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="retention" title="${t('gdpr_retention')}">${t('gdpr_retention')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="art30" title="${t('gdpr_art30')}">${t('gdpr_art30')}</button><button class="btn btn-glass btn-sm" data-action="gdpr-doc" data-kind="dpa" title="${t('gdpr_dpa')}">${t('gdpr_dpa')}</button>
         </div>
       </div>
       <div class="team-table"><table>
@@ -3270,7 +3270,15 @@ function renderProgress() {
   const nudge = board.length < 2
     ? `<div class="nudge-line">${svgIcon('sprout')}<span>${t('board_grow')}</span></div>`
     : (rank.ahead
-      ? `<div class="nudge-line">${svgIcon('bird')}<span><b>${esc(String(rank.ahead.name || 'Someone').split(' ')[0])}</b> ${t('xp_ahead_1')} <b>${rank.ahead.xp - S.xp} XP</b> ${t('xp_ahead_2')}</span></div>`
+      ? (() => {
+        const gap = rank.ahead.xp - S.xp;
+        const lessons = Math.max(1, Math.ceil(gap / 20));       /* 20 XP per module */
+        const who = esc(String(rank.ahead.name || 'Someone').split(' ')[0]);
+        /* say the true number of lessons, or say nothing: the gap is printed in
+           the row directly underneath, so a wrong "one module" is caught by the
+           reader instantly */
+        return `<div class="nudge-line">${svgIcon('bird')}<span><b>${who}</b> ${t('xp_ahead_1')} <b>${gap} XP</b> ${t('xp_ahead_2').replace('{n}', lessons)}</span></div>`;
+      })()
       : `<div class="nudge-line">${svgIcon('sun')}<span>${t('top_board')}</span></div>`);
 
   return `<div class="page"><div class="page-pad">
@@ -3917,7 +3925,20 @@ function render() {
 function renderNow() {
   const hash = location.hash || '#/home';
   const [, route, param] = hash.split('/');
-  if ((route === 'analytics' || route === 'admin') && !isAdmin()) { location.hash = '#/home'; return; }
+  if ((route === 'analytics' || route === 'admin') && !isAdmin()) {
+    /* was: location.hash = '#/home' — a silent bounce. Someone sent a link to
+       the team dashboard; tell them why they are not seeing it and who can
+       let them in, instead of dropping them on the learner homepage. */
+    $('#app').innerHTML = `<div class="page"><div class="page-pad">
+      <h1 class="page-title">${t('no_access_h')}</h1>
+      <p class="page-sub">${t('no_access_b')}</p>
+      <div style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;">
+        <a class="btn btn-primary" href="#/home">${t('back_home')}</a>
+        <button class="btn btn-glass" data-action="ai-open">${t('ask_tutor')}</button>
+      </div></div></div>`;
+    syncChrome();
+    return;
+  }
   /* overlay hygiene — a stuck full-screen layer must never block the app */
   const takeM = $('#takeModal'); if (takeM && takeM.classList.contains('open') && !pendingNext) takeM.classList.remove('open');
   document.querySelectorAll('.levelup').forEach(el => el.remove());
