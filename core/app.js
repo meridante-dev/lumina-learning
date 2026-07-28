@@ -529,7 +529,12 @@ function renderHome() {
   const lastPlayed = Object.entries(S.progress || {})
     .filter(([id, p]) => p && p.lastAt && !p.done && courseById(id))
     .sort((a, b) => b[1].lastAt - a[1].lastAt)[0];
-  const featured = (lastPlayed && courseById(lastPlayed[0]))
+  /* the richest course that is actually filmed — most real lessons first, and
+     a flagged `featured` breaks the tie */
+  const realOnes = CATALOG.filter(hasRealContent)
+    .sort((a, b) => (realModuleCount(b) - realModuleCount(a)) || ((b.featured ? 1 : 0) - (a.featured ? 1 : 0)));
+  const featured = (lastPlayed && courseById(lastPlayed[0]))          /* your own place always wins */
+    || realOnes.find(c => !isDone(c.id)) || realOnes[0]
     || S.path.map(courseById).filter(Boolean).find(c => !isDone(c.id))
     || CATALOG.find(c => c.featured && !isDone(c.id)) || CATALOG.find(c => !isDone(c.id))
     || CATALOG.find(c => c.featured) || CATALOG[0];                                    /* always a real course */
@@ -564,7 +569,8 @@ function renderHome() {
   return `<div class="page">
   <header class="hero">
     <div class="hero-bg"></div><div class="hero-grid"></div>
-    ${featured.poster ? `<div class="hero-art" style="background-image:url('${featured.poster}')"></div>` : ''}
+    ${featured.poster ? `<div class="hero-art" style="background-image:url('${featured.poster}')"></div>
+    <div class="hero-art blurred" style="background-image:url('${featured.poster}')" aria-hidden="true"></div>` : ''}
     <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div>
     <div class="hero-content">
       <span class="hero-eyebrow">${t('featured_eyebrow')}</span>
@@ -4317,6 +4323,14 @@ const playerEl = $('#player'), videoEl = $('#playerVideo');
 const simStage = $('#simStage'), simFill = $('#simFill');
 const vimeoWrap = $('#vimeoWrap'), soonStage = $('#soonStage');
 const modMedia = (c, i) => (c.moduleMedia && c.moduleMedia[i]) || null;
+/* A course "has real content" when its modules carry actual media — Vimeo or
+   YouTube ids the client filmed — rather than falling through to the shared
+   sample clips. The hero must lead with one of those: a billboard for a course
+   whose lessons are placeholder footage is a demo, not a product. Generic by
+   design, so each tenant leads with whatever it has actually filmed. */
+const realModuleCount = c => !c || !c.moduleMedia ? 0
+  : Object.values(c.moduleMedia).filter(m => m && (m.type === 'vimeo' || m.type === 'youtube')).length;
+const hasRealContent = c => realModuleCount(c) > 0;
 let playing = null; /* {courseId, mod} */
 let saveTimer = 0;
 let sim = { timer: null, t: 0, dur: 20, running: false };

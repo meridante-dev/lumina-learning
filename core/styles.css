@@ -3256,7 +3256,11 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
    strength, moving slowly. */
 .hero-art {
   inset: 0; width: 100%; opacity: 1;
-  background-size: cover; background-position: center 32%;
+  /* Course posters are title cards — they carry their own lettering. Favour the
+     photographic side and crop in, so the artwork's baked-in title does not sit
+     under ours (Netflix avoids this by shipping title-less key art plus separate
+     logo art; we have one asset, so we frame it). */
+  background-size: cover; background-position: 88% 45%;
   -webkit-mask-image: none; mask-image: none;
   transform-origin: 60% 45%;
   will-change: transform;
@@ -3265,14 +3269,17 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
   .hero-art { animation: kenBurns 34s cubic-bezier(.37,0,.63,1) infinite alternate; }
 }
 @keyframes kenBurns {
-  from { transform: scale(1.04) translate3d(0, 0, 0); }
-  to   { transform: scale(1.13) translate3d(-1.6%, -1.2%, 0); }
+  from { transform: scale(1.16) translate3d(0, 0, 0); }
+  to   { transform: scale(1.25) translate3d(-1.4%, -1.2%, 0); }
 }
 /* the copy scrim — Netflix's own angle and inset, in our background colour so
    a tenant's page tone carries through */
 .hero::before {
   content: ''; position: absolute; inset: 0 26.09% 0 0; z-index: 2; pointer-events: none;
-  background: linear-gradient(77deg, color-mix(in srgb, var(--bg) 88%, transparent), transparent 85%);
+  background: linear-gradient(77deg,
+    color-mix(in srgb, var(--bg) 96%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 80%, transparent) 42%,
+    transparent 88%);
 }
 .hero-content { position: relative; z-index: 4; }
 .hero-fade { z-index: 3; }
@@ -3305,3 +3312,22 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
 .me-link span { display: block; font-size: 12px; color: var(--text-faint); margin-top: 3px; }
 .md-sep { height: 1px; background: var(--line); margin: 10px 0; }
 .md-signout { background: none; border: 0; text-align: left; padding: 10px 0; color: var(--text-dim); font: 500 15px/1 var(--font-body); cursor: pointer; }
+/* Course posters are TITLE CARDS — the artwork carries the course name baked
+   into it. Netflix never has this problem: they ship title-less key art plus a
+   separate logo image. With one asset, cropping cannot escape lettering that
+   spans the frame, so the copy side gets a blurred copy of the same photograph
+   masked over it: the ghost text dissolves, the light and colour survive, and
+   the right side stays sharp. */
+.hero-art.blurred {
+  filter: blur(26px) saturate(1.08) brightness(.86);
+  transform: scale(1.3);
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 54%, transparent 80%);
+          mask-image: linear-gradient(90deg, #000 0%, #000 54%, transparent 80%);
+  animation: none;
+}
+@media (max-width: 900px) {
+  .hero-art.blurred {
+    -webkit-mask-image: linear-gradient(180deg, transparent 30%, #000 72%);
+            mask-image: linear-gradient(180deg, transparent 30%, #000 72%);
+  }
+}
