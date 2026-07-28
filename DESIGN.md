@@ -123,3 +123,25 @@ that 172 outlines used to attempt.
    VERSION together, or you will screenshot the old build and believe your change failed.
 3. **Not every nested box is clutter.** `.level-ring-in`'s background *is* the donut hole; removing
    it turned the level ring into a solid pie. Verify visually before deleting a nested surface.
+
+## Law 18 — opacity is a contrast tax, and it is always paid by the smallest text
+
+Every faint style in this product was authored twice: a token (`--text-faint`,
+5.32:1 on `--bg` — passes AA) and then an `opacity` multiplier on top of it in a
+premium layer. The multiplier is invisible in review and decisive in measurement:
+`.ai-foot` 3.21:1, `.stat .delta` 3.32:1, `.sect-sub` 3.71:1, `.ai-gear` ~3.1:1.
+All of them small text, all of them below the 4.5:1 floor.
+
+The worst case was the EU AI Act Art. 50 disclosure — the one line the regulation
+requires to be "clear and distinguishable" — rendered as the faintest text on the
+screen. **Set the colour, never dim it.** If a thing should be quieter, give it a
+quieter token.
+
+## Law 19 — a white-label token that isn't derived is a bug waiting for a tenant
+
+`--on-cta` was a fixed dark green while `--cta` derived from the tenant's accent.
+Correct for sage and amber; **1.64:1 on a corporate navy, 1.59:1 on a deep
+purple** — an unreadable primary button on every screen. `core/brandkit.js` now
+picks the on-colour from the accent's own luminance and warns at load when a
+tenant's pair cannot reach AA. Any future token pairing brand colour with text
+gets the same treatment: derive it, and make the console say so when it fails.

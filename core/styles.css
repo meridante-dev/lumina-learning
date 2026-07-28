@@ -2742,3 +2742,19 @@ body::before { animation: stageDrift 22s ease-in-out infinite; will-change: tran
 .filter-chip.active,
 .seg.current .snode { background: var(--cta); color: var(--on-cta); }
 .filter-chip.active { box-shadow: 0 4px 16px var(--cta-shadow); }
+
+/* ========== PREMIUM LAYER 9 — contrast: the opacity tax, repaid ==========
+   The base tokens pass (--text-faint is 5.32:1 on --bg). What failed is the
+   opacity multipliers the premium layers added on top of them: an audit
+   measured .ai-foot at 3.21:1, .stat .delta at 3.32:1, .admin-section .sect-sub
+   at 3.71:1 and .ai-gear at ~3.1:1, all under the 4.5:1 AA floor for small text.
+   The worst of them was the AI Act Art. 50 disclosure, which the regulation
+   requires to be "clear and distinguishable" and accessible — the one line in
+   the product that legally may not be the faintest.
+   Fix is the same everywhere: drop the multiplier, keep the token. */
+.ai-foot            { opacity: 1; color: var(--text-dim); }
+.ai-gear            { opacity: 1; color: var(--text-dim); }
+.ai-disclosure      { opacity: 1; color: var(--text-dim); }
+.stat .delta        { opacity: 1; color: var(--text-dim); }
+.stat .delta.warn   { opacity: 1; }
+.admin-section > .sect-sub { opacity: 1; color: var(--text-dim); }

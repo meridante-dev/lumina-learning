@@ -39,7 +39,8 @@
   ogImage: 'https://academy.edenrise.com/og-image.png',
   content: 'data.js',     /* this instance's course catalog (Stage 2 splits per-brand) */
   fonts: {
-    link: 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap',
+    /* self-hosted (GDPR: no visitor IP to a third party) — scripts/selfhost-fonts.py */
+    link: 'fonts/fonts.css',
     display: '"Cormorant Garamond", Georgia, serif',
     body: '"Inter", -apple-system, sans-serif'
   },
