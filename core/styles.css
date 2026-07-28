@@ -2664,9 +2664,9 @@ body::before { animation: stageDrift 22s ease-in-out infinite; will-change: tran
 .ai-msgs { padding: 4px 20px 12px; }
 .ai-panel:not(.has-msgs) .ai-msgs { min-height: 0; }
 .ai-hello {
-  margin: 0; padding: 26px 0 20px;
-  font-family: var(--font-display); font-size: 30px; line-height: 1.14;
-  letter-spacing: -.015em; color: var(--text);
+  margin: 0; padding: 20px 0 16px;
+  font-family: var(--font-display); font-size: 24px; line-height: 1.22;
+  letter-spacing: -.005em; color: var(--text);
 }
 /* the same signature the hero headline uses — last word warm and italic — so
    the tutor reads as part of the product, not a chat widget bolted onto it.
@@ -2695,7 +2695,7 @@ body::before { animation: stageDrift 22s ease-in-out infinite; will-change: tran
 @media (prefers-reduced-motion: reduce) {
   .ai-hello .w { animation: none; opacity: 1; filter: none; transform: none; }
 }
-@media (max-width: 480px) { .ai-hello { font-size: 25px; padding: 20px 0 16px; } }
+@media (max-width: 480px) { .ai-hello { font-size: 21px; padding: 16px 0 14px; } }
 
 /* suggestions: text, not five more pills — and gone once you're talking */
 .quick-row { padding: 0 20px 12px; gap: 7px 16px; }
