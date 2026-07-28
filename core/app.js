@@ -839,7 +839,9 @@ function initAdmin(retries) {
   const r = $('#cockpitRoster'); if (r) r.innerHTML = Array.from({ length: 4 }, () => `<tr class="skel-row"><td colspan="10"><div class="skel"></div></td></tr>`).join('');
   EdenCloud.listMembers().then(m => { adminMembers = m; paintMgrDash(); paintCockpit(); paintTrends(); paintAsgList(); const h = $('#cockpitHeat'); if (h) h.innerHTML = skillHeatmapHTML(); const cp = $('#cockpitComp'); if (cp) cp.innerHTML = complianceHTML(); const iw = $('#intelWrap'); if (iw) iw.outerHTML = intelHTML(); }).catch(err => {
     console.error('[cockpit]', err);
-    const rr = $('#cockpitRoster'); if (rr) rr.innerHTML = `<tr><td colspan="10" class="empty-note">Couldn't read members — make sure the updated Firestore rules (admin read) are published.</td></tr>`;
+    const rr = $('#cockpitRoster');
+    if (rr) rr.innerHTML = `<tr><td colspan="10" class="empty-note">${t('team_load_fail')} <button class="btn btn-glass btn-sm" data-action="cockpit-retry" style="margin-left:10px;">${t('retry')}</button></td></tr>`;
+    document.querySelectorAll('#cockpitStats .skel-num').forEach(el => { el.parentElement.textContent = '—'; });
   });
 }
 function exportMembersCSV() {
@@ -2801,10 +2803,10 @@ function adminCockpitHTML() {
     return `<div class="assignment-row">📌 <b>${c ? esc(c.title) : a.courseId}</b> → ${a.team === 'everyone' ? 'Everyone' : tdept(a.team)}${a.due ? ` · due ${a.due}` : ''}${track ? ` · <span class="asg-track">${track}</span>` : ''}<button class="ar-x" data-action="unassign" data-idx="${i}" title="Remove">✕</button></div>`;
   }).join('');
   return `<section class="stats" id="cockpitStats" style="margin:24px 0 0;">
-      <div class="stat"><div class="num">—</div><div class="lbl">Members</div></div>
-      <div class="stat"><div class="num">—</div><div class="lbl">Avg. completion</div></div>
-      <div class="stat"><div class="num">—</div><div class="lbl">Active this week</div></div>
-      <div class="stat"><div class="num">—</div><div class="lbl">At risk</div></div>
+      <div class="stat"><div class="num"><span class="skel skel-num"></span></div><div class="lbl">Members</div></div>
+      <div class="stat"><div class="num"><span class="skel skel-num"></span></div><div class="lbl">Avg. completion</div></div>
+      <div class="stat"><div class="num"><span class="skel skel-num"></span></div><div class="lbl">Active this week</div></div>
+      <div class="stat"><div class="num"><span class="skel skel-num"></span></div><div class="lbl">At risk</div></div>
     </section>
     <div id="mgrDash"></div>
     <div class="admin-section">
@@ -3933,9 +3935,15 @@ function renderNow() {
       libQuery = e.target.value;
       const tmp = document.createElement('div');
       tmp.innerHTML = renderLibrary();
-      const newGrid = tmp.querySelector('.grid');
-      const oldGrid = $('#app .grid');
-      if (newGrid && oldGrid) oldGrid.innerHTML = newGrid.innerHTML;
+      /* swap the whole results block, not just .grid: the "nothing matches"
+         note lives outside it, so typing a non-matching query used to leave a
+         blank page while clicking a category chip showed the message —
+         two behaviours for one state */
+      const newPad = tmp.querySelector('.page-pad') || tmp.querySelector('.grid');
+      const oldPad = $('#app .page-pad') || $('#app .grid');
+      if (newPad && oldPad) oldPad.innerHTML = newPad.innerHTML;
+      const sub = $('#app .page-sub'), newSub = tmp.querySelector('.page-sub');
+      if (sub && newSub) sub.textContent = newSub.textContent;
     };
   }
   initMotion();
@@ -4722,7 +4730,11 @@ const PALETTE_ACTIONS = [
   { t: 'Regenerate my AI path', icon: '↺', run: () => regenPath() }
 ];
 let palIdx = 0;
-function openPalette() { $('#palette').classList.add('open'); const i = $('#palInput'); i.value = ''; drawPalette(''); setTimeout(() => i.focus(), 30); }
+function openPalette() { $('#palette').classList.add('open');
+  const pr = $('#palResults'); if (pr) pr.setAttribute('role', 'listbox');
+  const pi = $('#palInput');
+  if (pi) { pi.setAttribute('role', 'combobox'); pi.setAttribute('aria-expanded', 'true');
+            pi.setAttribute('aria-controls', 'palResults'); pi.setAttribute('aria-autocomplete', 'list'); } const i = $('#palInput'); i.value = ''; drawPalette(''); setTimeout(() => i.focus(), 30); }
 
 /* ---------- voice search (Web Speech API) ---------- */
 let voiceRec = null;
@@ -4751,6 +4763,25 @@ function setVoiceUI(on) {
   const st = $('#palVoiceState'); if (st) { st.textContent = on ? `● ${t('voice_listening')}` : ''; st.classList.toggle('on', on); }
 }
 function closePalette() { $('#palette').classList.remove('open'); }
+/* Forgiving match for the palette: a query matches if its characters appear
+   IN ORDER anywhere in the haystack. Tighter runs score higher, a hit at a word
+   boundary scores higher still, so "wtr cyc" ranks Water Cycles above a course
+   that merely contains those letters. Returns -1 for no match. */
+function fuzzyScore(hay, q) {
+  hay = hay.toLowerCase(); q = q.toLowerCase().trim();
+  if (!q) return 0;
+  if (hay.includes(q)) return 1000 - hay.indexOf(q);           /* exact substring always wins */
+  let i = 0, score = 0, prev = -2;
+  for (const ch of q) {
+    if (ch === ' ') continue;
+    const at = hay.indexOf(ch, i);
+    if (at === -1) return -1;
+    score += (at === prev + 1) ? 6 : 1;                        /* consecutive letters */
+    if (at === 0 || /[\s·—-]/.test(hay[at - 1])) score += 4;   /* start of a word */
+    prev = at; i = at + 1;
+  }
+  return score;
+}
 function drawPalette(q) {
   q = q.toLowerCase();
   /* natural-language friendly: strip voice filler, match across title/hook/desc in both languages */
@@ -4758,11 +4789,17 @@ function drawPalette(q) {
        .replace(/^(something|anything|a course|um curso|algo|alguma coisa)\s+(about|on|sobre|de)?\s*/i, '').trim().toLowerCase();
   const words = q.split(/\s+/).filter(w => w.length > 2);
   const hay = c => (c.title + ' ' + c.cat + ' ' + c.desc + ' ' + ctitle(c) + ' ' + cdesc(c) + ' ' + tcat(c.cat) + ' ' + chook(c) + ' ' + chooksub(c)).toLowerCase();
-  const courses = CATALOG.filter(c => !q || hay(c).includes(q) || (words.length && words.some(w => hay(c).includes(w)))).slice(0, 6);
-  const acts = PALETTE_ACTIONS.filter(a => !q || a.t.toLowerCase().includes(q));
+  const courses = (!q
+    ? (S.palRecents || []).map(id => courseById(id)).filter(Boolean)          /* empty query → what you used last */
+    : CATALOG.map(c => ({ c, s: Math.max(fuzzyScore(hay(c), q), ...words.map(w => fuzzyScore(hay(c), w)), -1) }))
+        .filter(x => x.s >= 0).sort((a, b) => b.s - a.s).map(x => x.c)
+  ).slice(0, 6);
+  const acts = (!q ? PALETTE_ACTIONS
+    : PALETTE_ACTIONS.map(a => ({ a, s: fuzzyScore(a.t, q) })).filter(x => x.s >= 0)
+        .sort((x, y) => y.s - x.s).map(x => x.a)).slice(0, 6);
   palIdx = 0;
   let html = '';
-  if (courses.length) html += `<div class="palette-group">Courses</div>` + courses.map(c =>
+  if (courses.length) html += `<div class="palette-group">${q ? t('pal_courses') : t('pal_recent')}</div>` + courses.map(c =>
     `<div class="palette-item" data-pal="course:${c.id}"><span class="pi-icon t-grad-${c.grad}">${svgIcon(c.icon)}</span><div><div>${esc(c.title)}</div><div class="pi-meta">${esc(c.cat)} · ${fmtMins(courseMins(c))} · ★ ${c.rating}</div></div></div>`).join('');
   if (acts.length) html += `<div class="palette-group">Actions</div>` + acts.map((a, i) =>
     `<div class="palette-item" data-pal="act:${PALETTE_ACTIONS.indexOf(a)}"><span class="pi-icon" style="background:var(--surface-2)">${a.icon}</span><div>${a.t}</div></div>`).join('');
@@ -4772,7 +4809,16 @@ function drawPalette(q) {
 }
 function highlightPal() {
   const items = $$('#palResults .palette-item');
-  items.forEach((el, i) => el.classList.toggle('hl', i === palIdx));
+  items.forEach((el, i) => {
+    el.classList.toggle('hl', i === palIdx);
+    el.setAttribute('role', 'option');
+    if (!el.id) el.id = 'pal-opt-' + i;
+    el.setAttribute('aria-selected', i === palIdx ? 'true' : 'false');
+  });
+  /* the input keeps focus, so the screen reader needs to be told which row is
+     current — otherwise arrow keys move a highlight nobody announces */
+  const pi = $('#palInput');
+  if (pi && items[palIdx]) pi.setAttribute('aria-activedescendant', items[palIdx].id);
   if (items[palIdx]) items[palIdx].scrollIntoView({ block: 'nearest' });
 }
 function runPal(el) {
@@ -4780,7 +4826,10 @@ function runPal(el) {
   const kind = _p.slice(0, _i), val = _p.slice(_i + 1);
   closePalette();
   if (kind === 'ask') { openAsk(val); return; }
-  if (kind === 'course') location.hash = '#/course/' + val;
+  if (kind === 'course') {
+    S.palRecents = [val, ...(S.palRecents || []).filter(x => x !== val)].slice(0, 5); save();
+    location.hash = '#/course/' + val;
+  }
   else PALETTE_ACTIONS[+val].run();
 }
 
@@ -5318,6 +5367,7 @@ document.addEventListener('click', e => {
       saveAssignments(assignments, 'Assignment removed');
       break;
     }
+    case 'cockpit-retry': initAdmin(); break;
     case 'reset-demo': localStorage.removeItem(STATE_KEY); location.hash = '#/home'; location.reload(); break;
   }
 });
@@ -5370,6 +5420,52 @@ $('#palResults').addEventListener('click', e => { const it = e.target.closest('.
 $('#palette').addEventListener('click', e => { if (e.target === $('#palette')) closePalette(); });
 $('#quizModal').addEventListener('click', e => { if (e.target === $('#quizModal')) { $('#quizModal').classList.remove('open'); render(); } });
 $('#takeModal').addEventListener('click', e => { if (e.target === $('#takeModal')) resolveTakeaways(); });
+
+/* ---------- overlay focus management -------------------------------------
+   Eight overlays in this app are <div role="dialog" aria-modal="true"> with an
+   .open class. The markup LOOKS correct, which is why automated checkers pass
+   it, but not one of them traps focus: with a modal open you can Tab straight
+   out into the nav and the page behind it, operate controls you cannot see,
+   and never find your way back. WCAG 2.4.3.
+
+   Rather than rewrite eight call sites, this watches the class that opens them
+   and applies `inert` to everything else — which is what <dialog>.showModal()
+   does internally: background untabbable, focus moved in, focus restored on
+   close. Escape already works app-wide. */
+const OVERLAY_SEL = '.take-overlay, .modal-backdrop, .palette-backdrop, .onboard-overlay, .ck-ov, .member-card-pop';
+let _inertBy = null, _focusReturn = null;
+function _overlayVisible() {
+  return [...document.querySelectorAll(OVERLAY_SEL)]
+    .find(el => (el.classList.contains('open') || el.classList.contains('on')) && el.getBoundingClientRect().height > 0) || null;
+}
+function _setInert(on) {
+  ['#app', '.topnav', '.ai-fab', '.mobile-drawer'].forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el) { if (on) el.setAttribute('inert', ''); else el.removeAttribute('inert'); }
+  });
+}
+function syncOverlayFocus() {
+  const open = _overlayVisible();
+  if (open && open !== _inertBy) {
+    if (!_inertBy) _focusReturn = document.activeElement;
+    _inertBy = open;
+    _setInert(true);
+    /* first real control inside — an input if there is one, so typing works */
+    const first = open.querySelector('input:not([type=hidden]), textarea, select, button, [tabindex]:not([tabindex="-1"])');
+    if (first && !open.contains(document.activeElement)) setTimeout(() => { try { first.focus(); } catch (e) {} }, 30);
+  } else if (!open && _inertBy) {
+    _inertBy = null;
+    _setInert(false);
+    if (_focusReturn && document.contains(_focusReturn)) { try { _focusReturn.focus(); } catch (e) {} }
+    _focusReturn = null;
+  }
+}
+new MutationObserver(muts => {
+  for (const m of muts) {
+    const t = m.target;
+    if (t.nodeType === 1 && (t.matches(OVERLAY_SEL) || t.querySelector?.(OVERLAY_SEL))) { syncOverlayFocus(); return; }
+  }
+}).observe(document.body, { attributes: true, attributeFilter: ['class'], subtree: true, childList: true });
 
 /* Skip link. It cannot navigate by href: this is a HASH router, so clicking
    an href="#app" would set location.hash to '#app', which parses as a route

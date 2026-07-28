@@ -2797,3 +2797,81 @@ html { scroll-padding-top: 92px; }
 @keyframes vtIn  { from { opacity: 0; transform: translateY(8px); } }
 /* the skip target takes programmatic focus; it must not draw a stray ring */
 main#app:focus { outline: none; }
+
+/* ===== PREMIUM LAYER 11 — the tenant owns every surface, not just the buttons =====
+   An audit walked Belong (terracotta #be594d / amber #f8b556 on #211613) and
+   found EdenRise's literals still painting the client's own hero: the left half
+   of the hero glowed forest green, a sage orb sat behind the headline, and the
+   word "Belong" itself faded from gold into EdenRise's sage. Layer 8 fixed this
+   class of bug for buttons and stopped there. A client seeing their brand name
+   painted in another company's colours ends the meeting. */
+.hero-bg {
+  background:
+    radial-gradient(ellipse 90% 75% at 78% 12%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 62%),
+    radial-gradient(ellipse 70% 60% at 12% 88%, color-mix(in srgb, var(--accent-2) 24%, transparent), transparent 66%),
+    radial-gradient(ellipse 60% 50% at 50% 50%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%),
+    linear-gradient(160deg, color-mix(in srgb, var(--bg) 82%, var(--accent-2)), var(--bg));
+}
+.orb-1 { background: color-mix(in srgb, var(--accent) 24%, transparent); }
+.orb-2 { background: color-mix(in srgb, var(--accent-2) 26%, transparent); }
+.grad-text {
+  background: linear-gradient(95deg,
+    color-mix(in srgb, var(--accent) 55%, #fff) 0%,
+    var(--accent) 42%,
+    var(--accent-2) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.avatar { background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 78%, #fff), var(--accent)); }
+.ai-fab {
+  background: conic-gradient(from 200deg, var(--accent), var(--accent-2), color-mix(in srgb, var(--accent) 70%, #000), var(--accent));
+  box-shadow: 0 10px 34px color-mix(in srgb, var(--accent) 50%, transparent);
+}
+/* the flagship AI entry point rendered its ✦ in UA black on near-black:
+   measured 1.06:1 — an invisible icon inside a glowing ring, on every screen */
+.ai-fab .inner { background: color-mix(in srgb, var(--bg) 86%, #000); color: var(--accent); }
+
+/* Seven cool blue-grey surfaces survived the pass that DESIGN.md law 8 says
+   removed them — including the largest surface in the product (the video
+   stage), which read blue-purple on a forest page. */
+.player-stage, .stage { background-color: color-mix(in srgb, var(--bg) 72%, #000); }
+.palette         { background: color-mix(in srgb, var(--bg) 88%, #000); }
+.ai-panel        { background: color-mix(in srgb, var(--bg) 90%, #000); }
+.notes-drawer    { background: color-mix(in srgb, var(--bg) 88%, #000); }
+.avatar-menu     { background: color-mix(in srgb, var(--bg) 86%, #000); }
+.rail-arrow      { background: color-mix(in srgb, var(--bg) 84%, transparent); }
+.rail-arrow:hover { background: color-mix(in srgb, var(--accent) 18%, var(--bg)); }
+
+/* ---- one-line corrections the audit measured ---- */
+/* the nav was on a 1520px column while the entire page is on 1200px: at 1600px
+   the logo sat 160px left of the page title, every card, and the footer's own
+   copy of the same logo */
+nav.topnav { padding: 14px var(--edge); }
+/* .btn had no border and .btn-glass a 1px one, so every primary CTA was 2px
+   shorter than the secondary beside it and sat 1px lower */
+.btn { border: 1px solid transparent; }
+/* Cormorant's oldstyle figures render 1 as a capital I: "#I" for rank,
+   "I,234 XP" for score, and 3/8 dropping below the baseline */
+.num, .mh-num, .stat .num, .prog-mini .num, .kpi .num {
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+}
+/* Layer 8 accidentally beat Layer 3's sanctioned accent underline with a drop
+   shadow, so the active filter rendered as a sage smudge cast by an invisible
+   box and the underline vanished (DESIGN.md law 15) */
+.filter-chip.active {
+  box-shadow: inset 0 -1.5px 0 var(--accent);
+  background: none;
+}
+/* the card title sat 3px right of its section heading and 2px right of the
+   artwork it labels — leftovers of the card box that Layer 3 removed */
+.card { border: 0; }
+.card-body { padding: 15px 0 17px; }
+/* keyboard users could tab to Play / Add-to-path and never see them */
+.card:focus-within .card-actions { opacity: 1; transform: none; }
+/* reduced motion: durations were capped but ~15 infinite loops kept cycling */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-iteration-count: 1 !important; }
+}
+/* a metric that is still loading shows its shape, not an em-dash pretending
+   to be a value */
+.skel-num { display: inline-block; width: 62px; height: 30px; border-radius: 8px; vertical-align: middle; }
