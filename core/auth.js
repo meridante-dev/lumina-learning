@@ -53,8 +53,13 @@ const persistenceReady = setPersistence(auth, indexedDBLocalPersistence)
 /* Complete a Google redirect sign-in if we're returning from one (mobile/PWA flow). */
 if (BACKEND_READY) getRedirectResult(auth).catch(() => {});
 
-const KEY = 'edenrise-state-v2';
-const MODE = 'eden-auth-mode';          // 'firebase' | 'guest' | 'out'
+/* Must match app.js's STATE_KEY exactly — one origin can host several brands,
+   so the saved state is namespaced per brand (the founding brand keeps the
+   legacy key). Auth mode is namespaced for the same reason: signing in to one
+   academy was marking every other academy on the origin as signed in. */
+const BRAND_SLUG = (window.BRAND && window.BRAND.id) || 'edenrise';
+const KEY  = BRAND_SLUG === 'edenrise' ? 'edenrise-state-v2' : BRAND_SLUG + '-state-v2';
+const MODE = BRAND_SLUG === 'edenrise' ? 'eden-auth-mode' : BRAND_SLUG + '-auth-mode';   // 'firebase' | 'guest' | 'out'
 const $ = s => document.querySelector(s);
 const T = k => (typeof window.t === 'function' ? window.t(k) : k);
 const isPT = () => (typeof S !== 'undefined' && S.lang === 'pt');

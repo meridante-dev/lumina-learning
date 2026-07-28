@@ -1,10 +1,21 @@
 /* ============ EdenRise app — router, state, player, tutor ============ */
 
 /* ---------- state ---------- */
+/* localStorage is scoped to the ORIGIN, and we host several academies on one
+   (meridante-dev.github.io/<brand>/). A single hardcoded key therefore handed
+   one brand's saved learning path — course ids from ITS catalog — to a
+   different brand's app, which then rendered a path of courses that do not
+   exist. The founding brand keeps the legacy key so no live EdenRise learner
+   loses local progress; every other brand gets its own. */
+const BRAND_SLUG = (window.BRAND && window.BRAND.id) || 'edenrise';
+const STATE_KEY = BRAND_SLUG === 'edenrise' ? 'edenrise-state-v2' : BRAND_SLUG + '-state-v2';
+/* same reasoning for the sign-in flag: it decided whether the auth gate shows,
+   so one academy's session was opening the gate on all of them */
+const MODE_KEY  = BRAND_SLUG === 'edenrise' ? 'eden-auth-mode' : BRAND_SLUG + '-auth-mode';
 let S;
-try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem('edenrise-state-v2') || '{}')); }
+try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem(STATE_KEY) || '{}')); }
 catch { S = structuredClone(DEFAULT_STATE); }
-const save = () => { localStorage.setItem('edenrise-state-v2', JSON.stringify(S)); if (window.EdenCloud && window.EdenCloud.push) window.EdenCloud.push(S); };
+const save = () => { localStorage.setItem(STATE_KEY, JSON.stringify(S)); if (window.EdenCloud && window.EdenCloud.push) window.EdenCloud.push(S); };
 
 /* ---------- helpers ---------- */
 const $ = s => document.querySelector(s);
@@ -428,7 +439,14 @@ function renderHome() {
   const trending = [...CATALOG].sort((a, b) => (a.trending || 99) - (b.trending || 99)).slice(0, 6);
   const recs = CATALOG.filter(c => c.cat === 'Analytics' && !isDone(c.id) && coursePct(c.id) === 0).slice(0, 5);
   const heroSide = S.path.slice(0, 5).map(id => {
-    const c = courseById(id); const st = pathStatus(id); const p = prog(id);
+    const c = courseById(id);
+    /* A path id that this brand's catalog does not contain — a course removed
+       from the catalog, or a path written by a DIFFERENT academy sharing this
+       origin. Without this line ctitle(undefined) throws and takes the whole
+       home render with it: the nav paints and the body is empty.
+       pathStepperHTML has had this guard all along; the hero rail did not. */
+    if (!c) return '';
+    const st = pathStatus(id); const p = prog(id);
     const nodeCls = st === 'done' ? 'node-done' : st === 'current' ? 'node-active' : 'node-locked';
     const node = st === 'done' ? '✓' : st === 'current' ? '▶' : S.path.indexOf(id) + 1;
     const sub = st === 'done' ? `${t('completed')}${p && p.note ? ' · ' + tnote(p.note) : p && p.score ? ' · ' + t('scored') + ' ' + p.score + '%' : ''}` : st === 'current' ? `${t('in_progress')} · ${t('adapted_today')}` : t('unlocks_after');
@@ -1568,7 +1586,7 @@ function confirmPanelHTML() {
     <h2>${t('mconf_h')}</h2>
     <p class="sect-sub sub-auto">${t('mconf_sub')}</p>
     ${pend.slice(0, 12).map(p => `<div class="intent-row">
-      <div class="intent-info"><b>${esc(p.name)}</b> · ${esc(ctitle(courseById(p.courseId)) || p.courseId)}${p.text ? `<span>“${esc(p.text)}”</span>` : ''}</div>
+      <div class="intent-info"><b>${esc(p.name)}</b> · ${esc(titleOf(p.courseId))}${p.text ? `<span>“${esc(p.text)}”</span>` : ''}</div>
       <div class="intent-btns">
         <button class="btn btn-primary btn-sm" data-action="app-confirm" data-id="${p.hash}">${t('mconf_yes')}</button>
         <button class="btn btn-ghost btn-sm" data-action="app-deny" data-id="${p.hash}">${t('mconf_no')}</button>
@@ -3828,7 +3846,7 @@ async function deleteMyAccount() {
   if (typed !== 'DELETE') return;
   const isGuest = !(S.profile && S.profile.uid);
   if (isGuest || !(window.EdenCloud && EdenCloud.deleteAccount)) {
-    localStorage.removeItem('edenrise-state-v2'); localStorage.removeItem('eden-auth-mode');
+    localStorage.removeItem(STATE_KEY); localStorage.removeItem(MODE_KEY);
     toast(t('gdpr_deleted'), ''); setTimeout(() => location.reload(), 900); return;
   }
   try {
@@ -4480,7 +4498,7 @@ function resolveTakeaways(toQuiz) {
   else if (n.kind === 'soon') { closePlayer(); setTimeout(() => toast(_lang() === 'pt' ? 'É tudo por agora — o resto da jornada está a caminho' : 'That’s every lesson available so far — the rest of the journey is coming soon', ''), 400); }
   else if (n.kind === 'course-done') {
     closePlayer();
-    setTimeout(() => { openTutorWith(`${_lang() === 'pt' ? 'Terminou' : 'You finished'} <b>${ctitle(courseById(n.courseId))}</b> — ${_lang() === 'pt' ? 'quer o teste de certificação agora? São 3 perguntas.' : 'want the certification quiz now? It’s 3 questions.'}`, ['Quiz me now', 'Build me a path']); }, 700);
+    setTimeout(() => { openTutorWith(`${_lang() === 'pt' ? 'Terminou' : 'You finished'} <b>${esc(titleOf(n.courseId))}</b> — ${_lang() === 'pt' ? 'quer o teste de certificação agora? São 3 perguntas.' : 'want the certification quiz now? It’s 3 questions.'}`, ['Quiz me now', 'Build me a path']); }, 700);
   }
 }
 function completeModule(courseId, mod) {
@@ -5235,7 +5253,7 @@ document.addEventListener('click', e => {
       saveAssignments(assignments, 'Assignment removed');
       break;
     }
-    case 'reset-demo': localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); break;
+    case 'reset-demo': localStorage.removeItem(STATE_KEY); location.hash = '#/home'; location.reload(); break;
   }
 });
 
@@ -5398,7 +5416,7 @@ function drawOnboard() {
       <p class="ob-sub">${t('ob_q2_sub')}</p>
       <div class="ob-grid">${goals.map(g => `
         <div class="ob-option ${ob.goal === g ? 'sel' : ''}" data-goal="${g}">
-          <span class="oi">${svgIcon(courseById(GOAL_PRESETS[g][0]).icon)}</span><div>${tgoal(g)}<div class="od">${GOAL_PRESETS[g].length} ${t('courses_adaptive')}</div></div>
+          <span class="oi">${svgIcon((courseById(GOAL_PRESETS[g][0]) || {}).icon || 'leaf')}</span><div>${tgoal(g)}<div class="od">${GOAL_PRESETS[g].length} ${t('courses_adaptive')}</div></div>
         </div>`).join('')}
       </div>
       <div class="ob-foot">
@@ -5453,14 +5471,14 @@ $('#avatarMenu').addEventListener('click', e => {
   $('#avatarMenu').classList.remove('open');
   if (b.dataset.m === 'profile') location.hash = '#/profile';
   if (b.dataset.m === 'onboard') startOnboarding();
-  if (b.dataset.m === 'reset') { localStorage.removeItem('edenrise-state-v2'); location.hash = '#/home'; location.reload(); }
+  if (b.dataset.m === 'reset') { localStorage.removeItem(STATE_KEY); location.hash = '#/home'; location.reload(); }
   if (b.dataset.m === 'signout') { if (window.EdenCloud && window.EdenCloud.signOut) window.EdenCloud.signOut(); else toast('Sign-in ships once Firebase is connected', ''); }
 });
 
 /* ---------- bridge for the Firebase auth module (auth.js) ---------- */
 window.EdenApp = {
   reloadState() {
-    try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem('edenrise-state-v2') || '{}')); } catch (e) {}
+    try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem(STATE_KEY) || '{}')); } catch (e) {}
     if (S.xp == null) S.xp = seedXp();
     if (!S.badges) S.badges = [];
     checkBadges(true);
@@ -5621,7 +5639,7 @@ if (S.onboarded && document.documentElement.getAttribute('data-gate') !== 'on') 
 /* onboarding is triggered AFTER the user gets past the auth gate (see auth.js /
    EdenApp.maybeOnboard) — never before sign-in. Fallback: if no auth module is
    present at all (Firebase blocked), still onboard so the demo isn't stuck. */
-if (!window.EdenCloud && !localStorage.getItem('eden-auth-mode') && !S.onboarded) {
+if (!window.EdenCloud && !localStorage.getItem(MODE_KEY) && !S.onboarded) {
   /* no auth layer available — legacy/demo behaviour */
   setTimeout(() => { if (!window.EdenCloud && !S.onboarded) startOnboarding(); }, 4500);
 }
