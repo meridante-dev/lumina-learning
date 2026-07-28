@@ -381,7 +381,8 @@ function cardHTML(c, opts = {}) {
   else if (c.isNew) chips.push(`<span class="chip">${t('new')}</span>`);
   /* status reads as text, not as another bubble */
   let foot = '';
-  if (pct > 0 && pct < 100) foot = `<div class="card-progress"><div class="fill" style="width:${pct}%"></div></div>`;
+  const bar = (pct > 0 && pct < 100)
+    ? `<div class="card-progress"><div class="fill" style="width:${pct}%"></div></div>` : '';
   if (isDone(c.id)) foot = `<span class="card-status done">✓ ${t('completed')}${p.cert ? ' · ' + t('cert_issued') : ''}</span>`;
   else if (c.due) foot += `<span class="card-status due-soon">${c.due}</span>`;
   return `
@@ -390,7 +391,7 @@ function cardHTML(c, opts = {}) {
       <button class="icon-btn" data-action="play" data-id="${c.id}" aria-label="Play ${ctitle(c)}" title="Play">▶</button>
       <button class="icon-btn ${inPath(c.id) ? 'in-path' : ''}" data-action="toggle-path" data-id="${c.id}" aria-label="${inPath(c.id) ? 'Remove from your path' : 'Add to your path'}" title="${inPath(c.id) ? 'In your path' : 'Add to path'}">${inPath(c.id) ? '✓' : '＋'}</button>
     </div>
-    <div class="thumb t-grad-${c.grad} ${c.poster ? 'has-poster' : ''}"${c.poster ? ` data-bg="${c.poster}"` : ''}>${c.poster ? '' : `<span class="big-icon">${svgIcon(c.icon)}</span>`}<div class="chip-row">${chips.join('')}</div></div>
+    <div class="thumb t-grad-${c.grad} ${c.poster ? 'has-poster' : ''}"${c.poster ? ` data-bg="${c.poster}"` : ''}>${c.poster ? '' : `<span class="big-icon">${svgIcon(c.icon)}</span>`}<div class="chip-row">${chips.join('')}</div>${bar}</div>
     <div class="card-body">
       <h3>${ctitle(c)}</h3>
       <p class="card-hook">${chook(c)}</p>
@@ -439,6 +440,54 @@ function pathStepperHTML() {
    64px headline and made the first screen argue with itself. As a row it reads
    left to right like everything else on this page, the current step is the one
    with the light on it, and locked steps stop pretending to be clickable. */
+
+/* ---- rails: paging, paddle state, keyboard ------------------------------
+   Netflix advances to the first card that was not fully visible and snaps it
+   to the start, less the scroll-margin so the previous card peeks back in —
+   about one viewport minus one card. Measured on their live row: 505px of
+   container advanced 491px. Same rule here. */
+function scrollSurely(el, left) {
+  const before = el.scrollLeft;
+  el.scrollTo({ left, behavior: 'smooth' });
+  setTimeout(() => {
+    if (Math.abs(el.scrollLeft - before) < 2 && Math.abs(left - before) > 2) el.scrollLeft = left;
+    if (el.classList.contains('rail')) syncRailPaddles(el);
+  }, 260);
+}
+function railScroll(rail, dir) {
+  if (!rail) return;
+  const card = rail.querySelector('.card') || rail.querySelector('.pstep');
+  const peek = card ? Math.min(120, card.getBoundingClientRect().width * 0.4) : 100;
+  const step = Math.max(240, rail.clientWidth - peek);
+  const max = rail.scrollWidth - rail.clientWidth;
+  scrollSurely(rail, Math.max(0, Math.min(max, rail.scrollLeft + dir * step)));
+}
+function syncRailPaddles(rail) {
+  const sec = rail.closest('.rail-section'); if (!sec) return;
+  const max = rail.scrollWidth - rail.clientWidth;
+  const prev = sec.querySelector('.rail-arrow.prev'), next = sec.querySelector('.rail-arrow.next');
+  if (prev) prev.toggleAttribute('aria-disabled', rail.scrollLeft <= 2);
+  if (next) next.toggleAttribute('aria-disabled', rail.scrollLeft >= max - 2);
+}
+function armRails(root) {
+  (root || document).querySelectorAll('.rail, .path-row').forEach(rail => {
+    if (rail.dataset.armed) return;
+    rail.dataset.armed = '1';
+    /* a screen reader is told what this is and that it scrolls */
+    const head = rail.closest('.rail-section')?.querySelector('.rail-head h2');
+    rail.setAttribute('role', 'group');
+    if (head) rail.setAttribute('aria-label', head.textContent.trim());
+    rail.tabIndex = 0;
+    rail.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); railScroll(rail, 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); railScroll(rail, -1); }
+      else if (e.key === 'Home') { e.preventDefault(); scrollSurely(rail, 0); }
+      else if (e.key === 'End') { e.preventDefault(); scrollSurely(rail, rail.scrollWidth - rail.clientWidth); }
+    });
+    rail.addEventListener('scroll', () => syncRailPaddles(rail), { passive: true });
+    syncRailPaddles(rail);
+  });
+}
 function pathRowHTML() {
   const steps = S.path.slice(0, 6).map(id => {
     const c = courseById(id); if (!c) return '';
@@ -3997,6 +4046,7 @@ function renderNow() {
     };
   }
   initMotion();
+  armRails($('#app'));
   syncOverlayFocus();   /* backstop: never leave #app inert */
   armReveals();
   animateCounters();
@@ -4217,7 +4267,7 @@ function startSim(c, mod) {
   videoEl.style.display = 'none';
   simStage.classList.add('on');
   $('#simIcon').innerHTML = svgIcon(c.icon);
-  $('#simTitle').textContent = c.modules[mod];
+  $('#simTitle').textContent = '';
   stopSim();
   $('#simPlayBtn').textContent = '⏸ Pause';
   sim.t = 0; sim.running = true;
@@ -4337,6 +4387,21 @@ function openPlayer(courseId, mod) {
     return `<button class="mod-pill ${i === mod ? 'current' : done ? 'done' : ''} ${soon ? 'soon' : ''}" data-action="play" data-id="${courseId}" data-mod="${i}">${done ? '✓ ' : soon ? '🔒 ' : ''}${i + 1}. ${soon ? t('coming_soon') : cmods(c)[i]}</button>`;
   }).join('');
   /* hide "mark complete" for coming-soon lessons */
+  /* keep the lesson you are on inside the strip — the fix that matters more
+     than any affordance, because you always see where you are.
+     scrollIntoView() is useless here: at this point the overlay has not been
+     shown yet, so the element has no layout to scroll to. Compute the offset
+     and set it once the player is actually on screen. */
+  setTimeout(() => {
+    const strip = $('#playerPills'), cur = strip && strip.querySelector('.mod-pill.current');
+    if (!strip || !cur) return;
+    /* align to the pill's START, not its centre: the strip snaps to start, so a
+       centred target gets yanked back to the nearest snap point (measured: a
+       request for 418 landed at 234). Leave one pill of context to the left. */
+    const prev = cur.previousElementSibling;
+    const target = (prev ? prev.offsetLeft : cur.offsetLeft) - 12;
+    scrollSurely(strip, Math.max(0, target));
+  }, 260);
   $('#playerComplete').style.display = (media && media.type === 'soon') ? 'none' : '';
   playerEl.classList.add('open');
   if ($('#notesDrawer').classList.contains('open')) refreshNotesDrawer();
@@ -5184,11 +5249,7 @@ document.addEventListener('click', e => {
       if (failed) location.hash = '#/course/' + quiz.courseId;
       render(); break;
     }
-    case 'rail': {
-      const rail = el.parentElement.querySelector('.rail');
-      if (rail) rail.scrollBy({ left: +dir * Math.max(280, rail.clientWidth - 120), behavior: 'smooth' });
-      break;
-    }
+    case 'rail': { railScroll(el.parentElement.querySelector('.rail'), +dir); break; }
     case 'regen-path': regenPath(); break;
     case 'remind':
       el.classList.toggle('on');

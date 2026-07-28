@@ -3108,3 +3108,90 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
    course is legible from across the row */
 .card-progress { height: 3px; border-radius: 3px; background: color-mix(in srgb, #fff 12%, transparent); }
 .card-progress .fill { background: var(--accent); }
+
+/* ── the player's lesson strip ─────────────────────────────────────────────
+   1009px of pills in an 836px box with the scrollbar hidden and no fade: the
+   fifth lesson was clipped mid-word and the sixth did not exist as far as the
+   eye could tell. A mask says "there is more", scroll-snap makes dragging land
+   cleanly, and the current lesson is scrolled to centre on open. */
+.mod-pills {
+  scroll-snap-type: x proximity; scroll-padding-inline: 12px;
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 44px), transparent 100%);
+          mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 44px), transparent 100%);
+  padding-right: 12px;
+}
+.mod-pill { scroll-snap-align: start; }
+/* the strip is a list of lessons — say so to a screen reader */
+.mod-pills:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ══ PREMIUM LAYER 16 — what a Netflix teardown actually verified ═══════════
+   Two scouts read the live site. Most of the numbers people quote for Netflix
+   (the 1.5× hover, the 500ms expand) turned out to be tutorial authors' own
+   choices, not measurements — so only the first-hand findings are here.
+
+   MOTION. Their real tokens: 250ms, and TWO curves — a fast-settling one on the
+   way in, an ease-in on the way out. Asymmetry is what makes a hover feel
+   answered rather than animated. */
+:root {
+  --t-fast: 250ms;
+  --e-in:   cubic-bezier(.32, .94, .6, 1);     /* entering  */
+  --e-out:  cubic-bezier(.4, 0, .68, .06);     /* leaving   */
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card { transition: transform var(--t-fast) var(--e-out), filter var(--t-fast) var(--e-out); }
+  .card:hover, .card:focus-within { transition-timing-function: var(--e-in); }
+  .btn { transition: transform var(--t-fast) var(--e-out), box-shadow var(--t-fast) var(--e-out), background .2s; }
+  .btn:hover { transition-timing-function: var(--e-in); }
+}
+
+/* THE GRADIENT. Every scrim on netflix.com is a THIRTEEN-stop hand-eased ramp,
+   never a two-stop fade — that is what kills the banding you get from
+   linear-gradient(transparent, #000) on a large dark surface. Same shape here,
+   in our own background colour. */
+.hero-fade {
+  background: linear-gradient(
+    rgba(0,0,0,0) 0%,      color-mix(in srgb, var(--bg) 1%,  transparent) 8.333%,
+    color-mix(in srgb, var(--bg) 4.3%,  transparent) 16.67%,
+    color-mix(in srgb, var(--bg) 10%,   transparent) 25%,
+    color-mix(in srgb, var(--bg) 17.6%, transparent) 33.33%,
+    color-mix(in srgb, var(--bg) 28%,   transparent) 41.67%,
+    color-mix(in srgb, var(--bg) 40%,   transparent) 50%,
+    color-mix(in srgb, var(--bg) 52%,   transparent) 58.33%,
+    color-mix(in srgb, var(--bg) 62.4%, transparent) 66.67%,
+    color-mix(in srgb, var(--bg) 70%,   transparent) 75%,
+    color-mix(in srgb, var(--bg) 75.7%, transparent) 83.33%,
+    color-mix(in srgb, var(--bg) 79%,   transparent) 91.67%,
+    var(--bg) 100%);
+}
+
+/* CONTINUE WATCHING. Verified: their fill element sits INSIDE the artwork,
+   flush to its bottom edge — not below it in the text block, where ours was.
+   A half-finished course now reads from the poster itself. */
+.thumb { position: relative; }
+.thumb .card-progress {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+  height: 4px; border-radius: 0;
+  background: rgba(255,255,255,.28);
+}
+.thumb .card-progress .fill { height: 100%; background: var(--accent); }
+
+/* THE PADDLE. Gated on scroll POSITION, not just hover — at the start of a row
+   there is nothing to go back to, so the control is not offered. Their paddle
+   is an opaque block that occludes the peeking card rather than a fade. */
+.rail-arrow[disabled], .rail-arrow[aria-disabled="true"] { opacity: 0 !important; pointer-events: none; }
+
+/* SEQUENCE NUMERALS. Their Top-10 device is a two-layer data-content trick: a
+   thick stroked glyph with a second copy stamped over it to punch the interior.
+   Netflix ranks by popularity, which for mandatory training would tell a
+   learner the unpopular courses are optional — so we use it for ORDER, where
+   the number means something. */
+.pstep { padding-left: 42px; }
+.pstep-n {
+  position: absolute; left: 10px; top: 12px;
+  width: auto; height: auto; background: none !important; box-shadow: none !important;
+  font-family: var(--font-display); font-size: 30px; font-weight: 700; line-height: 1;
+  color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--text) 42%, transparent);
+}
+.pstep.done .pstep-n, .pstep.current .pstep-n {
+  -webkit-text-stroke: 1.5px var(--accent); color: color-mix(in srgb, var(--accent) 22%, transparent);
+}
