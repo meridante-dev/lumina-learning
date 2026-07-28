@@ -148,7 +148,7 @@ const MAIL = {
 const _lang = () => (typeof S !== 'undefined' && S.lang) || 'en';
 const UI = {
   en: {
-    nav_home:'Home', nav_library:'Library', nav_paths:'Paths', nav_live:'Live', nav_progress:'Progress', nav_analytics:'Analytics', nav_admin:'Admin', nav_community:'Community',
+    nav_home:'Home', nav_library:'Library', nav_paths:'Paths', nav_live:'Live', nav_progress:'Progress', nav_analytics:'Analytics', nav_admin:'Team', nav_me:'My learning', nav_settings:'Settings', nav_community:'Community',
     comm_title:'Community', comm_sub:'', comm_channels:'Community', comm_paths:'Learning paths', ch_intro:'Introductions', ch_general:'General', ch_wins:'Wins & harvests',
     comm_new:'Start a discussion', comm_title_ph:'Title — ask a question or start a topic', comm_body_ph:'Share your thoughts…', comm_msg_ph:'Write a message…', comm_post:'Post', comm_send:'Send', comm_reply:'Reply', comm_replies:'replies', comm_reply_one:'reply',
     comm_signin_post:'Sign in to join the conversation', comm_empty:'No posts here yet — be the first to start the conversation', comm_empty_replies:'No replies yet. Be the first.', comm_back:'Back', comm_posted:'Posted to the community', comm_just_now:'just now',
@@ -253,6 +253,9 @@ const UI = {
     paths_h:'Learning paths', paths_sub:'A sequence toward one goal. Finish a step and the rest re-plans around what you proved you know.',
     active_path:'Active path', courses_in_path:'Courses in this path', in_order:'In order', next_paths:'Suggested next', next_paths_sub:'Based on your goal',
     your_path:'Your path',
+    me_h:'My learning', me_progress:'Progress', me_record:'Record', me_activity:'Activity',
+    me_paths_sub:'Sequences toward a goal', me_comm_sub:'Questions, answers, your team', me_live_sub:'Sessions and replays',
+    nav_live:'Live',
     tutor_name:'EdenRise AI Tutor', tutor_ai_note:'AI assistant — answers can be wrong; verify what matters.', tutor_demo:'● Demo mode · scripted replies', summarize_course:'Summarize', quiz_now:'Quiz me', whats_due:"What's due?", build_path:'Build a path', ask_anything:'Ask anything about your land or courses…',
     connect_ai:'Connect real AI', api_note:"Paste an Anthropic API key to power the tutor with Claude. The key is stored only in this browser's localStorage and sent only to api.anthropic.com.", save:'Save', use_demo:'Use demo mode',
     footer_tag:'· The learning academy of EdenRise',
@@ -263,7 +266,7 @@ const UI = {
     auth_forgot:'Forgot password?', auth_reset_sent:'Reset link sent — check your inbox', auth_reset_need_email:'Type your email above first, then tap "Forgot password?" again.', auth_verify_sent:'Welcome! We sent a verification link to your email'
   },
   pt: {
-    nav_home:'Início', nav_library:'Biblioteca', nav_paths:'Percursos', nav_live:'Ao Vivo', nav_progress:'Progresso', nav_analytics:'Análises', nav_admin:'Admin', nav_community:'Comunidade',
+    nav_home:'Início', nav_library:'Biblioteca', nav_paths:'Percursos', nav_live:'Ao Vivo', nav_progress:'Progresso', nav_analytics:'Análises', nav_admin:'Equipa', nav_me:'A minha aprendizagem', nav_settings:'Definições', nav_community:'Comunidade',
     comm_title:'Comunidade', comm_sub:'', comm_channels:'Comunidade', comm_paths:'Percursos', ch_intro:'Apresentações', ch_general:'Geral', ch_wins:'Conquistas',
     comm_new:'Iniciar uma discussão', comm_title_ph:'Título — faça uma pergunta ou inicie um tema', comm_body_ph:'Partilhe as suas ideias…', comm_msg_ph:'Escreva uma mensagem…', comm_post:'Publicar', comm_send:'Enviar', comm_reply:'Responder', comm_replies:'respostas', comm_reply_one:'resposta',
     comm_signin_post:'Entre para participar na conversa', comm_empty:'Ainda sem publicações — seja o primeiro a começar a conversa', comm_empty_replies:'Ainda sem respostas. Seja o primeiro.', comm_back:'Voltar', comm_posted:'Publicado na comunidade', comm_just_now:'agora',
@@ -368,6 +371,9 @@ const UI = {
     paths_h:'Percursos', paths_sub:'Uma sequência para um objetivo. Termine um passo e o resto reorganiza-se com base no que já provou saber.',
     active_path:'Percurso ativo', courses_in_path:'Cursos deste percurso', in_order:'Por ordem', next_paths:'Sugestões seguintes', next_paths_sub:'Com base no seu objetivo',
     your_path:'O seu percurso',
+    me_h:'A minha aprendizagem', me_progress:'Progresso', me_record:'Registo', me_activity:'Atividade',
+    me_paths_sub:'Sequências para um objetivo', me_comm_sub:'Perguntas, respostas, a sua equipa', me_live_sub:'Sessões e gravações',
+    nav_live:'Ao Vivo',
     tutor_name:'Tutor de IA EdenRise', tutor_ai_note:'Assistente de IA — as respostas podem conter erros; confirme o que for importante.', tutor_demo:'● Modo demo · respostas guionadas', summarize_course:'Resumir', quiz_now:'Testar-me', whats_due:'O que falta?', build_path:'Criar percurso', ask_anything:'Pergunte sobre a sua terra ou cursos…',
     connect_ai:'Ligar IA real', api_note:'Cole uma chave da API Anthropic para o tutor usar o Claude. A chave fica apenas neste navegador (localStorage) e é enviada apenas para api.anthropic.com.', save:'Guardar', use_demo:'Usar modo demo',
     footer_tag:'· A academia de aprendizagem da EdenRise',

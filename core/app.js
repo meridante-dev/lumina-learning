@@ -401,10 +401,10 @@ function cardHTML(c, opts = {}) {
   </article>`;
 }
 
-function railHTML(title, hint, cards, seeAllRoute) {
+function railHTML(title, hint, cards, seeAllRoute, mod) {
   if (!cards.length) return '';
   return `
-  <section class="rail-section">
+  <section class="rail-section ${mod || ''}">
     <div class="rail-head">
       <h2>${title}</h2><span class="hint">${hint}</span>
       <button class="see-all" data-action="goto" data-route="${seeAllRoute || '#/library'}">${t('see_all')}</button>
@@ -469,6 +469,19 @@ function syncRailPaddles(rail) {
   if (prev) prev.toggleAttribute('aria-disabled', rail.scrollLeft <= 2);
   if (next) next.toggleAttribute('aria-disabled', rail.scrollLeft >= max - 2);
 }
+/* nav: transparent while the billboard is behind it, solid once it is not.
+   Netflix switches on a JS-side threshold; ours is the hero's own height, so
+   the change happens exactly when the artwork stops being behind the bar. */
+function armNavScroll() {
+  const nav = document.querySelector('.topnav'); if (!nav) return;
+  const sync = () => {
+    const hero = document.querySelector('#app .hero');
+    const over = !!hero && (scrollY < hero.getBoundingClientRect().height - 72);
+    nav.classList.toggle('over-hero', over);
+  };
+  if (!armNavScroll._on) { addEventListener('scroll', sync, { passive: true }); armNavScroll._on = 1; }
+  sync();
+}
 function armRails(root) {
   (root || document).querySelectorAll('.rail, .path-row').forEach(rail => {
     if (rail.dataset.armed) return;
@@ -510,7 +523,14 @@ function pathRowHTML() {
   </section>`;
 }
 function renderHome() {
-  const featured = S.path.map(courseById).filter(Boolean).find(c => !isDone(c.id))   /* real, existing, not-done path course */
+  /* Netflix, 360Learning and Cornerstone all rank resume by RECENCY. Ours
+     ranked by curriculum order, so a learner who watched an off-path course
+     yesterday was offered a different one and had to hunt for their own place. */
+  const lastPlayed = Object.entries(S.progress || {})
+    .filter(([id, p]) => p && p.lastAt && !p.done && courseById(id))
+    .sort((a, b) => b[1].lastAt - a[1].lastAt)[0];
+  const featured = (lastPlayed && courseById(lastPlayed[0]))
+    || S.path.map(courseById).filter(Boolean).find(c => !isDone(c.id))
     || CATALOG.find(c => c.featured && !isDone(c.id)) || CATALOG.find(c => !isDone(c.id))
     || CATALOG.find(c => c.featured) || CATALOG[0];                                    /* always a real course */
   const featuredCourses = CATALOG.filter(c => c.featured);
@@ -570,14 +590,21 @@ function renderHome() {
     </div>
   </header>
   <div class="hero-divider" aria-hidden="true"></div>
+  <!-- Featured takes the slot directly under the billboard and OVERLAPS it,
+       which is how netflix.com is actually built: the billboard paints 56.25vw
+       but the row reserves only 40% of width, so the first row rides up over
+       the hero's own vignette. Continue learning moves further down — the hero
+       already carries resume, with the module name and the progress bar. -->
+  <!-- Six blocks. It was thirteen, with the learning path rendered three times
+       on one page and a stats row duplicated from #/me. A returning learner has
+       one job — carry on — and everything here either serves that or teases
+       what is next. -->
+  ${askBarHTML()}
+  ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)), null, 'featured-row')}
   ${pathRowHTML()}
-  ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)))}
+  ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
   ${featuredCourses.length ? railHTML(t('featured_h'), t('featured_sub'), featuredCourses.map(c => cardHTML(c))) : ''}
   ${dailyDropHTML()}
-  ${assignmentCardsHTML()}
-  ${askBarHTML()}
-  ${digestsSectionHTML()}
-  ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
   <section class="path-banner">
     <div class="shimmer"></div>
     <div class="path-banner-head">
@@ -1271,7 +1298,6 @@ async function openAsk(q) {
   }
 }
 function askBarHTML() {
-  if (!aiKey()) return '';
   return `<section class="page-pad" style="padding-top:0;"><div class="ask-bar">
     <div class="ask-ic">✦</div>
     <div class="ask-main"><b>${t('ask_h')}</b><span>${t('ask_sub')}</span>
@@ -3334,7 +3360,39 @@ function renderAdmin() {
 }
 
 /* ---------- My Progress ---------- */
-function renderProgress() {
+
+/* ---- #/me · one place for every number ------------------------------------
+   The owner's brief, verbatim: "points, lessons learned, hours spent, streak,
+   leaderboard, badges, percentages, how I've gone above and beyond — everything
+   a gamer wants, in one cool spot." Duolingo's own post-mortem on this is that
+   scattering it was the mistake: "Achievements are badges buried in the profile
+   page. They're hard to find, and harder to celebrate."
+   Progress = the game. Record = the legal artefact. Activity = the places this
+   used to have top-level nav slots for. */
+let meTab = 'progress';
+function renderMe() {
+  const tabs = [['progress', t('me_progress')], ['record', t('me_record')], ['activity', t('me_activity')]];
+  const bar = `<div class="me-tabs" role="tablist">${tabs.map(([k, label]) =>
+    `<button class="me-tab ${meTab === k ? 'on' : ''}" role="tab" aria-selected="${meTab === k}" data-action="me-tab" data-v="${k}">${label}</button>`).join('')}</div>`;
+  let body = '';
+  if (meTab === 'progress') body = renderProgress(true);
+  /* the learner's own legal record — complianceHTML() is the MANAGER's view of
+     the whole team and renders nothing for a learner */
+  else if (meTab === 'record') body = `${compliancePanelHTML()}${verifiedPanelHTML()}${certsSectionHTML()}`;
+  else body = `<div class="page-pad"><h2 class="sect-h">${t('your_path')}</h2></div>${pathRowHTML()}
+    <div class="page-pad" style="padding-top:8px;">
+      <div class="me-links">
+        <button class="me-link" data-action="goto" data-route="#/paths"><b>${t('nav_paths')}</b><span>${t('me_paths_sub')}</span></button>
+        <button class="me-link" data-action="goto" data-route="#/community"><b>${t('nav_community')}</b><span>${t('me_comm_sub')}</span></button>
+        <button class="me-link" data-action="goto" data-route="#/live"><b>${t('nav_live')}</b><span>${t('me_live_sub')}</span></button>
+      </div>
+    </div>${digestsSectionHTML()}`;
+  return `<div class="page"><div class="page-pad">
+    <h1 class="page-title">${t('me_h')}</h1>
+    <p class="page-sub">${esc(displayName())}${S.profile && S.profile.dept ? ' · ' + esc(tdept(S.profile.dept)) : ''}</p>
+    </div>${bar}${body}${footerHTML()}</div>`;
+}
+function renderProgress(embedded) {
   const lv = levelFor(S.xp);
   const board = leaderboard();
   const rank = myRank();
@@ -3355,8 +3413,8 @@ function renderProgress() {
       : `<div class="nudge-line">${svgIcon('sun')}<span>${t('top_board')}</span></div>`);
 
   return `<div class="page"><div class="page-pad">
-    <h1 class="page-title">${t('my_progress')}</h1>
-    <p class="page-sub">${t('progress_sub')}</p>
+    ${embedded ? '' : `<h1 class="page-title">${t('my_progress')}</h1>
+    <p class="page-sub">${t('progress_sub')}</p>`}
 
     <div class="prog-top">
       <div class="level-card">
@@ -3388,7 +3446,7 @@ function renderProgress() {
     </div>
     ${transferPanelHTML()}
     ${verifiedPanelHTML()}
-    ${compliancePanelHTML()}
+    ${embedded ? '' : compliancePanelHTML()}
     ${readinessSectionHTML()}
     ${skillsSectionHTML()}
     ${certsSectionHTML()}
@@ -3978,7 +4036,7 @@ function saveProfile() {
 }
 
 /* ---------- router ---------- */
-const routes = { home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin, profile: renderProfile, community: renderCommunity };
+const routes = { me: renderMe, home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin, profile: renderProfile, community: renderCommunity };
 /* a11y: make clickable non-native elements keyboard-operable */
 function makeFocusable(root) {
   (root || document).querySelectorAll('[data-action]').forEach(el => {
@@ -4023,8 +4081,8 @@ function renderNow() {
   lazyBackgrounds();
   if (route === 'community') initCommunity();
   if (route === 'admin' && isAdmin()) initAdmin();
-  if (route === 'progress' && boardCache === null) initBoard();
-  if (route === 'progress') paintLedgerCheck();
+  if ((route === 'progress' || route === 'me') && boardCache === null) initBoard();
+  if (route === 'progress' || route === 'me') paintLedgerCheck();
   maybeTour();
   if (route === 'community') initBoard();
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -4047,6 +4105,7 @@ function renderNow() {
   }
   initMotion();
   armRails($('#app'));
+  armNavScroll();
   syncOverlayFocus();   /* backstop: never leave #app inert */
   armReveals();
   animateCounters();
@@ -4134,7 +4193,7 @@ function lazyBackgrounds() {
 addEventListener('hashchange', render);
 
 /* ---------- language (EN / PT) ---------- */
-const NAV_KEYS = { '#/home': 'nav_home', '#/library': 'nav_library', '#/paths': 'nav_paths', '#/community': 'nav_community', '#/live': 'nav_live', '#/progress': 'nav_progress', '#/analytics': 'nav_analytics', '#/admin': 'nav_admin' };
+const NAV_KEYS = { '#/home': 'nav_home', '#/me': 'nav_me', '#/profile': 'nav_settings', '#/library': 'nav_library', '#/paths': 'nav_paths', '#/community': 'nav_community', '#/live': 'nav_live', '#/progress': 'nav_progress', '#/analytics': 'nav_analytics', '#/admin': 'nav_admin' };
 function syncChrome() {
   $$('.nav-links a, .mobile-drawer a').forEach(a => { const k = NAV_KEYS[a.getAttribute('href')]; if (k) a.textContent = t(k); });
   const search = $('#navSearch'); if (search) search.innerHTML = `⌕&nbsp; ${t('search_ph')} <kbd>⌘K</kbd>`;
@@ -4355,6 +4414,10 @@ function openPlayer(courseId, mod) {
   watchedSeconds = 0;
   playing = { courseId, mod };
   if (!prog(courseId)) S.progress[courseId] = { mod, pct: 0 };
+  /* what you last opened is what "carry on" must mean — the syllabus order is
+     the platform's opinion, this is the learner's */
+  S.progress[courseId].lastAt = Date.now();
+  clearTimeout(saveTimer); saveTimer = setTimeout(save, 400);
   resetStages();
 
   if (media && media.type === 'soon') {
@@ -4711,6 +4774,7 @@ function resolveTakeaways(toQuiz) {
 function completeModule(courseId, mod) {
   const c = courseById(courseId);
   const p = S.progress[courseId] || (S.progress[courseId] = { mod: 0, pct: 0 });
+  p.lastAt = Date.now();
   /* 40h compliance: credit this lesson's carga horária to the append-only training ledger */
   if (!(S.trainingLog || (S.trainingLog = [])).some(e => e.courseId === courseId && e.mod === mod)) {
     const mins = (c.moduleDurations && c.moduleDurations[mod]) || 12;
@@ -5066,12 +5130,17 @@ function buildTutorSystem() {
   return `You are the ${brandName()} Tutor, the in-app AI learning companion inside ${brandAcademy()} — the learning platform of ${brandEthos()}
 You are talking to ${displayName()}${S.role ? ' (' + S.role + ')' : ''}, whose learning goal is "${S.goal}".
 
-His AI learning path right now:
+Courses he has NOT started (recommend only from here):
+${CATALOG.filter(x => !isDone(x.id) && coursePct(x.id) === 0).slice(0, 14).map(x => `- ${x.title} (${x.cat}, ${fmtMins(courseMins(x))})`).join('\n')}
+
+His learning path right now:
 ${pathLines}
 
 ${c ? `He currently has "${c.title}" open${p && !p.done ? ` — module ${(p.mod || 0) + 1} of ${c.modules.length}, "${c.modules[p.mod || 0]}", ${coursePct(c.id)}% complete` : ''}. Course description: ${c.desc}` : 'No course is currently open.'}
 
 Deadlines: "Fire Safety on the Land" is required and due in 3 days (it's fire season in the Alentejo); the team series "Living by the Seasons" is due June 30.
+
+WHEN HE BRINGS A PROBLEM, NOT A QUESTION — a bad day, a manager who has gone quiet, friction in the team, feeling behind — do this and nothing else: acknowledge it in ONE short sentence without platitudes, then recommend at most TWO courses he has NOT started, say in a half-line what each would give him for THAT problem, and tell him which to start first. Never recommend something he has already completed. If the library genuinely has nothing for it, say so and suggest who he might talk to instead — a course is not a substitute for a person.
 
 Style: warm, encouraging, concise (2-4 sentences unless asked for depth). Refer to his actual progress and path when relevant. You can offer to quiz him — if he agrees, tell him to press the "Quiz me now" button. Never invent courses that aren't in his path or the descriptions above.
 HONESTY: Be honest before being helpful. If you are not sure of something, or the courses don't cover it, say so plainly ("I'm not certain" / "our courses don't cover this yet — check with the land team") instead of guessing. Never invent facts, names, numbers or regulations. When the learner shares their own reasoning, respond to their ACTUAL thinking — name what's right in it before correcting what's off.
@@ -5172,7 +5241,50 @@ function tutorRespond(text) {
   if (aiKey()) { askClaude(text); return; }
   scriptedRespond(text);
 }
+
+/* ---- the concierge -------------------------------------------------------
+   A learner does not arrive with a course code. They arrive with a bad day:
+   "my boss isn't talking to me", "I'm struggling with the team", "I feel
+   behind". This maps the problem they actually described to two courses they
+   have NOT taken, and offers to start the better one — because a
+   recommendation you cannot act on in one click is just advice. */
+const CONCIERGE = [
+  { k: ['boss', 'manager', 'chefe', 'supervisor', 'ignor', 'não fala', 'not talking', 'feedback'],
+    cats: ['Leadership', 'Community'], why_en: 'talking to the person above you', why_pt: 'falar com quem está acima de si' },
+  { k: ['team', 'colleague', 'equipa', 'colega', 'conflict', 'conflito', 'argument', 'discussão'],
+    cats: ['Community', 'Leadership'], why_en: 'working with the people around you', why_pt: 'trabalhar com quem o rodeia' },
+  { k: ['stress', 'burn', 'tired', 'cansad', 'overwhelm', 'ansied', 'anxious', 'bad day', 'mau dia', 'struggl', 'dificuldade'],
+    cats: ['Wellbeing', 'Nature Connection'], why_en: 'getting your footing back', why_pt: 'voltar a encontrar o seu ritmo' },
+  { k: ['behind', 'atrasad', 'slow', 'lento', 'catch up', 'recuperar', 'time', 'tempo'],
+    cats: ['Stewardship', 'Leadership'], why_en: 'getting back on track', why_pt: 'voltar ao caminho' },
+];
+function conciergePick(text) {
+  const q = (text || '').toLowerCase();
+  const hit = CONCIERGE.find(r => r.k.some(k => q.includes(k)));
+  if (!hit) return null;
+  const untouched = CATALOG.filter(c => !isDone(c.id) && coursePct(c.id) === 0);
+  const inCat = hit.cats.flatMap(cat => untouched.filter(c => c.cat === cat));
+  const picks = [...new Set(inCat.concat(untouched))].slice(0, 2);
+  return picks.length ? { picks, hit } : null;
+}
+function conciergeReply(text) {
+  const found = conciergePick(text);
+  if (!found) return false;
+  const pt = _lang() === 'pt';
+  const [a, b] = found.picks;
+  const why = pt ? found.hit.why_pt : found.hit.why_en;
+  const line = pt
+    ? `Obrigado por dizer isso — não é pouco. Pelo que descreve, o que ajuda é <b>${esc(why)}</b>. Duas coisas que ainda não fez:`
+    : `Thanks for saying that — it isn't nothing. From what you describe, the thing that helps is <b>${esc(why)}</b>. Two you haven't done yet:`;
+  const card = c => `<div class="rec-item"><div><b>${esc(ctitle(c))}</b><span>${esc(tcat(c.cat))} · ${fmtMins(courseMins(c))}</span></div>
+      <button class="btn btn-primary btn-sm" data-action="play" data-id="${c.id}">${pt ? 'Começar' : 'Start'}</button></div>`;
+  botSay(`${line}<div class="rec-list">${card(a)}${b ? card(b) : ''}</div>
+    <span class="rec-note">${pt ? 'Começaria pelo primeiro.' : "I'd start with the first one."}</span>`, 700);
+  return true;
+}
 function scriptedRespond(text) {
+  /* a person's problem outranks every keyword branch below it */
+  if (conciergeReply(text)) return;
   const id = currentCourseId(); const c = id && courseById(id);
   const t0 = text.toLowerCase();
   const pt = _lang() === 'pt';
@@ -5517,6 +5629,7 @@ document.addEventListener('click', e => {
       saveAssignments(assignments, 'Assignment removed');
       break;
     }
+    case 'me-tab': meTab = el.dataset.v; render(); break;
     case 'cockpit-retry': initAdmin(); break;
     case 'reset-demo': localStorage.removeItem(STATE_KEY); location.hash = '#/home'; location.reload(); break;
   }
@@ -5814,6 +5927,12 @@ function drawOnboard() {
 $('#avatarMenu').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   $('#avatarMenu').classList.remove('open');
+  /* "My learning" is the one place every number lives — points, lessons,
+     hours, streak, badges, the board, compliance. Settings is separate. */
+  if (b.dataset.m === 'me') location.hash = '#/progress';
+  if (b.dataset.m === 'paths') location.hash = '#/paths';
+  if (b.dataset.m === 'community') location.hash = '#/community';
+  if (b.dataset.m === 'live') location.hash = '#/live';
   if (b.dataset.m === 'profile') location.hash = '#/profile';
   if (b.dataset.m === 'onboard') startOnboarding();
   if (b.dataset.m === 'reset') { localStorage.removeItem(STATE_KEY); location.hash = '#/home'; location.reload(); }

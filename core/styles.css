@@ -3195,3 +3195,113 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
 .pstep.done .pstep-n, .pstep.current .pstep-n {
   -webkit-text-stroke: 1.5px var(--accent); color: color-mix(in srgb, var(--accent) 22%, transparent);
 }
+
+/* ══ PREMIUM LAYER 17 — the billboard and the row that rides over it ════════
+   Verified off netflix.com: `.billboard-row` reserves only 40% of viewport
+   WIDTH as layout height while `.billboard` paints 56.25vw — so the first row
+   overlaps the hero by roughly 16vw rather than starting below it, and the
+   hero's own bottom vignette (14.7vw tall, fading to the page colour at 68%)
+   is what makes the seam invisible. That overlap is the reason their home page
+   reads as one continuous surface instead of a header plus a list. */
+.featured-row {
+  position: relative; z-index: 3;
+  /* must beat the 72px section rhythm as well as clear the divider, or the row
+     lands 127px BELOW the hero instead of riding over it */
+  margin-top: calc(-1 * clamp(90px, 11vw, 190px));
+}
+/* the hairline divider exists to separate the hero from what follows — when
+   the featured row deliberately overlaps it, there is nothing to divide */
+.page:has(.featured-row) .hero-divider { display: none; }
+.featured-row .rail-head h2 { font-size: clamp(20px, 1.6vw, 30px); }
+/* their bottom vignette is 14.7vw and lands on the page colour at 68% —
+   ours was a flat 180px, which is why the seam showed at large widths */
+.hero-fade { height: max(180px, 14.7vw); }
+
+/* Row titles on netflix.com are #e5e5e5, not white: the title is a signpost,
+   the artwork is the content. Same idea in our own token. */
+.rail-head h2 { color: color-mix(in srgb, var(--text) 90%, transparent); }
+
+/* Nav: transparent over the billboard, solid page colour once you leave it,
+   over 400ms — their exact treatment, including the permanent top scrim that
+   keeps the wordmark legible while transparent. */
+.topnav { transition: background-color .4s ease, border-color .4s ease; }
+.topnav.over-hero {
+  background: linear-gradient(180deg, rgba(0,0,0,.7) 10%, transparent);
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+}
+/* the account menu is now the way to everything that is not "carry on" */
+.avatar-menu { min-width: 208px; }
+.avatar-menu .am-primary { font-weight: 600; color: var(--text); }
+.avatar-menu .am-sep { height: 1px; background: var(--line); margin: 6px 4px; }
+/* the concierge's answer: two courses, each startable in one click */
+.rec-list { display: grid; gap: 8px; margin: 12px 0 6px; }
+.rec-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.rec-item b { display: block; font-size: 13px; }
+.rec-item span { display: block; font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+.rec-note { display: block; font-size: 11.5px; color: var(--text-faint); }
+
+/* ══ PREMIUM LAYER 18 — the billboard is the course's own artwork ═══════════
+   The hero art was a 60%-wide panel at 50% opacity behind a mask: decoration
+   made from a poster. Netflix gives the artwork the whole billboard and then
+   earns the text back with two scrims — a left one for the copy, a bottom one
+   that dissolves into the first row. Both verified off their live CSS:
+   `linear-gradient(77deg, rgba(0,0,0,.6), transparent 85%)` inset from the
+   right at 26.09%, and a 13-stop eased ramp at the bottom.
+   The artwork is now the REAL cover of the course you are resuming, at full
+   strength, moving slowly. */
+.hero-art {
+  inset: 0; width: 100%; opacity: 1;
+  background-size: cover; background-position: center 32%;
+  -webkit-mask-image: none; mask-image: none;
+  transform-origin: 60% 45%;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-art { animation: kenBurns 34s cubic-bezier(.37,0,.63,1) infinite alternate; }
+}
+@keyframes kenBurns {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to   { transform: scale(1.13) translate3d(-1.6%, -1.2%, 0); }
+}
+/* the copy scrim — Netflix's own angle and inset, in our background colour so
+   a tenant's page tone carries through */
+.hero::before {
+  content: ''; position: absolute; inset: 0 26.09% 0 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(77deg, color-mix(in srgb, var(--bg) 88%, transparent), transparent 85%);
+}
+.hero-content { position: relative; z-index: 4; }
+.hero-fade { z-index: 3; }
+/* the orbs and the grid were doing the decorating the artwork now does */
+.hero .orb, .hero-grid { opacity: .35; }
+
+@media (max-width: 900px) {
+  .hero-art { width: 100%; opacity: .9; background-position: 62% top;
+    -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 92%);
+            mask-image: linear-gradient(180deg, #000 35%, transparent 92%); }
+  .hero::before { inset: 0; background: linear-gradient(180deg, transparent 8%, color-mix(in srgb, var(--bg) 82%, transparent) 58%); }
+}
+/* the hub's tabs, and its doorways to what used to have nav slots */
+.me-tabs { display: flex; gap: 22px; padding: 8px var(--edge) 0; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+.me-tab {
+  background: none; border: 0; padding: 10px 0 12px; cursor: pointer;
+  font: 600 14px/1 var(--font-body); color: var(--text-faint);
+  box-shadow: inset 0 -1.5px 0 transparent; transition: color .2s, box-shadow .2s;
+}
+.me-tab.on { color: var(--text); box-shadow: inset 0 -1.5px 0 var(--accent); }
+.me-tab:hover { color: var(--text); }
+.me-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 6px; }
+.me-link {
+  text-align: left; background: color-mix(in srgb, var(--bg) 78%, #fff 3%); border: 0;
+  border-radius: 12px; padding: 16px 18px; cursor: pointer; font-family: var(--font-body);
+  transition: transform var(--t-fast) var(--e-out), background var(--t-fast) var(--e-out);
+}
+.me-link:hover { transform: translateY(-3px); background: color-mix(in srgb, var(--accent) 9%, var(--bg)); }
+.me-link b { display: block; font-size: 14px; color: var(--text); }
+.me-link span { display: block; font-size: 12px; color: var(--text-faint); margin-top: 3px; }
+.md-sep { height: 1px; background: var(--line); margin: 10px 0; }
+.md-signout { background: none; border: 0; text-align: left; padding: 10px 0; color: var(--text-dim); font: 500 15px/1 var(--font-body); cursor: pointer; }
