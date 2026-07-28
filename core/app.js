@@ -570,7 +570,7 @@ function renderHome() {
   <header class="hero">
     <div class="hero-bg"></div><div class="hero-grid"></div>
     ${(featured.heroArt || featured.poster) ? `<div class="hero-art" style="background-image:url('${featured.heroArt || featured.poster}')"></div>` : ''}
-    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div>
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div><div class="hero-rim" aria-hidden="true"></div>
     <div class="hero-content">
       <span class="hero-eyebrow">${t('featured_eyebrow')}</span>
       <h1 class="hero-h1">${words.map((wd, i) => `<span class="hw" style="--i:${i}">${esc(wd)}</span>`).join(' ')} <span class="hw grad-text" style="--i:${words.length}">${esc(lastWord)}</span></h1>
@@ -4301,26 +4301,28 @@ function armHeroDepth() {
   const paint = () => {
     raf = 0;
     const y = Math.min(scrolled(), hero.offsetHeight);
-    art.style.setProperty('--sy', (y * 0.24).toFixed(1) + 'px');
-    if (copy) {
-      copy.style.transform = `translate3d(0, ${(y * 0.08).toFixed(1)}px, 0)`;
-      copy.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.72)));
-    }
+    art.style.setProperty('--sy', (y * 0.16).toFixed(1) + 'px');
+    /* the copy fades but does NOT move: neither Stripe nor Linear translates
+       hero text on scroll, and moving it is what reads as a parallax demo */
+    if (copy) copy.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.78)));
   };
   const onScroll = () => { if (!raf) raf = requestAnimationFrame(paint); };
   /* window.scrollY reads 0 in some embedded contexts while the document is
      genuinely scrolled — take whichever value is real */
   const scrolled = () => Math.max(scrollY || 0, (document.scrollingElement || {}).scrollTop || 0);
+  let _skip = 0;
+  let myRaf = 0;
   const glide = () => {
-    if (!hero.isConnected) { cancelAnimationFrame(_heroRaf); return; }
-    px += (tx - px) * 0.06; py += (tpy - py) * 0.06;
+    if (!hero.isConnected) { cancelAnimationFrame(myRaf); return; }   /* cancel MY handle, never the shared one */
+    if ((_skip = (_skip + 1) % 2)) { myRaf = _heroRaf = requestAnimationFrame(glide); return; }  /* ~30fps, as Stripe renders its own hero */
+    px += (tx - px) * 0.11; py += (tpy - py) * 0.11;
     hero.style.setProperty('--mx', px.toFixed(2) + '%');
     hero.style.setProperty('--my', py.toFixed(2) + '%');
-    _heroRaf = requestAnimationFrame(glide);
+    myRaf = _heroRaf = requestAnimationFrame(glide);
   };
   const onMove = e => {
     const r = hero.getBoundingClientRect();
-    tx = ((e.clientX - r.left) / r.width) * 100;
+    tx = Math.max(52, ((e.clientX - r.left) / r.width) * 100);   /* the light stays out of the copy column */
     tpy = ((e.clientY - r.top) / r.height) * 100;
   };
   if (armHeroDepth._scroll) removeEventListener('scroll', armHeroDepth._scroll);
@@ -4336,6 +4338,9 @@ function armHeroDepth() {
     cancelAnimationFrame(_heroRaf); glide();
   }
   paint();
+  matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', e => {
+    if (e.matches) { cancelAnimationFrame(_heroRaf); removeEventListener('scroll', onScroll); }
+  }, { once: true });
 }
 function initMotion() {
   const G = window.gsap;
@@ -4354,16 +4359,12 @@ function initMotion() {
   /* hero entrance — headline, meta, actions, side panel */
   const hero = $('.hero-content');
   if (hero) {
-    const tl = G.timeline({ defaults: { ease: 'power3.out' } });
-    tl.from('.hero-eyebrow', { y: 18, opacity: 0, duration: .6 })
-      .from('.hero h1', { y: 28, opacity: 0, duration: .9 }, '-=.35')
-      .from('.hero-meta > *', { y: 14, opacity: 0, stagger: .05, duration: .5 }, '-=.5')
-      .from('.hero p.desc', { y: 18, opacity: 0, duration: .6 }, '-=.4')
-      .from('.hero-actions .btn', { y: 16, opacity: 0, stagger: .07, duration: .5 }, '-=.4')
-      .from('.hero-progress', { opacity: 0, duration: .6 }, '-=.3')
-      .from('.hero-side', { x: 26, opacity: 0, duration: .8 }, '-=.9');
-    /* safety: if frames are throttled (background tab), jump to the end */
-    setTimeout(() => { try { if (tl.progress() < 1) tl.progress(1); } catch (e) {} }, 2200);
+    /* The hero's entrance is CSS now (PREMIUM LAYER 20): a per-word headline
+       plus a staggered block, with `both` fill. CSS animations outrank inline
+       styles, so GSAP's tweens were being overridden and wasted — except on
+       .hero h1, which no CSS rule targets, so desktop was fading the headline
+       as a block WHILE its own words animated individually. Two entrances on
+       top of each other, and desktop got the worse one. One owner now. */
   }
 
   if (ST) {
