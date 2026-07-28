@@ -573,7 +573,7 @@ function renderHome() {
     <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div>
     <div class="hero-content">
       <span class="hero-eyebrow">${t('featured_eyebrow')}</span>
-      <h1>${words.join(' ')} <span class="grad-text">${lastWord}</span></h1>
+      <h1 class="hero-h1">${words.map((wd, i) => `<span class="hw" style="--i:${i}">${esc(wd)}</span>`).join(' ')} <span class="hw grad-text" style="--i:${words.length}">${esc(lastWord)}</span></h1>
       <!-- THREE facts, like a Netflix billboard. Was five plus a boxed chip:
            goal-match, modules, duration, level, CERTIFIED. Level and the
            certified badge are on the course page where they matter. -->
@@ -4117,6 +4117,8 @@ function renderNow() {
   }
   initMotion();
   armRails($('#app'));
+  armHeroDepth();
+  setTimeout(() => { const h = document.querySelector('#app .hero'); if (h) h.classList.add('hero-settled'); }, 2200);
   armNavScroll();
   syncOverlayFocus();   /* backstop: never leave #app inert */
   armReveals();
@@ -4282,6 +4284,59 @@ function loadMotionLibs() {
     .then(() => { motionLibsState = 2; initMotion(); });
 }
 let _motionRoute = null;
+
+/* ---- hero depth ----------------------------------------------------------
+   Two rates, one pointer. The artwork drifts at a quarter of the scroll and the
+   copy at a twelfth, which is what reads as distance rather than lag; a wide
+   soft light follows the pointer at a tenth of its speed, enough to feel lit
+   and not enough to notice as an effect. Transform and opacity only, off under
+   reduced motion, and it unbinds itself when the hero is gone. */
+let _heroRaf = 0;
+function armHeroDepth() {
+  const hero = document.querySelector('#app .hero');
+  const art = hero && hero.querySelector('.hero-art');
+  if (!hero || !art || (typeof reduceMotion !== 'undefined' && reduceMotion)) return;
+  const copy = hero.querySelector('.hero-content');
+  let ty = 0, px = 50, py = 42, tx = 50, tpy = 42, raf = 0;
+  const paint = () => {
+    raf = 0;
+    const y = Math.min(scrolled(), hero.offsetHeight);
+    art.style.setProperty('--sy', (y * 0.24).toFixed(1) + 'px');
+    if (copy) {
+      copy.style.transform = `translate3d(0, ${(y * 0.08).toFixed(1)}px, 0)`;
+      copy.style.opacity = String(Math.max(0, 1 - y / (hero.offsetHeight * 0.72)));
+    }
+  };
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(paint); };
+  /* window.scrollY reads 0 in some embedded contexts while the document is
+     genuinely scrolled — take whichever value is real */
+  const scrolled = () => Math.max(scrollY || 0, (document.scrollingElement || {}).scrollTop || 0);
+  const glide = () => {
+    if (!hero.isConnected) { cancelAnimationFrame(_heroRaf); return; }
+    px += (tx - px) * 0.06; py += (tpy - py) * 0.06;
+    hero.style.setProperty('--mx', px.toFixed(2) + '%');
+    hero.style.setProperty('--my', py.toFixed(2) + '%');
+    _heroRaf = requestAnimationFrame(glide);
+  };
+  const onMove = e => {
+    const r = hero.getBoundingClientRect();
+    tx = ((e.clientX - r.left) / r.width) * 100;
+    tpy = ((e.clientY - r.top) / r.height) * 100;
+  };
+  if (armHeroDepth._scroll) removeEventListener('scroll', armHeroDepth._scroll);
+  armHeroDepth._scroll = onScroll;
+  addEventListener('scroll', onScroll, { passive: true });
+  /* bound on the window, not the hero: #app is replaced on every route render,
+     so a listener on the element itself dies with the element while its
+     animation loop keeps writing to a node nobody can see */
+  if (matchMedia('(hover: hover)').matches) {
+    if (armHeroDepth._move) removeEventListener('pointermove', armHeroDepth._move);
+    armHeroDepth._move = onMove;
+    addEventListener('pointermove', onMove, { passive: true });
+    cancelAnimationFrame(_heroRaf); glide();
+  }
+  paint();
+}
 function initMotion() {
   const G = window.gsap;
   if (!G) { forceVisible(); loadMotionLibs(); return; }
