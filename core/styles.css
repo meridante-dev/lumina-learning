@@ -3004,3 +3004,32 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
   .rail:not(:has(.card:nth-child(3))) .card { flex: 0 0 calc((100% - 60px) / 3.4); }
 }
 .rail-section:not(:has(.card:nth-child(4))) .rail-arrow { display: none; }
+
+/* ══ PREMIUM LAYER 14 — the flows a phone user could not finish ══════════════
+   TEXT SEARCH ON A PHONE. Below 1097px the search pill is display:none, so the
+   only search affordance left in the header was a MICROPHONE. A search button
+   now sits beside it and opens the palette — the same palette desktop gets
+   from ⌘K, which already has fuzzy matching and recents. */
+.nav-search-btn { display: none; }
+@media (max-width: 1097px) {
+  .nav-search-btn { display: grid; place-items: center; }
+  .nav-search-btn svg { width: 18px; height: 18px; }
+}
+
+/* CARD ACTIONS ON TOUCH. Play and Add-to-path are opacity:0 with only a :hover
+   reveal, and the touch stylesheet then re-pinned them to 0 — so on every
+   phone and tablet two of a card's three affordances could never be seen or
+   used. On a coarse pointer there is no hover to wait for: show them. */
+@media (hover: none) {
+  .card .card-actions { opacity: 1; transform: none; }
+  .card:hover .card-actions { opacity: 1; transform: none; }
+}
+
+/* the onboarding option that the disabled button is waiting for */
+.nudge-attn { animation: attnPulse .6s ease 2; }
+@keyframes attnPulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
+  50% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 45%, transparent); }
+}
+/* a field the form is complaining about */
+.field-bad { border-color: color-mix(in srgb, #e0a08a 70%, transparent) !important; }

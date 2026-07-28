@@ -550,24 +550,24 @@ function renderLibrary() {
 function renderPaths() {
   const doneCount = S.path.filter(isDone).length;
   return `<div class="page"><div class="page-pad">
-    <h1 class="page-title">Learning Paths</h1>
-    <p class="page-sub">Adaptive sequences toward a goal. Finish a step and the AI re-plans the rest around what you proved you know.</p>
+    <h1 class="page-title">${t('paths_h')}</h1>
+    <p class="page-sub">${t('paths_sub')}</p>
   </div>
   <section class="path-banner">
     <div class="shimmer"></div>
     <div class="path-banner-head">
       <div class="left">
-        <span class="ai-tag">✦ Active path · ${doneCount}/${S.path.length} complete</span>
-        <h2>Your path to ${S.goal}</h2>
+        <span class="ai-tag">${t('active_path')} · ${doneCount}/${S.path.length}</span>
+        <h2>${t('your_path_to')} ${tgoal(S.goal)}</h2>
         <p class="sub">${PATH_RATIONALES[S.rationaleIdx % PATH_RATIONALES.length]}</p>
       </div>
-      <button class="btn btn-glass" data-action="regen-path" id="regenBtn">Regenerate path ↺</button>
+      <button class="btn btn-glass" data-action="regen-path" id="regenBtn">${t('regenerate_path')}</button>
     </div>
     ${pathStepperHTML()}
   </section>
   <div class="page-pad" style="padding-top:26px;">${journeysSectionHTML()}</div>
-  ${railHTML('Courses in this path', 'In order', S.path.map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
-  ${railHTML('Suggested next paths', 'Based on your goal & org needs', ['regen-design', 'capstone-land', 'community-land', 'seasonal-rhythm'].map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
+  ${railHTML(t('courses_in_path'), t('in_order'), S.path.map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
+  ${railHTML(t('next_paths'), t('next_paths_sub'), ['regen-design', 'capstone-land', 'community-land', 'seasonal-rhythm'].map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
   ${footerHTML()}</div>`;
 }
 
@@ -5187,6 +5187,7 @@ document.addEventListener('click', e => {
       botSay(`<b>${esc(c.title)}</b> — AI overview: ${c.desc} You'd be joining ${c.learners} fellow stewards (★ ${c.rating}). Given your goal (<b>${S.goal}</b>), I'd slot it ${inPath(id) ? 'right where it already is in your path' : 'after your current course'}. Want me to add it?`);
       break;
     }
+    case 'open-palette': openPalette(); break;
     case 'ai-open': setTutorOpen(true); break;
     case 'ai-missing': setTutorOpen(true); botSay(t('missing_prompt'), 400); break;
     case 'take-go': resolveTakeaways(); break;
@@ -5652,8 +5653,14 @@ function drawOnboard() {
       <div class="ob-foot">
         <button class="ob-skip" id="obSkip">${t('ob_skip')}</button>
         <span style="flex:1"></span>
-        <button class="btn btn-primary" id="obNext" ${ob.role ? '' : 'disabled style="opacity:.5"'}>${t('ob_continue')}</button>
+        <button class="btn btn-primary" id="obNext" ${ob.role ? '' : 'data-needs="role" style="opacity:.55"'}>${t('ob_continue')}</button>
       </div>`;
+    const nb = $('#obNext');
+    if (nb && nb.dataset.needs) nb.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      toast(t(nb.dataset.needs === 'role' ? 'ob_need_role' : 'ob_need_goal'), 'ℹ️');
+      const first = body.querySelector('.ob-option'); if (first) { first.classList.add('nudge-attn'); setTimeout(() => first.classList.remove('nudge-attn'), 1200); first.focus?.(); }
+    }, true);
     const grabHandle = () => { const u = $('#obUsername'); if (u) ob.username = u.value.trim(); };
     body.querySelectorAll('.ob-option').forEach(o => o.addEventListener('click', () => { grabHandle(); ob.role = o.dataset.role; drawOnboard(); }));
   } else if (ob.step === 1) {
@@ -5671,7 +5678,7 @@ function drawOnboard() {
       <div class="ob-foot">
         <button class="ob-skip" id="obBack">← ${_lang() === 'pt' ? 'Voltar' : 'Back'}</button>
         <span style="flex:1"></span>
-        <button class="btn btn-primary" id="obNext" ${ob.goal ? '' : 'disabled style="opacity:.5"'}>${t('ob_build')}</button>
+        <button class="btn btn-primary" id="obNext" ${ob.goal ? '' : 'data-needs="goal" style="opacity:.55"'}>${t('ob_build')}</button>
       </div>`;
     body.querySelectorAll('.ob-option').forEach(o => o.addEventListener('click', () => { ob.goal = o.dataset.goal; drawOnboard(); }));
     $('#obBack').addEventListener('click', () => { ob.step = 0; drawOnboard(); });

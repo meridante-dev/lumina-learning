@@ -716,9 +716,19 @@ function wire() {
     const email = $('#authEmail').value.trim();
     const pass = $('#authPass').value;
     const name = $('#authName').value.trim();
+    const focusBad = sel => { const el = $(sel); if (el) { el.focus(); el.classList.add('field-bad'); setTimeout(() => el.classList.remove('field-bad'), 1600); } };
+    if (!email) { showErr(isPT() ? 'Escreva o seu email.' : 'Enter your email.'); focusBad('#authEmail'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { showErr(isPT() ? 'Esse email não parece completo.' : "That email doesn't look complete."); focusBad('#authEmail'); return; }
+    if (!pass) { showErr(isPT() ? 'Escreva a sua palavra-passe.' : 'Enter your password.'); focusBad('#authPass'); return; }
     if (signupMode) {
+      if (pass.length < 6) { showErr(isPT() ? 'A palavra-passe precisa de pelo menos 6 caracteres.' : 'Use at least 6 characters.'); focusBad('#authPass'); return; }
       if (!$('#authConsent').checked) { showErr(T('auth_consent_req')); return; }
-      if (!name) { showErr(isPT() ? 'Introduza o seu nome.' : 'Please enter your name.'); return; }
+      if (!name) { showErr(isPT() ? 'Introduza o seu nome.' : 'Please enter your name.'); focusBad('#authName'); return; }
+    }
+    /* if the backend is not reachable at all, say so rather than spinning */
+    if (typeof BACKEND_READY !== 'undefined' && !BACKEND_READY) {
+      showErr(isPT() ? 'Sessão indisponível de momento — continue como convidado.' : 'Sign-in is unavailable right now — continue as a guest.');
+      return;
     }
     setBusy(true);
     try {
@@ -731,7 +741,10 @@ function wire() {
         // onAuthStateChanged already fired; refresh profile name
         if (window.EdenApp) window.EdenApp.applyProfile({ name: name || email.split('@')[0], email });
       } else {
-        await signInWithEmailAndPassword(auth, email, pass);
+        await Promise.race([
+          signInWithEmailAndPassword(auth, email, pass),
+          new Promise((_, rej) => setTimeout(() => rej({ code: 'auth/network-request-failed' }), 15000))
+        ]);
       }
     } catch (err) { setBusy(false); showErr(friendly(err.code)); }
   });
