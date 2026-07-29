@@ -5116,10 +5116,13 @@ function setVoiceUI(on) {
      placeholder says so, which is the difference between a mic you hope did
      something and one you can see is on. */
   const bar = $('#searchbar'); if (bar) bar.classList.toggle('listening', on);
+  /* The field says it ONCE. Saying "Listening…" in the placeholder and again in
+     the mic label put the same word twice inside one small pill; the label is
+     hidden while listening instead, leaving the icon and its rings. */
   const ph = document.querySelector('#navSearch .search-ph');
   if (ph) ph.textContent = on ? t('voice_listening') : t('search_ph');
   const ml = document.querySelector('.searchbar-mic .mic-label');
-  if (ml) ml.textContent = on ? t('voice_listening') : t('voice_label');
+  if (ml) ml.textContent = t('voice_label');
 }
 function closePalette() { $('#palette').classList.remove('open'); }
 /* Forgiving match for the palette: a query matches if its characters appear

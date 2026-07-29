@@ -3925,3 +3925,80 @@ nav.topnav { gap: 16px; padding-top: 12px; padding-bottom: 12px; }
 /* a chip should be the width of its content, not of the column it sits in */
 .mobile-drawer .xp-chip { align-self: flex-start; }
 .mobile-drawer-head .org-chip { cursor: default; }
+
+/* ── PREMIUM LAYER 27 · the search field, quieted ────────────────────────────
+   Layer 24 got the STRUCTURE right — one pill, mic inside it — and then shouted
+   it: a bold letterspaced "VOICE" in caps, a boxed ⌘K badge, and a divider rule
+   between the two halves. Three pieces of chrome doing the job of none. What
+   makes a field like this read expensive is restraint: one hairline, one glyph
+   weight, one text colour, and nothing raised above anything else until you
+   touch it. Everything below removes something. */
+
+.searchbar {
+  background: rgba(10,15,11,.34);
+  border-color: rgba(231,237,227,.09);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+}
+.searchbar:hover { background: rgba(10,15,11,.46); border-color: rgba(231,237,227,.16); }
+.searchbar:focus-within {
+  background: rgba(10,15,11,.62);
+  border-color: rgba(166,195,165,.38);
+  box-shadow: 0 0 0 3px rgba(166,195,165,.08);
+}
+
+.topnav .search { width: 268px; padding: 0 4px 0 14px; min-height: 38px; gap: 10px; }
+.search-ic { width: 15px; height: 15px; opacity: .5; stroke-width: 1.3; }
+.search-ph { font-size: 13px; font-weight: 400; color: rgba(231,237,227,.5); letter-spacing: .002em; }
+
+/* the shortcut is a hint, not a key-cap. No box, no border, no fill —
+   just quiet type that a returning user's eye already knows where to find. */
+.topnav .search kbd {
+  background: none; border: 0; padding: 0 2px; border-radius: 0;
+  font-size: 11px; font-weight: 500; letter-spacing: .06em;
+  color: rgba(231,237,227,.3);
+}
+
+/* the microphone: sentence case, normal weight, same colour as the placeholder.
+   It was uppercase-bold-letterspaced in accent green, which made a secondary
+   control the loudest thing in the header. It earns colour on hover and while
+   listening — not before. */
+.searchbar-mic {
+  border-left: 0;                        /* the divider was a line for its own sake */
+  padding: 0 14px 0 8px; gap: 7px;
+  color: rgba(231,237,227,.5);
+  font-size: 13px; font-weight: 400; letter-spacing: 0; text-transform: none;
+}
+.searchbar-mic svg { width: 15px; height: 15px; stroke-width: 1.4; }
+.searchbar-mic:hover { background: none; color: var(--accent-2); }
+.searchbar-mic:focus-visible { outline: 2px solid var(--accent-2); outline-offset: -3px; border-radius: 999px; }
+/* a hairline appears only on hover, to show where the field ends and the
+   microphone begins — the one moment that distinction actually matters */
+.searchbar-mic::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 1px; height: 16px; background: rgba(231,237,227,.14);
+  opacity: 0; transition: opacity .25s;
+}
+.searchbar:hover .searchbar-mic::before,
+.searchbar:focus-within .searchbar-mic::before { opacity: 1; }
+
+/* listening is the ONE state allowed to be loud */
+.searchbar.listening { border-color: rgba(166,195,165,.5); background: rgba(16,26,17,.72); }
+.searchbar.listening .searchbar-mic { color: var(--accent-2); }
+.searchbar.listening .search-ph { color: rgba(166,195,165,.8); }
+
+@media (max-width: 720px) { .searchbar-mic { padding: 0 12px; } }
+
+/* ── PREMIUM LAYER 28 · the listening state, said once ───────────────────────
+   Forcing the state on and LOOKING at it showed two things the rules alone did
+   not: "Listening…" printed twice inside one small pill, and the mic grew a
+   pale chip behind it — an earlier reduced-motion fallback — which broke the
+   single-pill silhouette into two objects exactly when attention matters most.
+   The word belongs in the placeholder; the button keeps only its icon. */
+.searchbar.listening .mic-label { display: none; }
+.searchbar.listening .topnav .search kbd,
+.searchbar.listening kbd { opacity: 0; transition: opacity .2s; }
+.searchbar-mic.listening,
+.searchbar.listening .searchbar-mic { background: none; padding-right: 15px; }
+/* the rings are the whole signal — give them room and keep them inside the pill */
+.searchbar.listening .mic-rings i { border-color: var(--accent-2); }
