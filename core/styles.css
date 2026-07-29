@@ -3590,3 +3590,55 @@ section.rail-section { margin-top: 72px; }     /* was 52 — the rails ran toget
 @media (prefers-reduced-motion: no-preference) {
   .hero-actions .btn-primary::before { animation: ctaSheen 900ms cubic-bezier(.4,0,.2,1) 1.3s both; }
 }
+/* a hero that has already introduced itself this session does not do it again */
+.hero-seen .hw, .hero-seen .hero-eyebrow, .hero-seen .hero-meta,
+.hero-seen .desc, .hero-seen .hero-actions, .hero-seen .hero-progress,
+.hero-seen .btn-primary::before {
+  animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important;
+}
+
+/* ── PREMIUM LAYER 22 · the frame around the picture ──────────────────────────
+   The hero art was already good; everything touching its edges was not. */
+
+/* 1 · The nav must be readable over ANY tenant's artwork. The scrim was a 66px
+   fade, so the search pill — sitting top-right, exactly where this hero puts
+   its brightest sky — washed out to unreadable. Netflix solves this with a
+   taller, softer top scrim than the bar itself, and it is the reason their
+   nav survives every billboard they ship. */
+nav.topnav::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 168px;
+  background: linear-gradient(180deg, rgba(8,12,9,.82) 0%, rgba(8,12,9,.52) 38%, transparent 100%);
+  pointer-events: none; z-index: -1;
+}
+nav.topnav.scrolled::before { opacity: 0; transition: opacity .35s; }
+
+/* the pill carries its own darkness rather than borrowing the page's */
+.search {
+  background: rgba(10,15,11,.52);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border-color: rgba(231,237,227,.16);
+  color: rgba(231,237,227,.72);
+}
+.search:hover { background: rgba(10,15,11,.68); border-color: rgba(231,237,227,.3); }
+
+/* 2 · The billboard used to STOP — a 180px fade to a flat band, and the eye
+   read the seam as the end of the page rather than the start of the rails.
+   A longer fade plus a soft floor lets the art dissolve instead of ending. */
+.hero-fade {
+  height: 320px;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(14,20,15,.35) 42%,
+    rgba(14,20,15,.78) 72%,
+    var(--bg) 100%);
+}
+
+/* 3 · The first rail must PEEK. A homepage whose entire second screen is empty
+   space teaches the reader there is nothing below; Netflix always leaves a row
+   half-visible, and that sliver is what makes the scroll happen. The hero gave
+   up 8vh and the gap between it and the first row lost ~90px. */
+.hero { min-height: 72vh; padding-bottom: 40px; }
+.hero-divider { margin: 22px auto 18px; }
+section.rail-section { margin-top: 40px; }
+.page-pad.ask-line-wrap { margin-top: 2px; margin-bottom: 2px; }

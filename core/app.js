@@ -37,6 +37,7 @@ const courseMins = c => c.moduleDurations ? c.moduleDurations.reduce((a, b) => a
 const moduleDur = (c, i) => (c.moduleDurations && c.moduleDurations[i]) ? c.moduleDurations[i] + 'm' : '12m';
 /* studio meta (admin-managed, loaded from Firestore courses/__meta) */
 let studioMeta = null;
+let heroIntroDecided = false;   /* hero entrance: one decision per page load, see renderNow */
 const ORIG_COURSES = {};
 const liveList = () => (studioMeta && Array.isArray(studioMeta.live) && studioMeta.live.length) ? studioMeta.live : LIVE_SESSIONS;
 const fmtMins = m => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60 ? (m % 60) + 'm' : ''}`.trim() : `${m}m`;
@@ -4118,6 +4119,27 @@ function renderNow() {
   initMotion();
   armRails($('#app'));
   armHeroDepth();
+  /* All three Awwwards winners torn down for this pass — IZANAMI, RISK and Son
+     Daven — skip their entrance on a repeat visit, each via sessionStorage
+     ("__risk_loader_done__", "hasVisited"). An entrance is an introduction; the
+     second time it is a toll. Ours plays once per session, then the hero simply
+     is there. */
+  const heroEl = document.querySelector('#app .hero');
+  if (heroEl) {
+    /* Decided once per page load, never re-read. renderNow runs many times —
+       a cloud sync alone triggers one within a second — and re-reading the
+       flag each time meant a re-render could either restart the entrance from
+       zero or cut it off halfway through its own first play. The entrance now
+       plays on exactly one render: the first of the first load of a session. */
+    if (heroIntroDecided) heroEl.classList.add('hero-settled', 'hero-seen');
+    else {
+      heroIntroDecided = true;
+      let seen = false;
+      try { seen = sessionStorage.getItem('hero-intro') === '1'; } catch (e) {}
+      if (seen) heroEl.classList.add('hero-settled', 'hero-seen');
+      else { try { sessionStorage.setItem('hero-intro', '1'); } catch (e) {} }
+    }
+  }
   setTimeout(() => { const h = document.querySelector('#app .hero'); if (h) h.classList.add('hero-settled'); }, 2200);
   armNavScroll();
   syncOverlayFocus();   /* backstop: never leave #app inert */
@@ -4170,13 +4192,15 @@ function armReveals() {
       es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); _revealObs.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
   }
-  /* GSAP/ScrollTrigger already choreographs .admin-section/.rail on desktop.
-     Running BOTH made two systems fight over the same opacity (class vs inline
-     style) and could flash a section blank before GSAP took over. When GSAP is
-     present it owns those; this observer then covers only what GSAP doesn't
-     (the bento) and acts as the full fallback on mobile, where GSAP never loads. */
-  const gsapOwnsSections = !!(window.gsap && window.ScrollTrigger);
-  const sel = gsapOwnsSections ? '#app .prog-top' : '#app .admin-section, #app .rail, #app .prog-top';
+  /* ONE owner for block reveals, every viewport. This used to hand the sections
+     to GSAP on desktop and keep only the bento here, which meant two systems
+     fighting over the same opacity — a class against an inline style — and the
+     desktop path could leave a rail frozen part-faded forever. The observer is
+     the survivor because it cannot: the hidden state is a class this script
+     adds, so if anything fails the content is simply visible. */
+  const sel = '#app .rail-section, #app .path-banner, #app .stats, #app .module-list,'
+            + '#app .admin-section, #app .chart-card, #app .live-card, #app .two-col,'
+            + '#app .rail, #app .prog-top';
   document.querySelectorAll(sel).forEach(el => {
     if (el.dataset.rev) return;
     el.dataset.rev = '1';
@@ -4270,8 +4294,15 @@ const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: r
 const BLOCK_SEL = '.page, .hero-content > *, .hero-side, .pillar, .rail-section, .path-banner, .stats, .module-list, .admin-section, .chart-card, .live-card, .two-col';
 function forceVisible() {
   document.querySelectorAll(BLOCK_SEL).forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
-  /* scroll-reveal blocks settle too — otherwise a screenshot shows empty space */
-  document.querySelectorAll('.will-reveal').forEach(el => el.classList.add('in'));
+  /* Scroll-reveal blocks settle too — otherwise a screenshot shows empty space.
+     Only the ones ON SCREEN, though: settling all of them meant this 1200ms
+     safety net silently switched the whole scroll cadence off, since every
+     section below the fold arrived pre-revealed. What the reader can see must
+     never be blank; what they have not reached yet still gets its entrance. */
+  document.querySelectorAll('.will-reveal').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < innerHeight) el.classList.add('in');
+  });
 }
 /* GSAP loads on demand — desktop only, never on phones (bandwidth + battery) */
 let motionLibsState = 0; /* 0 none · 1 loading · 2 ready */
@@ -4370,14 +4401,30 @@ function initMotion() {
   if (ST) {
     G.from('.pillar', { y: 14, opacity: 0, stagger: .06, duration: .6, ease: 'power2.out',
       scrollTrigger: { trigger: '.pillars', start: 'top 95%', once: true } });
-    G.utils.toArray('.rail-section, .path-banner, .stats, .module-list, .admin-section, .chart-card, .live-card, .two-col').forEach(el => {
-      G.from(el, { y: 26, opacity: 0, duration: .7, ease: 'power2.out',
-        scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
-    });
+    /* Block reveals are NOT GSAP's job any more — armReveals() owns them, alone.
+       Two systems animated the same opacity and the seam showed: gsap.from()
+       pre-hides on creation, so whether a rail ever became visible depended on
+       whether it happened to exist in the DOM at the single moment initMotion
+       ran (later renders early-return, arming nothing), and a tween interrupted
+       during scroll-restoration froze its last written value into the style
+       attribute forever — measured 0.38 and 0.61 on two runs, with the top of
+       the page reading as an empty void. The CSS/IntersectionObserver path has
+       neither failure mode: the hidden state is a class, the fallback is
+       visible, and nothing writes inline styles. */
     setTimeout(() => { try { ST.refresh(); } catch (e) {} }, 250);
   }
   /* hard guarantee: nothing stays invisible, even if rAF is frozen */
   setTimeout(forceVisible, 1200);
+  /* Late, targeted rescue: anything ON SCREEN and still part-faded is stuck, not
+     animating — a blanket forceVisible here would instead burn every legitimate
+     below-fold reveal the reader has not reached yet. */
+  setTimeout(() => {
+    document.querySelectorAll(BLOCK_SEL).forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      if (parseFloat(getComputedStyle(el).opacity) < 1) { el.style.opacity = '1'; el.style.transform = 'none'; }
+    });
+  }, 3000);
 }
 
 /* ---------- player ---------- */
