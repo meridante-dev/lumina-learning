@@ -684,7 +684,10 @@ function renderPaths() {
   </section>
   <div class="page-pad" style="padding-top:26px;">${journeysSectionHTML()}</div>
   ${railHTML(t('courses_in_path'), t('in_order'), S.path.map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
-  ${railHTML(t('next_paths'), t('next_paths_sub'), ['regen-design', 'capstone-land', 'community-land', 'seasonal-rhythm'].map(id => courseById(id)).filter(Boolean).map(c => cardHTML(c)))}
+  ${/* "Where to go next" = whatever is filmed and not already on your path.
+        This was four hard-coded ids, all of which are now deleted, so the rail
+        rendered empty; derived, it stays correct as the library grows. */''}
+  ${railHTML(t('next_paths'), t('next_paths_sub'), CATALOG.filter(c => !S.path.includes(c.id) && hasRealContent(c)).map(c => cardHTML(c)))}
   ${footerHTML()}</div>`;
 }
 
@@ -1262,7 +1265,7 @@ async function seedDemo() {
       { id: 'live-soil-clinic', title: 'Field Hours: Live Soil Clinic', host: 'Marta Oliveira · Head of Regeneration', when: fmtDay(next(4)), date: iso(next(4)), desc: 'Bring a photo or sample of your soil — read live, with the first three things to do.', live: false, viewers: 0, grad: 7, icon: 'sprout' },
       { id: 'live-founder-ama', title: 'Founder AMA: Why Regeneration', host: 'João Amaral · Founder', when: fmtDay(next(8)), date: iso(next(8)), desc: 'Unfiltered Q&A on building EdenRise and stewarding land in the Baixo Alentejo.', live: false, viewers: 0, grad: 1, icon: 'tree' }
     ];
-    const assignments = activeAssignments().concat([{ id: 'asg-living-soil-land', courseId: 'living-soil', team: 'land', due: new Date(Date.now() + 14 * day).toISOString().slice(0, 10) }]);
+    const assignments = activeAssignments().concat([{ id: 'asg-fire-truck-land', courseId: 'fire-truck-training', team: 'land', due: new Date(Date.now() + 14 * day).toISOString().slice(0, 10) }]);
     await EdenCloud.saveMeta(Object.assign({}, studioMeta, { live, assignments }));
     studioMeta = Object.assign({}, studioMeta, { live, assignments });
     toast('Demo content seeded', '✓'); render();

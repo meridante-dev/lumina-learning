@@ -64,18 +64,22 @@ const PATH_RATIONALES = [
 ];
 
 
+/* One goal, built only from what has actually been filmed. Four presets used to
+   fan out across twenty courses that did not exist — a path whose every step
+   after the first says "unlocks after assessment" for a lesson nobody shot is
+   worse than a short, honest path. Add goals back as the library is produced. */
 const GOAL_PRESETS = {
-  'Regenerative Steward': ['land-literacy', 'living-soil', 'land-team-journey', 'agroforestry', 'regen-design', 'capstone-land'],
-  'Food Forester': ['living-soil', 'seed-saving', 'agroforestry', 'cork-oak', 'foraging'],
-  'Land Restorer': ['land-literacy', 'water-cycles', 'rewilding', 'rainwater', 'regen-design'],
-  'Rooted Living': ['nature-connection', 'seasonal-rhythm', 'herbal', 'community-land']
+  'Land Team': ['land-team-journey', 'fire-truck-training', 'alignment-journey', 'ai-literacy']
 };
 
 const ROLE_OPTIONS = [
-  { key: 'land', label: 'Land & Farming', icon: 'sprout', goals: ['Regenerative Steward', 'Food Forester'] },
-  { key: 'nature', label: 'Nature & Wellbeing', icon: 'leaf', goals: ['Rooted Living', 'Land Restorer'] },
-  { key: 'water', label: 'Water & Climate', icon: 'drop', goals: ['Land Restorer', 'Regenerative Steward'] },
-  { key: 'community', label: 'Community & Place', icon: 'people', goals: ['Rooted Living', 'Food Forester'] }
+  /* Every role leads to the same filmed path for now. Offering a learner a
+     choice between four goals that resolve to the same four lessons is a
+     costume, not a choice — restore the branching when the library branches. */
+  { key: 'land', label: 'Land & Farming', icon: 'sprout', goals: ['Land Team'] },
+  { key: 'nature', label: 'Nature & Wellbeing', icon: 'leaf', goals: ['Land Team'] },
+  { key: 'water', label: 'Water & Climate', icon: 'drop', goals: ['Land Team'] },
+  { key: 'community', label: 'Community & Place', icon: 'people', goals: ['Land Team'] }
 ];
 
 /* Gamification — growth-themed levels (nature) + subtle badges. Tuned to lift completion. */
@@ -114,8 +118,8 @@ const DEFAULT_STATE = {
   notes: {},
   apiKey: '',
   aiModel: 'claude-opus-4-8',
-  goal: 'Regenerative Steward',
-  path: ['land-literacy', 'living-soil', 'land-team-journey', 'agroforestry', 'regen-design', 'capstone-land'],
+  goal: 'Land Team',
+  path: ['land-team-journey', 'fire-truck-training', 'alignment-journey', 'ai-literacy'],
   progress: {},      /* truth only — earned, never seeded */
   review: {},
   reminders: [],
@@ -191,7 +195,7 @@ const UI = {
     vcert_btn:'Proven certificate', vcert_locked:'Not proven yet — finish, then answer again in a week.', hourlog_btn:'Hour log', cert_popup:'Allow pop-ups to open the certificate', ots_none:'', ots_pending:'Timestamp pending', ots_confirmed:'Timestamped publicly · block {b}',
     ck_h:'Quick check', ck_continue:'Continue watching', ck_right:'Spot on — keep going', ck_wrong:'Not quite — the right answer is highlighted. It will come back in your review deck.',
     gdpr_doc_done:'Document downloaded — open it and print to PDF', gdpr_retention:'Retention policy (PT)', gdpr_art30:'Record of processing — art. 30 (PT)', gdpr_dpa:'DPA template — art. 28 (PT)',
-    ask_h:'Ask the Academy', ask_sub:'Any question about the land — answered from your team\u2019s own courses.', ask_ph:'e.g. How do I slow erosion on the slope path?', ask_go:'Ask', ask_refs:'Learn more in', ask_thinking:'Reading the library…', ask_fail:'Could not answer right now — try again.',
+    ask_h:'Ask the Academy', ask_sub:'Any question about the land — answered from your team\u2019s own courses.', ask_ph:'e.g. How do I fill the water tank on the fire truck?', ask_go:'Ask', ask_refs:'Learn more in', ask_thinking:'Reading the library…', ask_fail:'Could not answer right now — try again.',
     skills_h:'Skills', skills_sub:'',
     comp_expired:'Certification expired', comp_expiring:'Expires soon', comp_renew:'Renew', nudge_recert_t:'Time to recertify', nudge_recert_b:'Your {course} certification {when} — a quick rewatch renews it.',
     jour_h:'Journeys', jour_sub:'Structured paths with milestones, field missions and a capstone.', jour_stage:'Stage', jour_mission_tag:'+ field mission', jour_capstone:'Capstone', jour_done:'Journey complete', jour_cert:'Journey certificate', jour_progress:'complete', jour_start:'Begin the journey', jour_continue:'Continue the journey',
@@ -240,7 +244,7 @@ const UI = {
     badges_h:'Badges', badges_sub:'', locked_dot:'Locked ·', leaders_board:'Leaderboard · this week', board_sub:'Resets Monday.', keep_alive:'',
     you:'you', xp_ahead_1:'is just', xp_ahead_2:'ahead — about {n} lessons', top_board:"You're top of the board this week. Keep the grove growing.", path_points:'',
     ob_welcome:'Welcome to EdenRise', ob_step:'Step', ob_hi:'Welcome,', ob_pick_handle:"Pick a username — it's how others see you in the community.", ob_role_q:'And what do you do?', ob_q1:'What do you do?', ob_q1_sub:'The AI uses your role to seed your first learning path. You can change everything later.', ob_skip:'Skip — explore on my own', ob_continue:'Continue →',
-    ob_destination:'Your destination', ob_q2:'Pick a goal to work toward', ob_q2_sub:'The AI sequences courses toward this goal and re-plans as you prove skills.', ob_build:'Build my path ✦', ob_building:'Building your path to', courses_adaptive:'courses · adaptive', track_more:'track & more',
+    ob_destination:'Your destination', ob_q2:'Pick a goal to work toward', ob_q2_sub:'The AI sequences courses toward this goal and re-plans as you prove skills.', ob_build:'Build my path ✦', ob_building:'Building your path to', courses_adaptive:'courses · adaptive', track_more:'track',
     ai_hello:'How can I help you today?', how_answers:'How it answers',
     tutor_foot_live:'AI · answers can be wrong · grounded in your courses',
     tutor_foot_demo:'Demo · scripted replies · grounded in your courses',
@@ -309,7 +313,7 @@ const UI = {
     ck_h:'Verificação rápida', ck_continue:'Continuar a ver', ck_right:'Em cheio — continue', ck_wrong:'Quase — a resposta certa está destacada. Vai voltar no seu baralho de revisão.',
     gdpr_doc_done:'Documento descarregado — abra e imprima para PDF', gdpr_retention:'Política de retenção', gdpr_art30:'Registo de tratamento — art. 30.º', gdpr_dpa:'Minuta DPA — art. 28.º',
     lesson_goal:'Nesta lição', nudge_today_one:'Tem 1 ação sugerida hoje', nudge_today:'Tem {n} ações sugeridas hoje',
-    ask_h:'Pergunte à Academia', ask_sub:'Qualquer pergunta sobre a terra — respondida a partir dos cursos da equipa.', ask_ph:'ex.: Como travo a erosão no caminho da encosta?', ask_go:'Perguntar', ask_refs:'Aprenda mais em', ask_thinking:'A ler a biblioteca…', ask_fail:'Não foi possível responder — tente de novo.',
+    ask_h:'Pergunte à Academia', ask_sub:'Qualquer pergunta sobre a terra — respondida a partir dos cursos da equipa.', ask_ph:'ex.: Como encho o tanque de água do camião?', ask_go:'Perguntar', ask_refs:'Aprenda mais em', ask_thinking:'A ler a biblioteca…', ask_fail:'Não foi possível responder — tente de novo.',
     skills_h:'Competências', skills_sub:'',
     comp_expired:'Certificação expirada', comp_expiring:'Expira em breve', comp_renew:'Renovar', nudge_recert_t:'Hora de recertificar', nudge_recert_b:'A sua certificação de {course} {when} — uma revisão rápida renova-a.',
     jour_h:'Jornadas', jour_sub:'Percursos estruturados com marcos, missões de campo e um projeto final.', jour_stage:'Etapa', jour_mission_tag:'+ missão de campo', jour_capstone:'Projeto final', jour_done:'Jornada concluída', jour_cert:'Certificado da jornada', jour_progress:'concluída', jour_start:'Começar a jornada', jour_continue:'Continuar a jornada',
@@ -358,7 +362,7 @@ const UI = {
     badges_h:'Distintivos', badges_sub:'', locked_dot:'Bloqueado ·', leaders_board:'Ranking · esta semana', board_sub:'Amigável, reinicia todas as segundas. Uma competição saudável mantém todos a terminar.', keep_alive:'▲ Mantenha viva',
     you:'você', xp_ahead_1:'está apenas', xp_ahead_2:'à sua frente — termine um módulo para alcançar', top_board:'Está no topo do ranking esta semana. Continue a fazer crescer o bosque.', path_points:'',
     ob_welcome:'Bem-vindo à EdenRise', ob_step:'Passo', ob_hi:'Bem-vindo,', ob_pick_handle:'Escolha um nome de utilizador — é assim que os outros o veem na comunidade.', ob_role_q:'E o que faz?', ob_q1:'O que faz?', ob_q1_sub:'A IA usa a sua função para criar o seu primeiro percurso. Pode mudar tudo mais tarde.', ob_skip:'Ignorar — explorar sozinho', ob_continue:'Continuar →',
-    ob_destination:'O seu destino', ob_q2:'Escolha um objetivo', ob_q2_sub:'A IA sequencia cursos para este objetivo e replaneia à medida que prova competências.', ob_build:'Criar o meu percurso ✦', ob_building:'A criar o seu percurso para', courses_adaptive:'cursos · adaptativo', track_more:'percurso e mais',
+    ob_destination:'O seu destino', ob_q2:'Escolha um objetivo', ob_q2_sub:'A IA sequencia cursos para este objetivo e replaneia à medida que prova competências.', ob_build:'Criar o meu percurso ✦', ob_building:'A criar o seu percurso para', courses_adaptive:'cursos · adaptativo', track_more:'percurso',
     ai_hello:'Como posso ajudar hoje?', how_answers:'Como responde',
     tutor_foot_live:'IA · as respostas podem conter erros · baseadas nos seus cursos',
     tutor_foot_demo:'Demo · respostas guionadas · baseadas nos seus cursos',
@@ -425,18 +429,6 @@ const MISSIONS = {
   'land-team-journey': { xp: 150,
     en: { title: 'Catch yourself below the line', brief: 'For three days, notice one moment each day when you slip below the line — blame, excuse or denial. Write the three moments down, and what pulled you back above. Photograph your notes as proof.' },
     pt: { title: 'Apanhe-se abaixo da linha', brief: 'Durante três dias, repare num momento por dia em que desce abaixo da linha — culpa, desculpa ou negação. Anote os três momentos e o que o trouxe de volta acima. Fotografe as suas notas como prova.' } },
-  'living-soil': { xp: 150,
-    en: { title: 'Dig a test pit', brief: 'Dig a small pit (30cm) somewhere on the land. Photograph the soil profile and note: colour, smell, moisture, and any life you find. The photo is your proof.' },
-    pt: { title: 'Abra uma cova de teste', brief: 'Abra uma pequena cova (30cm) algures no terreno. Fotografe o perfil do solo e anote: cor, cheiro, humidade e a vida que encontrar. A foto é a sua prova.' } },
-  'water-cycles': { xp: 150,
-    en: { title: 'Walk the water', brief: 'On (or right after) a rainy day, walk the land and photograph two places where water flows or pools. Note where you would slow it, spread it, or sink it.' },
-    pt: { title: 'Caminhe com a água', brief: 'Num dia de chuva (ou logo depois), percorra o terreno e fotografe dois locais onde a água corre ou se acumula. Anote onde a iria travar, espalhar ou infiltrar.' } },
-  'composting': { xp: 120,
-    en: { title: 'Feed the pile', brief: 'Build or turn a compost pile using the layering you learned. Photograph the layers (greens/browns) before you close it up.' },
-    pt: { title: 'Alimente a pilha', brief: 'Monte ou vire uma pilha de compostagem com as camadas que aprendeu. Fotografe as camadas (verdes/castanhos) antes de a fechar.' } },
-  'nature-connection': { xp: 100,
-    en: { title: 'One sit spot, three days', brief: 'Sit in the same outdoor spot for 10 minutes, three days in a row. Photograph the spot and note one thing you only noticed on day three.' },
-    pt: { title: 'Um lugar, três dias', brief: 'Sente-se no mesmo lugar ao ar livre 10 minutos, três dias seguidos. Fotografe o lugar e anote algo que só reparou ao terceiro dia.' } }
 };
 const missionFor = id => { const m = MISSIONS[id]; return m ? Object.assign({ xp: m.xp }, _lang() === 'pt' ? m.pt : m.en) : null; };
 
@@ -450,14 +442,6 @@ const ROLEPLAY = {
       system: 'És o Rui, um membro trabalhador mas frustrado da equipa de terra num resort regenerativo no Alentejo. Um canteiro falhou e estás firmemente abaixo da linha: a culpar a Marta, a arranjar desculpas, a negar qualquer parte. Sê realista e humano — defensivo no início, abrindo APENAS se o utilizador liderar com curiosidade e responsabilidade em vez de acusação. Respostas com menos de 60 palavras, tom falado. Nunca saias da personagem, nunca digas que és uma IA.',
       goal: 'Traga o Rui de volta acima da linha — sem o culpar por culpar.', rubric: ['Manteve-se acima da linha', 'Curiosidade antes de correção', 'Um próximo passo claro, acordado juntos'] }
   },
-  'community-land': {
-    en: { title: 'The boundary talk', persona: 'Sr. Almeida, a wary neighbour', opening: 'Your people left the shared gate open again. My sheep were on the road. This arrangement is not working for me.',
-      system: 'You are Sr. Almeida, a 60-year-old Alentejo farmer who shares a boundary and a gate with a regenerative resort. You are courteous but firm and skeptical of newcomers. A real grievance: their volunteers left the gate open twice. You soften only with genuine listening, respect for your experience, and a concrete fix. Replies under 60 words, spoken tone. Never break character.',
-      goal: 'Repair trust and agree a practical fix for the gate.', rubric: ['Listened before defending', 'Respected his experience', 'A concrete, checkable agreement'] },
-    pt: { title: 'A conversa da vizinhança', persona: 'Sr. Almeida, um vizinho desconfiado', opening: 'A vossa gente deixou o portão partilhado aberto outra vez. As minhas ovelhas andavam na estrada. Este arranjo não está a funcionar para mim.',
-      system: 'És o Sr. Almeida, um agricultor alentejano de 60 anos que partilha uma extrema e um portão com um resort regenerativo. És cortês mas firme e desconfiado de recém-chegados. Queixa real: os voluntários deixaram o portão aberto duas vezes. Só abrandas com escuta genuína, respeito pela tua experiência e uma solução concreta. Respostas com menos de 60 palavras. Nunca saias da personagem.',
-      goal: 'Repare a confiança e acorde uma solução prática para o portão.', rubric: ['Ouviu antes de se defender', 'Respeitou a experiência dele', 'Um acordo concreto e verificável'] }
-  }
 };
 const roleplayFor = id => { const r = ROLEPLAY[id]; return r ? (_lang() === 'pt' ? r.pt : r.en) : null; };
 
@@ -478,27 +462,20 @@ const CAT_SKILL = { 'Land & Soil': 'soil', 'Water & Climate': 'water', 'Food & F
 const skillsOf = c => COURSE_SKILLS[c.id] || [CAT_SKILL[c.cat] || 'nature'];
 
 /* Journeys — structured milestone paths with a capstone */
+/* One journey, and every stage of it is filmed. Two journeys used to run over
+   eight courses of which one existed — a milestone path whose milestones cannot
+   be reached is the most damaging kind of empty, because the learner only finds
+   out at the third step. */
 const JOURNEYS = [
   {
-    id: 'land-steward', icon: 'mountain', grad: 7, xp: 300,
-    en: { title: 'The Land Steward Journey', desc: 'From reading the land to a full land plan — the complete formation, proven on the ground.' },
-    pt: { title: 'A Jornada do Guardião da Terra', desc: 'De ler a terra a um plano completo — a formação inteira, provada no terreno.' },
+    id: 'land-team', icon: 'compass', grad: 4, xp: 300,
+    en: { title: 'The EdenRise Land Team', desc: 'How this team shows up, how it works the land safely, and how it works with AI — the whole induction, filmed here.' },
+    pt: { title: 'A Equipa de Terra EdenRise', desc: 'Como esta equipa se apresenta, como trabalha a terra em segurança e como trabalha com IA — a formação completa, filmada aqui.' },
     stages: [
-      { course: 'land-literacy' },
-      { course: 'living-soil', mission: true },
-      { course: 'water-cycles', mission: true },
-      { course: 'agroforestry' },
-      { course: 'capstone-land', capstone: true }
-    ]
-  },
-  {
-    id: 'grounded-leader', icon: 'compass', grad: 4, xp: 250,
-    en: { title: 'The Grounded Leader', desc: 'Lead a land team the EdenRise way — above the line, in community, with roots.' },
-    pt: { title: 'O Líder Enraizado', desc: 'Liderar uma equipa de terra à maneira EdenRise — acima da linha, em comunidade, com raízes.' },
-    stages: [
+      { course: 'alignment-journey' },
       { course: 'land-team-journey', mission: true },
-      { course: 'ethics' },
-      { course: 'community-land', capstone: true }
+      { course: 'fire-truck-training' },
+      { course: 'ai-literacy', capstone: true }
     ]
   }
 ];
