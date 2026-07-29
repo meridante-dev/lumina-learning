@@ -25,121 +25,121 @@ const CATALOG = [
   },
   {
     id: 'land-literacy', title: 'Reading the Land', cat: 'Nature Connection', grad: 6, icon: 'compass',
-    level: 'Beginner', rating: 4.9, learners: 412, ai: true,
+    level: 'Beginner', rating: 4.9, learners: 412, ai: true, poster: 'media/covers/land-literacy.webp',
     desc: 'Before you change a landscape, learn to read it. Slope, water, soil, sun and succession — the literacy that every act of stewardship begins with.',
     modules: ['Standing still: how to observe', 'Reading slope & water', 'Soil by feel & sight', 'Sun, shade & aspect', 'Succession & what land wants', 'Mapping your patch']
   },
   {
     id: 'living-soil', title: 'Living Soil', cat: 'Land & Soil', grad: 7, icon: 'sprout',
-    level: 'Beginner', rating: 4.8, learners: 356, ai: true,
+    level: 'Beginner', rating: 4.8, learners: 356, ai: true, poster: 'media/covers/living-soil.webp',
     desc: 'Soil is not dirt — it is a living community. Meet the microbiome beneath your feet and the practices that feed it instead of mining it.',
     modules: ['The soil food web', 'Why we stopped tilling', 'Compost as inoculant', 'Cover crops & living roots', 'Mulch & bare-soil rules', 'Reading a soil test']
   },
   {
     id: 'water-cycles', title: 'Water & the Living Landscape', cat: 'Water & Climate', grad: 5, icon: 'drop',
-    level: 'Intermediate', rating: 4.9, learners: 298, ai: true,
+    level: 'Intermediate', rating: 4.9, learners: 298, ai: true, poster: 'media/covers/water-cycles.webp',
     desc: 'Master the small water cycle your land depends on. This program adapts to your terrain — EdenRise\'s AI re-sequences each module around what your last assessment showed you already know.',
     modules: ['The small water cycle', 'Where your water goes', 'Slowing, spreading, sinking', 'Swales & on-contour design', 'Ponds & keypoint dams', 'Rehydrating dry land', 'Greywater, gently', 'Drought-proofing a garden', 'Reading a catchment', 'Springs & soaks', 'Measuring infiltration', 'Final assessment']
   },
   {
     id: 'agroforestry', title: 'Agroforestry & the Edible Forest', cat: 'Food & Forest', grad: 1, icon: 'tree',
-    level: 'Intermediate', rating: 4.9, learners: 187, ai: true,
+    level: 'Intermediate', rating: 4.9, learners: 187, ai: true, poster: 'media/covers/agroforestry.webp',
     desc: 'Stack a forest that feeds you. Seven layers, nitrogen fixers, and the patient art of designing a system that grows more abundant every year.',
     modules: ['The seven layers', 'Choosing your canopy', 'Nitrogen fixers & support species', 'Guilds that work together', 'Planting for succession', 'Tending the young forest']
   },
   {
     id: 'regen-design', title: 'Designing with Nature', cat: 'Stewardship', grad: 6, icon: 'leaf',
-    level: 'Advanced', rating: 4.8, learners: 143,
+    level: 'Advanced', rating: 4.8, learners: 143, poster: 'media/covers/regen-design.webp',
     desc: 'Permaculture design from observation to plan: zones, sectors, and how to place every element so the land does the work, not you.',
     modules: ['Observation before action', 'Zones & sectors', 'Placing elements by relationship', 'Patterns to details', 'The whole-site plan']
   },
   {
     id: 'capstone-land', title: 'Capstone: Your Land Plan', cat: 'Stewardship', grad: 8, icon: 'mountain',
-    level: 'Advanced', rating: 4.9, learners: 96, ai: true,
+    level: 'Advanced', rating: 4.9, learners: 96, ai: true, poster: 'media/covers/capstone-land.webp',
     desc: 'The graded finale: produce and present a one-year regeneration plan for a real piece of land. EdenRise AI reviews it for water, soil, and sequence.',
     modules: ['Briefing your site', 'Water-first design', 'Sequencing the first year', 'Dry-run with AI feedback', 'AI-graded review']
   },
   {
     id: 'composting', title: 'The Art of Compost', cat: 'Land & Soil', grad: 7, icon: 'sprout',
-    level: 'Beginner', rating: 4.7, learners: 224, trending: 3,
+    level: 'Beginner', rating: 4.7, learners: 224, trending: 3, poster: 'media/covers/composting.webp',
     desc: 'Turn waste into black gold. Hot piles, cold piles, worms and the simple ratios that make compost reliably, without the smell.',
     modules: ['Greens & browns', 'Building a hot pile', 'Worms & vermicompost', 'Compost tea & extracts', 'Troubleshooting smells', 'Using finished compost']
   },
   {
     id: 'seed-saving', title: 'Seed Saving & Heritage Varieties', cat: 'Food & Forest', grad: 4, icon: 'seed',
-    level: 'Intermediate', rating: 4.8, learners: 132, ai: true,
+    level: 'Intermediate', rating: 4.8, learners: 132, ai: true, poster: 'media/covers/seed-saving.webp',
     desc: 'Keep the lineage alive. Save, dry and store seed from your own garden — and the open-pollinated varieties worth protecting in the Alentejo.',
     modules: ['Why open-pollinated matters', 'Isolation & purity', 'Wet & dry seed processing', 'Drying & storage', 'A community seed library']
   },
   {
     id: 'foraging', title: 'Foraging the Alentejo', cat: 'Food & Forest', grad: 2, icon: 'basket',
-    level: 'Beginner', rating: 4.9, learners: 284, trending: 1,
+    level: 'Beginner', rating: 4.9, learners: 284, trending: 1, poster: 'media/covers/foraging.webp',
     desc: 'Walk out and come back fed. Wild greens, mushrooms, herbs and the golden rule of foraging — identify with certainty, harvest with care.',
     modules: ['The forager\'s mindset', 'Identify with certainty', 'Wild greens of the meadow', 'Mushrooms: respect & caution', 'Wild herbs & teas', 'Harvest ethics', 'Seasonal calendar', 'Preserving the wild harvest', 'Look-alikes to never confuse', 'A first foraging walk']
   },
   {
     id: 'native-flora', title: 'Native Flora & Pollinators', cat: 'Nature Connection', grad: 3, icon: 'flower',
-    level: 'Beginner', rating: 4.7, learners: 167,
+    level: 'Beginner', rating: 4.7, learners: 167, poster: 'media/covers/native-flora.webp',
     desc: 'Bring the buzz back. Native plants, hedgerows and the small changes that turn a quiet garden into a pollinator corridor.',
     modules: ['Who are your pollinators', 'Native plants first', 'Hedgerows & corridors', 'Year-round flowering', 'A pollinator patch']
   },
   {
     id: 'rainwater', title: 'Rainwater Harvesting & Swales', cat: 'Water & Climate', grad: 5, icon: 'drop',
-    level: 'Intermediate', rating: 4.8, learners: 119,
+    level: 'Intermediate', rating: 4.8, learners: 119, poster: 'media/covers/rainwater.webp',
     desc: 'Catch every drop. Roofs, tanks, swales and earthworks that store the winter rains in the ground for the long Alentejo summer.',
     modules: ['Sizing your catchment', 'Tanks & first-flush', 'Digging on contour', 'Overflow & safety', 'Storing water in soil']
   },
   {
     id: 'rewilding', title: 'Rewilding & Habitat', cat: 'Stewardship', grad: 7, icon: 'bird',
-    level: 'Intermediate', rating: 4.7, learners: 108, isNew: true,
+    level: 'Intermediate', rating: 4.7, learners: 108, isNew: true, poster: 'media/covers/rewilding.webp',
     desc: 'Step back and let life return. Where to intervene, where to wait, and how to measure a landscape coming back to life.',
     modules: ['Reading what\'s missing', 'Keystone species', 'When to do nothing', 'Ponds, logs & edges', 'Measuring return']
   },
   {
     id: 'cork-oak', title: 'The Montado & Cork Oak', cat: 'Food & Forest', grad: 1, icon: 'tree',
-    level: 'Intermediate', rating: 4.9, learners: 201, trending: 2,
+    level: 'Intermediate', rating: 4.9, learners: 201, trending: 2, poster: 'media/covers/cork-oak.webp',
     desc: 'The Alentejo\'s living masterpiece. How the cork-oak savannah feeds people, livestock and wildlife together — and how to tend it for centuries.',
     modules: ['What is a montado', 'The cork harvest cycle', 'Grazing under the trees', 'Acorns, pigs & people', 'Regenerating old oaks']
   },
   {
     id: 'natural-building', title: 'Natural Building with Earth', cat: 'Craft & Hands', grad: 3, icon: 'hands',
-    level: 'Intermediate', rating: 4.8, learners: 176,
+    level: 'Intermediate', rating: 4.8, learners: 176, poster: 'media/covers/natural-building.webp',
     desc: 'Build with what the land gives. Cob, lime, earth plaster and the warm, breathing walls that have sheltered the Alentejo for generations.',
     modules: ['Earth as a material', 'Testing your soil mix', 'Cob & adobe basics', 'Lime & earth plasters', 'Finishes that last']
   },
   {
     id: 'herbal', title: 'The Herbal Apothecary', cat: 'Wellbeing', grad: 6, icon: 'flower',
-    level: 'Beginner', rating: 4.8, learners: 226,
+    level: 'Beginner', rating: 4.8, learners: 226, poster: 'media/covers/herbal.webp',
     desc: 'Grow your medicine. A garden of healing herbs and the simple preparations — teas, tinctures, salves — that turn a harvest into a home apothecary.',
     modules: ['A healing garden', 'Harvesting at the right time', 'Drying & storing herbs', 'Teas, tinctures & infusions', 'Salves & balms', 'Your home apothecary']
   },
   {
     id: 'fire-safety', title: 'Fire Safety on the Land', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12,
-    level: 'All levels', rating: 4.6, learners: 540, required: true, due: 'Due in 3 days',
+    level: 'All levels', rating: 4.6, learners: 540, required: true, due: 'Due in 3 days', poster: 'media/covers/fire-safety.webp',
     desc: 'The Alentejo summer asks for respect. Defensible space, safe burning windows, equipment and what to do in the first sixty seconds of a wildfire.',
     modules: ['The 2026 fire season', 'Defensible space around buildings', 'Safe burning windows', 'Tools & water on hand', 'Reading wind & terrain', 'The first 60 seconds', 'Reporting & evacuation', 'Land-clearing the right way', 'Certification check']
   },
   {
     id: 'ethics', title: 'Stewardship Ethics & Land Rights', cat: 'Community', grad: 8, icon: 'compass',
-    level: 'All levels', rating: 4.5, learners: 489, required: true,
+    level: 'All levels', rating: 4.5, learners: 489, required: true, poster: 'media/covers/ethics.webp',
     desc: 'Stewardship is a relationship of duty. Land rights, water rights, neighbours and the quiet ethics of leaving a place better than you found it.',
     modules: ['Land as relationship, not asset', 'Water rights & sharing', 'Working with neighbours', 'Leaving it better', 'Certification check']
   },
   {
     id: 'seasonal-rhythm', title: 'Living by the Seasons', cat: 'Wellbeing', grad: 6, icon: 'moon',
-    level: 'All levels', rating: 4.8, learners: 178, teamGoal: true, due: 'Due June 30',
+    level: 'All levels', rating: 4.8, learners: 178, teamGoal: true, due: 'Due June 30', poster: 'media/covers/seasonal-rhythm.webp',
     desc: 'Re-tune your life to the land\'s calendar. A six-part series on working with the seasons of the Alentejo instead of against them.',
     modules: ['The wheel of the year', 'Spring: planting & energy', 'Summer: tending & rest', 'Autumn: harvest & storing', 'Winter: stillness & planning']
   },
   {
     id: 'nature-connection', title: 'The Art of Noticing', cat: 'Nature Connection', grad: 2, icon: 'leaf',
-    level: 'Beginner', rating: 4.7, learners: 154, ai: true,
+    level: 'Beginner', rating: 4.7, learners: 154, ai: true, poster: 'media/covers/nature-connection.webp',
     desc: 'A practice of attention. Slow walks, sit-spots and the daily habit of noticing that turns a place you live into a place you belong to.',
     modules: ['Your sit-spot', 'Widening the senses', 'A daily nature journal', 'Tracking change over weeks', 'Belonging to a place', 'Sharing what you see']
   },
   {
     id: 'community-land', title: 'Community & the Commons', cat: 'Community', grad: 5, icon: 'people',
-    level: 'Beginner', rating: 4.7, learners: 132, ai: true,
+    level: 'Beginner', rating: 4.7, learners: 132, ai: true, poster: 'media/covers/community-land.webp',
     desc: 'Land heals faster together. Shared tools, work parties, and the old-and-new structures that let a community steward a place as one.',
     modules: ['Why the commons works', 'Sharing tools & labour', 'Running a work party', 'Decisions without burnout', 'A 90-day community plan']
   },
