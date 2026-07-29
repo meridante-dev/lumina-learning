@@ -15,6 +15,30 @@ const MODE_KEY  = BRAND_SLUG === 'edenrise' ? 'eden-auth-mode' : BRAND_SLUG + '-
 let S;
 try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem(STATE_KEY) || '{}')); }
 catch { S = structuredClone(DEFAULT_STATE); }
+/* Saved state outlives the catalogue. When courses are retired, a returning
+   learner still carries their old path and goal in localStorage — the home page
+   was reading "For your goal · Regenerative Steward" for a goal that no longer
+   exists, and stepping through path entries that resolve to nothing. Progress is
+   never touched: it is the one part of this object that is earned. */
+(function migrateState() {
+  const goals = (typeof GOAL_PRESETS === 'object' && GOAL_PRESETS) || {};
+  const names = Object.keys(goals);
+  const goalRetired = names.length && !goals[S.goal];
+  if (goalRetired) S.goal = names[0];
+  const known = new Set((typeof CATALOG !== 'undefined' ? CATALOG : []).map(c => c.id));
+  if (Array.isArray(S.path)) {
+    const kept = S.path.filter(id => known.has(id));
+    const preset = (goals[S.goal] || []).filter(id => known.has(id));
+    /* If their GOAL was retired, the path should describe the new goal — pruning
+       alone left a learner on a one-step path when their goal has four. Order
+       follows the preset, but anything they had kept that the preset omits stays
+       appended rather than being taken away from them. */
+    S.path = goalRetired || !kept.length
+      ? preset.concat(kept.filter(id => !preset.includes(id)))
+      : kept;
+  }
+  if (Array.isArray(S.assignments)) S.assignments = S.assignments.filter(a => a && known.has(a.courseId));
+})();
 const save = () => { localStorage.setItem(STATE_KEY, JSON.stringify(S)); if (window.EdenCloud && window.EdenCloud.push) window.EdenCloud.push(S); };
 
 /* ---------- helpers ---------- */
@@ -396,7 +420,7 @@ function cardHTML(c, opts = {}) {
     <div class="card-body">
       <h3>${ctitle(c)}</h3>
       <p class="card-hook">${chook(c)}</p>
-      <div class="meta"><span>${tcat(c.cat)}</span><span class="dot"></span><span>${fmtMins(courseMins(c))}</span><span class="dot"></span><span>★ ${c.rating}</span></div>
+      <div class="meta"><span>${tcat(c.cat)}</span><span class="dot"></span><span>${fmtMins(courseMins(c))}</span>${c.rating ? `<span class="dot"></span><span>★ ${c.rating}</span>` : ''}</div>
       ${foot}
     </div>
   </article>`;
@@ -552,12 +576,19 @@ function renderHome() {
     || CATALOG.find(c => c.featured) || CATALOG[0];                                    /* always a real course */
   const featuredCourses = CATALOG.filter(c => c.featured);
   const fp = prog(featured.id);
-  const continuing = CATALOG.filter(c => coursePct(c.id) > 0 && !isDone(c.id));
+  /* The billboard is already the strongest possible pitch for whatever it is
+     showing — and it carries its own Resume button. Repeating that same course
+     in the first row underneath it is the one thing a streaming service never
+     does, and with a small catalogue it happened in three rows at once. Every
+     rail below the hero excludes the hero. Nothing is lost: the hero IS the
+     resume entry for that course. */
+  const notHero = c => c && c.id !== featured.id;
+  const continuing = CATALOG.filter(c => coursePct(c.id) > 0 && !isDone(c.id)).filter(notHero);
   const adminAssigned = S.assignments
     .map(a => { const c = courseById(a.courseId); return c ? Object.assign({}, c, { due: `Due ${a.due}`, required: true }) : null; })
     .filter(Boolean);
   const assigned = [...adminAssigned, ...CATALOG.filter(c => (c.required || c.teamGoal || c.id === 'new-manager') && !adminAssigned.some(a => a.id === c.id))];
-  const trending = [...CATALOG].sort((a, b) => (a.trending || 99) - (b.trending || 99)).slice(0, 6);
+  const trending = [...CATALOG].filter(notHero).sort((a, b) => (a.trending || 99) - (b.trending || 99)).slice(0, 6);
   const recs = CATALOG.filter(c => c.cat === 'Analytics' && !isDone(c.id) && coursePct(c.id) === 0).slice(0, 5);
   const heroSide = S.path.slice(0, 5).map(id => {
     const c = courseById(id);
@@ -619,8 +650,8 @@ function renderHome() {
   ${askBarHTML()}
   ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)), null, 'featured-row')}
   ${pathRowHTML()}
-  ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.map(c => cardHTML(c)))}
-  ${featuredCourses.length ? railHTML(t('featured_h'), t('featured_sub'), featuredCourses.map(c => cardHTML(c))) : ''}
+  ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.filter(notHero).map(c => cardHTML(c)))}
+  ${railHTML(t('featured_h'), t('featured_sub'), featuredCourses.filter(notHero).map(c => cardHTML(c)))}
   ${dailyDropHTML()}
   <section class="path-banner">
     <div class="shimmer"></div>
@@ -798,7 +829,9 @@ function renderCourse(id) {
             <span class="match">${c.ai ? t('in_ai_rotation') : tcat(c.cat)}</span><span class="sep"></span>
             <span>${c.modules.length} ${t('modules')}</span><span class="sep"></span>
             <span>${fmtMins(courseMins(c))}</span><span class="sep"></span><span>${t(c.level) || c.level}</span>
-            <span class="sep"></span><span>★ ${c.rating} · ${c.learners} ${t('learners')}</span>
+            ${/* A course with no ratings yet must say nothing, not "★ undefined ·
+                   0 learners". Absent proof is fine; invented or broken proof is not. */''}
+            ${c.rating ? `<span class="sep"></span><span>★ ${c.rating}${c.learners ? ` · ${c.learners} ${t('learners')}` : ''}</span>` : ''}
             ${c.updated ? `<span class="sep"></span><span class="fresh-tag">${t('updated_lbl')} ${fmtYm(c.updated)}</span>` : ''}
           </div>
           <h1>${ctitle(c)}</h1>
