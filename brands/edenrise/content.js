@@ -84,7 +84,12 @@ const CATALOG = [
   {
     id: 'ai-literacy', title: 'Level Up with AI', cat: 'Leadership', grad: 2, icon: 'compass', recertMonths: 12,
     level: 'All levels', rating: 5.0, learners: 0, isNew: true, updated: '2026-07',
-    poster: 'media/covers/ai-literacy.webp',
+    /* Cards and the course page render the title in our own type directly
+       beside the artwork, so a poster carrying its own lettering printed the
+       name twice — and on a 16:9 card `cover` fits the width exactly, leaving
+       ~30px of vertical slack, far too little to shift the lockup out of
+       frame. Reframing needed its own crop, not a background-position. */
+    poster: 'media/covers/ai-literacy-card.webp',
     /* Same rule as the fire truck: the poster is a composed card carrying its
        own lettering, which is right at card size and wrong full-bleed — the
        hero would set "LEVEL UP WITH AI" twice. heroArt is the photographic
