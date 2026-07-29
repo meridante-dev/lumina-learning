@@ -3642,3 +3642,33 @@ nav.topnav.scrolled::before { opacity: 0; transition: opacity .35s; }
 .hero-divider { margin: 22px auto 18px; }
 section.rail-section { margin-top: 40px; }
 .page-pad.ask-line-wrap { margin-top: 2px; margin-bottom: 2px; }
+
+/* ── PREMIUM LAYER 23 · the path row gets its pictures ────────────────────────
+   Every course owns a filmed cover, and this row — the FIRST thing on the
+   homepage, the one a buyer sees before anything else — was the last surface
+   still drawing flat tinted boxes. A streaming service's numbered row is
+   artwork with the numeral over it, never a list with a bullet. */
+.pstep.has-art {
+  background-size: cover; background-position: center;
+  min-height: 132px; align-content: end;
+  border: 1px solid rgba(231,237,227,.08);
+  overflow: hidden; isolation: isolate;
+}
+/* Bottom-weighted so the photograph still breathes at the top of the tile
+   while the title stays readable over ANY tenant's photography — this has to
+   hold for a cover nobody has seen yet, not just for these. */
+.pstep.has-art::after {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(9,13,10,.14) 0%, rgba(9,13,10,.58) 52%, rgba(9,13,10,.92) 100%);
+  transition: background .3s;
+}
+.pstep.has-art:hover, .pstep.has-art:focus-visible { background-color: transparent; }
+.pstep.has-art:hover::after, .pstep.has-art:focus-visible::after {
+  background: linear-gradient(180deg, rgba(9,13,10,.04) 0%, rgba(9,13,10,.46) 52%, rgba(9,13,10,.88) 100%);
+}
+/* a locked step stays a sequence you unlock, not a poster of equal weight */
+.pstep.has-art.locked { opacity: 1; filter: saturate(.5) brightness(.6); }
+.pstep.has-art.locked:hover { filter: saturate(.5) brightness(.6); background-color: transparent; }
+.pstep.has-art .pstep-t { font-size: 14px; text-shadow: 0 1px 12px rgba(0,0,0,.75); }
+.pstep.has-art .pstep-s { color: rgba(231,237,227,.78); text-shadow: 0 1px 10px rgba(0,0,0,.75); }
+.pstep.has-art .pstep-n { background: rgba(9,13,10,.62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }

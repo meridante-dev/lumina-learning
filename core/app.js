@@ -510,7 +510,12 @@ function pathRowHTML() {
     const sub = st === 'done' ? t('completed')
       : st === 'current' ? `${pct}% · ${fmtMins(Math.round(courseMins(c) * (100 - pct) / 100))} ${t('left')}`
       : t('unlocks_after');
-    return `<${st === 'locked' ? 'div' : 'button'} class="pstep ${st}"${st === 'locked' ? ' aria-disabled="true"' : ` data-action="open-course" data-id="${id}"`}>
+    /* The FIRST row on the homepage was the only surface still drawing flat
+       boxes while every one of these courses owns a filmed cover. Netflix's
+       numbered row is artwork with the numeral over it, never a list with a
+       bullet — and this row is what a buyer sees before anything else. */
+    const art = c.poster ? ` style="background-image:url('${c.poster}')"` : '';
+    return `<${st === 'locked' ? 'div' : 'button'} class="pstep ${st}${c.poster ? ' has-art' : ''}"${st === 'locked' ? ' aria-disabled="true"' : ` data-action="open-course" data-id="${id}"`}${art}>
       <span class="pstep-n">${st === 'done' ? '✓' : n}</span>
       <span class="pstep-t">${esc(ctitle(c))}</span>
       <span class="pstep-s">${sub}</span>
