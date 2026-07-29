@@ -34,6 +34,11 @@
   superadmins: ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'],
   themeColor: '#0e140f',
   wordSub: 'Academy',     /* the small word under the logo name */
+  /* The billboard this instance leads with. Without it the hero auto-picks the
+     most-filmed course, which is a sensible default and a poor storefront: the
+     tenant, not a ranking function, decides what a visitor sees first. The
+     learner's own place is never lost — it stays one row down in "Continue". */
+  heroCourse: 'fire-truck-training',
   logoSvg: null,          /* founding brand keeps the inline SVG in index.html; a client ships its own here */
   favicon: null,          /* keep index.html's versioned favicon for the founding brand */
   ogImage: 'https://academy.edenrise.com/og-image.png',

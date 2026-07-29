@@ -3672,3 +3672,256 @@ section.rail-section { margin-top: 40px; }
 .pstep.has-art .pstep-t { font-size: 14px; text-shadow: 0 1px 12px rgba(0,0,0,.75); }
 .pstep.has-art .pstep-s { color: rgba(231,237,227,.78); text-shadow: 0 1px 10px rgba(0,0,0,.75); }
 .pstep.has-art .pstep-n { background: rgba(9,13,10,.62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+
+/* ── PREMIUM LAYER 24 · the header, reduced to what a header is for ──────────
+   Before: seven competing objects — five nav links, an XP chip, a search box,
+   a tenant bubble, a language pair, a bell and an avatar. A bar that busy is a
+   toolbar, not a header, and it fights every billboard behind it.
+   After: menu · identity · search · self. Everything else moved into the panel,
+   which is where a destination list belongs once there is more than a handful. */
+
+/* the menu leads, on every viewport — this used to appear under 900px only */
+.nav-burger {
+  display: inline-flex !important; margin-left: 0; order: -1;
+  width: 40px; height: 40px; border-radius: 12px;
+  background: transparent; border: 1px solid transparent;
+  color: var(--text); cursor: pointer; flex-shrink: 0;
+  align-items: center; justify-content: center;
+  transition: background .22s, border-color .22s;
+}
+.nav-burger:hover { background: rgba(231,237,227,.07); border-color: rgba(231,237,227,.12); }
+.nav-burger:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+/* three hairlines, drawn not iconified, so the middle one can shorten on hover
+   — the smallest possible signal that the control is alive */
+.burger-lines { display: block; width: 18px; }
+.burger-lines i {
+  display: block; height: 1.5px; border-radius: 2px; background: currentColor;
+  transition: width .28s cubic-bezier(.2,.8,.2,1), opacity .22s;
+}
+.burger-lines i + i { margin-top: 4.5px; }
+.burger-lines i:nth-child(1) { width: 18px; }
+.burger-lines i:nth-child(2) { width: 13px; opacity: .8; }
+.burger-lines i:nth-child(3) { width: 18px; }
+.nav-burger:hover .burger-lines i:nth-child(2) { width: 18px; opacity: 1; }
+
+/* what the bar no longer carries */
+.topnav .nav-links,
+.topnav .xp-chip,
+.topnav .org-chip,
+.topnav .lang-toggle,
+.topnav .nav-search-btn,
+.topnav .nav-mic { display: none !important; }
+
+nav.topnav { gap: 16px; padding-top: 12px; padding-bottom: 12px; }
+.nav-right { gap: 10px; margin-left: auto; }
+
+/* ── the search field ──────────────────────────────────────────────────────
+   One object: field and microphone in a single pill, divided by a hairline.
+   A mic sitting loose in a toolbar is read as decoration — inside the search
+   field, past a divider, it can only mean "say it instead of typing it". */
+.searchbar {
+  display: flex; align-items: stretch;
+  background: rgba(10,15,11,.5);
+  border: 1px solid rgba(231,237,227,.13);
+  border-radius: 999px; overflow: hidden;
+  backdrop-filter: blur(16px) saturate(1.25);
+  -webkit-backdrop-filter: blur(16px) saturate(1.25);
+  transition: border-color .25s, background .25s, box-shadow .25s;
+}
+.searchbar:hover { border-color: rgba(231,237,227,.24); background: rgba(10,15,11,.62); }
+.searchbar:focus-within { border-color: rgba(166,195,165,.55); box-shadow: 0 0 0 4px rgba(166,195,165,.12); }
+.topnav .search {
+  display: flex; align-items: center; gap: 9px;
+  width: 290px; padding: 0 6px 0 15px; min-height: 40px;
+  background: none; border: 0; border-radius: 0;
+  color: rgba(231,237,227,.62); font-size: 13.5px; cursor: pointer;
+  white-space: nowrap; overflow: hidden;
+}
+.search-ic { width: 16px; height: 16px; flex-shrink: 0; opacity: .75; }
+.search-ph { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.topnav .search kbd {
+  font-family: var(--font-body); font-size: 10.5px; font-weight: 600;
+  color: rgba(231,237,227,.45); background: rgba(231,237,227,.07);
+  border: 1px solid rgba(231,237,227,.1); border-radius: 5px;
+  padding: 2px 5px; flex-shrink: 0;
+}
+
+/* the microphone — labelled, because an unlabelled glyph is a guess */
+.searchbar-mic {
+  position: relative; display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 15px 0 12px; border: 0; background: none; cursor: pointer;
+  color: var(--accent-2); font-family: var(--font-body);
+  font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  border-left: 1px solid rgba(231,237,227,.12);
+  transition: color .2s, background .2s;
+}
+.searchbar-mic svg { width: 16px; height: 16px; }
+.searchbar-mic:hover { background: rgba(166,195,165,.1); color: #cfe0ce; }
+.searchbar-mic:focus-visible { outline: 2px solid var(--accent-2); outline-offset: -2px; }
+.mic-label { line-height: 1; }
+
+/* listening: the field itself says so. Concentric rings are the one voice
+   idiom every assistant shares, so nobody has to learn ours. */
+.mic-rings { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+.mic-rings i {
+  position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px;
+  border: 1px solid var(--accent-2); border-radius: 50%; opacity: 0; transform: scale(.5);
+}
+.searchbar.listening { border-color: rgba(166,195,165,.6); background: rgba(18,28,19,.78); }
+.searchbar.listening .searchbar-mic { color: #d6e6d5; }
+@media (prefers-reduced-motion: no-preference) {
+  .mic-btn.listening .mic-rings i { animation: micRing 1.9s cubic-bezier(.2,.7,.3,1) infinite; }
+  .mic-btn.listening .mic-rings i:nth-child(2) { animation-delay: .95s; }
+}
+@keyframes micRing {
+  0%   { opacity: .55; transform: scale(.5); }
+  100% { opacity: 0;   transform: scale(1.5); }
+}
+/* reduced motion still gets an unmistakable state, just a still one */
+@media (prefers-reduced-motion: reduce) {
+  .mic-btn.listening { background: rgba(166,195,165,.18); }
+}
+
+/* ── the bell ──────────────────────────────────────────────────────────────
+   It was a 38px filled tile with a border, the same weight as a primary
+   control. A notification bell is a passive indicator: no box until touched. */
+.topnav .bell {
+  width: 38px; height: 38px; border-radius: 12px;
+  background: transparent; border: 1px solid transparent;
+  color: rgba(231,237,227,.6);
+  transition: color .2s, background .2s, border-color .2s;
+}
+.topnav .bell:hover { background: rgba(231,237,227,.07); border-color: rgba(231,237,227,.12); color: var(--text); }
+.topnav .bell svg { width: 18px; height: 18px; }
+.topnav .bell-dot { top: 9px; right: 10px; width: 6px; height: 6px; border-width: 1.5px; }
+
+.topnav .avatar { width: 32px; height: 32px; font-size: 12px; border-width: 1.5px; }
+
+/* ── the panel ─────────────────────────────────────────────────────────────
+   Now the only home for every destination, so it earns real presentation:
+   wider, sectioned, and it slides rather than appears. */
+.mobile-drawer-panel {
+  width: min(340px, 86vw); padding: 20px 18px 26px;
+  background: linear-gradient(180deg, #121a13 0%, #0d130e 100%);
+  border-right: 1px solid rgba(231,237,227,.09);
+  box-shadow: 40px 0 90px rgba(0,0,0,.55);
+}
+.mobile-drawer-head { margin-bottom: 16px; }
+.mobile-drawer-head .org-chip { display: flex; }
+.mobile-drawer .xp-chip { display: inline-flex; margin-bottom: 20px; }
+.md-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(231,237,227,.34); margin: 4px 0 8px 12px;
+}
+.mobile-drawer a {
+  font-size: 15px; padding: 11px 12px; border-radius: 10px;
+  transition: background .18s, color .18s, padding-left .22s;
+}
+.mobile-drawer a:hover { padding-left: 16px; }
+.mobile-drawer a.active { background: rgba(166,195,165,.12); color: var(--text); }
+.md-sep { height: 1px; background: rgba(231,237,227,.09); margin: 16px 4px; }
+.drawer-lang { margin-top: 18px; width: 100%; }
+.drawer-lang .lang-btn { flex: 1; }
+
+/* phones: the field collapses to its glyph, the label would not fit */
+@media (max-width: 720px) {
+  .topnav .search { width: auto; padding-right: 2px; }
+  .topnav .search .search-ph, .topnav .search kbd { display: none; }
+  .mic-label { display: none; }
+  .searchbar-mic { padding: 0 12px; }
+}
+
+/* ── PREMIUM LAYER 25 · key art, for assets that are not full-bleed landscape ─
+   Most course posters are title cards: the name is baked into the picture, so
+   full-bleed they print the course name twice — once in the artwork, once in
+   our own type — and any badge lockup in them fights the palette. When a course
+   ships a photographic PLATE cut out of its poster, frame it as key art: a
+   right-hand panel that dissolves leftwards into the page, so the copy sits on
+   clean darkness and the photograph keeps its own space. */
+.hero-art.fit-key {
+  inset: 0 0 0 auto; width: 62%;
+  /* anchored to the TOP, not centred: the plate is taller than the band, and a
+     centred crop guillotined the subject's head against the nav */
+  background-size: cover; background-position: 100% 8%;
+  opacity: .92;
+  /* Two masks intersected, not one. The horizontal fade alone left the plate
+     ending on a hard horizontal edge along the hero's floor — invisible on the
+     dark left side, obvious under the bright fire on the right. */
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0%, rgba(0,0,0,.55) 26%, #000 62%),
+    linear-gradient(180deg, #000 62%, transparent 99%);
+  mask-image:
+    linear-gradient(90deg, transparent 0%, rgba(0,0,0,.55) 26%, #000 62%),
+    linear-gradient(180deg, #000 62%, transparent 99%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  transform-origin: 70% 45%;
+}
+/* the plate is an upscale from a 620px crop — a whisper of grain hides the
+   softness the way film does, and costs one composited layer */
+.hero-art.fit-key::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px; opacity: .05; mix-blend-mode: overlay;
+}
+/* it must never crowd the headline on a narrow desktop window */
+@media (max-width: 1100px) {
+  .hero-art.fit-key { width: 74%; opacity: .55;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 55%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 55%); }
+}
+@media (max-width: 700px) {
+  .hero-art.fit-key { inset: 0; width: 100%; opacity: .3; background-position: 30% top;
+    -webkit-mask-image: linear-gradient(180deg, #000, transparent 62%);
+    mask-image: linear-gradient(180deg, #000, transparent 62%); }
+}
+
+/* ── PREMIUM LAYER 26 · the panel exists on every viewport ───────────────────
+   The drawer's entire ruleset lived inside @media (max-width:1024px), and a
+   later rule killed it outright above 1025px with !important — correct when it
+   was a phone-only fallback for a desktop nav bar, wrong now that it is the
+   ONLY place the destinations live. Restated unconditionally, and it opens from
+   the LEFT because that is the edge its button sits on. */
+.mobile-drawer {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(6,10,7,.62);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  display: none; opacity: 0; transition: opacity .3s;
+}
+.mobile-drawer.open { display: block !important; opacity: 1; }
+.mobile-drawer-panel {
+  position: absolute; top: 0; right: auto; bottom: 0; left: 0;
+  width: min(340px, 86vw);
+  background: linear-gradient(180deg, #121a13 0%, #0d130e 100%);
+  border-left: 0; border-right: 1px solid rgba(231,237,227,.09);
+  padding: 20px 18px 26px; display: flex; flex-direction: column; gap: 4px;
+  transform: translateX(-100%); transition: transform .38s cubic-bezier(.2,.8,.2,1);
+  box-shadow: 40px 0 90px rgba(0,0,0,.55);
+  overflow-y: auto;
+}
+.mobile-drawer.open .mobile-drawer-panel { transform: translateX(0); }
+.mobile-drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.mobile-drawer-close {
+  width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+  background: transparent; border: 1px solid rgba(231,237,227,.12);
+  color: var(--text-dim); cursor: pointer; font-size: 14px;
+  transition: background .2s, color .2s;
+}
+.mobile-drawer-close:hover { background: rgba(231,237,227,.08); color: var(--text); }
+.mobile-drawer a {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 12px; border-radius: 10px;
+  color: var(--text-dim); text-decoration: none; font-size: 15px; font-weight: 550;
+  transition: background .18s, color .18s, padding-left .22s;
+}
+.mobile-drawer a:hover { background: rgba(231,237,227,.06); color: var(--text); padding-left: 16px; }
+.mobile-drawer a.active { background: rgba(166,195,165,.12); color: var(--accent-2); }
+.md-signout {
+  margin-top: 6px; padding: 11px 12px; border-radius: 10px; text-align: left;
+  background: none; border: 0; color: #e2857a; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: var(--font-body); transition: background .18s;
+}
+.md-signout:hover { background: rgba(226,133,122,.1); }
+/* a chip should be the width of its content, not of the column it sits in */
+.mobile-drawer .xp-chip { align-self: flex-start; }
+.mobile-drawer-head .org-chip { cursor: default; }

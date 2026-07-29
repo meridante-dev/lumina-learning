@@ -145,7 +145,13 @@ const CATALOG = [
   },
   {
     id: 'fire-truck-training', title: 'Fire Truck Training', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12, featured: true, updated: '2026-07',
-    level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/fire-truck-training.webp', heroArt: 'media/covers/fire-truck-training-hero.webp',
+    level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/fire-truck-training.webp',
+    /* The poster is a title card — it carries its own giant lettering, so at
+       hero scale the course name appeared twice and the four coloured badges
+       fought the palette. heroArt is the photographic plate cut out of it;
+       heroFit:'key' frames it as a right-hand panel that fades into the page,
+       the way key art works when the artwork is not full-bleed landscape. */
+    heroArt: 'media/covers/fire-truck-training-key.webp', heroFit: 'key',
     desc: 'Hands-on operation of the land’s fire truck — start it, drive it, fill it, and put water exactly where it’s needed. When fire season comes, everyone should know how to move water.',
     modules: ['Starting & Driving the Truck', 'Filling the Water Tank', 'Off-Road, Pump & Spray', 'Power, Safety & the Drill'],
     moduleDurations: [6, 10, 10, 9],   /* real Vimeo lengths: 5:55 10:11 9:49 9:28 */

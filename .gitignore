@@ -19,3 +19,11 @@ dist/
 .env.local
 CLAUDE.md
 FOR-THE-LOOP.md
+
+# Working media that must not enter git history on a public repo.
+# 22MB of promo renders + three superseded site backups were swept in by an
+# `add -A`; they stay on disk, they just don't ship. Publish a promo cut
+# deliberately (and prefer a CDN link) rather than committing the master.
+collateral/promo/
+collateral/site-backups/
+collateral/site-v2/

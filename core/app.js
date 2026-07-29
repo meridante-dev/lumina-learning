@@ -539,7 +539,13 @@ function renderHome() {
      a flagged `featured` breaks the tie */
   const realOnes = CATALOG.filter(hasRealContent)
     .sort((a, b) => (realModuleCount(b) - realModuleCount(a)) || ((b.featured ? 1 : 0) - (a.featured ? 1 : 0)));
-  const featured = (lastPlayed && courseById(lastPlayed[0]))          /* your own place always wins */
+  /* An explicit tenant pick outranks everything, including the resume slot.
+     A storefront's lead title is an editorial decision, not a function of what
+     this particular viewer happened to open last — and the viewer loses
+     nothing, because "Continue learning" carries their place one row below. */
+  const brandHero = BRAND.heroCourse && courseById(BRAND.heroCourse);
+  const featured = brandHero
+    || (lastPlayed && courseById(lastPlayed[0]))
     || realOnes.find(c => !isDone(c.id)) || realOnes[0]
     || S.path.map(courseById).filter(Boolean).find(c => !isDone(c.id))
     || CATALOG.find(c => c.featured && !isDone(c.id)) || CATALOG.find(c => !isDone(c.id))
@@ -575,7 +581,7 @@ function renderHome() {
   return `<div class="page">
   <header class="hero">
     <div class="hero-bg"></div><div class="hero-grid"></div>
-    ${(featured.heroArt || featured.poster) ? `<div class="hero-art" style="background-image:url('${featured.heroArt || featured.poster}')"></div>` : ''}
+    ${(featured.heroArt || featured.poster) ? `<div class="hero-art${featured.heroFit ? ' fit-' + featured.heroFit : ''}" style="background-image:url('${featured.heroArt || featured.poster}')"></div>` : ''}
     <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="hero-fade"></div><div class="hero-rim" aria-hidden="true"></div>
     <div class="hero-content">
       <span class="hero-eyebrow">${t('featured_eyebrow')}</span>
@@ -4239,7 +4245,11 @@ addEventListener('hashchange', render);
 const NAV_KEYS = { '#/home': 'nav_home', '#/me': 'nav_me', '#/profile': 'nav_settings', '#/library': 'nav_library', '#/paths': 'nav_paths', '#/community': 'nav_community', '#/live': 'nav_live', '#/progress': 'nav_progress', '#/analytics': 'nav_analytics', '#/admin': 'nav_admin' };
 function syncChrome() {
   $$('.nav-links a, .mobile-drawer a').forEach(a => { const k = NAV_KEYS[a.getAttribute('href')]; if (k) a.textContent = t(k); });
-  const search = $('#navSearch'); if (search) search.innerHTML = `⌕&nbsp; ${t('search_ph')} <kbd>⌘K</kbd>`;
+  /* Only the words change. This used to rewrite the field's whole innerHTML on
+     every language sync, which would have thrown away the search glyph and the
+     mic that now live inside it. */
+  const sph = document.querySelector('#navSearch .search-ph'); if (sph) sph.textContent = t('search_ph');
+  const mlab = document.querySelector('.searchbar-mic .mic-label'); if (mlab) mlab.textContent = t('voice_label');
   const org = $('#orgChip'); if (org) org.innerHTML = `<span class="org-dot"></span>${brandName()} · ${BRAND.wordSub || 'Academy'}`;
   const tn = $('#aiTitle'); if (tn) tn.textContent = t('tutor_name');
   /* AI Act Art. 50: people must know they are talking to AI — said plainly,
@@ -5102,6 +5112,14 @@ function startVoiceSearch() {
 function setVoiceUI(on) {
   $$('.mic-btn').forEach(b => { b.classList.toggle('listening', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   const st = $('#palVoiceState'); if (st) { st.textContent = on ? `● ${t('voice_listening')}` : ''; st.classList.toggle('on', on); }
+  /* The whole field reacts, not just the button — while it is listening the
+     placeholder says so, which is the difference between a mic you hope did
+     something and one you can see is on. */
+  const bar = $('#searchbar'); if (bar) bar.classList.toggle('listening', on);
+  const ph = document.querySelector('#navSearch .search-ph');
+  if (ph) ph.textContent = on ? t('voice_listening') : t('search_ph');
+  const ml = document.querySelector('.searchbar-mic .mic-label');
+  if (ml) ml.textContent = on ? t('voice_listening') : t('voice_label');
 }
 function closePalette() { $('#palette').classList.remove('open'); }
 /* Forgiving match for the palette: a query matches if its characters appear
