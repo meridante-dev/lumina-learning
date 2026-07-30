@@ -5031,6 +5031,63 @@ function showTakeaways(c, mod, next) {
   $('#takeModal').classList.add('open');
   armUpNext(next);
 }
+/* ===== END-OF-LESSON CHECK — what actually credits the hour ================
+   Reuses the in-video checkpoint overlay so there is one visual language for
+   "answer this". Submission writes the art. 131.º record; skipping leaves the
+   lesson in pendingChecks and credits nothing, which the learner is told
+   plainly rather than discovering at audit time. */
+function showModuleCheck(c, mod, after) {
+  const ov = $('#ckOv'); if (!ov) { creditTraining(c.id, mod, null); if (after) after(); return; }
+  const qs = moduleCheckQuestions(c, mod);
+  const done = res => { ov.classList.remove('on'); ov.innerHTML = ''; creditTraining(c.id, mod, res); updateXpChip(); if (after) after(); };
+
+  /* No question bank for this course: the spec allows "assessment OR
+     acknowledgment". An explicit, recorded acknowledgment is honest; a silent
+     credit is not. */
+  if (!qs) {
+    ov.innerHTML = `<div class="ck-card">
+      <div class="ob-eyebrow">${t('mc_eyebrow')} · ${esc(ctitle(c))}</div>
+      <div class="ck-q">${t('mc_ack_q')}</div>
+      <label class="ck-ack"><input type="checkbox" id="mcAck"> <span>${t('mc_ack_label')}</span></label>
+      <div class="ck-foot"><span class="ck-note">${t('mc_ack_note')}</span>
+        <button class="btn btn-primary btn-sm" id="mcGo" disabled>${t('mc_submit')}</button></div>
+    </div>`;
+    ov.classList.add('on');
+    const box = $('#mcAck'), go = $('#mcGo');
+    box.addEventListener('change', () => { go.disabled = !box.checked; });
+    go.addEventListener('click', () => done({ kind: 'acknowledgment', acknowledged: true, at: Date.now() }));
+    return;
+  }
+
+  const answers = new Array(qs.length).fill(null);
+  const paint = () => {
+    ov.innerHTML = `<div class="ck-card">
+      <div class="ob-eyebrow">${t('mc_eyebrow')} · ${esc(ctitle(c))}</div>
+      <p class="pre-sub">${t('mc_sub')}</p>
+      ${qs.map((q, qi) => `<div class="mc-q">
+        <div class="ck-q">${qi + 1}. ${esc(q.q)}</div>
+        ${q.opts.map((o, oi) => `<div class="q-opt${answers[qi] === oi ? ' sel' : ''}" data-q="${qi}" data-o="${oi}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
+      </div>`).join('')}
+      <div class="ck-foot"><span class="ck-note">${t('mc_note')}</span>
+        <button class="btn btn-primary btn-sm" id="mcGo"${answers.some(a => a === null) ? ' disabled' : ''}>${t('mc_submit')}</button></div>
+    </div>`;
+    ov.querySelectorAll('.q-opt').forEach(el => el.addEventListener('click', () => {
+      answers[+el.dataset.q] = +el.dataset.o; paint();
+    }));
+    const go = $('#mcGo');
+    if (go) go.addEventListener('click', () => {
+      const detail = qs.map((q, i) => ({ q: q.q, given: q.opts[answers[i]], correct: q.opts[q.a], ok: answers[i] === q.a }));
+      const score = detail.filter(d => d.ok).length;
+      if (score === qs.length) awardXp(5, t('mc_eyebrow'));
+      S.quizzesPassed = (S.quizzesPassed || 0) + (score === qs.length ? 1 : 0);
+      toast(score === qs.length ? t('mc_all_right') : t('mc_recorded'), score === qs.length ? '✓' : 'ℹ️');
+      done({ kind: 'assessment', score, total: qs.length, passed: score === qs.length, detail, at: Date.now() });
+    });
+  };
+  paint();
+  ov.classList.add('on');
+}
+
 /* ---- up-next auto-advance ------------------------------------------------
    Only for a real next lesson: never auto-advance into a quiz, a locked
    "coming soon", or the end of a course. Any keypress, click or hover cancels
@@ -5068,6 +5125,17 @@ function resolveTakeaways(toQuiz) {
   $('#takeModal').classList.remove('open');
   const n = pendingNext; pendingNext = null;
   if (!n) return;
+  /* The check comes BETWEEN the takeaways and whatever is next: the learner has
+     just seen the key learnings, which is the moment the question is a retrieval
+     cue rather than a gotcha — and it is the event that credits the hour. */
+  const lc = n.checkFor;
+  if (lc && !(S.trainingLog || []).some(e => e.courseId === lc.courseId && e.mod === lc.mod)) {
+    const c = courseById(lc.courseId);
+    if (c) { showModuleCheck(c, lc.mod, () => resolveTakeawaysNext(n, toQuiz)); return; }
+  }
+  resolveTakeawaysNext(n, toQuiz);
+}
+function resolveTakeawaysNext(n, toQuiz) {
   if (toQuiz && n.courseId) { closePlayer(); setTimeout(() => openQuiz(n.courseId), 250); return; }   /* watch → assess loop */
   if (n.kind === 'next') openPlayer(n.courseId, n.mod);
   else if (n.kind === 'soon') { closePlayer(); setTimeout(() => toast(_lang() === 'pt' ? 'É tudo por agora — o resto da jornada está a caminho' : 'That’s every lesson available so far — the rest of the journey is coming soon', ''), 400); }
@@ -5076,51 +5144,95 @@ function resolveTakeaways(toQuiz) {
     setTimeout(() => { openTutorWith(`${_lang() === 'pt' ? 'Terminou' : 'You finished'} <b>${esc(titleOf(n.courseId))}</b> — ${_lang() === 'pt' ? 'quer o teste de certificação agora? São 3 perguntas.' : 'want the certification quiz now? It’s 3 questions.'}`, ['Quiz me now', 'Build me a path']); }, 700);
   }
 }
+/* ===== art. 131.º hour record — REQ-L-001 / 002 / 010 ======================
+   Written ONLY on submission of the end-of-lesson check. The evidence chain the
+   spec asks for has three legs and this joins them: the media was played
+   (segments), a human was present and engaged (assessment), and the content is
+   job-related (capability).
+
+   Hours credit on SUBMISSION, pass or fail. Art. 131.º counts hours of training
+   PROVIDED, not exam success — a worker who sat the lesson and scored badly was
+   still trained, and refusing the hour would under-report real training and
+   make the employer look non-compliant when they are not. The score is stored
+   separately: it is the "resultados" column the Relatório Único Anexo C asks
+   for, which nothing in this product could previously fill. */
+function creditTraining(courseId, mod, assessment) {
+  const c = courseById(courseId); if (!c) return null;
+  S.trainingLog = S.trainingLog || [];
+  if (S.trainingLog.some(e => e.courseId === courseId && e.mod === mod)) return null;
+  const mins = (c.moduleDurations && c.moduleDurations[mod]) || 12;
+  const live = watchEv && watchEv.key === courseId + ':' + mod;
+  const segs = live ? watchMerged() : [];
+  const dur = (live && watchEv.dur) || 0;
+  const covered = segs.length ? watchCoveredSec() : 0;
+  const coverage = dur ? Math.min(1, covered / dur) : null;
+  const credited = coverage == null ? mins / 60 : (mins / 60) * coverage;
+  const entry = {
+    courseId, mod, title: (cmods(c)[mod] || c.modules[mod]),
+    hours: Math.round(credited * 100) / 100,
+    at: Date.now(), confirmed: true,
+    ev: {
+      nominalMin: mins,
+      mediaDurSec: Math.round(dur) || null,
+      watchedSec: covered || null,
+      coverage: coverage == null ? null : Math.round(coverage * 100) / 100,
+      method: (live && watchEv.method) || 'none',
+      segments: segs.slice(0, 60),
+      startedAt: (live && watchEv.startedAt) || null,
+      endedAt: Date.now(),
+      outsideHours: isOutsideWorkingHours(),
+      capability: (typeof capabilityFor === 'function' ? capabilityFor(c) : null) || null,
+      /* the completion check — REQ-L-002's second half */
+      check: assessment || null
+    }
+  };
+  S.trainingLog.push(entry);
+  clearCheckPending(courseId, mod);
+  ledgerAppend('training_credited', {
+    courseId, mod, hours: entry.hours,
+    coverage: entry.ev.coverage, score: assessment ? assessment.score : null,
+    total: assessment ? assessment.total : null, kind: assessment ? assessment.kind : 'none'
+  });
+  save();
+  return entry;
+}
+/* Lessons watched but not yet checked. Kept explicit so a learner is never told
+   they are further along their 40h than the record can support. */
+function markCheckPending(courseId, mod) {
+  const k = courseId + ':' + mod;
+  S.pendingChecks = S.pendingChecks || {};
+  if (!S.trainingLog || !S.trainingLog.some(e => e.courseId === courseId && e.mod === mod)) {
+    if (!S.pendingChecks[k]) { S.pendingChecks[k] = Date.now(); save(); }
+  }
+}
+function clearCheckPending(courseId, mod) {
+  if (S.pendingChecks) { delete S.pendingChecks[courseId + ':' + mod]; }
+}
+function pendingCheckCount() { return Object.keys(S.pendingChecks || {}).length; }
+
+/* Two questions from the course's OWN bank, chosen deterministically per module
+   so a retake asks the same thing and the record stays comparable. Never the
+   generic category bank: being asked about soil at the end of a fire-truck
+   lesson teaches people the check is noise. */
+function moduleCheckQuestions(c, mod) {
+  const qs = (typeof courseOwnQuiz === 'function' && courseOwnQuiz(c)) || null;
+  if (!qs || !qs.length) return null;
+  const n = Math.min(2, qs.length);
+  const out = [];
+  for (let i = 0; i < n; i++) out.push(qs[(mod * 2 + i) % qs.length]);
+  return out;
+}
+
 function completeModule(courseId, mod) {
   const c = courseById(courseId);
   const p = S.progress[courseId] || (S.progress[courseId] = { mod: 0, pct: 0 });
   p.lastAt = Date.now();
-  /* ===== art. 131.º hour record — REQ-L-001 / 002 / 010 =====================
-     This used to credit the module's NOMINAL duration for anyone who reached
-     the end, and store a single number. Two problems: an hour was claimed that
-     nobody could evidence, and there was nothing to show an inspector but a
-     boolean.
-
-     Credited hours are now the declared carga horária scaled by the share of
-     the lesson actually played. That is the defensible rule: the employer
-     declares a duration, and we credit it in proportion to content covered,
-     never more. Coverage is unknown only when no media reported a duration —
-     recorded honestly as such rather than silently credited in full. */
-  if (!(S.trainingLog || (S.trainingLog = [])).some(e => e.courseId === courseId && e.mod === mod)) {
-    const mins = (c.moduleDurations && c.moduleDurations[mod]) || 12;
-    const segs = watchEv && watchEv.key === courseId + ':' + mod ? watchMerged() : [];
-    const dur = watchEv && watchEv.dur || 0;
-    const covered = segs.length ? watchCoveredSec() : 0;
-    const coverage = dur ? Math.min(1, covered / dur) : null;
-    const credited = coverage == null ? mins / 60 : (mins / 60) * coverage;
-    S.trainingLog.push({
-      courseId, mod, title: (cmods(c)[mod] || c.modules[mod]),
-      hours: Math.round(credited * 100) / 100,
-      at: Date.now(), confirmed: true,
-      ev: {
-        nominalMin: mins,
-        mediaDurSec: Math.round(dur) || null,
-        watchedSec: covered || null,
-        coverage: coverage == null ? null : Math.round(coverage * 100) / 100,
-        method: (watchEv && watchEv.method) || 'none',
-        /* the raw evidence the spec asks to be kept, capped so a long lesson
-           with heavy scrubbing cannot bloat the record */
-        segments: segs.slice(0, 60),
-        startedAt: (watchEv && watchEv.startedAt) || null,
-        endedAt: Date.now(),
-        outsideHours: isOutsideWorkingHours(),
-        /* REQ-L-001 job-relevance link — the capability this lesson maps to.
-           Populated by REQ-L-020; null here means "not yet asserted", which is
-           the honest state until that lands. */
-        capability: (typeof capabilityFor === 'function' ? capabilityFor(c) : null) || null
-      }
-    });
-  }
+  /* The hour is NOT credited here. Watching advances progress; the art. 131.º
+     record is written only when the learner submits the end-of-lesson check
+     (see creditTraining). Spec REQ-L-002 requires watch-time evidence PLUS a
+     completion check, and our Q4 position is watch-time + assessment +
+     job-relevance — so attendance alone must not mint an hour. */
+  markCheckPending(courseId, mod);
   ledgerAppend('module_complete', { courseId, mod, mins: (c.moduleDurations && c.moduleDurations[mod]) || 12 });
   if (mod >= c.modules.length - 1) ledgerAppend('course_complete', { courseId });
   if (S.review[courseId] === mod) { delete S.review[courseId]; toast('Review module cleared — nice recovery', '↺'); }
@@ -5132,7 +5244,7 @@ function completeModule(courseId, mod) {
     toast(`${_lang() === 'pt' ? 'Curso concluído' : 'Course complete'}: ${ctitle(c)}`, '🏆');
     awardXp(XP.module + XP.course, 'course complete');
     checkBadges();
-    showTakeaways(c, mod, { kind: 'course-done', courseId });
+    showTakeaways(c, mod, { kind: 'course-done', courseId, checkFor: { courseId, mod } });
   } else {
     const nextMedia = modMedia(c, mod + 1);
     p.mod = mod + 1;
@@ -5140,7 +5252,7 @@ function completeModule(courseId, mod) {
     save();
     awardXp(XP.module, 'module');
     checkBadges();
-    showTakeaways(c, mod, (nextMedia && nextMedia.type === 'soon') ? { kind: 'soon' } : { kind: 'next', courseId, mod: mod + 1 });
+    showTakeaways(c, mod, Object.assign((nextMedia && nextMedia.type === 'soon') ? { kind: 'soon' } : { kind: 'next', courseId, mod: mod + 1 }, { checkFor: { courseId, mod } }));
   }
 }
 
