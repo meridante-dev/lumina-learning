@@ -2940,9 +2940,31 @@ function openMemberDetail(uid) {
   addEventListener('keydown', esch);
 }
 function registerRowsFor(pf, log, y) {
-  const rows = [['Trabalhador', 'NIF', 'Ação', 'Módulo', 'Modalidade', 'Data', 'Duração (h)', 'Confirmação']];
+  /* The register is what an ACT inspector reads. It used to state a duration
+     with nothing behind it; it now carries the evidence for that duration —
+     how much of the lesson was played, by what method, and whether the training
+     fell inside normal working hours (art. 226.º/3(d), a payroll consequence).
+     Entries recorded before this shipped have no evidence and say so, rather
+     than being back-filled with a number nobody measured. */
+  const rows = [['Trabalhador', 'NIF', 'Ação', 'Módulo', 'Modalidade', 'Início', 'Fim',
+                 'Duração creditada (h)', 'Carga horária (min)', 'Visto (s)', 'Cobertura',
+                 'Método de evidência', 'Fora do horário', 'Confirmação']];
   (log || []).filter(e => new Date(e.at).getFullYear() === y).sort((a, b) => a.at - b.at)
-    .forEach(e => rows.push([pf.name || '', pf.nif || '', ptCourseTitle(e.courseId), e.title || '', 'e-learning', new Date(e.at).toLocaleString('pt-PT'), e.hours, e.confirmed ? 'Sim' : '']));
+    .forEach(e => {
+      const v = e.ev || {};
+      rows.push([
+        pf.name || '', pf.nif || '', ptCourseTitle(e.courseId), e.title || '', 'e-learning',
+        v.startedAt ? new Date(v.startedAt).toLocaleString('pt-PT') : new Date(e.at).toLocaleString('pt-PT'),
+        new Date(v.endedAt || e.at).toLocaleString('pt-PT'),
+        e.hours,
+        v.nominalMin != null ? v.nominalMin : '',
+        v.watchedSec != null ? v.watchedSec : '',
+        v.coverage != null ? Math.round(v.coverage * 100) + '%' : 'sem evidência',
+        v.method && v.method !== 'none' ? v.method : 'não registado',
+        v.outsideHours == null ? '' : (v.outsideHours ? 'Sim' : 'Não'),
+        e.confirmed ? 'Sim' : ''
+      ]);
+    });
   return rows;
 }
 function downloadMemberRegister(uid) {
@@ -4619,6 +4641,7 @@ function openPlayer(courseId, mod) {
   const media = modMedia(c, mod);
   clearCheckpoint();
   watchedSeconds = 0;
+  watchStart(courseId + ':' + mod, 'pending');
   playing = { courseId, mod };
   if (!prog(courseId)) S.progress[courseId] = { mod, pct: 0 };
   /* what you last opened is what "carry on" must mean — the syllabus order is
@@ -4642,6 +4665,7 @@ function openPlayer(courseId, mod) {
     vimeoWrap.innerHTML = `<iframe src="https://player.vimeo.com/video/${media.id}?${media.h ? 'h=' + media.h + '&' : ''}title=0&byline=0&portrait=0&badge=0&autoplay=1&autopause=0&dnt=1&player_id=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen title="${cmods(c)[mod]}"></iframe>`;
     armVimeo(c, mod);
   } else {
+    if (watchEv) watchEv.method = 'video-timeupdate';
     videoEl.src = c.video || vidFor(courseId, mod);
     videoEl.play().catch(() => {});
   }
@@ -4785,8 +4809,10 @@ function armVimeo(c, mod) {
     if (!ifr || !window.Vimeo || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
     try { vimeoPlayer = new Vimeo.Player(ifr); } catch (e) { return; }
     let checkFired = false, done = false;
+    if (watchEv && watchEv.key === c.id + ':' + mod) watchEv.method = 'vimeo-timeupdate';
     vimeoPlayer.on('timeupdate', d => {
       if (!d || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
+      if (document.visibilityState === 'visible') watchMark(d.seconds, d.duration);
       /* live progress, so a half-watched lesson is not lost on close */
       const p = prog(c.id); if (p && d.percent) p.pct = Math.max(p.pct || 0, Math.round(d.percent * 100));
       if (!needsCheck || checkFired || !d.percent || d.percent < 0.5) return;
@@ -4797,6 +4823,10 @@ function armVimeo(c, mod) {
     });
     vimeoPlayer.on('ended', () => {
       if (done || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
+      /* the same discipline the <video> branch has always had: reaching the end
+         of the timeline is not the same as having watched the lesson, and a
+         scrubbed-through lesson must not mint a compliance hour */
+      if (watchEv && watchEv.dur && watchCoverage() < WATCH_MIN_COVERAGE) { toast(t('watch_more'), 'ℹ️'); return; }
       done = true;
       completeModule(c.id, mod);
     });
@@ -4887,12 +4917,80 @@ videoEl.addEventListener('ended', () => {
   if (d && w < d * 0.75) { toast(t('watch_more'), 'ℹ️'); return; }
   completeModule(playing.courseId, playing.mod);
 });
-/* measured watch time — only accrues while the tab is visible and the video is
-   actually advancing, which is the same discipline S.mins already uses */
+/* ============ REQ-L-002 · DURATION EVIDENCE =================================
+   The legal spec is explicit: duration evidence must be "segments actually
+   played, not merely opened", and the RAW evidence must be stored, not just a
+   boolean. Two things were wrong here.
+
+   1. This counted WALL-CLOCK seconds while playing. Re-watching the same ten
+      seconds twenty times scored 200s of "training". A union of played RANGES
+      measures distinct content covered, which is what an inspector is actually
+      asking about, and it cannot be inflated by replaying.
+   2. Only the <video> branch had any gate. Every filmed EdenRise course is
+      VIMEO, and that branch completed on 'ended' with no watch test at all — so
+      the hours that reach the art. 131.º ledger for real content had no
+      evidence behind them whatsoever.
+
+   Both players now feed the same recorder. Nothing here decides what is legally
+   sufficient — that is Part 6 Q4, unanswered. This captures the record so the
+   answer can be applied to real data rather than to nothing. */
+const WATCH_MIN_COVERAGE = 0.75;   /* completion gate; NOT a legal threshold */
+let watchEv = null;
+function watchStart(key, method) {
+  watchEv = { key, method, segs: [], last: null, startedAt: Date.now(), dur: 0 };
+}
+/* Extend the open range while playback is contiguous; a jump starts a new one,
+   so scrubbing forward can never manufacture coverage. */
+function watchMark(pos, duration) {
+  if (!watchEv || !isFinite(pos)) return;
+  if (duration && isFinite(duration)) watchEv.dur = duration;
+  const prev = watchEv.last;
+  watchEv.last = pos;
+  if (prev == null) { watchEv.segs.push([pos, pos]); return; }
+  const gap = pos - prev;
+  const open = watchEv.segs[watchEv.segs.length - 1];
+  if (gap >= -0.6 && gap <= 2.5 && open) open[1] = Math.max(open[1], pos);
+  else if (watchEv.segs.length < 400) watchEv.segs.push([pos, pos]);
+}
+function watchMerged() {
+  if (!watchEv) return [];
+  const r = watchEv.segs.filter(x => x[1] > x[0] + 0.2).sort((a, b) => a[0] - b[0]);
+  const out = [];
+  r.forEach(seg => {
+    const last = out[out.length - 1];
+    if (last && seg[0] <= last[1] + 0.75) last[1] = Math.max(last[1], seg[1]);
+    else out.push([seg[0], seg[1]]);
+  });
+  return out.map(x => [Math.round(x[0] * 10) / 10, Math.round(x[1] * 10) / 10]);
+}
+function watchCoveredSec() { return Math.round(watchMerged().reduce((a, x) => a + (x[1] - x[0]), 0)); }
+function watchCoverage() {
+  const d = watchEv && watchEv.dur;
+  return d ? Math.min(1, watchCoveredSec() / d) : 0;
+}
+/* Back-compat: the old scalar is still read by the <video> 'ended' gate. */
 let watchedSeconds = 0;
 videoEl.addEventListener('timeupdate', () => {
-  if (!videoEl.paused && document.visibilityState === 'visible') watchedSeconds += 0.25;
+  if (videoEl.paused || document.visibilityState !== 'visible') return;
+  watchedSeconds += 0.25;
+  watchMark(videoEl.currentTime, videoEl.duration);
 });
+
+/* REQ-L-010 · training inside or outside normal working hours. Hours are paid
+   working time; outside-hours training must be compensated, and ≤2h/day outside
+   hours is not supplementary work (art. 131.º, 226.º/3(d)). That is a payroll
+   consequence for the client, so the record has to say which it was. The window
+   is per-company config — a resort's hours are not an office's. */
+function workWindow() {
+  const o = (window.EdenOrg && EdenOrg.workHours) || {};
+  return { start: o.start != null ? o.start : 8, end: o.end != null ? o.end : 18,
+           days: o.days || [1, 2, 3, 4, 5] };
+}
+function isOutsideWorkingHours(d) {
+  const w = workWindow(), t = d || new Date();
+  const h = t.getHours() + t.getMinutes() / 60;
+  return !(w.days.includes(t.getDay()) && h >= w.start && h < w.end);
+}
 
 /* "what you take with you" — 3 key learnings shown at each module's end (peak-end moment) */
 function takeawaysFor(c, mod) {
@@ -4982,10 +5080,46 @@ function completeModule(courseId, mod) {
   const c = courseById(courseId);
   const p = S.progress[courseId] || (S.progress[courseId] = { mod: 0, pct: 0 });
   p.lastAt = Date.now();
-  /* 40h compliance: credit this lesson's carga horária to the append-only training ledger */
+  /* ===== art. 131.º hour record — REQ-L-001 / 002 / 010 =====================
+     This used to credit the module's NOMINAL duration for anyone who reached
+     the end, and store a single number. Two problems: an hour was claimed that
+     nobody could evidence, and there was nothing to show an inspector but a
+     boolean.
+
+     Credited hours are now the declared carga horária scaled by the share of
+     the lesson actually played. That is the defensible rule: the employer
+     declares a duration, and we credit it in proportion to content covered,
+     never more. Coverage is unknown only when no media reported a duration —
+     recorded honestly as such rather than silently credited in full. */
   if (!(S.trainingLog || (S.trainingLog = [])).some(e => e.courseId === courseId && e.mod === mod)) {
     const mins = (c.moduleDurations && c.moduleDurations[mod]) || 12;
-    S.trainingLog.push({ courseId, mod, title: (cmods(c)[mod] || c.modules[mod]), hours: Math.round(mins / 60 * 100) / 100, at: Date.now(), confirmed: true });
+    const segs = watchEv && watchEv.key === courseId + ':' + mod ? watchMerged() : [];
+    const dur = watchEv && watchEv.dur || 0;
+    const covered = segs.length ? watchCoveredSec() : 0;
+    const coverage = dur ? Math.min(1, covered / dur) : null;
+    const credited = coverage == null ? mins / 60 : (mins / 60) * coverage;
+    S.trainingLog.push({
+      courseId, mod, title: (cmods(c)[mod] || c.modules[mod]),
+      hours: Math.round(credited * 100) / 100,
+      at: Date.now(), confirmed: true,
+      ev: {
+        nominalMin: mins,
+        mediaDurSec: Math.round(dur) || null,
+        watchedSec: covered || null,
+        coverage: coverage == null ? null : Math.round(coverage * 100) / 100,
+        method: (watchEv && watchEv.method) || 'none',
+        /* the raw evidence the spec asks to be kept, capped so a long lesson
+           with heavy scrubbing cannot bloat the record */
+        segments: segs.slice(0, 60),
+        startedAt: (watchEv && watchEv.startedAt) || null,
+        endedAt: Date.now(),
+        outsideHours: isOutsideWorkingHours(),
+        /* REQ-L-001 job-relevance link — the capability this lesson maps to.
+           Populated by REQ-L-020; null here means "not yet asserted", which is
+           the honest state until that lands. */
+        capability: (typeof capabilityFor === 'function' ? capabilityFor(c) : null) || null
+      }
+    });
   }
   ledgerAppend('module_complete', { courseId, mod, mins: (c.moduleDurations && c.moduleDurations[mod]) || 12 });
   if (mod >= c.modules.length - 1) ledgerAppend('course_complete', { courseId });
