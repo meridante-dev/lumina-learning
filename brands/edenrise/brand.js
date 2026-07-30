@@ -34,6 +34,13 @@
   superadmins: ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'],
   themeColor: '#0e140f',
   wordSub: 'Academy',     /* the small word under the logo name */
+  /* REQ-L-003 — who supplied the content, printed on every proof document.
+     EMPTY for EdenRise: it filmed its own courses, so the employer is also the
+     author and there is no external provider to name. A white-label client
+     running our library MUST set this — under the content-supply model
+     (legal spec Part 1.2) the training is legally the employer's and we are the
+     external content provider, which only holds if we are named. */
+  contentProvider: '',
   /* The billboard this instance leads with. Without it the hero auto-picks the
      most-filmed course, which is a sensible default and a poor storefront: the
      tenant, not a ranking function, decides what a visitor sees first. The

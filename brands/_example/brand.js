@@ -28,6 +28,12 @@
   superadmins: [],
   themeColor: '#0b0d1a',
   wordSub: 'Academy',
+  /* REQ-L-003 — REQUIRED if this client runs OUR course library. Printed on
+     every proof document as "Content supplied by …". The content-supply model
+     (legal spec Part 1.2) holds because the employer organises the training and
+     the external provider is named; leave it empty ONLY when the client
+     authored its own content. */
+  contentProvider: 'Academy Platforms',
   logoSvg: '<svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="13" stroke="#7c5cff" stroke-width="2"/><path d="M10 21V11l12 10V11" stroke="#43e0c8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   favicon: null,
   ogImage: null,

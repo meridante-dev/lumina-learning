@@ -766,7 +766,7 @@ function renderAnalytics() {
     <section class="stats" style="margin:28px 0 0;">
       <div class="stat"><div class="num">${S.streak || 0}d</div><div class="lbl">${t('learning_streak')}</div><div class="delta">${S.bestStreak ? t('stats_best') + ' ' + S.bestStreak + 'd' : t('no_data')}</div></div>
       <div class="stat"><div class="num">${fmtMins(weekMinutes())}</div><div class="lbl">${t('this_week')}</div><div class="delta">${week[6].v ? '▲ ' + week[6].v + 'm ' + t('stats_today') : t('no_data')}</div></div>
-      <div class="stat"><div class="num">${certs.length}</div><div class="lbl">Certificates</div><div class="delta">${certs.length ? '▲' : t('no_data')}</div></div>
+      <div class="stat"><div class="num">${certs.length}</div><div class="lbl">Training records</div><div class="delta">${certs.length ? '▲' : t('no_data')}</div></div>
       <div class="stat"><div class="num">${S.quizzesPassed}</div><div class="lbl">Quizzes passed</div><div class="delta">${avgQuizScore() != null ? 'avg ' + avgQuizScore() + '%' : t('no_data')}</div></div>
     </section>
     <div class="two-col" style="margin-top:18px;">
@@ -781,7 +781,7 @@ function renderAnalytics() {
         </div>
       </div>
       <div class="chart-card">
-        <h3>Certificates</h3>
+        <h3>Training records</h3>
         ${certs.map(c => `<div class="cert-row"><span class="ci">${svgIcon(c.icon)}</span><span class="ct">${ctitle(c)}</span><span class="cd">★ verified</span></div>`).join('') || '<p class="empty-note">Complete a course to earn your first certificate.</p>'}
       </div>
     </div>
@@ -1481,7 +1481,7 @@ function trainingCertCanvas(pf, year, code) {
   x.strokeStyle = 'rgba(200,164,93,.35)'; x.lineWidth = 1; x.strokeRect(60, 60, W - 120, H - 120);
   x.textAlign = 'center';
   x.fillStyle = '#c8a45d'; x.font = '600 24px Inter, sans-serif'; try { x.letterSpacing = '10px'; } catch (e) {} x.fillText(companyName().toUpperCase().split('').join(' '), W / 2, 138); try { x.letterSpacing = '0px'; } catch (e) {}
-  x.fillStyle = '#f7f6f1'; x.font = '600 52px "Cormorant Garamond", serif'; x.fillText('Certificado de Frequência', W / 2, 244);
+  x.fillStyle = '#f7f6f1'; x.font = '600 52px "Cormorant Garamond", serif'; x.fillText('Documento Comprovativo', W / 2, 244);
   x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 26px "Cormorant Garamond", serif'; x.fillText('Formação Profissional Contínua', W / 2, 286);
   const done = trainingHours(S.trainingLog), target = complianceTarget(pf) || 40;
   x.fillStyle = 'rgba(247,246,241,.55)'; x.font = '400 22px Inter'; x.fillText('Certifica-se que', W / 2, 372);
@@ -2063,9 +2063,17 @@ function openPrintDoc(html) {
   w.document.write(html); w.document.close();
 }
 function certFooterNote() {
+  /* Part 4.1 of the legal spec: our output may never be called a `certificado`.
+     The permitted phrasing is the "documento comprovativo" the law itself
+     contemplates for employer-delivered training (art. 131.º/3) — and the
+     counting claim carries its statutory CONDITION: it counts when integrated
+     into the employer's training plan and related to the worker's activity
+     (art. 133.º). Dropping that condition would overstate what this document
+     does. The final clause is Part 4.2's qualifier, which stays until Part 6
+     is signed off by Portuguese counsel. */
   return _lang() === 'pt'
-    ? 'Certificado interno de formação, emitido pela entidade no âmbito da formação contínua (art. 131.º do Código do Trabalho). Não constitui certificação profissional emitida por entidade formadora certificada.'
-    : 'Internal training certificate, issued by the organisation within continuous workplace training (PT Labour Code art. 131). It is not a professional certification issued by an accredited training entity.';
+    ? 'Documento comprovativo de formação interna, emitido pelo empregador no âmbito da formação profissional contínua (art. 131.º/3 do Código do Trabalho). Conta para as 40 horas anuais quando integrado no plano de formação do empregador e relacionado com a atividade do trabalhador. NÃO constitui certificação profissional, não é emitido no SIGO e não é averbado no Passaporte Qualifica. Confirme o enquadramento com o seu consultor jurídico.'
+    : 'Internal training record, issued by the employer within continuous workplace training (PT Labour Code art. 131.º/3). It counts toward the annual 40 hours when integrated into the employer\'s training plan and related to the worker\'s activity. It is NOT a professional certification, is not issued via SIGO, and is not recorded in the worker\'s national qualifications record. Confirm the position with your legal adviser.';
 }
 function buildCertHTML(o) {
   const accent = brandVar('--accent', '#c8a45d');
@@ -2091,6 +2099,9 @@ function buildCertHTML(o) {
   ${o.evidence ? `.ev { margin-top:4mm; font-family:'Courier New',monospace; font-size:10px; color:#6a736c; line-height:1.7; } .ev b { color:#3c453e; font-family:Helvetica,Arial,sans-serif; }` : ''}
   .sig { margin-top:auto; margin-bottom:6mm; display:flex; width:100%; justify-content:space-between; align-items:flex-end; font-family:Helvetica,Arial,sans-serif; font-size:11px; color:#57605a; }
   .sig .line { border-top:1px solid #1c2420; padding-top:2mm; width:62mm; text-align:center; }
+  .sig .line .role { font-size:8.5px; color:#8b938c; letter-spacing:.04em; margin-top:1mm; }
+  .prov { font-family:Helvetica,Arial,sans-serif; font-size:9.5px; color:#6a736c; margin-bottom:2mm; letter-spacing:.03em; }
+  .prov b { color:#3c453e; }
   .note { position:absolute; bottom:9.5mm; left:20mm; right:20mm; font-family:Helvetica,Arial,sans-serif; font-size:8px; color:#8b938c; line-height:1.45; }
   .print { position:fixed; top:12px; right:12px; font-family:Helvetica,Arial,sans-serif; background:#161d18; color:#fff; border:0; border-radius:8px; padding:9px 16px; cursor:pointer; font-size:13px; }
   @media print { .print { display:none; } body { background:#faf8f2; } }
@@ -2107,9 +2118,24 @@ function buildCertHTML(o) {
   <div class="what">${esc(o.what)}</div>
   <div class="meta">${o.meta}</div>
   ${o.evidence ? `<div class="ev">${o.evidence}</div>` : ''}
-  <div class="sig"><div>${esc(o.code || '')}</div><div class="line">${esc(companyName())}</div></div>
+  ${/* REQ-L-003: the document is issued in the EMPLOYER's name — that is the
+        signature line — and must NAME any external trainer or content provider.
+        The whole content-supply model (Part 1.2) rests on the employer being the
+        legal deliverer while we are visibly the supplier; leaving the supplier
+        unnamed is what would make it look like a certificate from us. */''}
+  <div class="sig">
+    <div>${esc(o.code || '')}</div>
+    <div class="line">${esc(companyName())}<div class="role">${pt ? 'Entidade empregadora · formação organizada por' : 'Employer · training organised by'}</div></div>
+  </div>
+  ${contentProvider() ? `<div class="prov">${pt ? 'Conteúdo fornecido por' : 'Content supplied by'} <b>${esc(contentProvider())}</b></div>` : ''}
   <div class="note">${certFooterNote()}${o.extraNote ? ' · ' + o.extraNote : ''}</div>
 </div></body></html>`;
+}
+/* Who supplied the content, if not the employer. Brand config so each tenant
+   states the truth: a client running our library names us; a client that
+   authored its own names no one and the line disappears. */
+function contentProvider() {
+  return (window.BRAND && BRAND.contentProvider) || '';
 }
 function certIdentity() { const pf = S.profile || {}; return pf.name || pf.username || (pf.email || '').split('@')[0] || 'Learner'; }
 function fmtCertDate(d) {
@@ -2122,8 +2148,8 @@ function premiumCourseCert(courseId) {
   const c = courseById(courseId); if (!c || !isDone(courseId)) return;
   const pt = _lang() === 'pt', h = Math.round(courseMins(c) / 6) / 10;
   openPrintDoc(buildCertHTML({
-    docTitle: (pt ? 'Certificado — ' : 'Certificate — ') + ctitle(c),
-    eyebrow: pt ? 'Certificado de Conclusão' : 'Certificate of Completion',
+    docTitle: (pt ? 'Documento Comprovativo — ' : 'Training Record — ') + ctitle(c),
+    eyebrow: pt ? 'Documento Comprovativo de Formação' : 'Record of Training Completed',
     who: certIdentity(),
     did: pt ? 'concluiu com aproveitamento o percurso de formação' : 'has successfully completed the training course',
     what: ctitle(c),
@@ -2137,8 +2163,8 @@ function premiumJourneyCert(id) {
   const doneAt = new Date((S.journeysDone && S.journeysDone[id]) || Date.now());
   const hours = Math.round(j.stages.reduce((a, st) => { const c = courseById(st.course); return a + (c ? courseMins(c) : 0); }, 0) / 6) / 10;
   openPrintDoc(buildCertHTML({
-    docTitle: (pt ? 'Certificado de Percurso — ' : 'Journey Certificate — ') + tjour(j, 'title'),
-    eyebrow: pt ? 'Certificado de Percurso' : 'Journey Certificate',
+    docTitle: (pt ? 'Documento Comprovativo de Percurso — ' : 'Journey Training Record — ') + tjour(j, 'title'),
+    eyebrow: pt ? 'Documento Comprovativo de Percurso' : 'Journey Training Record',
     who: certIdentity(),
     did: pt ? `concluiu o percurso completo (${j.stages.length} etapas)` : `has completed the full journey (${j.stages.length} stages)`,
     what: tjour(j, 'title'),
@@ -2154,7 +2180,7 @@ async function premiumComplianceCert() {
   ledgerAppend('cert_issued', { year: y, code, kind: 'compliance' });
   const h = trainingHours(S.trainingLog || []);
   openPrintDoc(buildCertHTML({
-    docTitle: (pt ? 'Certificado de Formação Contínua ' : 'Continuous Training Certificate ') + y,
+    docTitle: (pt ? 'Documento Comprovativo de Formação Contínua ' : 'Continuous Training Record ') + y,
     eyebrow: pt ? 'Formação Contínua · ' + y : 'Continuous Training · ' + y,
     who: certIdentity(),
     did: (pt ? 'NIF ' : 'Tax ID ') + pf.nif + (pt ? ' · realizou no ano de ' + y : ' · completed in ' + y),
@@ -2183,7 +2209,7 @@ function downloadVerifiedCert(courseId) {
   ].filter(Boolean);
   openPrintDoc(buildCertHTML({
     docTitle: (pt ? 'Competência Verificada — ' : 'Verified Competency — ') + ctitle(c),
-    eyebrow: pt ? 'Certificado de Competência' : 'Competency Certificate',
+    eyebrow: pt ? 'Comprovativo de Competência' : 'Competency Record',
     tier: pt ? 'Competência Verificada' : 'Verified Competency',
     who: certIdentity(),
     did: pt ? 'demonstrou competência verificada em' : 'has demonstrated verified competency in',
