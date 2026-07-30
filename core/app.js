@@ -20,7 +20,8 @@ catch { S = structuredClone(DEFAULT_STATE); }
    was reading "For your goal · Regenerative Steward" for a goal that no longer
    exists, and stepping through path entries that resolve to nothing. Progress is
    never touched: it is the one part of this object that is earned. */
-(function migrateState() {
+function migrateState() {
+  const before = JSON.stringify([S.goal, S.path, S.assignments]);
   const goals = (typeof GOAL_PRESETS === 'object' && GOAL_PRESETS) || {};
   const names = Object.keys(goals);
   const goalRetired = names.length && !goals[S.goal];
@@ -38,7 +39,13 @@ catch { S = structuredClone(DEFAULT_STATE); }
       : kept;
   }
   if (Array.isArray(S.assignments)) S.assignments = S.assignments.filter(a => a && known.has(a.courseId));
-})();
+  return JSON.stringify([S.goal, S.path, S.assignments]) !== before;
+}
+/* Boot: persist LOCALLY only. `save` is a const declared below, so calling it
+   here would hit its temporal dead zone — and pushing to the cloud before auth
+   has resolved would write as the wrong user anyway. The cloud copy is corrected
+   by the reloadState() pass, once we know who is signed in. */
+if (migrateState()) { try { localStorage.setItem(STATE_KEY, JSON.stringify(S)); } catch (e) {} }
 const save = () => { localStorage.setItem(STATE_KEY, JSON.stringify(S)); if (window.EdenCloud && window.EdenCloud.push) window.EdenCloud.push(S); };
 
 /* ---------- helpers ---------- */
@@ -6128,6 +6135,13 @@ $('#avatarMenu').addEventListener('click', e => {
 window.EdenApp = {
   reloadState() {
     try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem(STATE_KEY) || '{}')); } catch (e) {}
+    /* Migrate here TOO. auth.js calls this once Firebase resolves, which means
+       the cloud copy of the state lands after boot — so the boot-time migration
+       was being undone a second later and a signed-in learner kept seeing their
+       retired goal. Whoever re-hydrates S owns migrating it. */
+    /* and push the correction up, so the stale goal stops coming back down on
+       this or any other device the learner signs into */
+    if (migrateState()) save();
     if (S.xp == null) S.xp = seedXp();
     if (!S.badges) S.badges = [];
     checkBadges(true);
