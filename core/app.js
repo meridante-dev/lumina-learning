@@ -1445,9 +1445,25 @@ function complianceTarget(pf) {
   }
   return Math.round(40 * fte * frac);
 }
+/* The art. 131.º total counts only COUNTABLE hours — job-related training
+   (art. 133.º). Entries marked countable:false are kept in the log (the
+   training happened and the learner should see it) but excluded here, because
+   this figure is the one that goes to the employer's legal report. Entries
+   written before `countable` existed are undefined, and undefined !== false,
+   so history keeps counting rather than silently collapsing. */
 function trainingHours(log) {
   const y = complianceYear();
-  return Math.round((log || []).filter(e => e && new Date(e.at).getFullYear() === y).reduce((a, e) => a + (e.hours || 0), 0) * 10) / 10;
+  return Math.round((log || [])
+    .filter(e => e && new Date(e.at).getFullYear() === y && e.countable !== false)
+    .reduce((a, e) => a + (e.hours || 0), 0) * 10) / 10;
+}
+/* Training that happened but does not count toward the mandate — shown to the
+   learner so the two numbers never silently disagree. */
+function nonCountableHours(log) {
+  const y = complianceYear();
+  return Math.round((log || [])
+    .filter(e => e && new Date(e.at).getFullYear() === y && e.countable === false)
+    .reduce((a, e) => a + (e.hours || 0), 0) * 10) / 10;
 }
 /* expected hours by today if pacing evenly across the year (the ~1h/week line) */
 function trainingPace(target) {
@@ -2948,7 +2964,9 @@ function registerRowsFor(pf, log, y) {
      than being back-filled with a number nobody measured. */
   const rows = [['Trabalhador', 'NIF', 'Ação', 'Módulo', 'Modalidade', 'Início', 'Fim',
                  'Duração creditada (h)', 'Carga horária (min)', 'Visto (s)', 'Cobertura',
-                 'Método de evidência', 'Fora do horário', 'Confirmação']];
+                 'Método de evidência', 'Fora do horário', 'Resultado',
+                 'Competências', 'Relacionada com a função (art. 133.º)',
+                 'Regime especial', 'Confirmação']];
   (log || []).filter(e => new Date(e.at).getFullYear() === y).sort((a, b) => a.at - b.at)
     .forEach(e => {
       const v = e.ev || {};
@@ -2962,6 +2980,10 @@ function registerRowsFor(pf, log, y) {
         v.coverage != null ? Math.round(v.coverage * 100) + '%' : 'sem evidência',
         v.method && v.method !== 'none' ? v.method : 'não registado',
         v.outsideHours == null ? '' : (v.outsideHours ? 'Sim' : 'Não'),
+        v.check ? (v.check.kind === 'acknowledgment' ? 'Confirmação' : (v.check.score + '/' + v.check.total)) : 'sem avaliação',
+        v.capabilities && v.capabilities.length ? v.capabilities.join(' + ') : '',
+        v.jobRelevant === true ? 'Sim' : v.jobRelevant === false ? 'NÃO — não conta' : 'por confirmar',
+        v.regime ? v.regime + ' (regime próprio — não dispensado)' : '',
         e.confirmed ? 'Sim' : ''
       ]);
     });
@@ -5144,6 +5166,39 @@ function resolveTakeawaysNext(n, toQuiz) {
     setTimeout(() => { openTutorWith(`${_lang() === 'pt' ? 'Terminou' : 'You finished'} <b>${esc(titleOf(n.courseId))}</b> — ${_lang() === 'pt' ? 'quer o teste de certificação agora? São 3 perguntas.' : 'want the certification quiz now? It’s 3 questions.'}`, ['Quiz me now', 'Build me a path']); }, 700);
   }
 }
+/* ===== REQ-L-020 · JOB RELEVANCE ===========================================
+   art. 133.º: training content must coincide with or relate to the worker's
+   activity. Breach is a contraordenação grave (€612–€9,690). The spec requires
+   this be enforced STRUCTURALLY, not by trust — so relevance is computed from
+   the course's capabilities against the worker's role profile, and recorded on
+   every entry rather than assumed.
+
+   A non-relevant course is NOT blocked. People may learn anything they like;
+   the law only governs what counts toward the mandatory 40 hours. So it is
+   logged, marked countable:false, and excluded from the art. 131.º total. That
+   is the honest split — the training happened, it just is not this obligation. */
+function capabilityFor(c) { try { return (skillsOf(c) || [])[0] || null; } catch (e) { return null; } }
+function roleCapabilities(pf) {
+  const role = (pf || S.profile || {}).role || S.role;
+  const prof = (typeof ROLE_PROFILES !== 'undefined' && ROLE_PROFILES[role]) || null;
+  return prof ? Object.keys(prof.skills || {}) : [];
+}
+function isJobRelevant(c, pf) {
+  const caps = roleCapabilities(pf);
+  /* No role on file yet means we cannot ASSERT relevance. Counting anyway would
+     be the trust-based behaviour the spec rules out; refusing would punish a
+     learner for an admin gap. Recorded as unasserted and counted, flagged for
+     the employer to resolve — see registerRowsFor. */
+  if (!caps.length) return null;
+  const mine = (skillsOf(c) || []);
+  return mine.some(k => caps.includes(k));
+}
+/* REQ-L-021 — the regime a course belongs to, if any, and our standing position
+   on it. Never claims the regime is satisfied. */
+function courseRegime(c) {
+  return (typeof COURSE_REGIME !== 'undefined' && COURSE_REGIME[c && c.id]) || null;
+}
+
 /* ===== art. 131.º hour record — REQ-L-001 / 002 / 010 ======================
    Written ONLY on submission of the end-of-lesson check. The evidence chain the
    spec asks for has three legs and this joins them: the media was played
@@ -5167,9 +5222,12 @@ function creditTraining(courseId, mod, assessment) {
   const covered = segs.length ? watchCoveredSec() : 0;
   const coverage = dur ? Math.min(1, covered / dur) : null;
   const credited = coverage == null ? mins / 60 : (mins / 60) * coverage;
+  const rel = isJobRelevant(c);
   const entry = {
     courseId, mod, title: (cmods(c)[mod] || c.modules[mod]),
     hours: Math.round(credited * 100) / 100,
+    /* art. 133.º gate: only job-related training counts toward the 40 hours */
+    countable: rel !== false,
     at: Date.now(), confirmed: true,
     ev: {
       nominalMin: mins,
@@ -5181,7 +5239,14 @@ function creditTraining(courseId, mod, assessment) {
       startedAt: (live && watchEv.startedAt) || null,
       endedAt: Date.now(),
       outsideHours: isOutsideWorkingHours(),
-      capability: (typeof capabilityFor === 'function' ? capabilityFor(c) : null) || null,
+      capability: capabilityFor(c),
+      capabilities: skillsOf(c) || [],
+      roleAtTime: (S.profile || {}).role || S.role || null,
+      jobRelevant: rel,                    /* true | false | null = unasserted */
+      /* REQ-L-021: the regime this content belongs to, and the standing fact
+         that we do not claim to discharge it (Part 6 Q5 unanswered). */
+      regime: courseRegime(c),
+      regimeSatisfied: false,
       /* the completion check — REQ-L-002's second half */
       check: assessment || null
     }

@@ -386,13 +386,19 @@ const COURSE_SKILLS = {
   'fire-truck-training': ['safety'],
   'alignment-journey': ['leadership', 'community'],
   'land-team-journey': ['leadership', 'community'],
-  'fire-safety': ['safety'],
-  'capstone-land': ['soil', 'water', 'food'],
-  'rainwater': ['water', 'craft'],
-  'natural-building': ['craft'],
-  'community-land': ['community', 'leadership'],
-  'ethics': ['community'],
-  'regen-design': ['soil', 'water'],
-  'rewilding': ['nature', 'food'],
-  'herbal': ['wellbeing', 'nature']
+};
+
+/* ===== REQ-L-021 · SPECIAL REGIMES =========================================
+   Some training is governed by its own regime with its own provider rules —
+   food hygiene / HACCP (Reg. CE 852/2004; DL 113/2006) and safety and health at
+   work (SST). Legal spec Part 6 Q5 asks whether those may be employer-delivered
+   through this platform at all, and it is UNANSWERED.
+
+   Until it is answered, a course in one of these regimes may still be taken and
+   still counts toward the art. 131.º 40 hours — that part is not in doubt — but
+   the platform must never state or imply that it DISCHARGES the special regime.
+   Fire Truck Training is the live example: plausibly SST, and exactly the kind
+   of course a client would assume covers their safety obligation. */
+const COURSE_REGIME = {
+  'fire-truck-training': 'SST'
 };
