@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Suporte e níveis de serviço — Academy Platforms</title>
+<meta name="description" content="Como funciona o serviço, como pedir ajuda e em quanto tempo respondemos. Níveis de serviço da Academy Platforms.">
+<meta name="theme-color" content="#012A4A">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#012A4A; --deep2:#013A63; --blue:#468FAF; --sky:#89C2D9; --sky2:#A9D6E5;
+  --ivory:#EAF4FA; --gold:#F5A623; --gold2:#E8B04B; --green:#7fd6a2;
+  --mut:rgba(169,214,229,.74); --dim:rgba(169,214,229,.55);
+  --line:rgba(169,214,229,.16);
+  --serif:'Instrument Serif',Georgia,serif; --sans:'Manrope',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --pad:clamp(22px,5vw,64px); --ease:cubic-bezier(.22,.8,.24,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--deep);color:var(--ivory);line-height:1.7;
+  font-size:16px;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%,#01426f 0%,#012A4A 55%,#001c33 100%)}
+a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(245,166,35,.35)}
+a:hover{border-color:var(--gold)}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:var(--pad)}
+.hero,.sub,section>p{max-width:none}
+
+header{border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
+  background:rgba(1,42,74,.9);backdrop-filter:blur(14px)}
+.nav{display:flex;align-items:center;gap:20px;padding:16px var(--pad);max-width:1300px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:11px;border:0}
+.brand svg{width:26px;height:26px}
+.brand .bt{font-family:var(--serif);font-size:1.4rem;letter-spacing:.13em;text-transform:uppercase;line-height:.9}
+.brand .bt small{display:block;font-family:var(--sans);font-size:.5rem;font-weight:600;
+  letter-spacing:.5em;color:var(--gold);text-transform:uppercase;margin-top:4px}
+.nav .back{margin-left:auto;font-size:.82rem;font-weight:600;color:var(--sky2);border:0}
+
+.hero{padding:clamp(56px,10vh,110px) 0 clamp(24px,4vh,44px);max-width:720px}
+.eyebrow{font-size:.66rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--blue);display:inline-flex;align-items:center;gap:1.1em}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--gold)}
+h1{font-family:var(--serif);font-size:clamp(2.4rem,6vw,3.6rem);line-height:1.04;
+  font-weight:400;margin:.4em 0 .3em;letter-spacing:-.01em}
+h1 em{font-style:italic;color:var(--gold2)}
+.lead{font-size:1.05rem;color:var(--mut)}
+
+section{margin-bottom:clamp(44px,7vh,76px);scroll-margin-top:90px}
+section>p,.ladder li span{max-width:74ch}
+h2{font-family:var(--serif);font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:400;line-height:1.12;margin-bottom:.35em}
+h2 em{font-style:italic;color:var(--gold2)}
+.sub{color:var(--mut);margin-bottom:1.6em;max-width:62ch}
+h3{font-size:.95rem;font-weight:700;color:var(--sky2);margin:1.7em 0 .5em}
+p{margin-bottom:1em;color:var(--mut)}
+p strong,li strong,td strong{color:var(--ivory);font-weight:600}
+ul,ol{margin:0 0 1.1em 1.15em;color:var(--mut)}
+li{margin-bottom:.5em}
+li::marker{color:rgba(245,166,35,.7)}
+.ph{font-family:var(--mono);font-size:.82em;color:var(--gold);background:rgba(245,166,35,.1);
+  padding:2px 8px;border-radius:6px;white-space:nowrap}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:8px;counter-reset:f}
+.step{border:1px solid var(--line);border-radius:18px;padding:22px 20px;background:rgba(169,214,229,.04);
+  position:relative;transition:transform .4s var(--ease),border-color .4s}
+.step:hover{transform:translateY(-4px);border-color:rgba(245,166,35,.4)}
+.step .n{counter-increment:f;content:'';font-family:var(--mono);font-size:.62rem;color:var(--gold);
+  letter-spacing:.16em;display:block;margin-bottom:10px}
+.step .n::before{content:'0' counter(f)}
+.step h4{font-family:var(--serif);font-size:1.22rem;font-weight:400;line-height:1.1;margin-bottom:8px}
+.step p{font-size:.84rem;line-height:1.6;margin:0;color:var(--dim)}
+.step .when{display:block;margin-top:12px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.1em;color:var(--sky);text-transform:uppercase}
+@media(max-width:940px){.flow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.flow{grid-template-columns:1fr}}
+
+/* tables */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--line);border-radius:18px;background:rgba(169,214,229,.03)}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:600px}
+th,td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:rgba(169,214,229,.04)}
+td:first-child{color:var(--ivory);font-weight:600}
+.sev{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.sev i{width:9px;height:9px;border-radius:50%;flex:none}
+.p1 i{background:#ff6b6b;box-shadow:0 0 9px rgba(255,107,107,.7)}
+.p2 i{background:var(--gold);box-shadow:0 0 9px rgba(245,166,35,.6)}
+.p3 i{background:var(--sky)}
+.p4 i{background:rgba(169,214,229,.45)}
+.tick{color:var(--green);font-weight:700}
+.dash{color:rgba(169,214,229,.35)}
+
+/* report card */
+.report{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;align-items:start}
+@media(max-width:820px){.report{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:20px;padding:26px 28px;background:rgba(169,214,229,.04)}
+.card.gold{border-color:rgba(245,166,35,.34);
+  background:linear-gradient(180deg,rgba(245,166,35,.1),rgba(245,166,35,.03))}
+.card h3{margin-top:0}
+.card ol{margin-left:1.1em}
+.chk{list-style:none;margin-left:0}
+.chk li{position:relative;padding-left:26px}
+.chk li::before{content:'✓';position:absolute;left:0;color:var(--gold);font-weight:800}
+
+/* escalation ladder */
+.ladder{list-style:none;margin:0;counter-reset:l}
+.ladder li{counter-increment:l;position:relative;padding:16px 0 16px 52px;border-bottom:1px solid var(--line)}
+.ladder li:last-child{border-bottom:0}
+.ladder li::before{content:counter(l);position:absolute;left:0;top:14px;width:32px;height:32px;
+  border-radius:50%;border:1px solid rgba(245,166,35,.5);color:var(--gold);
+  font-family:var(--mono);font-size:.72rem;display:grid;place-items:center}
+.ladder b{display:block;color:var(--ivory);font-size:.95rem;margin-bottom:3px}
+.ladder span{font-size:.86rem;color:var(--mut)}
+
+.note{margin-top:26px;padding:20px 24px;border-radius:18px;border:1px solid var(--line);
+  background:rgba(169,214,229,.04);font-size:.9rem;color:var(--mut)}
+.note b{color:var(--gold)}
+
+.cta{margin-top:clamp(40px,6vh,70px);padding:clamp(30px,5vw,46px);border-radius:24px;text-align:center;
+  background:linear-gradient(180deg,rgba(245,166,35,.12),rgba(245,166,35,.04));
+  border:1px solid rgba(245,166,35,.3)}
+.cta h2{margin-bottom:.3em}
+.btn{display:inline-flex;align-items:center;gap:.8em;background:var(--gold);color:#2A1B02;
+  font-weight:700;font-size:.95rem;padding:15px 30px;border-radius:99px;border:0;margin-top:14px}
+
+footer{border-top:1px solid var(--line);margin-top:clamp(50px,8vh,90px);
+  padding:40px 0 calc(46px + env(safe-area-inset-bottom));font-size:.8rem;color:var(--dim)}
+.flinks{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px}
+.flinks a{color:var(--sky2);border:0;font-weight:600}
+.flinks a:hover{color:var(--gold)}
+.imprint{font-size:.72rem;line-height:1.9;color:rgba(169,214,229,.5)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M13 17 L31 8 V41 L13 50 Z" stroke="#EAF4FA" stroke-width="2.6"/>
+        <path d="M27 23 L45 14 V47 L27 56 Z" stroke="#F5A623" stroke-width="2.6"/>
+      </svg>
+      <span class="bt">Academy<small>Platforms</small></span>
+    </a>
+    <a class="back" id="langlink" href="support.html" style="margin-left:auto">EN</a>
+    <a class="back" href="./" style="margin-left:16px">← Voltar ao site</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="eyebrow">Suporte</span>
+    <h1>Se alguma coisa correr mal,<br><em>não fica à espera.</em></h1>
+    <p class="lead">Um único endereço, uma resposta com prazo escrito e uma pessoa com nome
+    do outro lado. Esta página diz exatamente como funciona — e em quanto tempo.</p>
+  </div>
+
+  <!-- ── SERVICE FLOW ── -->
+  <section id="fluxo">
+    <h2>Do primeiro contacto <em>à academia a funcionar.</em></h2>
+    <p class="sub">Cinco passos. Sem projeto de seis meses, sem consultoria antes de ver o produto.</p>
+    <div class="flow">
+      <div class="step"><span class="n"></span>
+        <h4>Chamada de 15 minutos</h4>
+        <p>Mostramos a plataforma a funcionar e percebemos o que precisa de formar. Sem apresentação.</p>
+        <span class="when">Dia 0</span></div>
+      <div class="step"><span class="n"></span>
+        <h4>Proposta e contrato</h4>
+        <p>Plano, preço e âmbito por escrito. Assina digitalmente e emitimos a fatura de instalação.</p>
+        <span class="when">2–3 dias</span></div>
+      <div class="step"><span class="n"></span>
+        <h4>A sua instância</h4>
+        <p>Marca, domínio, cores e utilizadores. A academia fica no ar com a sua identidade.</p>
+        <span class="when">≤ 1 dia útil</span></div>
+      <div class="step"><span class="n"></span>
+        <h4>Formação do administrador</h4>
+        <p>Uma sessão para quem vai gerir: carregar conteúdos, atribuir formação, ler o painel.</p>
+        <span class="when">1 sessão</span></div>
+      <div class="step"><span class="n"></span>
+        <h4>Operação e revisão</h4>
+        <p>A equipa aprende, as horas contam-se sozinhas. Nós acompanhamos e respondemos.</p>
+        <span class="when">Contínuo</span></div>
+    </div>
+    <div class="note">
+      <b>Conteúdos à medida.</b> Se contratou os planos <strong>Standard</strong> ou <strong>Completo</strong>,
+      a produção dos seus programas corre em paralelo, com plano de trabalho e datas aprovadas por si —
+      a plataforma não fica à espera do conteúdo para arrancar.
+    </div>
+  </section>
+
+  <!-- ── HOW TO GET HELP ── -->
+  <section id="pedir">
+    <h2>Como pedir ajuda</h2>
+    <p class="sub">Um canal principal, para que nada se perca em conversas paralelas.</p>
+    <div class="report">
+      <div class="card gold">
+        <h3>O canal</h3>
+        <p>Envie um email para <span class="ph">[SUPPORT-EMAIL]</span>.</p>
+        <p>Recebe de imediato uma <strong>confirmação automática com uma referência</strong>.
+        É essa referência que segue o caso até ao fim — responda sempre no mesmo fio.</p>
+        <p style="margin-bottom:0">Nos planos <strong>Standard</strong> e <strong>Completo</strong> tem também
+        <strong>WhatsApp direto</strong> com o seu contacto designado, para o que for urgente.</p>
+      </div>
+      <div class="card">
+        <h3>O que incluir</h3>
+        <p style="font-size:.88rem">Com isto, resolvemos quase sempre à primeira:</p>
+        <ul class="chk" style="font-size:.88rem">
+          <li>O que estava a tentar fazer</li>
+          <li>O que aconteceu em vez disso</li>
+          <li>Quem é afetado — uma pessoa ou toda a equipa</li>
+          <li>O endereço da página onde acontece</li>
+          <li>Uma captura de ecrã, se der</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEVERITY + QUOTAS ── -->
+  <section id="niveis">
+    <h2>Quanto tempo até ter resposta</h2>
+    <p class="sub">Classificamos cada pedido por impacto real no seu negócio, não por quem grita mais alto.
+    Os tempos abaixo são de <strong>primeira resposta humana</strong> — não são respostas automáticas —
+    e contam em <strong>horas úteis</strong>.</p>
+
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>Nível</th><th>O que é</th><th>Base</th><th>Standard</th><th>Completo</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="sev p1"><i></i>P1 · Crítico</span></td>
+            <td>A academia está inacessível para toda a gente, ou há risco para a integridade dos dados e da evidência.</td>
+            <td>4 h úteis</td><td>2 h úteis</td><td><strong>1 h útil</strong></td>
+          </tr>
+          <tr>
+            <td><span class="sev p2"><i></i>P2 · Alto</span></td>
+            <td>Uma função essencial falhou para muitos utilizadores — vídeo não reproduz, certificado não emite, horas não registam.</td>
+            <td>1 dia útil</td><td>4 h úteis</td><td>2 h úteis</td>
+          </tr>
+          <tr>
+            <td><span class="sev p3"><i></i>P3 · Normal</span></td>
+            <td>Problema pontual ou de um utilizador, com solução alternativa disponível.</td>
+            <td>2 dias úteis</td><td>1 dia útil</td><td>4 h úteis</td>
+          </tr>
+          <tr>
+            <td><span class="sev p4"><i></i>P4 · Pedido</span></td>
+            <td>Dúvida, pedido de alteração, sugestão de melhoria, questão estética.</td>
+            <td>3 dias úteis</td><td>2 dias úteis</td><td>1 dia útil</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>O que está incluído em todos os planos</h3>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>&nbsp;</th><th>Base</th><th>Standard</th><th>Completo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Pedidos de suporte</td><td>Ilimitados</td><td>Ilimitados</td><td>Ilimitados</td></tr>
+          <tr><td>Horário</td><td colspan="2">Dias úteis, 9h–18h (Lisboa)</td><td>Dias úteis, 8h–20h</td></tr>
+          <tr><td>Canal</td><td>Email</td><td>Email + WhatsApp</td><td>Email + WhatsApp + telefone</td></tr>
+          <tr><td>Contacto designado</td><td class="dash">—</td><td class="tick">✓</td><td class="tick">✓ gestor de conta</td></tr>
+          <tr><td>Formação de administrador</td><td>1 sessão</td><td>2 sessões</td><td>Sessões a definir</td></tr>
+          <tr><td>Acompanhamento</td><td>A pedido</td><td>Chamada mensal (30 min)</td><td>Revisão trimestral</td></tr>
+          <tr><td>Correção de erros da plataforma</td><td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td></tr>
+          <tr><td>Ajuda com utilizadores e atribuições</td><td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td></tr>
+          <tr><td>Apoio à exportação de evidência</td><td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td></tr>
+          <tr><td>Atualizações da plataforma</td><td class="tick">✓ sem custo</td><td class="tick">✓ sem custo</td><td class="tick">✓ sem custo</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <b>O que é faturado à parte.</b> Produção de conteúdos fora do âmbito contratado, desenvolvimento
+      à medida, integrações com sistemas do Cliente, formação presencial e migrações de dados que
+      excedam a exportação normal. Dizemos sempre o preço <strong>antes</strong> de começar — nunca
+      aparece na fatura sem ter sido aprovado.
+    </div>
+  </section>
+
+  <!-- ── ESCALATION ── -->
+  <section id="escalar">
+    <h2>Se não ficar resolvido</h2>
+    <p class="sub">Uma escada curta e explícita. Não precisa de descobrir a quem se queixar.</p>
+    <ol class="ladder">
+      <li><b>Fio de suporte</b><span>Responde no mesmo email. O caso mantém a referência e o histórico completo.</span></li>
+      <li><b>Prazo ultrapassado → escalar</b><span>Se o tempo de primeira resposta do seu plano não for cumprido, responda no fio com a palavra <strong>ESCALAR</strong>. O caso sobe de imediato de prioridade e é notificado o responsável de serviço.</span></li>
+      <li><b>Revisão com o responsável de serviço</b><span>Marcamos uma chamada em <strong>1 dia útil</strong> para acordar um plano de resolução com data.</span></li>
+      <li><b>Crédito de serviço</b><span>Se a disponibilidade mensal ficar abaixo do compromisso em dois meses seguidos, tem direito a crédito na fatura seguinte, nos termos da cláusula 6 dos <a href="termos.html">Termos</a>.</span></li>
+    </ol>
+  </section>
+
+  <!-- ── AVAILABILITY ── -->
+  <section id="disponibilidade">
+    <h2>Disponibilidade e manutenção</h2>
+    <p>Comprometemo-nos com <strong>99,5% de disponibilidade em cada mês civil</strong>. Na prática,
+    é o compromisso que conseguimos cumprir com honestidade — preferimos prometer o que sustentamos
+    a escrever um número maior que não sustentamos.</p>
+    <ul>
+      <li><strong>Manutenção programada</strong> é avisada com pelo menos <strong>48 horas</strong> e feita, sempre que possível, fora do horário laboral.</li>
+      <li><strong>Cópias de segurança</strong> diárias, retidas nos termos da política de retenção, em infraestrutura na União Europeia.</li>
+      <li><strong>Os seus dados saem quando quiser</strong> — a exportação de formação, horas, certificados e evidência está disponível a qualquer momento, em formato aberto, sem depender do nosso software.</li>
+    </ul>
+    <div class="note">
+      <b>Uma nota honesta sobre incidentes.</b> Quando algo corre mal, dizemos o que aconteceu,
+      o que fizemos e o que mudámos para não repetir. Sem comunicados vagos.
+    </div>
+  </section>
+
+  <div class="cta">
+    <h2>Ainda com dúvidas?</h2>
+    <p style="max-width:52ch;margin:0 auto">Fale connosco antes de decidir. Quinze minutos, a plataforma
+    a funcionar e as perguntas difíceis respondidas.</p>
+    <a class="btn" href="mailto:[SUPPORT-EMAIL]?subject=Sess%C3%A3o%20de%20estrat%C3%A9gia%20Academy%20Platforms">Marcar chamada de 15 minutos →</a>
+  </div>
+
+  <footer>
+    <div class="flinks">
+      <a href="./">Site</a>
+      <a href="termos.html">Termos e Condições</a>
+      <a href="https://academy.edenrise.com/privacy.html" target="_blank" rel="noopener">Política de Privacidade (plataforma)</a>
+      <a href="https://academy.edenrise.com/verify.html" target="_blank" rel="noopener">Verificador público</a>
+    </div>
+    <div class="imprint">
+      © <span class="ph">[ENTIDADE]</span> · vendido através de Meridante · NIPC <span class="ph">[NIPC]</span> ·
+      <span class="ph">[MORADA]</span> · <span class="ph">[EMAIL]</span><br>
+      Os tempos de resposta são compromissos contratuais nos termos da cláusula 6 dos Termos e Condições de Serviço.
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,733 @@
+{
+ "course": "fire-truck-training",
+ "modules": {
+  "0": [
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "The engine starts immediately",
+      "The brakes loosen",
+      "The fire truck can be driven",
+      "The red lights stop shining"
+     ],
+     "q": "What happens when the pressure for the brakes is low?",
+     "why": "The brakes don't loosen when the pressure is low, indicated by the red lights shining."
+    },
+    "pt": {
+     "opts": [
+      "O motor arranca imediatamente",
+      "Os travões se soltam",
+      "O camião dos bombeiros pode ser conduzido",
+      "As luzes vermelhas param de piscar"
+     ],
+     "q": "O que acontece quando a pressão para os travões é baixa?",
+     "why": "Os travões não se soltam quando a pressão é baixa, indicado pelas luzes vermelhas a piscar."
+    },
+    "t0": 25,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785749993444,
+    "corrected": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "To start the engine",
+      "To fill the brake system",
+      "To use the gas pedal",
+      "To increase the speed"
+     ],
+     "q": "What is the function of the throttle button?",
+     "why": "The throttle button is used to increase the speed, and it's easier to use than the gas pedal."
+    },
+    "pt": {
+     "opts": [
+      "Arrancar o motor",
+      "Encher o sistema de travões",
+      "Usar o pedal do gás",
+      "Aumentar a velocidade"
+     ],
+     "q": "Qual é a função do botão do acelerador?",
+     "why": "O botão do acelerador é usado para aumentar a velocidade, e é mais fácil de usar do que o pedal do gás."
+    },
+    "t0": 80,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785749993444,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Fill the brake system",
+      "Check the pressure for the brakes",
+      "Start the engine and let it fill the brake system",
+      "Drive the fire truck to test it"
+     ],
+     "q": "What should you do before starting the engine every morning?",
+     "why": "You should fill the brake system before starting the engine every morning to ensure it holds for the whole day."
+    },
+    "pt": {
+     "opts": [
+      "Encher o sistema de travões",
+      "Verificar a pressão para os travões",
+      "Arrancar o motor e deixar que encha o sistema de travões",
+      "Conduzir o camião dos bombeiros para testá-lo"
+     ],
+     "q": "O que deve fazer antes de arrancar o motor todas as manhãs?",
+     "why": "Deve encher o sistema de travões antes de arrancar o motor todas as manhãs para garantir que ele dure o dia todo."
+    },
+    "t0": 107,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785749993444,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Use them to drive in normal terrain",
+      "Use them to drive in hard terrain",
+      "Don't touch them without knowledge",
+      "Use them to start the engine"
+     ],
+     "q": "What should you do with the buttons that block the axles?",
+     "why": "You should not touch the buttons that block the axles without knowledge, as they can damage the gearbox."
+    },
+    "pt": {
+     "opts": [
+      "Usá-los para conduzir em terreno normal",
+      "Usá-los para conduzir em terreno difícil",
+      "Não os tocar sem conhecimento",
+      "Usá-los para arrancar o motor"
+     ],
+     "q": "O que deve fazer com os botões que bloqueiam os eixos?",
+     "why": "Não deve tocar os botões que bloqueiam os eixos sem conhecimento, pois eles podem danificar a caixa de velocidades."
+    },
+    "t0": 192,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785749993444,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "The engine starts and the fire truck moves",
+      "The brakes loosen and the fire truck can be driven",
+      "The engine dies and the fire truck can't be driven",
+      "The red lights stop shining and the fire truck can be driven"
+     ],
+     "q": "What happens if you try to drive the fire truck without enough pressure in the brake system?",
+     "why": "The engine dies and the fire truck can't be driven if you try to drive without enough pressure in the brake system."
+    },
+    "pt": {
+     "opts": [
+      "O motor arranca e o camião dos bombeiros se move",
+      "Os travões se soltam e o camião dos bombeiros pode ser conduzido",
+      "O motor morre e o camião dos bombeiros não pode ser conduzido",
+      "As luzes vermelhas param de piscar e o camião dos bombeiros pode ser conduzido"
+     ],
+     "q": "O que acontece se tentar conduzir o camião dos bombeiros sem pressão suficiente no sistema de travões?",
+     "why": "O motor morre e o camião dos bombeiros não pode ser conduzido se tentar conduzir sem pressão suficiente no sistema de travões."
+    },
+    "t0": 134,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785749993444,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Use the buttons that block the axles",
+      "Check the pressure for the brakes",
+      "Use the gear sign to adjust the gears",
+      "Stop the fire truck and check the terrain"
+     ],
+     "q": "What should you do if the fire truck is not moving straight while driving?",
+     "why": "You should check the terrain and adjust the gears if the fire truck is not moving straight while driving."
+    },
+    "pt": {
+     "opts": [
+      "Usar os botões que bloqueiam os eixos",
+      "Verificar a pressão para os travões",
+      "Usar o sinal de marchas para ajustar as marchas",
+      "Parar o camião dos bombeiros e verificar o terreno"
+     ],
+     "q": "O que deve fazer se o camião dos bombeiros não estiver a mover-se em linha reta enquanto conduz?",
+     "why": "Deve verificar o terreno e ajustar as marchas se o camião dos bombeiros não estiver a mover-se em linha reta enquanto conduz."
+    },
+    "t0": 165,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785749993444,
+    "corrected": true
+   }
+  ],
+  "1": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "At the river",
+      "At the pump house in the valley",
+      "At the top of the mountain",
+      "At the fire station"
+     ],
+     "q": "Where do we fill the fire truck with water?",
+     "why": "The pump house in the valley has a special connection point to fill the truck quickly."
+    },
+    "pt": {
+     "opts": [
+      "No rio",
+      "Na casa de bombas no vale",
+      "No topo da montanha",
+      "Na estação de bombeiros"
+     ],
+     "q": "Onde enchemos o camião de bombeiros com água?",
+     "why": "A casa de bombas no vale tem um ponto de ligação especial para encher o camião rapidamente."
+    },
+    "t0": 30,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750013325,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "By pressing the button under the clutch pedal",
+      "By turning the black switch",
+      "By lifting the brake",
+      "By using the fire gun"
+     ],
+     "q": "How do we stop the engine of the fire truck?",
+     "why": "The engine can be stopped by pressing the button under the clutch pedal."
+    },
+    "pt": {
+     "opts": [
+      "Premindo o botão debaixo do pedal da embreagem",
+      "Girando o interruptor preto",
+      "Levantando o freio",
+      "Usando a espingarda de incêndio"
+     ],
+     "q": "Como paramos o motor do camião de bombeiros?",
+     "why": "O motor pode ser parado premindo o botão debaixo do pedal da embreagem."
+    },
+    "t0": 93,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750013325,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "They must be used only by two people",
+      "They must be locked in loosely",
+      "They must be used only for filling the tank",
+      "They must lock in really tight"
+     ],
+     "q": "What is important when working with the fire truck's materials?",
+     "why": "The materials must lock in really tight to ensure safe and effective use."
+    },
+    "pt": {
+     "opts": [
+      "Devem ser usados apenas por duas pessoas",
+      "Devem ser ligados de forma frouxa",
+      "Devem ser usados apenas para encher o tanque",
+      "Devem ser ligados muito apertado"
+     ],
+     "q": "O que é importante quando se trabalha com os materiais do camião de bombeiros?",
+     "why": "Os materiais devem ser ligados muito apertado para garantir um uso seguro e eficaz."
+    },
+    "t0": 211,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750013325,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Alone",
+      "With two people",
+      "Only for filling the tank",
+      "Only for sucking water from a well"
+     ],
+     "q": "How should the big fire gun be used?",
+     "why": "The big fire gun should be used with two people for safety and effectiveness."
+    },
+    "pt": {
+     "opts": [
+      "Sozinho",
+      "Com duas pessoas",
+      "Apenas para encher o tanque",
+      "Apenas para sugar água de um poço"
+     ],
+     "q": "Como deve ser usada a espingarda de incêndio grande?",
+     "why": "A espingarda de incêndio grande deve ser usada com duas pessoas para garantir segurança e eficácia."
+    },
+    "t0": 121,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750013325,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "By using the pump to suck water from a river",
+      "By using the gravity-fed water from the tank on top of the mountain",
+      "By filling the truck at the fire station",
+      "By using a backup generator"
+     ],
+     "q": "If the electric system is down due to a fire, how can we still get water for the fire truck?",
+     "why": "We can still get water using the gravity-fed system from the tank on top of the mountain, which is electricity-free."
+    },
+    "pt": {
+     "opts": [
+      "Usando a bomba para sugar água de um rio",
+      "Usando a água alimentada por gravidade do tanque no topo da montanha",
+      "Enchendo o camião na estação de bombeiros",
+      "Usando um gerador de backup"
+     ],
+     "q": "Se o sistema elétrico estiver desligado devido a um incêndio, como podemos ainda obter água para o camião de bombeiros?",
+     "why": "Ainda podemos obter água usando o sistema alimentado por gravidade do tanque no topo da montanha, que é livre de eletricidade."
+    },
+    "t0": 61,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750013325,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "The rubber hose",
+      "The metal hose",
+      "The hose with the adapter",
+      "The hose with the pump"
+     ],
+     "q": "If we need to fill the fire truck's tank from a well, which hose should we use?",
+     "why": "We should use the rubber hose, which is also used for filling the tank and can suck water from a well or river with the help of the pump."
+    },
+    "pt": {
+     "opts": [
+      "A mangueira de borracha",
+      "A mangueira de metal",
+      "A mangueira com o adaptador",
+      "A mangueira com a bomba"
+     ],
+     "q": "Se precisamos encher o tanque do camião de bombeiros a partir de um poço, qual mangueira devemos usar?",
+     "why": "Devemos usar a mangueira de borracha, que também é usada para encher o tanque e pode sugar água de um poço ou rio com a ajuda da bomba."
+    },
+    "t0": 179,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750013325,
+    "verified": true
+   }
+  ],
+  "2": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "The engine shuts off",
+      "The exhaust pipe closes, reducing power",
+      "The brake pedal is disabled",
+      "The clutch is disengaged"
+     ],
+     "q": "What happens when you use the button under the clutch pedal to brake while driving the fire truck?",
+     "why": "The button under the clutch pedal closes the exhaust pipe, reducing power, but does not shut off the engine."
+    },
+    "pt": {
+     "opts": [
+      "O motor desliga",
+      "O tubo de escape fecha, reduzindo a potência",
+      "O pedal de freio é desativado",
+      "A embreagem é desengatada"
+     ],
+     "q": "O que acontece quando você usa o botão debaixo do pedal da embreagem para frear enquanto dirige o camião de bombeiros?",
+     "why": "O botão debaixo do pedal da embreagem fecha o tubo de escape, reduzindo a potência, mas não desliga o motor."
+    },
+    "t0": 26,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750033921,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "To keep the truck warm",
+      "To charge the battery",
+      "To power the pump",
+      "To play music"
+     ],
+     "q": "What is the primary reason for leaving the engine on when arriving at a fire fighting location?",
+     "why": "The engine needs to be left on to power the pump for fire fighting."
+    },
+    "pt": {
+     "opts": [
+      "Manter o camião quente",
+      "Carregar a bateria",
+      "Alimentar a bomba",
+      "Tocar música"
+     ],
+     "q": "Qual é o principal motivo para deixar o motor ligado ao chegar a um local de combate a incêndios?",
+     "why": "O motor precisa ser deixado ligado para alimentar a bomba para combate a incêndios."
+    },
+    "t0": 147,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750033921,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Turn off the engine and engage the handbrake",
+      "Leave the engine on and engage the handbrake",
+      "Turn off the engine and disengage the handbrake",
+      "Leave the engine on and disengage the handbrake"
+     ],
+     "q": "What should you do when arriving at a fire fighting location with the fire truck?",
+     "why": "You should leave the engine on to power the pump and engage the handbrake to secure the truck."
+    },
+    "pt": {
+     "opts": [
+      "Desligar o motor e engatar o freio de estacionamento",
+      "Deixar o motor ligado e engatar o freio de estacionamento",
+      "Desligar o motor e desengatar o freio de estacionamento",
+      "Deixar o motor ligado e desengatar o freio de estacionamento"
+     ],
+     "q": "O que você deve fazer ao chegar a um local de combate a incêndios com o camião de bombeiros?",
+     "why": "Você deve deixar o motor ligado para alimentar a bomba e engatar o freio de estacionamento para segurar o camião."
+    },
+    "t0": 174,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750033921,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Release the clutch and push the throttle down",
+      "Push the clutch and hold it",
+      "Release the clutch and push the throttle up",
+      "Push the clutch and then push the throttle up"
+     ],
+     "q": "What should you do after pushing the orange button to start the pump on the fire truck?",
+     "why": "You should push the clutch and then push the throttle up to start the pump."
+    },
+    "pt": {
+     "opts": [
+      "Largar a embreagem e empurrar o acelerador para baixo",
+      "Empurrar a embreagem e segurá-la",
+      "Largar a embreagem e empurrar o acelerador para cima",
+      "Empurrar a embreagem e então empurrar o acelerador para cima"
+     ],
+     "q": "O que você deve fazer após pressionar o botão laranja para iniciar a bomba no camião de bombeiros?",
+     "why": "Você deve empurrar a embreagem e então empurrar o acelerador para cima para iniciar a bomba."
+    },
+    "t0": 246,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750033921,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to turn around in the available space",
+      "Look for a wider area to turn around",
+      "Continue driving and try to find an alternative route",
+      "Turn off the engine and wait for further instructions"
+     ],
+     "q": "You are driving the fire truck on a narrow road with limited space to turn around. What should you do?",
+     "why": "You should look for a wider area to turn around to avoid damaging the truck or surrounding environment."
+    },
+    "pt": {
+     "opts": [
+      "Tentar girar no espaço disponível",
+      "Procurar uma área mais ampla para girar",
+      "Continuar dirigindo e tentar encontrar uma rota alternativa",
+      "Desligar o motor e esperar por instruções adicionais"
+     ],
+     "q": "Você está dirigindo o camião de bombeiros em uma estrada estreita com espaço limitado para girar. O que você deve fazer?",
+     "why": "Você deve procurar uma área mais ampla para girar para evitar danificar o camião ou o ambiente circundante."
+    },
+    "t0": 92,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750033921,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "The risk of getting stuck in the mud",
+      "The risk of the truck falling over",
+      "The risk of damaging the truck's suspension",
+      "The risk of running out of fuel"
+     ],
+     "q": "You are driving the fire truck off-road in a hilly area. What should you be aware of?",
+     "why": "You should be aware of the risk of the truck falling over, especially when driving on uneven terrain."
+    },
+    "pt": {
+     "opts": [
+      "O risco de ficar preso na lama",
+      "O risco de o camião tombar",
+      "O risco de danificar a suspensão do camião",
+      "O risco de ficar sem combustível"
+     ],
+     "q": "Você está dirigindo o camião de bombeiros fora da estrada em uma área montanhosa. Do que você deve estar ciente?",
+     "why": "Você deve estar ciente do risco de o camião tombar, especialmente quando dirigindo em terreno irregular."
+    },
+    "t0": 119,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750033921,
+    "verified": true
+   }
+  ],
+  "3": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "The engine starts",
+      "The engine is completely off",
+      "The lights turn on",
+      "The pump starts working"
+     ],
+     "q": "What happens when the emergency switch is activated on the Stefinator?",
+     "why": "The emergency switch turns off the engine completely."
+    },
+    "pt": {
+     "opts": [
+      "O motor começa",
+      "O motor está completamente desligado",
+      "As luzes se acendem",
+      "A bomba começa a funcionar"
+     ],
+     "q": "O que acontece quando o interruptor de emergência é ativado no Stefinator?",
+     "why": "O interruptor de emergência desliga o motor completamente."
+    },
+    "t0": 54,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750055774,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Fire protection clothes",
+      "Normal clothes",
+      "Black clothes",
+      "Summer clothes"
+     ],
+     "q": "What type of clothes should be worn when fighting a fire?",
+     "why": "Fire protection clothes should be worn to protect against the heat and flames."
+    },
+    "pt": {
+     "opts": [
+      "Roupas de proteção contra incêndios",
+      "Roupas normais",
+      "Roupas pretas",
+      "Roupas de verão"
+     ],
+     "q": "Que tipo de roupa deve ser usada ao combater um incêndio?",
+     "why": "Roupas de proteção contra incêndios devem ser usadas para proteger contra o calor e as chamas."
+    },
+    "t0": 136,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750055774,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to start the engine again",
+      "Push the clutch",
+      "Push back the button",
+      "Check the oil temperature"
+     ],
+     "q": "What should be done after the emergency switch is activated and the engine is off?",
+     "why": "The button must be pushed back to reset the trip switch before the engine can be started again."
+    },
+    "pt": {
+     "opts": [
+      "Tentar ligar o motor novamente",
+      "Pressionar a embreagem",
+      "Pressionar o botão novamente",
+      "Verificar a temperatura do óleo"
+     ],
+     "q": "O que deve ser feito após o interruptor de emergência ser ativado e o motor estar desligado?",
+     "why": "O botão deve ser pressionado novamente para reiniciar o interruptor de viagem antes que o motor possa ser ligado novamente."
+    },
+    "t0": 80,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750055774,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Use the truck every week",
+      "Leave the water in the tank for weeks",
+      "Check the oil temperature regularly",
+      "Clean the tank every month"
+     ],
+     "q": "What should be done to prevent the water in the tank from rusting and getting green?",
+     "why": "Using the truck every week helps to prevent the water from rusting and getting green by circulating the water and preventing stagnation."
+    },
+    "pt": {
+     "opts": [
+      "Usar o camião todas as semanas",
+      "Deixar a água no tanque por semanas",
+      "Verificar a temperatura do óleo regularmente",
+      "Limpar o tanque todos os meses"
+     ],
+     "q": "O que deve ser feito para evitar que a água no tanque enferruje e fique verde?",
+     "why": "Usar o camião todas as semanas ajuda a prevenir que a água enferruje e fique verde, circulando a água e prevenindo a estagnação."
+    },
+    "t0": 168,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750055774,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "One person operates the gun and the other person secures the hose",
+      "One person operates the hose and the other person secures the gun",
+      "Both people operate the gun and hose together",
+      "One person operates the gun and hose alone"
+     ],
+     "q": "You are fighting a fire with a team of two people. What is the normal way to operate the fire gun and hose?",
+     "why": "The normal way to operate the fire gun and hose is to have one person in front with the gun and another person securing them with the hose."
+    },
+    "pt": {
+     "opts": [
+      "Uma pessoa opera a arma e a outra pessoa segura a mangueira",
+      "Uma pessoa opera a mangueira e a outra pessoa segura a arma",
+      "Ambas as pessoas operam a arma e a mangueira juntas",
+      "Uma pessoa opera a arma e a mangueira sozinha"
+     ],
+     "q": "Você está combatendo um incêndio com uma equipe de duas pessoas. Qual é a maneira normal de operar a arma de incêndio e a mangueira?",
+     "why": "A maneira normal de operar a arma de incêndio e a mangueira é ter uma pessoa na frente com a arma e outra pessoa segurando-a com a mangueira."
+    },
+    "t0": 108,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750055774,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Empty the tank and refill it with new water",
+      "Leave the water in the tank and check it again next week",
+      "Clean the tank and pump without emptying the water",
+      "Use the water to fight a fire anyway"
+     ],
+     "q": "You notice that the water in the tank has started to get green. What should you do?",
+     "why": "When the water starts to get green, it is important to empty the tank and refill it with new water to prevent rust and clogging."
+    },
+    "pt": {
+     "opts": [
+      "Esvaziar o tanque e reencher com água nova",
+      "Deixar a água no tanque e verificar novamente na próxima semana",
+      "Limpar o tanque e a bomba sem esvaziar a água",
+      "Usar a água para combater um incêndio de qualquer forma"
+     ],
+     "q": "Você nota que a água no tanque começou a ficar verde. O que você deve fazer?",
+     "why": "Quando a água começa a ficar verde, é importante esvaziar o tanque e reencher com água nova para prevenir a ferrugem e o entupimento."
+    },
+    "t0": 194,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750055774,
+    "corrected": true
+   }
+  ]
+ }
+}

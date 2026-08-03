@@ -533,6 +533,19 @@ function armRails(root) {
     syncRailPaddles(rail);
   });
 }
+/* The learning loop, made visible where the day starts: lessons watched but
+   unchecked (hours not yet counted — never let that be a surprise), and reviews
+   due (the spaced-repetition queue knocking). Empty when there is nothing —
+   a permanent panel would train people to ignore it. */
+function loopStripHTML() {
+  const pend = pendingCheckCount();
+  const due = reviewsDue().length;
+  if (!pend && !due) return '';
+  return `<div class="loop-strip">
+    ${pend ? `<span class="loop-chip" data-action="resume-check">⚠ ${pend} ${t('checks_chip')}</span>` : ''}
+    ${due ? `<button class="loop-chip rev" data-action="open-reviews">↻ ${due} ${t('rev_chip')}</button>` : ''}
+  </div>`;
+}
 function pathRowHTML() {
   const steps = S.path.slice(0, 6).map(id => {
     const c = courseById(id); if (!c) return '';
@@ -655,6 +668,7 @@ function renderHome() {
        one job — carry on — and everything here either serves that or teases
        what is next. -->
   ${askBarHTML()}
+  ${loopStripHTML()}
   ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)), null, 'featured-row')}
   ${pathRowHTML()}
   ${railHTML(t('assigned_you'), t('from_stewardship'), assigned.filter(notHero).map(c => cardHTML(c)))}
@@ -4352,7 +4366,20 @@ function lazyBackgrounds() {
     if (!ioEverFired) document.querySelectorAll('.thumb[data-bg]').forEach(loadBg);
   }, 2500);
 }
-addEventListener('hashchange', render);
+/* Deep link from outside the app — LandFlow's brain sends people here.
+   #/play/fire-truck-training/1/183 = module 2 of the fire-truck course at 3:03.
+   Consumed once and normalised to the course page underneath the player, so a
+   reload doesn't restart the video mid-air. */
+function handlePlayLink() {
+  const m = (location.hash || '').match(/^#\/play\/([a-z0-9-]+)\/(\d+)(?:\/(\d+))?/);
+  if (!m) return false;
+  const [, cid, mod, sec] = m;
+  location.hash = '#/course/' + cid;
+  setTimeout(() => openPlayer(cid, +mod, sec ? +sec : undefined), 350);
+  return true;
+}
+addEventListener('hashchange', () => { if (!handlePlayLink()) render(); });
+if (handlePlayLink()) {} 
 
 /* ---------- language (EN / PT) ---------- */
 const NAV_KEYS = { '#/home': 'nav_home', '#/me': 'nav_me', '#/profile': 'nav_settings', '#/library': 'nav_library', '#/paths': 'nav_paths', '#/community': 'nav_community', '#/live': 'nav_live', '#/progress': 'nav_progress', '#/analytics': 'nav_analytics', '#/admin': 'nav_admin' };
@@ -4654,9 +4681,14 @@ window.addEventListener('popstate', () => {
   if (_popClosing) return;
   if (typeof playerEl !== 'undefined' && playerEl.classList.contains('open')) { _playerPushed = false; closePlayer(true); }
 });
-function openPlayer(courseId, mod) {
+/* startAt (seconds): the moment-anchor. Two callers depend on it — LandFlow's
+   walkie-talkie answers link open_at_moment, and quiz review sends the learner
+   back to the exact passage a missed question came from. */
+let _seekTo = null;
+function openPlayer(courseId, mod, startAt) {
   const c = courseById(courseId);
   if (!c) return;
+  _seekTo = (typeof startAt === 'number' && startAt > 2) ? startAt : null;
   try { history.pushState({ overlay: 'player' }, ''); _playerPushed = true; } catch (e) {}
   if (mod == null) mod = (prog(courseId) && !isDone(courseId)) ? (prog(courseId).mod || 0) : 0;
   mod = Math.min(mod, c.modules.length - 1);
@@ -4688,6 +4720,11 @@ function openPlayer(courseId, mod) {
     armVimeo(c, mod);
   } else {
     if (watchEv) watchEv.method = 'video-timeupdate';
+    if (_seekTo) videoEl.addEventListener('loadedmetadata', function once() {
+      videoEl.removeEventListener('loadedmetadata', once);
+      try { videoEl.currentTime = Math.min(_seekTo, (videoEl.duration || _seekTo) - 1); } catch (e) {}
+      _seekTo = null;
+    });
     videoEl.src = c.video || vidFor(courseId, mod);
     videoEl.play().catch(() => {});
   }
@@ -4830,6 +4867,7 @@ function armVimeo(c, mod) {
     const ifr = vimeoWrap.querySelector('iframe');
     if (!ifr || !window.Vimeo || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
     try { vimeoPlayer = new Vimeo.Player(ifr); } catch (e) { return; }
+    if (_seekTo) { const t = _seekTo; _seekTo = null; vimeoPlayer.setCurrentTime(t).catch(() => {}); }
     let checkFired = false, done = false;
     if (watchEv && watchEv.key === c.id + ':' + mod) watchEv.method = 'vimeo-timeupdate';
     vimeoPlayer.on('timeupdate', d => {
@@ -5060,54 +5098,118 @@ function showTakeaways(c, mod, next) {
    plainly rather than discovering at audit time. */
 function showModuleCheck(c, mod, after) {
   const ov = $('#ckOv'); if (!ov) { creditTraining(c.id, mod, null); if (after) after(); return; }
-  const qs = moduleCheckQuestions(c, mod);
-  const done = res => { ov.classList.remove('on'); ov.innerHTML = ''; creditTraining(c.id, mod, res); updateXpChip(); if (after) after(); };
+  const lang = _lang() === 'pt' ? 'pt' : 'en';
+  const finish = res => { ov.classList.remove('on'); ov.innerHTML = ''; creditTraining(c.id, mod, res); updateXpChip(); if (after) after(); };
 
-  /* No question bank for this course: the spec allows "assessment OR
-     acknowledgment". An explicit, recorded acknowledgment is honest; a silent
-     credit is not. */
-  if (!qs) {
+  loadQuizV2(c.id).then(() => {
+    /* V2 (transcript-grounded, blind-verified) first; the hand-written bank is
+       the fallback, and the acknowledgment is the floor — never a silent credit. */
+    let qs = v2CheckPair(c.id, mod, lang);
+    if (!qs) {
+      const legacy = moduleCheckQuestions(c, mod);
+      qs = legacy ? legacy.map(q => ({ q: q.q, opts: q.opts, a: q.a, why: null, t0: null, type: 'recall', gen: false, audit: 'authored' })) : null;
+    }
+    if (!qs) {
+      ov.innerHTML = `<div class="ck-card">
+        <div class="ob-eyebrow">${t('mc_eyebrow')} · ${esc(ctitle(c))}</div>
+        <div class="ck-q">${t('mc_ack_q')}</div>
+        <label class="ck-ack"><input type="checkbox" id="mcAck"> <span>${t('mc_ack_label')}</span></label>
+        <div class="ck-foot"><span class="ck-note">${t('mc_ack_note')}</span>
+          <button class="btn btn-primary btn-sm" id="mcGo" disabled>${t('mc_submit')}</button></div>
+      </div>`;
+      ov.classList.add('on');
+      const box = $('#mcAck'), go = $('#mcGo');
+      box.addEventListener('change', () => { go.disabled = !box.checked; });
+      go.addEventListener('click', () => finish({ kind: 'acknowledgment', acknowledged: true, at: Date.now() }));
+      return;
+    }
+
+    const answers = new Array(qs.length).fill(null);
+    const conf = new Array(qs.length).fill(null);   /* true=sure, false=guessing, null=unsaid */
+    const paint = () => {
+      ov.innerHTML = `<div class="ck-card">
+        <div class="ob-eyebrow">${t('mc_eyebrow')} · ${esc(ctitle(c))}</div>
+        <p class="pre-sub">${t('mc_sub')}</p>
+        ${qs.map((q, qi) => `<div class="mc-q">
+          <div class="ck-q">${qi + 1}. ${esc(q.q)}</div>
+          ${q.opts.map((o, oi) => `<div class="q-opt${answers[qi] === oi ? ' sel' : ''}" data-q="${qi}" data-o="${oi}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
+          <div class="mc-conf">${t('mc_conf')}
+            <button type="button" class="conf-b${conf[qi] === true ? ' on' : ''}" data-cq="${qi}" data-cv="1">${t('mc_conf_sure')}</button>
+            <button type="button" class="conf-b${conf[qi] === false ? ' on' : ''}" data-cq="${qi}" data-cv="0">${t('mc_conf_guess')}</button>
+          </div>
+        </div>`).join('')}
+        <div class="ck-foot"><span class="ck-note">${t('mc_note')}</span>
+          <button class="btn btn-primary btn-sm" id="mcGo"${answers.some(a => a === null) ? ' disabled' : ''}>${t('mc_submit')}</button></div>
+      </div>`;
+      ov.querySelectorAll('.q-opt').forEach(el => el.addEventListener('click', () => { answers[+el.dataset.q] = +el.dataset.o; paint(); }));
+      ov.querySelectorAll('.conf-b').forEach(el => el.addEventListener('click', () => { conf[+el.dataset.cq] = el.dataset.cv === '1'; paint(); }));
+      const go = $('#mcGo');
+      if (go) go.addEventListener('click', () => {
+        const detail = qs.map((q, i) => ({
+          q: q.q, given: q.opts[answers[i]], correct: q.opts[q.a], ok: answers[i] === q.a,
+          type: q.type, audit: q.audit, conf: conf[i], t0: q.t0
+        }));
+        const score = detail.filter(d => d.ok).length;
+        if (score === qs.length) awardXp(5, t('mc_eyebrow'));
+        S.quizzesPassed = (S.quizzesPassed || 0) + (score === qs.length ? 1 : 0);
+        /* the hour credits on SUBMISSION — the feedback screen that follows is
+           teaching, not a further hurdle */
+        const res = { kind: 'assessment', score, total: qs.length, passed: score === qs.length, detail, at: Date.now() };
+        creditTraining(c.id, mod, res);
+        updateXpChip();
+        detail.forEach((d, i) => { if (!d.ok) scheduleReview(c.id, mod, qs[i]); });
+        /* feedback state: the why, and the way back to the exact moment */
+        ov.innerHTML = `<div class="ck-card">
+          <div class="ob-eyebrow">${t('mc_result')} · ${score}/${qs.length}</div>
+          ${qs.map((q, i) => `<div class="mc-fb ${detail[i].ok ? 'ok' : 'ko'}">
+            <div class="ck-q">${detail[i].ok ? '✓' : '✗'} ${esc(q.q)}</div>
+            ${detail[i].ok ? '' : `<p class="mc-ans">${t('mc_correct_was')} <b>${esc(q.opts[q.a])}</b></p>`}
+            ${q.why ? `<p class="mc-why">${esc(q.why)}</p>` : ''}
+            ${(!detail[i].ok && q.t0 != null) ? `<button class="btn btn-glass btn-sm" data-action="review-moment" data-id="${c.id}" data-mod="${mod}" data-t="${Math.max(0, Math.floor(q.t0 - 4))}">⏱ ${t('mc_moment')} ${Math.floor(q.t0 / 60)}:${String(Math.floor(q.t0 % 60)).padStart(2, '0')}</button>` : ''}
+          </div>`).join('')}
+          <div class="ck-foot"><span class="ck-note">${score === qs.length ? t('mc_all_right') : t('mc_recorded')}</span>
+            <button class="btn btn-primary btn-sm" id="mcDone">${t('mc_continue')}</button></div>
+        </div>`;
+        $('#mcDone').addEventListener('click', () => { ov.classList.remove('on'); ov.innerHTML = ''; if (after) after(); });
+      });
+    };
+    paint();
+    ov.classList.add('on');
+  });
+}
+
+/* ===== the review session — due questions, one at a time =================== */
+function openReviewSession() {
+  const due = reviewsDue();
+  if (!due.length) return;
+  const ov = $('#ckOv'); if (!ov) return;
+  const lang = _lang() === 'pt' ? 'pt' : 'en';
+  let i = 0;
+  const step = () => {
+    if (i >= due.length) { ov.classList.remove('on'); ov.innerHTML = ''; toast(t('rev_done'), '✓'); render(); return; }
+    const e = due[i];
+    const v = e.view;
+    if (!v) { i++; step(); return; }
     ov.innerHTML = `<div class="ck-card">
-      <div class="ob-eyebrow">${t('mc_eyebrow')} · ${esc(ctitle(c))}</div>
-      <div class="ck-q">${t('mc_ack_q')}</div>
-      <label class="ck-ack"><input type="checkbox" id="mcAck"> <span>${t('mc_ack_label')}</span></label>
-      <div class="ck-foot"><span class="ck-note">${t('mc_ack_note')}</span>
-        <button class="btn btn-primary btn-sm" id="mcGo" disabled>${t('mc_submit')}</button></div>
+      <div class="ob-eyebrow">${t('rev_h')} · ${i + 1}/${due.length}</div>
+      <div class="ck-q">${esc(v.q)}</div>
+      ${v.opts.map((o, oi) => `<div class="q-opt" data-o="${oi}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
+      <div class="ck-foot"><span class="ck-note" id="revNote"></span><button class="btn btn-primary btn-sm" id="revNext" style="display:none;">${t('mc_continue')}</button></div>
     </div>`;
     ov.classList.add('on');
-    const box = $('#mcAck'), go = $('#mcGo');
-    box.addEventListener('change', () => { go.disabled = !box.checked; });
-    go.addEventListener('click', () => done({ kind: 'acknowledgment', acknowledged: true, at: Date.now() }));
-    return;
-  }
-
-  const answers = new Array(qs.length).fill(null);
-  const paint = () => {
-    ov.innerHTML = `<div class="ck-card">
-      <div class="ob-eyebrow">${t('mc_eyebrow')} · ${esc(ctitle(c))}</div>
-      <p class="pre-sub">${t('mc_sub')}</p>
-      ${qs.map((q, qi) => `<div class="mc-q">
-        <div class="ck-q">${qi + 1}. ${esc(q.q)}</div>
-        ${q.opts.map((o, oi) => `<div class="q-opt${answers[qi] === oi ? ' sel' : ''}" data-q="${qi}" data-o="${oi}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
-      </div>`).join('')}
-      <div class="ck-foot"><span class="ck-note">${t('mc_note')}</span>
-        <button class="btn btn-primary btn-sm" id="mcGo"${answers.some(a => a === null) ? ' disabled' : ''}>${t('mc_submit')}</button></div>
-    </div>`;
+    let answered = false;
     ov.querySelectorAll('.q-opt').forEach(el => el.addEventListener('click', () => {
-      answers[+el.dataset.q] = +el.dataset.o; paint();
+      if (answered) return; answered = true;
+      const sel = +el.dataset.o, ok = sel === v.a;
+      ov.querySelectorAll('.q-opt').forEach((x, oi) => { if (oi === v.a) x.classList.add('correct'); else if (oi === sel) x.classList.add('wrong'); });
+      $('#revNote').innerHTML = ok ? t('ck_right') : `${t('mc_correct_was')} <b>${esc(v.opts[v.a])}</b>` +
+        ((v.t0 != null) ? ` · <button class="btn btn-glass btn-sm" data-action="review-moment" data-id="${e.courseId}" data-mod="${e.mod}" data-t="${Math.max(0, Math.floor(v.t0 - 4))}">⏱ ${t('mc_moment')}</button>` : '');
+      reviewOutcome(e, ok);
+      $('#revNext').style.display = '';
+      $('#revNext').addEventListener('click', () => { i++; step(); });
     }));
-    const go = $('#mcGo');
-    if (go) go.addEventListener('click', () => {
-      const detail = qs.map((q, i) => ({ q: q.q, given: q.opts[answers[i]], correct: q.opts[q.a], ok: answers[i] === q.a }));
-      const score = detail.filter(d => d.ok).length;
-      if (score === qs.length) awardXp(5, t('mc_eyebrow'));
-      S.quizzesPassed = (S.quizzesPassed || 0) + (score === qs.length ? 1 : 0);
-      toast(score === qs.length ? t('mc_all_right') : t('mc_recorded'), score === qs.length ? '✓' : 'ℹ️');
-      done({ kind: 'assessment', score, total: qs.length, passed: score === qs.length, detail, at: Date.now() });
-    });
   };
-  paint();
-  ov.classList.add('on');
+  step();
 }
 
 /* ---- up-next auto-advance ------------------------------------------------
@@ -5275,6 +5377,75 @@ function clearCheckPending(courseId, mod) {
 }
 function pendingCheckCount() { return Object.keys(S.pendingChecks || {}).length; }
 
+/* ===== QUIZ ENGINE V2 — transcript-grounded banks ===========================
+   knowledge/quizzes/<course>.json: per-module questions GENERATED from the
+   lesson's own Whisper transcript, blind-VERIFIED (a second model answers each
+   question without seeing the key; disagreement corrects or kills it — the
+   first batch had wrong keys on half the questions, so this gate is what makes
+   "generated questions ship everywhere" a sane decision), each anchored to the
+   second of video that teaches it. Loaded lazily; every consumer falls back to
+   the hand-written banks when a course has no V2 file. */
+const QUIZ_V2 = {};
+function loadQuizV2(courseId) {
+  if (QUIZ_V2[courseId] !== undefined) return Promise.resolve(QUIZ_V2[courseId]);
+  /* cache-bust rides the same edrNNN as every other asset — derived from the
+     app script's own src so no separate constant can drift out of step */
+  const v = ((document.querySelector('script[src*="core/app.js"]') || {}).src || '').match(/v=(edr\d+)/);
+  return fetch('knowledge/quizzes/' + courseId + '.json?v=' + (v ? v[1] : ''))
+    .then(r => r.ok ? r.json() : null)
+    .then(b => (QUIZ_V2[courseId] = b && b.modules ? b : null))
+    .catch(() => (QUIZ_V2[courseId] = null));
+}
+/* Options are shuffled AT RENDER and the key remapped: generated keys cluster
+   on low indices (and humans cluster on C), so fixed order leaks the answer. */
+function shuffledView(q, lang) {
+  const L = q[lang] || q.en;
+  const idx = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+  return { q: L.q, opts: idx.map(i => L.opts[i]), a: idx.indexOf(q.a),
+           why: L.why, t0: q.t0, type: q.type, gen: !!q.gen,
+           audit: q.verified ? 'verified' : q.corrected ? 'corrected' : q.gen ? 'unaudited' : 'authored' };
+}
+/* The pair for the hour-crediting check: one recall + one application/scenario,
+   deterministic per module so a retake asks the same thing and records compare. */
+function v2CheckPair(courseId, mod, lang) {
+  const bank = QUIZ_V2[courseId];
+  const qs = bank && bank.modules && bank.modules[mod];
+  if (!qs || !qs.length) return null;
+  const rec = qs.find(x => x.type === 'recall') || qs[0];
+  const app = qs.find(x => x !== rec && (x.type === 'application' || x.type === 'scenario')) || qs.find(x => x !== rec);
+  return [rec, app].filter(Boolean).map(q => shuffledView(q, lang));
+}
+
+/* ===== SPACED REVIEW (SM-2-lite) ============================================
+   A missed question is a scheduling event, not a shame event. Intervals expand
+   1→3→7→16→35 days on success and reset on a lapse. Reviews re-ask the SAME
+   question (same anchor), and XP comes from the retrieval, never the visit. */
+const REVIEW_STEPS = [1, 3, 7, 16, 35];
+function reviewKey(courseId, q) { return courseId + '|' + (q.q || '').slice(0, 80); }
+function scheduleReview(courseId, mod, view) {
+  S.reviewQueue = S.reviewQueue || [];
+  const k = reviewKey(courseId, view);
+  let e = S.reviewQueue.find(x => x.k === k);
+  if (!e) { e = { k, courseId, mod, step: 0 }; S.reviewQueue.push(e); }
+  e.step = 0;
+  e.q = view.q; e.t0 = view.t0;
+  e.due = Date.now() + REVIEW_STEPS[0] * 864e5;
+  save();
+}
+function reviewOutcome(entry, correct) {
+  if (correct) {
+    entry.step = Math.min(entry.step + 1, REVIEW_STEPS.length - 1);
+    if (entry.step >= REVIEW_STEPS.length - 1 && entry.graduated) {
+      S.reviewQueue = S.reviewQueue.filter(x => x !== entry); save(); return;
+    }
+    if (entry.step === REVIEW_STEPS.length - 1) entry.graduated = true;
+    awardXp(3, t('rev_h'));
+  } else entry.step = 0;
+  entry.due = Date.now() + REVIEW_STEPS[entry.step] * 864e5;
+  save();
+}
+function reviewsDue() { return (S.reviewQueue || []).filter(e => e.due <= Date.now()); }
+
 /* Two questions from the course's OWN bank, chosen deterministically per module
    so a retake asks the same thing and the record stays comparable. Never the
    generic category bank: being asked about soil at the end of a fire-truck
@@ -5352,6 +5523,24 @@ function openQuiz(courseId) {
   const lang = _lang() === 'pt' ? 'pt' : 'en';
   const cq = COURSE_QUIZ[c.id] || c.quiz;
   const staticQ = cq ? (cq[lang] || cq.en || cq) : (QUIZ_BANK[c.cat] || QUIZ_BANK._default);
+  /* V2 outranks BOTH the runtime AI quiz and the static bank: it is grounded in
+     the lesson transcripts and its keys are blind-verified, while the runtime
+     AI quiz is generated on the spot with no verification pass. Interleaved
+     across modules (mixing beats blocking for retention), shuffled options. */
+  const v2 = QUIZ_V2[c.id];
+  if (v2 && v2.modules) {
+    const all = Object.values(v2.modules).flat().map(q => shuffledView(q, lang));
+    if (all.length >= 4) {
+      const mix = all.sort(() => Math.random() - 0.5).slice(0, 8);
+      startQuiz(c, mix, false);
+      return;
+    }
+  }
+  if (QUIZ_V2[c.id] === undefined) {
+    /* first open: load the bank, then re-enter — one hop, cached after */
+    loadQuizV2(c.id).then(() => openQuiz(courseId));
+    return;
+  }
   if (aiKey()) {   /* AI-FIRST: rigorous, land-adapted, scenario questions; curated set is the fallback */
     $('#quizModal').classList.add('open');
     $('#quizBody').innerHTML = `<div class="q-center"><div class="orb-spin"></div><p class="m-sub" style="margin-top:16px;">${t('quiz_ai_building')}</p></div>`;
@@ -6079,6 +6268,19 @@ document.addEventListener('click', e => {
     case 'pwa-dismiss': localStorage.setItem('eden-pwa-nudged', '1'); const pb2 = $('#pwaBar'); if (pb2) pb2.remove(); break;
     case 'seed-demo': seedDemo(); break;
     case 'voice-search': startVoiceSearch(); break;
+    case 'review-moment': {
+      /* from the check's feedback or a review card: close overlays, reopen the
+         player four seconds before the moment that teaches the answer */
+      const ck = $('#ckOv'); if (ck) { ck.classList.remove('on'); ck.innerHTML = ''; }
+      openPlayer(b.dataset.id, +b.dataset.mod, +b.dataset.t);
+      break;
+    }
+    case 'open-reviews': openReviewSession(); break;
+    case 'resume-check': {
+      const k = Object.keys(S.pendingChecks || {})[0];
+      if (k) { const [cid, mod] = k.split(':'); openPlayer(cid, +mod); }
+      break;
+    }
     case 'save-profile': saveProfile(); break;
     case 'gdpr-export': exportMyData(); break;
     case 'gdpr-delete': deleteMyAccount(); break;

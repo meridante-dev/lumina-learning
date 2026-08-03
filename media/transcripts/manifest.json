@@ -1,0 +1,182 @@
+{
+ "generatedAt": 1785749896958,
+ "modules": [
+  {
+   "course": "alignment-journey",
+   "mod": 0,
+   "vimeoId": "1060039319",
+   "title": "Warm Welcome",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 1,
+   "vimeoId": "1057945306",
+   "title": "Above the Line · Intro",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 2,
+   "vimeoId": "1057946039",
+   "title": "Above the Line · Simple & Powerful Thinking",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 3,
+   "vimeoId": "1057946404",
+   "title": "Above the Line · Deep Dive",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 4,
+   "vimeoId": "1057946740",
+   "title": "Above the Line · Summary",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 5,
+   "vimeoId": "1057992514",
+   "title": "No Failure, Only Feedback · Intro",
+   "duration": 68,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 6,
+   "vimeoId": "1057993253",
+   "title": "No Failure, Only Feedback · Animation",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 7,
+   "vimeoId": "1057993947",
+   "title": "No Failure, Only Feedback · Summary",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 8,
+   "vimeoId": "1058001287",
+   "title": "ESIP · Introduction",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 9,
+   "vimeoId": "1058014143",
+   "title": "Goal Setting · Intro",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 10,
+   "vimeoId": "1058013428",
+   "title": "Goal Setting · Animation",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 11,
+   "vimeoId": "1058013161",
+   "title": "Goal Setting · 90-Day Goals",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 12,
+   "vimeoId": "1058013794",
+   "title": "Goal Setting · Top 5 Goals",
+   "duration": null,
+   "status": "already",
+   "language": "en"
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 13,
+   "vimeoId": "1058014738",
+   "title": "Goal Setting · Summary",
+   "duration": null,
+   "status": "done",
+   "language": "en",
+   "segments": 17
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 14,
+   "vimeoId": "1058001585",
+   "title": "Beyond Fear · Intro",
+   "duration": null,
+   "status": "done",
+   "language": "en",
+   "segments": 17
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 15,
+   "vimeoId": "1058002386",
+   "title": "Beyond Fear · Animation",
+   "duration": null,
+   "status": "done",
+   "language": "en",
+   "segments": 49
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 16,
+   "vimeoId": "1058003540",
+   "title": "Beyond Fear · Unpack & Summary",
+   "duration": null,
+   "status": "done",
+   "language": "en",
+   "segments": 150
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 17,
+   "vimeoId": "1058016139",
+   "title": "Body, Soul & Spirit · Intro",
+   "duration": null,
+   "status": "done",
+   "language": "en",
+   "segments": 15
+  },
+  {
+   "course": "alignment-journey",
+   "mod": 18,
+   "vimeoId": "1058015323",
+   "title": "Body, Soul & Spirit · Deep Dive",
+   "duration": null,
+   "status": "done",
+   "language": "en",
+   "segments": 111
+  }
+ ]
+}

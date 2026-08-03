@@ -1,0 +1,1279 @@
+{
+ "course": "land-team-journey",
+ "modules": {
+  "0": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Taking responsibility",
+      "Asking questions",
+      "Blaming others, making excuses, being defensive",
+      "Seeking feedback"
+     ],
+     "q": "What characterizes being 'below the line'?",
+     "why": "Below the line is characterized by blaming others, making excuses, and being defensive."
+    },
+    "pt": {
+     "opts": [
+      "Assumir responsabilidade",
+      "Fazer perguntas",
+      "Culpar os outros, arranjar desculpas, ter postura defensiva",
+      "Procurar feedback"
+     ],
+     "q": "O que caracteriza estar 'abaixo da linha'?",
+     "why": "Abaixo da linha é caracterizado por culpar os outros, arranjar desculpas e ter postura defensiva."
+    },
+    "t0": 51,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511449083,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Asking what can be learned, helping, and taking responsibility",
+      "Blaming others, making excuses, and being defensive",
+      "Only seeking feedback",
+      "Only solving problems"
+     ],
+     "q": "What is the primary focus of being 'above the line'?",
+     "why": "Above the line focuses on asking what can be learned, helping, and taking responsibility."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar o que se pode aprender, ajudar e assumir responsabilidade",
+      "Culpar os outros, arranjar desculpas e ter postura defensiva",
+      "Procurar apenas feedback",
+      "Apenas resolver problemas"
+     ],
+     "q": "Qual é o foco principal de estar 'acima da linha'?",
+     "why": "Acima da linha foca em perguntar o que se pode aprender, ajudar e assumir responsabilidade."
+    },
+    "t0": 104,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511449083,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Blame someone else",
+      "Make excuses",
+      "Ask what you can learn from the situation and how you can help",
+      "Do nothing"
+     ],
+     "q": "When faced with a problem, what should you do to stay 'above the line'?",
+     "why": "To stay above the line, you should ask what you can learn from the situation and how you can help."
+    },
+    "pt": {
+     "opts": [
+      "Culpar outra pessoa",
+      "Arranjar desculpas",
+      "Perguntar o que pode aprender da situação e como pode ajudar",
+      "Não fazer nada"
+     ],
+     "q": "Quando enfrenta um problema, o que deve fazer para se manter 'acima da linha'?",
+     "why": "Para se manter acima da linha, deve perguntar o que pode aprender da situação e como pode ajudar."
+    },
+    "t0": 104,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511449083,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to blame someone else",
+      "Recognize where you are and choose to move above the line",
+      "Do nothing and hope the situation resolves itself",
+      "Make excuses"
+     ],
+     "q": "What is the first step to take when you realize you are 'below the line'?",
+     "why": "The first step is to recognize where you are and choose to move above the line."
+    },
+    "pt": {
+     "opts": [
+      "Tentar culpar outra pessoa",
+      "Reconhecer onde está e escolher mover-se para acima da linha",
+      "Não fazer nada e esperar que a situação se resolva",
+      "Arranjar desculpas"
+     ],
+     "q": "Qual é o primeiro passo a tomar quando se apercebe que está 'abaixo da linha'?",
+     "why": "O primeiro passo é reconhecer onde está e escolher mover-se para acima da linha."
+    },
+    "t0": 182,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511449083,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them it's their fault and they should fix it",
+      "Ask how you can help resolve the issue together",
+      "Ignore the situation and hope it goes away",
+      "Complain to someone else about the mistake"
+     ],
+     "q": "A colleague makes a mistake that affects your work. How should you respond to stay 'above the line'?",
+     "why": "To stay above the line, you should ask how you can help resolve the issue together."
+    },
+    "pt": {
+     "opts": [
+      "Dizer-lhe que é culpa dele e que deve consertar",
+      "Perguntar como pode ajudar a resolver a questão juntos",
+      "Ignorar a situação e esperar que desapareça",
+      "Queixar-se a outra pessoa sobre o erro"
+     ],
+     "q": "Um colega comete um erro que afeta o seu trabalho. Como deve responder para se manter 'acima da linha'?",
+     "why": "Para se manter acima da linha, deve perguntar como pode ajudar a resolver a questão juntos."
+    },
+    "t0": 157,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511449083,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask them questions to understand their perspective and offer help",
+      "Tell them they are not doing enough and need to improve",
+      "Ignore the situation and focus on your own work",
+      "Complain about them to someone else"
+     ],
+     "q": "You notice a team member is not pulling their weight. What 'above the line' behavior should you exhibit?",
+     "why": "You should ask them questions to understand their perspective and offer help."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar-lhe questões para entender a sua perspectiva e oferecer ajuda",
+      "Dizer-lhe que não está fazendo o suficiente e precisa melhorar",
+      "Ignorar a situação e focar no seu próprio trabalho",
+      "Queixar-se sobre ele a outra pessoa"
+     ],
+     "q": "Nota que um membro da equipe não está fazendo o seu melhor. Que comportamento 'acima da linha' deve exibir?",
+     "why": "Deve perguntar-lhe questões para entender a sua perspectiva e oferecer ajuda."
+    },
+    "t0": 130,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511449083,
+    "verified": true
+   }
+  ],
+  "1": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "There is no feedback, only failure",
+      "There is no success, only learning",
+      "There is no failure, only feedback",
+      "There is no growth, only mistakes"
+     ],
+     "q": "What is the key phrase to remember according to the trainer?",
+     "why": "The trainer emphasizes that there is no failure, only feedback, to encourage a growth mindset."
+    },
+    "pt": {
+     "opts": [
+      "Não há feedback, só fracasso",
+      "Não há sucesso, só aprendizagem",
+      "Não há fracasso, só feedback",
+      "Não há crescimento, só erros"
+     ],
+     "q": "Qual é a frase-chave para lembrar de acordo com o treinador?",
+     "why": "O treinador enfatiza que não há fracasso, só feedback, para encorajar uma mentalidade de crescimento."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511491952,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "They become defensive and deny responsibility",
+      "They ignore the feedback and continue as before",
+      "They say thank you and ask for improvement",
+      "They get angry and argue with the feedback giver"
+     ],
+     "q": "How does the second person in the example react to feedback?",
+     "why": "The second person in the example reacts to feedback by saying thank you and asking for improvement, demonstrating a growth mindset."
+    },
+    "pt": {
+     "opts": [
+      "Eles se tornam defensivos e negam a responsabilidade",
+      "Eles ignoram o feedback e continuam como antes",
+      "Eles dizem obrigado e pedem melhoria",
+      "Eles ficam zangados e discutem com o dador de feedback"
+     ],
+     "q": "Como reage a segunda pessoa no exemplo ao feedback?",
+     "why": "A segunda pessoa no exemplo reage ao feedback dizendo obrigado e pedindo melhoria, demonstrando uma mentalidade de crescimento."
+    },
+    "t0": 131,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511491952,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to hide it and hope no one notices",
+      "Blame someone else for the mistake",
+      "Ask for feedback and try to learn from it",
+      "Get discouraged and give up"
+     ],
+     "q": "What should you do when you make a mistake at work?",
+     "why": "When you make a mistake at work, you should ask for feedback and try to learn from it, rather than trying to hide it or blame someone else."
+    },
+    "pt": {
+     "opts": [
+      "Tentar escondê-lo e esperar que ninguém note",
+      "Culpar alguém mais pelo erro",
+      "Pedir feedback e tentar aprender com ele",
+      "Ficar desanimado e desistir"
+     ],
+     "q": "O que deve fazer quando comete um erro no trabalho?",
+     "why": "Quando comete um erro no trabalho, deve pedir feedback e tentar aprender com ele, em vez de tentar escondê-lo ou culpar alguém mais."
+    },
+    "t0": 104,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511491952,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Arrogance and a know-it-all attitude",
+      "Humility and a willingness to learn",
+      "Competitiveness and a desire to win",
+      "Indifference and a lack of interest"
+     ],
+     "q": "What attitude is required to learn from people who are more advanced than you?",
+     "why": "To learn from people who are more advanced than you, you need to have humility and a willingness to learn, rather than an arrogant or competitive attitude."
+    },
+    "pt": {
+     "opts": [
+      "Arrogância e uma atitude de saber-tudo",
+      "Humildade e uma vontade de aprender",
+      "Competitividade e um desejo de vencer",
+      "Indiferença e uma falta de interesse"
+     ],
+     "q": "Qual atitude é necessária para aprender com pessoas que estão mais avançadas do que você?",
+     "why": "Para aprender com pessoas que estão mais avançadas do que você, você precisa ter humildade e uma vontade de aprender, em vez de uma atitude arrogante ou competitiva."
+    },
+    "t0": 186,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511491952,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "That they are not competent and should be replaced",
+      "That they are not trying hard enough and need to work more",
+      "That mistakes are an opportunity for growth and learning",
+      "That the task is too difficult and should be simplified"
+     ],
+     "q": "A colleague is struggling with a task and has made several mistakes. What can you learn from their experience?",
+     "why": "You can learn from your colleague's experience that mistakes are an opportunity for growth and learning, just like Michael Jordan's story."
+    },
+    "pt": {
+     "opts": [
+      "Que ele não é competente e deve ser substituído",
+      "Que ele não está tentando o suficiente e precisa trabalhar mais",
+      "Que os erros são uma oportunidade para crescimento e aprendizado",
+      "Que a tarefa é muito difícil e deve ser simplificada"
+     ],
+     "q": "Um colega está tendo dificuldades com uma tarefa e cometeu vários erros. O que você pode aprender com a experiência dele?",
+     "why": "Você pode aprender com a experiência do seu colega que os erros são uma oportunidade para crescimento e aprendizado, assim como a história de Michael Jordan."
+    },
+    "t0": 53,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511491952,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Argue with the feedback giver and try to convince them that they are wrong",
+      "Ask questions and try to understand the feedback",
+      "Ignore the feedback and continue as before",
+      "Get defensive and deny responsibility"
+     ],
+     "q": "You are given feedback on your performance and you don't agree with it. What should you do?",
+     "why": "When given feedback that you don't agree with, you should ask questions and try to understand the feedback, rather than arguing or getting defensive."
+    },
+    "pt": {
+     "opts": [
+      "Discutir com o dador de feedback e tentar convencê-lo de que ele está errado",
+      "Fazer perguntas e tentar entender o feedback",
+      "Ignorar o feedback e continuar como antes",
+      "Ficar defensivo e negar a responsabilidade"
+     ],
+     "q": "Você recebe feedback sobre o seu desempenho e não concorda com ele. O que deve fazer?",
+     "why": "Quando recebe feedback que você não concorda, deve fazer perguntas e tentar entender o feedback, em vez de discutir ou ficar defensivo."
+    },
+    "t0": 159,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511491952,
+    "verified": true
+   }
+  ],
+  "2": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Because it is more efficient",
+      "Because it builds trust",
+      "Because it is mandatory",
+      "Because it is traditional"
+     ],
+     "q": "Why do most people choose a well-organized workspace over a disorganized one?",
+     "why": "Attention to detail builds trust."
+    },
+    "pt": {
+     "opts": [
+      "Porque é mais eficiente",
+      "Porque constrói confiança",
+      "Porque é obrigatório",
+      "Porque é tradicional"
+     ],
+     "q": "Por que a maioria das pessoas escolhe um local de trabalho organizado em vez de um desorganizado?",
+     "why": "A atenção ao detalhe constrói confiança."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511517126,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "To be perfect",
+      "To impress others",
+      "To show respect",
+      "To care about the work"
+     ],
+     "q": "What is the main goal of attention to detail?",
+     "why": "Attention to detail is about caring about the work."
+    },
+    "pt": {
+     "opts": [
+      "Ser perfeito",
+      "Impressinar os outros",
+      "Mostrar respeito",
+      "Importar-se com o trabalho"
+     ],
+     "q": "Qual é o principal objetivo da atenção ao detalhe?",
+     "why": "A atenção ao detalhe é sobre importar-se com o trabalho."
+    },
+    "t0": 80,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511517126,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Ignore it",
+      "Fix it immediately",
+      "Report it to your supervisor",
+      "Wait for someone else to fix it"
+     ],
+     "q": "What should you do when you notice a small problem in your work?",
+     "why": "Noticing small problems before they become big ones is a key aspect of attention to detail."
+    },
+    "pt": {
+     "opts": [
+      "Ignorá-lo",
+      "Consertá-lo imediatamente",
+      "Relatar ao seu supervisor",
+      "Esperar que alguém else o conserte"
+     ],
+     "q": "O que deve fazer quando nota um pequeno problema no seu trabalho?",
+     "why": "Notar pequenos problemas antes de se tornarem grandes problemas é um aspecto chave da atenção ao detalhe."
+    },
+    "t0": 135,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511517126,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Take a break",
+      "Ask for feedback",
+      "Pause for a minute to review your work",
+      "Move on to the next task"
+     ],
+     "q": "What should you do before finishing a task to ensure attention to detail?",
+     "why": "Pausing to review your work helps ensure that you have not missed any important details."
+    },
+    "pt": {
+     "opts": [
+      "Fazer uma pausa",
+      "Pedir feedback",
+      "Parar por um minuto para revisar o seu trabalho",
+      "Passar para a próxima tarefa"
+     ],
+     "q": "O que deve fazer antes de terminar uma tarefa para garantir a atenção ao detalhe?",
+     "why": "Parar para revisar o seu trabalho ajuda a garantir que não perdeu nenhum detalhe importante."
+    },
+    "t0": 162,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511517126,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "John",
+      "Mike",
+      "Both are equally professional",
+      "Neither is professional"
+     ],
+     "q": "Two employees, John and Mike, complete a painting task. John leaves the area messy, while Mike cleans up and organizes the space. Who demonstrates more professionalism?",
+     "why": "Mike's attention to detail and cleanliness demonstrate a higher level of professionalism."
+    },
+    "pt": {
+     "opts": [
+      "João",
+      "Miguel",
+      "Ambos são igualmente profissionais",
+      "Nenhum é profissional"
+     ],
+     "q": "Dois funcionários, João e Miguel, completam uma tarefa de pintura. João deixa a área desarrumada, enquanto Miguel limpa e organiza o espaço. Quem demonstra mais profissionalismo?",
+     "why": "A atenção ao detalhe e a limpeza de Miguel demonstram um nível mais alto de profissionalismo."
+    },
+    "t0": 110,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511517126,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "It has no impact",
+      "It makes them appear more approachable",
+      "It makes them appear less competent",
+      "It makes them appear more experienced"
+     ],
+     "q": "You receive an email from a colleague with several spelling errors and missing information. How does this reflect on the sender's professionalism?",
+     "why": "The email's lack of attention to detail makes the sender appear less competent and less professional."
+    },
+    "pt": {
+     "opts": [
+      "Não tem impacto",
+      "Faz com que ele pareça mais acessível",
+      "Faz com que ele pareça menos competente",
+      "Faz com que ele pareça mais experiente"
+     ],
+     "q": "Recebe um e-mail de um colega com vários erros ortográficos e informações em falta. Como isso reflete o profissionalismo do remetente?",
+     "why": "A falta de atenção ao detalhe no e-mail faz com que o remetente pareça menos competente e menos profissional."
+    },
+    "t0": 190,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511517126,
+    "corrected": true
+   }
+  ],
+  "3": [
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Open the cabinets and find the pieces",
+      "Put the fire gun on the hose",
+      "Set the adapters and outlets",
+      "Make sure the throttle is on"
+     ],
+     "q": "What is the first step when using the fire gun?",
+     "why": "The first step is to open the cabinets and find the necessary pieces, such as the small adapter and fire gun."
+    },
+    "pt": {
+     "opts": [
+      "Abrir os armários e encontrar as peças",
+      "Colocar a espingarda de incêndio na mangueira",
+      "Configurar os adaptadores e tomadas",
+      "Certificar-se de que o acelerador está ligado"
+     ],
+     "q": "Qual é o primeiro passo ao usar a espingarda de incêndio?",
+     "why": "O primeiro passo é abrir os armários e encontrar as peças necessárias, como o adaptador pequeno e a espingarda de incêndio."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511545235,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "To turn on the throttle",
+      "To fix the throttle when it's too high",
+      "To communicate with the backside",
+      "To set the adapters and outlets"
+     ],
+     "q": "What is the purpose of the orange button?",
+     "why": "The orange button is used to fix the throttle when it's too high, by pushing it to the right to lower it."
+    },
+    "pt": {
+     "opts": [
+      "Ligar o acelerador",
+      "Corrigir o acelerador quando está muito alto",
+      "Comunicar com a parte de trás",
+      "Configurar os adaptadores e tomadas"
+     ],
+     "q": "Qual é o propósito do botão laranja?",
+     "why": "O botão laranja é usado para corrigir o acelerador quando está muito alto, empurrando-o para a direita para baixá-lo."
+    },
+    "t0": 53,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511545235,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Put the fire gun on the hose",
+      "Make sure the throttle is on",
+      "Check if the seals are full",
+      "Open the cabinets and find the pieces"
+     ],
+     "q": "What should you do after setting the adapters and outlets?",
+     "why": "After setting the adapters and outlets, you should make sure the seals are full and ready for use."
+    },
+    "pt": {
+     "opts": [
+      "Colocar a espingarda de incêndio na mangueira",
+      "Certificar-se de que o acelerador está ligado",
+      "Verificar se os selos estão cheios",
+      "Abrir os armários e encontrar as peças"
+     ],
+     "q": "O que deve fazer após configurar os adaptadores e tomadas?",
+     "why": "Após configurar os adaptadores e tomadas, você deve verificar se os selos estão cheios e prontos para uso."
+    },
+    "t0": 27,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511545235,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Their experience in driving a caterpillar",
+      "Their license to operate the vehicle",
+      "Their knowledge of the fire area",
+      "Their ability to communicate with the team"
+     ],
+     "q": "What should you consider when asking someone to operate a vehicle in a fire?",
+     "why": "You should consider their license to operate the vehicle, as it ensures they have the necessary training and expertise."
+    },
+    "pt": {
+     "opts": [
+      "Sua experiência em dirigir um caterpillar",
+      "Sua licença para operar o veículo",
+      "Seu conhecimento da área do incêndio",
+      "Sua capacidade de se comunicar com a equipe"
+     ],
+     "q": "O que deve considerar ao pedir a alguém para operar um veículo em um incêndio?",
+     "why": "Você deve considerar sua licença para operar o veículo, pois garante que eles tenham o treinamento e a expertise necessários."
+    },
+    "t0": 112,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511545235,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Ask them to take a break and rest",
+      "Ask them to help with the fire gun",
+      "Ask them to operate the caterpillar to help put out the fire",
+      "Ask them to communicate with the team using the CB phone"
+     ],
+     "q": "You are working with a team to put out a fire and one of the team members is a soldier with experience in operating heavy machinery. What should you do?",
+     "why": "You should ask them to operate the caterpillar to help put out the fire, as their experience and training can be valuable in this situation."
+    },
+    "pt": {
+     "opts": [
+      "Pedir-lhes que façam uma pausa e descansem",
+      "Pedir-lhes que ajudem com a espingarda de incêndio",
+      "Pedir-lhes que operem o caterpillar para ajudar a apagar o incêndio",
+      "Pedir-lhes que se comuniquem com a equipe usando o telefone CB"
+     ],
+     "q": "Você está trabalhando com uma equipe para apagar um incêndio e um dos membros da equipe é um soldado com experiência em operar máquinas pesadas. O que deve fazer?",
+     "why": "Você deve pedir-lhes que operem o caterpillar para ajudar a apagar o incêndio, pois sua experiência e treinamento podem ser valiosos nesta situação."
+    },
+    "t0": 137,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511545235,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Take the microphone away from them",
+      "Tell them to be more careful with the microphone",
+      "Ignore the situation and continue working",
+      "Ask them to stop using the microphone"
+     ],
+     "q": "You are working with a team to put out a fire and one of the team members is using a microphone to communicate with the team. What should you do if you see them being careless with the microphone?",
+     "why": "You should tell them to be more careful with the microphone, as it is an important tool for communication and can be damaged if not handled properly."
+    },
+    "pt": {
+     "opts": [
+      "Tirar o microfone deles",
+      "Dizer-lhes para serem mais cuidadosos com o microfone",
+      "Ignorar a situação e continuar trabalhando",
+      "Pedir-lhes que parem de usar o microfone"
+     ],
+     "q": "Você está trabalhando com uma equipe para apagar um incêndio e um dos membros da equipe está usando um microfone para se comunicar com a equipe. O que deve fazer se vê-los sendo descuidados com o microfone?",
+     "why": "Você deve dizer-lhes para serem mais cuidadosos com o microfone, pois é uma ferramenta importante para a comunicação e pode ser danificada se não for manuseada corretamente."
+    },
+    "t0": 189,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511545235,
+    "corrected": true
+   }
+  ],
+  "4": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "They already know everything",
+      "They are always asking questions and seeking to learn",
+      "They only learn from formal education",
+      "They never make mistakes"
+     ],
+     "q": "What is a key characteristic of someone who is an 'aprendiz para a vida', or a lifelong learner?",
+     "why": "Lifelong learners maintain curiosity and seek to learn every day."
+    },
+    "pt": {
+     "opts": [
+      "Eles já sabem tudo",
+      "Eles estão sempre a fazer perguntas e a procurar aprender",
+      "Eles só aprendem através da educação formal",
+      "Eles nunca cometem erros"
+     ],
+     "q": "Qual é uma característica-chave de alguém que é um 'aprendiz para a vida', ou um aprendiz de toda a vida?",
+     "why": "Os aprendizes de toda a vida mantêm a curiosidade e procuram aprender todos os dias."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511572193,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "It's a sign of ignorance",
+      "It's a sign of weakness",
+      "It's a sign of wisdom",
+      "It's a sign of laziness"
+     ],
+     "q": "What does it mean when someone asks questions, according to the lesson?",
+     "why": "Asking questions is a sign of wisdom, not weakness."
+    },
+    "pt": {
+     "opts": [
+      "É um sinal de ignorância",
+      "É um sinal de fraqueza",
+      "É um sinal de sabedoria",
+      "É um sinal de preguiça"
+     ],
+     "q": "O que significa quando alguém faz perguntas, de acordo com a lição?",
+     "why": "Fazer perguntas é um sinal de sabedoria, não de fraqueza."
+    },
+    "t0": 54,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511572193,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Reflect on what you learned and how you can improve",
+      "Only focus on completing tasks",
+      "Ignore any mistakes made during the day",
+      "Wait for others to tell you what to do"
+     ],
+     "q": "What should you do at the end of each workday to continue growing and learning?",
+     "why": "Reflecting on what you learned and how you can improve helps you grow and learn."
+    },
+    "pt": {
+     "opts": [
+      "Refletir sobre o que aprendeu e como pode melhorar",
+      "Apenas se concentrar em completar tarefas",
+      "Ignorar qualquer erro cometido durante o dia",
+      "Esperar que os outros lhe digam o que fazer"
+     ],
+     "q": "O que deve fazer no final de cada dia de trabalho para continuar a crescer e a aprender?",
+     "why": "Refletir sobre o que aprendeu e como pode melhorar ajuda-o a crescer e a aprender."
+    },
+    "t0": 80,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511572193,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Only use AI for automated tasks",
+      "Ask AI for feedback and suggestions on how to improve",
+      "Never use AI for learning",
+      "Use AI only for simple tasks"
+     ],
+     "q": "How can you use AI to improve your work and learning?",
+     "why": "Asking AI for feedback and suggestions can help you improve your work and learning."
+    },
+    "pt": {
+     "opts": [
+      "Apenas use a IA para tarefas automatizadas",
+      "Pergunte à IA por feedback e sugestões sobre como melhorar",
+      "Nunca use a IA para aprender",
+      "Use a IA apenas para tarefas simples"
+     ],
+     "q": "Como pode usar a IA para melhorar o seu trabalho e aprendizado?",
+     "why": "Perguntar à IA por feedback e sugestões pode ajudá-lo a melhorar o seu trabalho e aprendizado."
+    },
+    "t0": 131,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511572193,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Give up and move on to something else",
+      "Try to figure it out on your own without asking for help",
+      "Ask a colleague or leader for guidance and feedback",
+      "Wait for someone to come and fix it for you"
+     ],
+     "q": "You're working on a project and encounter an obstacle. What should you do?",
+     "why": "Asking for help and guidance can help you learn and grow from the experience."
+    },
+    "pt": {
+     "opts": [
+      "Desiste e passa para algo mais",
+      "Tenta resolver sozinho sem pedir ajuda",
+      "Pergunta a um colega ou líder por orientação e feedback",
+      "Espera que alguém venha e o resolva por si"
+     ],
+     "q": "Está a trabalhar num projeto e encontra um obstáculo. O que deve fazer?",
+     "why": "Pedir ajuda e orientação pode ajudá-lo a aprender e a crescer com a experiência."
+    },
+    "t0": 105,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511572193,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Learn from the mistake and try to improve for next time",
+      "Ignore the mistake and move on to something else",
+      "Blame someone else for the mistake",
+      "Give up on the task altogether"
+     ],
+     "q": "You've made a mistake on a task and are not sure how to improve. What should you do?",
+     "why": "Learning from mistakes and trying to improve is a key part of growing and learning."
+    },
+    "pt": {
+     "opts": [
+      "Aprenda com o erro e tente melhorar para a próxima vez",
+      "Ignore o erro e passe para algo mais",
+      "Culpe alguém mais pelo erro",
+      "Desista da tarefa por completo"
+     ],
+     "q": "Cometeu um erro numa tarefa e não sabe como melhorar. O que deve fazer?",
+     "why": "Aprender com os erros e tentar melhorar é uma parte fundamental do crescimento e do aprendizado."
+    },
+    "t0": 158,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511572193,
+    "corrected": true
+   }
+  ],
+  "5": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Time management",
+      "Communication",
+      "Leadership",
+      "Problem-solving"
+     ],
+     "q": "What is one of the most valuable skills that a team can learn?",
+     "why": "Communication is a crucial skill that helps teams work effectively together."
+    },
+    "pt": {
+     "opts": [
+      "Gestão do tempo",
+      "Comunicação",
+      "Liderança",
+      "Resolução de problemas"
+     ],
+     "q": "Qual é uma das competências mais valiosas que uma equipa pode aprender?",
+     "why": "A comunicação é uma competência crucial que ajuda as equipas a trabalhar eficazmente em conjunto."
+    },
+    "t0": 28,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511597416,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Not asking enough questions",
+      "Presuming understanding",
+      "Not listening actively",
+      "Not providing feedback"
+     ],
+     "q": "What is a common mistake that can lead to problems in team communication?",
+     "why": "Presuming understanding can lead to misunderstandings and errors."
+    },
+    "pt": {
+     "opts": [
+      "Não fazer perguntas suficientes",
+      "Pressupor compreensão",
+      "Não ouvir ativamente",
+      "Não fornecer feedback"
+     ],
+     "q": "Qual é um erro comum que pode levar a problemas na comunicação em equipa?",
+     "why": "Pressupor compreensão pode levar a mal-entendidos e erros."
+    },
+    "t0": 56,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511597416,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Start working on the task immediately",
+      "Ask clarifying questions",
+      "Wait for further instructions",
+      "Assume you understand"
+     ],
+     "q": "What should you do when you're unsure about the meaning of a task or instruction?",
+     "why": "Asking clarifying questions helps ensure understanding and prevents errors."
+    },
+    "pt": {
+     "opts": [
+      "Começar a trabalhar na tarefa imediatamente",
+      "Fazer perguntas esclarecedoras",
+      "Esperar por instruções adicionais",
+      "Pressupor que entende"
+     ],
+     "q": "O que deve fazer quando não tem certeza sobre o significado de uma tarefa ou instrução?",
+     "why": "Fazer perguntas esclarecedoras ajuda a garantir a compreensão e a prevenir erros."
+    },
+    "t0": 82,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511597416,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "While doing something else",
+      "By interrupting them",
+      "By responding immediately",
+      "By giving them your full attention"
+     ],
+     "q": "How should you listen to someone who is speaking to you?",
+     "why": "Giving someone your full attention shows respect and helps you understand their message."
+    },
+    "pt": {
+     "opts": [
+      "Enquanto faz outra coisa",
+      "Interrompendo-o",
+      "Respondendo imediatamente",
+      "Dando-lhe toda a sua atenção"
+     ],
+     "q": "Como deve ouvir alguém que está a falar consigo?",
+     "why": "Dar a alguém toda a sua atenção mostra respeito e ajuda a entender a mensagem."
+    },
+    "t0": 107,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511597416,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Send a message to update them on your progress",
+      "Wait until the task is complete before reporting back",
+      "Ask someone else to update the team",
+      "Don't communicate with the team until they ask"
+     ],
+     "q": "You're working on a task that's taking longer than expected. What should you do to keep your team informed?",
+     "why": "Sending a message to update the team on your progress helps keep them informed and shows that you're responsible."
+    },
+    "pt": {
+     "opts": [
+      "Enviar uma mensagem para atualizá-los sobre o seu progresso",
+      "Esperar até que a tarefa esteja completa antes de relatar",
+      "Pedir a alguém para atualizar a equipa",
+      "Não comunicar com a equipa até que eles perguntem"
+     ],
+     "q": "Está a trabalhar numa tarefa que está a demorar mais do que o esperado. O que deve fazer para manter a equipa informada?",
+     "why": "Enviar uma mensagem para atualizar a equipa sobre o seu progresso ajuda a mantê-los informados e mostra que é responsável."
+    },
+    "t0": 137,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511597416,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to solve it on your own without telling anyone",
+      "Inform your team and ask for help",
+      "Wait until the problem becomes more serious before reporting it",
+      "Ignore the problem and hope it goes away"
+     ],
+     "q": "You've encountered an issue while working on a task. What should you do to address the problem?",
+     "why": "Informing your team and asking for help allows them to assist you in resolving the issue and prevents it from becoming more serious."
+    },
+    "pt": {
+     "opts": [
+      "Tentar resolver sozinho sem dizer a ninguém",
+      "Informar a equipa e pedir ajuda",
+      "Esperar até que o problema se torne mais sério antes de relatar",
+      "Ignorar o problema e esperar que desapareça"
+     ],
+     "q": "Encontrou um problema enquanto trabalhava numa tarefa. O que deve fazer para resolver o problema?",
+     "why": "Informar a equipa e pedir ajuda permite que eles o ajudem a resolver o problema e impede que ele se torne mais sério."
+    },
+    "t0": 163,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511597416,
+    "corrected": true
+   }
+  ],
+  "6": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "They know everything",
+      "They know how to learn",
+      "They are born talented",
+      "They work alone"
+     ],
+     "q": "What is a key characteristic of the best people in the world?",
+     "why": "The best people in the world know how to learn, not necessarily knowing everything."
+    },
+    "pt": {
+     "opts": [
+      "Elas sabem tudo",
+      "Elas sabem como aprender",
+      "Elas nascem talentosas",
+      "Elas trabalham sozinhas"
+     ],
+     "q": "Qual é uma característica chave das melhores pessoas do mundo?",
+     "why": "As melhores pessoas do mundo sabem como aprender, não necessariamente sabendo tudo."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511622503,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Creating something new from scratch",
+      "Finding the worst example and learning from it",
+      "Finding the best example and learning from it",
+      "Asking a colleague for their opinion"
+     ],
+     "q": "What does making a benchmark mean?",
+     "why": "Making a benchmark means finding the best example and learning from it."
+    },
+    "pt": {
+     "opts": [
+      "Criar algo novo do zero",
+      "Encontrar o pior exemplo e aprender com ele",
+      "Encontrar o melhor exemplo e aprender com ele",
+      "Perguntar a um colega a sua opinião"
+     ],
+     "q": "O que significa fazer um benchmark?",
+     "why": "Fazer um benchmark significa encontrar o melhor exemplo e aprender com ele."
+    },
+    "t0": 53,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511622503,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Ask a colleague for their opinion",
+      "Ask AI for help",
+      "Start working immediately",
+      "Check the company manual"
+     ],
+     "q": "What should you do before sending an email or creating a document?",
+     "why": "You should ask AI for help before sending an email or creating a document to see if it can be improved."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar a um colega a sua opinião",
+      "Perguntar à IA para ajudar",
+      "Começar a trabalhar imediatamente",
+      "Verificar o manual da empresa"
+     ],
+     "q": "O que deve fazer antes de enviar um e-mail ou criar um documento?",
+     "why": "Deve perguntar à IA para ajudar antes de enviar um e-mail ou criar um documento para ver se pode ser melhorado."
+    },
+    "t0": 78,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511622503,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "Refusing to ask for help",
+      "Asking for help only when necessary",
+      "Never asking for help",
+      "Asking for help often"
+     ],
+     "q": "What is a sign of wisdom in the workplace?",
+     "why": "Asking for help often is a sign of wisdom in the workplace, as it shows a willingness to learn and improve."
+    },
+    "pt": {
+     "opts": [
+      "Recusar-se a pedir ajuda",
+      "Pedir ajuda apenas quando necessário",
+      "Nunca pedir ajuda",
+      "Pedir ajuda frequentemente"
+     ],
+     "q": "O que é um sinal de sabedoria no local de trabalho?",
+     "why": "Pedir ajuda frequentemente é um sinal de sabedoria no local de trabalho, pois mostra uma vontade de aprender e melhorar."
+    },
+    "t0": 105,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511622503,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "The first employee",
+      "The second employee",
+      "Both are equally productive",
+      "It depends on the quality of the table"
+     ],
+     "q": "Two employees are building the same table. One starts immediately and works for 4 hours, while the other spends 5 minutes asking for advice from a skilled carpenter and works for 3 hours. Who is more productive?",
+     "why": "The second employee is more productive because they spent time learning from a skilled carpenter and were able to work more efficiently."
+    },
+    "pt": {
+     "opts": [
+      "O primeiro funcionário",
+      "O segundo funcionário",
+      "Ambos são igualmente produtivos",
+      "Depende da qualidade da mesa"
+     ],
+     "q": "Dois funcionários estão a construir a mesma mesa. Um começa imediatamente e trabalha durante 4 horas, enquanto o outro passa 5 minutos a pedir conselhos a um carpinteiro experiente e trabalha durante 3 horas. Quem é mais produtivo?",
+     "why": "O segundo funcionário é mais produtivo porque passou tempo a aprender com um carpinteiro experiente e foi capaz de trabalhar de forma mais eficiente."
+    },
+    "t0": 131,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511622503,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask someone who gives excellent presentations to review it",
+      "Spend more time researching the topic",
+      "Start practicing your delivery immediately",
+      "Ask a colleague for their opinion"
+     ],
+     "q": "You are preparing a presentation and want to improve it. What should you do?",
+     "why": "You should ask someone who gives excellent presentations to review it, as they can provide valuable feedback and help you improve."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar a alguém que faz apresentações excelentes para rever",
+      "Passar mais tempo a pesquisar o tema",
+      "Começar a praticar a apresentação imediatamente",
+      "Perguntar a um colega a sua opinião"
+     ],
+     "q": "Está a preparar uma apresentação e quer melhorá-la. O que deve fazer?",
+     "why": "Deve perguntar a alguém que faz apresentações excelentes para rever, pois podem fornecer feedback valioso e ajudá-lo a melhorar."
+    },
+    "t0": 158,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785511622503,
+    "corrected": true
+   }
+  ]
+ }
+}

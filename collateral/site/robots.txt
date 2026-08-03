@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /v2/
+
+Sitemap: https://meridante-dev.github.io/academy-platforms/sitemap.xml

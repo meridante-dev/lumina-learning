@@ -1,0 +1,427 @@
+{
+ "language": "pt",
+ "segments": [
+  {
+   "t0": 0.0,
+   "t1": 5.28,
+   "text": "Imagine isto. O seu chefe diz, por favor, mudem as cadeiras de lugar."
+  },
+  {
+   "t0": 5.84,
+   "t1": 10.94,
+   "text": "Uma pessoa move cinco cadeiras, outra pessoa move todas as cadeiras da sala,"
+  },
+  {
+   "t0": 11.38,
+   "t1": 15.28,
+   "text": "outra pessoa não move nenhuma porque pensou que era para amanhã."
+  },
+  {
+   "t0": 15.78,
+   "t1": 16.98,
+   "text": "Quem cometeu o erro?"
+  },
+  {
+   "t0": 17.42,
+   "t1": 18.36,
+   "text": "Talvez ninguém."
+  },
+  {
+   "t0": 18.82,
+   "t1": 21.1,
+   "text": "Talvez o problema não tenha sido o esforço,"
+  },
+  {
+   "t0": 21.52,
+   "t1": 24.16,
+   "text": "talvez o problema tenha sido a comunicação."
+  },
+  {
+   "t0": 24.72,
+   "t1": 27.5,
+   "text": "As grandes equipas não trabalham apenas com a Fink."
+  },
+  {
+   "t0": 27.9,
+   "t1": 30.56,
+   "text": "As grandes equipas comunican com clareza."
+  },
+  {
+   "t0": 31.06,
+   "t1": 35.8,
+   "text": "A comunicação é uma das competências mais valiosas que alguma vez irá aprender."
+  },
+  {
+   "t0": 36.24,
+   "t1": 40.1,
+   "text": "Poupa tempo, previne erros, constrói confiança"
+  },
+  {
+   "t0": 40.48,
+   "t1": 43.38,
+   "text": "e ajuda as pessoas a gostarem de trabalhar em conjunto."
+  },
+  {
+   "t0": 43.84,
+   "t1": 45.98,
+   "text": "O maior erro de comunicação é este."
+  },
+  {
+   "t0": 46.28,
+   "t1": 47.38,
+   "text": "Nós presumimos."
+  },
+  {
+   "t0": 47.78,
+   "t1": 49.28,
+   "text": "Presumimos que percebemos."
+  },
+  {
+   "t0": 49.58,
+   "t1": 51.68,
+   "text": "Presumimos que a outra pessoa percebeu."
+  },
+  {
+   "t0": 52.16,
+   "t1": 55.06,
+   "text": "Presumimos que toda a gente está a pensar a mesma coisa."
+  },
+  {
+   "t0": 55.58,
+   "t1": 58.38,
+   "text": "A maioria dos problemas começa com suposições."
+  },
+  {
+   "t0": 58.76,
+   "t1": 60.02,
+   "text": "A solução é simples."
+  },
+  {
+   "t0": 60.26,
+   "t1": 62.16,
+   "text": "Faça perguntas de clarificação."
+  },
+  {
+   "t0": 62.52,
+   "t1": 66.02,
+   "text": "Por exemplo, só quero confirmar se percebi bem."
+  },
+  {
+   "t0": 66.7,
+   "t1": 68.7,
+   "text": "Pode mostrar-me o que quer dizer?"
+  },
+  {
+   "t0": 69.54,
+   "t1": 71.74,
+   "text": "Como é que se define sucesso aqui?"
+  },
+  {
+   "t0": 72.4,
+   "t1": 74.4,
+   "text": "Para quando precisa disto pronto?"
+  },
+  {
+   "t0": 75.08,
+   "t1": 76.84,
+   "text": "É esta maior prioridade?"
+  },
+  {
+   "t0": 77.48,
+   "t1": 81.58,
+   "text": "Estes não são sinais de fraqueza, são sinais de profissionalismo."
+  },
+  {
+   "t0": 82.18,
+   "t1": 83.92,
+   "text": "Deixe-me dar-lhe outro exemplo."
+  },
+  {
+   "t0": 84.18,
+   "t1": 85.24,
+   "text": "O seu chefe diz."
+  },
+  {
+   "t0": 85.64,
+   "t1": 87.64,
+   "text": "Por favor, limpe a cozinha."
+  },
+  {
+   "t0": 88.18,
+   "t1": 89.68,
+   "text": "Uma pessoa lava a loiza."
+  },
+  {
+   "t0": 89.88,
+   "t1": 90.98,
+   "text": "Outra limpa o chão."
+  },
+  {
+   "t0": 91.28,
+   "t1": 92.88,
+   "text": "Outra limpa as bancadas."
+  },
+  {
+   "t0": 93.22,
+   "t1": 94.62,
+   "text": "Outras vazia o lixo."
+  },
+  {
+   "t0": 94.98,
+   "t1": 96.72,
+   "text": "Todos trabalharam com afinco."
+  },
+  {
+   "t0": 97.08,
+   "t1": 101.82,
+   "text": "Mas todos tinham uma ideia diferente do que significava limpar a cozinha."
+  },
+  {
+   "t0": 102.32,
+   "t1": 106.76,
+   "text": "Uma conversa de dois minutos podia ter poupado 30 minutos de confusão."
+  },
+  {
+   "t0": 107.26,
+   "t1": 110.6,
+   "text": "Uma boa comunicação é mais rápida do que corrigir erros."
+  },
+  {
+   "t0": 111.3,
+   "t1": 113.0,
+   "text": "Agora vamos falar sobre escutar."
+  },
+  {
+   "t0": 113.46,
+   "t1": 116.12,
+   "text": "Muitas pessoas escutam para poderem responder."
+  },
+  {
+   "t0": 116.52,
+   "t1": 119.62,
+   "text": "As grandes pessoas escutam para poderem compreender."
+  },
+  {
+   "t0": 120.06,
+   "t1": 122.88,
+   "text": "Quando alguém está a falar, pare o que está a fazer."
+  },
+  {
+   "t0": 123.28,
+   "t1": 124.42,
+   "text": "Olhe para a pessoa."
+  },
+  {
+   "t0": 124.72,
+   "t1": 126.02,
+   "text": "Escute com atenção."
+  },
+  {
+   "t0": 126.34,
+   "t1": 127.22,
+   "text": "Não interrompa."
+  },
+  {
+   "t0": 127.64,
+   "t1": 129.94,
+   "text": "Quando terminar, repita o que ouviu."
+  },
+  {
+   "t0": 130.28,
+   "t1": 136.0,
+   "text": "Por exemplo, então se percebi bem, gostaria que eu terminasse isto antes do almoço."
+  },
+  {
+   "t0": 136.6,
+   "t1": 139.62,
+   "text": "Chama-se a isto, confirmar a sua compreensão."
+  },
+  {
+   "t0": 140.26,
+   "t1": 143.14,
+   "text": "É um dos hábitos mais simples das grandes equipas."
+  },
+  {
+   "t0": 143.58,
+   "t1": 146.82,
+   "text": "Outro hábito importante é fazer o ponto da situação."
+  },
+  {
+   "t0": 147.32,
+   "t1": 151.32,
+   "text": "Se uma tarefa demora várias horas ou vários dias, não desapareça."
+  },
+  {
+   "t0": 151.74,
+   "t1": 153.06,
+   "text": "Envie uma mensagem."
+  },
+  {
+   "t0": 153.34,
+   "t1": 154.06,
+   "text": "Vala a ter."
+  },
+  {
+   "t0": 154.42,
+   "t1": 155.06,
+   "text": "Pergunte."
+  },
+  {
+   "t0": 155.42,
+   "t1": 156.46,
+   "text": "Só confirmar."
+  },
+  {
+   "t0": 156.74,
+   "t1": 158.66,
+   "text": "Isto continua a ser a prioridade?"
+  },
+  {
+   "t0": 159.06,
+   "t1": 160.94,
+   "text": "Ou este é o meu progresso."
+  },
+  {
+   "t0": 161.22,
+   "t1": 162.46,
+   "text": "Estou no caminho certo?"
+  },
+  {
+   "t0": 162.98,
+   "t1": 166.38,
+   "text": "Pequenos pontos de situação evitam grandes problemas."
+  },
+  {
+   "t0": 166.86,
+   "t1": 167.94,
+   "text": "Lembre-se disto."
+  },
+  {
+   "t0": 168.26,
+   "t1": 170.66,
+   "text": "As mais notícias não melhoram com o tempo."
+  },
+  {
+   "t0": 171.1,
+   "t1": 176.82,
+   "text": "Se algo estiver atrasado, se cometer um erro, se não percebe algo, fale cedo."
+  },
+  {
+   "t0": 177.26,
+   "t1": 180.38,
+   "text": "As pessoas podem ajudar a resolver um problema que conhecem."
+  },
+  {
+   "t0": 180.74,
+   "t1": 183.54,
+   "text": "Não podem resolver um problema que não sabem que existe."
+  },
+  {
+   "t0": 183.98,
+   "t1": 187.74,
+   "text": "Por fim, lembre-se de que a comunicação tem a ver com respeito."
+  },
+  {
+   "t0": 188.18,
+   "t1": 191.74,
+   "text": "Quando comunica com clareza, respeita o tempo dos outros."
+  },
+  {
+   "t0": 192.1,
+   "t1": 195.26,
+   "text": "Quando escuta com atenção, respeita a outra pessoa."
+  },
+  {
+   "t0": 195.74,
+   "t1": 198.14,
+   "text": "Quando faz perguntas, respeita o trabalho."
+  },
+  {
+   "t0": 198.38,
+   "t1": 201.58,
+   "text": "Quando confirma sua compreensão, respeita a missão."
+  },
+  {
+   "t0": 202.22,
+   "t1": 206.3,
+   "text": "Por isso, hoje, quero que se lembre de quatro hábitos simples."
+  },
+  {
+   "t0": 206.86,
+   "t1": 208.7,
+   "text": "Primeiro, não presuma."
+  },
+  {
+   "t0": 209.34,
+   "t1": 212.34,
+   "text": "Segundo, faça perguntas de clarificação."
+  },
+  {
+   "t0": 213.06,
+   "t1": 215.42,
+   "text": "Terceiro, repita o que percebeu."
+  },
+  {
+   "t0": 216.18,
+   "t1": 220.58,
+   "text": "Quarto, faça pontos de situação cedo e com frequência."
+  },
+  {
+   "t0": 221.34,
+   "t1": 225.02,
+   "text": "Estes quatro hábitos vão torná-lo um melhor colega de equipa."
+  },
+  {
+   "t0": 225.54,
+   "t1": 227.82,
+   "text": "Vão torná-lo mais digno de confiança."
+  },
+  {
+   "t0": 228.22,
+   "t1": 230.46,
+   "text": "Vão ajudá-lo a crescer na sua carreira."
+  },
+  {
+   "t0": 230.86,
+   "t1": 234.5,
+   "text": "E vão ajudar toda a nossa equipa a ter sucesso em conjunto."
+  },
+  {
+   "t0": 235.26,
+   "t1": 238.82,
+   "text": "Uma boa comunicação não tem a ver com usar palavras difíceis."
+  },
+  {
+   "t0": 239.3,
+   "t1": 242.86,
+   "text": "Tem a ver com garantir que as pessoas se compreendem umas às outras."
+  },
+  {
+   "t0": 243.38,
+   "t1": 244.78,
+   "text": "Comunique com clareza."
+  },
+  {
+   "t0": 245.06,
+   "t1": 246.5,
+   "text": "Escute com atenção."
+  },
+  {
+   "t0": 246.78,
+   "t1": 248.5,
+   "text": "Esclareça com frequência."
+  },
+  {
+   "t0": 249.02,
+   "t1": 251.14,
+   "text": "Porque as grandes equipas não adivinham."
+  },
+  {
+   "t0": 251.5,
+   "t1": 253.74,
+   "text": "As grandes equipas comunicam."
+  }
+ ],
+ "model": "whisper-small",
+ "generatedAt": 1785511164878
+}

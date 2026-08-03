@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Support & service levels — Academy Platforms</title>
+<meta name="description" content="How the service works, how to ask for help, and how fast we answer. Academy Platforms service levels.">
+<meta name="theme-color" content="#012A4A">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --deep:#012A4A; --deep2:#013A63; --blue:#468FAF; --sky:#89C2D9; --sky2:#A9D6E5;
+  --ivory:#EAF4FA; --gold:#F5A623; --gold2:#E8B04B; --green:#7fd6a2;
+  --mut:rgba(169,214,229,.74); --dim:rgba(169,214,229,.55);
+  --line:rgba(169,214,229,.16);
+  --serif:'Instrument Serif',Georgia,serif; --sans:'Manrope',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --pad:clamp(22px,5vw,64px); --ease:cubic-bezier(.22,.8,.24,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--deep);color:var(--ivory);line-height:1.7;
+  font-size:16px;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%,#01426f 0%,#012A4A 55%,#001c33 100%)}
+a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(245,166,35,.35)}
+a:hover{border-color:var(--gold)}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:var(--pad)}
+.hero,.sub,section>p{max-width:none}
+
+header{border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;
+  background:rgba(1,42,74,.9);backdrop-filter:blur(14px)}
+.nav{display:flex;align-items:center;gap:20px;padding:16px var(--pad);max-width:1300px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:11px;border:0}
+.brand svg{width:26px;height:26px}
+.brand .bt{font-family:var(--serif);font-size:1.4rem;letter-spacing:.13em;text-transform:uppercase;line-height:.9}
+.brand .bt small{display:block;font-family:var(--sans);font-size:.5rem;font-weight:600;
+  letter-spacing:.5em;color:var(--gold);text-transform:uppercase;margin-top:4px}
+.nav .back{margin-left:auto;font-size:.82rem;font-weight:600;color:var(--sky2);border:0}
+
+.hero{padding:clamp(56px,10vh,110px) 0 clamp(24px,4vh,44px);max-width:720px}
+.eyebrow{font-size:.66rem;font-weight:600;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--blue);display:inline-flex;align-items:center;gap:1.1em}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--gold)}
+h1{font-family:var(--serif);font-size:clamp(2.4rem,6vw,3.6rem);line-height:1.04;
+  font-weight:400;margin:.4em 0 .3em;letter-spacing:-.01em}
+h1 em{font-style:italic;color:var(--gold2)}
+.lead{font-size:1.05rem;color:var(--mut)}
+
+section{margin-bottom:clamp(44px,7vh,76px);scroll-margin-top:90px}
+section>p,.ladder li span{max-width:74ch}
+h2{font-family:var(--serif);font-size:clamp(1.7rem,3.6vw,2.3rem);font-weight:400;line-height:1.12;margin-bottom:.35em}
+h2 em{font-style:italic;color:var(--gold2)}
+.sub{color:var(--mut);margin-bottom:1.6em;max-width:62ch}
+h3{font-size:.95rem;font-weight:700;color:var(--sky2);margin:1.7em 0 .5em}
+p{margin-bottom:1em;color:var(--mut)}
+p strong,li strong,td strong{color:var(--ivory);font-weight:600}
+ul,ol{margin:0 0 1.1em 1.15em;color:var(--mut)}
+li{margin-bottom:.5em}
+li::marker{color:rgba(245,166,35,.7)}
+.ph{font-family:var(--mono);font-size:.82em;color:var(--gold);background:rgba(245,166,35,.1);
+  padding:2px 8px;border-radius:6px;white-space:nowrap}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:8px;counter-reset:f}
+.step{border:1px solid var(--line);border-radius:18px;padding:22px 20px;background:rgba(169,214,229,.04);
+  position:relative;transition:transform .4s var(--ease),border-color .4s}
+.step:hover{transform:translateY(-4px);border-color:rgba(245,166,35,.4)}
+.step .n{counter-increment:f;content:'';font-family:var(--mono);font-size:.62rem;color:var(--gold);
+  letter-spacing:.16em;display:block;margin-bottom:10px}
+.step .n::before{content:'0' counter(f)}
+.step h4{font-family:var(--serif);font-size:1.22rem;font-weight:400;line-height:1.1;margin-bottom:8px}
+.step p{font-size:.84rem;line-height:1.6;margin:0;color:var(--dim)}
+.step .when{display:block;margin-top:12px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.1em;color:var(--sky);text-transform:uppercase}
+@media(max-width:940px){.flow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.flow{grid-template-columns:1fr}}
+
+/* tables */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;
+  border:1px solid var(--line);border-radius:18px;background:rgba(169,214,229,.03)}
+table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:600px}
+th,td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);
+  background:rgba(169,214,229,.04)}
+td:first-child{color:var(--ivory);font-weight:600}
+.sev{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.sev i{width:9px;height:9px;border-radius:50%;flex:none}
+.p1 i{background:#ff6b6b;box-shadow:0 0 9px rgba(255,107,107,.7)}
+.p2 i{background:var(--gold);box-shadow:0 0 9px rgba(245,166,35,.6)}
+.p3 i{background:var(--sky)}
+.p4 i{background:rgba(169,214,229,.45)}
+.tick{color:var(--green);font-weight:700}
+.dash{color:rgba(169,214,229,.35)}
+
+/* report card */
+.report{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;align-items:start}
+@media(max-width:820px){.report{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);border-radius:20px;padding:26px 28px;background:rgba(169,214,229,.04)}
+.card.gold{border-color:rgba(245,166,35,.34);
+  background:linear-gradient(180deg,rgba(245,166,35,.1),rgba(245,166,35,.03))}
+.card h3{margin-top:0}
+.card ol{margin-left:1.1em}
+.chk{list-style:none;margin-left:0}
+.chk li{position:relative;padding-left:26px}
+.chk li::before{content:'✓';position:absolute;left:0;color:var(--gold);font-weight:800}
+
+/* escalation ladder */
+.ladder{list-style:none;margin:0;counter-reset:l}
+.ladder li{counter-increment:l;position:relative;padding:16px 0 16px 52px;border-bottom:1px solid var(--line)}
+.ladder li:last-child{border-bottom:0}
+.ladder li::before{content:counter(l);position:absolute;left:0;top:14px;width:32px;height:32px;
+  border-radius:50%;border:1px solid rgba(245,166,35,.5);color:var(--gold);
+  font-family:var(--mono);font-size:.72rem;display:grid;place-items:center}
+.ladder b{display:block;color:var(--ivory);font-size:.95rem;margin-bottom:3px}
+.ladder span{font-size:.86rem;color:var(--mut)}
+
+.note{margin-top:26px;padding:20px 24px;border-radius:18px;border:1px solid var(--line);
+  background:rgba(169,214,229,.04);font-size:.9rem;color:var(--mut)}
+.note b{color:var(--gold)}
+
+.cta{margin-top:clamp(40px,6vh,70px);padding:clamp(30px,5vw,46px);border-radius:24px;text-align:center;
+  background:linear-gradient(180deg,rgba(245,166,35,.12),rgba(245,166,35,.04));
+  border:1px solid rgba(245,166,35,.3)}
+.cta h2{margin-bottom:.3em}
+.btn{display:inline-flex;align-items:center;gap:.8em;background:var(--gold);color:#2A1B02;
+  font-weight:700;font-size:.95rem;padding:15px 30px;border-radius:99px;border:0;margin-top:14px}
+
+footer{border-top:1px solid var(--line);margin-top:clamp(50px,8vh,90px);
+  padding:40px 0 calc(46px + env(safe-area-inset-bottom));font-size:.8rem;color:var(--dim)}
+.flinks{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px}
+.flinks a{color:var(--sky2);border:0;font-weight:600}
+.flinks a:hover{color:var(--gold)}
+.imprint{font-size:.72rem;line-height:1.9;color:rgba(169,214,229,.5)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a class="brand" href="./">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <path d="M13 17 L31 8 V41 L13 50 Z" stroke="#EAF4FA" stroke-width="2.6"/>
+        <path d="M27 23 L45 14 V47 L27 56 Z" stroke="#F5A623" stroke-width="2.6"/>
+      </svg>
+      <span class="bt">Academy<small>Platforms</small></span>
+    </a>
+    <a class="back" id="langlink" href="suporte.html" style="margin-left:auto">PT</a>
+    <a class="back" href="./" style="margin-left:16px">← Back to site</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="eyebrow">Support</span>
+    <h1>If something goes wrong,<br><em>you are not left waiting.</em></h1>
+    <p class="lead">One address, a response time in writing, and a named person on the other side.
+    This page says exactly how it works — and how fast.</p>
+  </div>
+
+  <!-- ── SERVICE FLOW ── -->
+  <section id="fluxo">
+    <h2>From first contact <em>to a running academy.</em></h2>
+    <p class="sub">Five steps. No six-month project, no consulting before you see the product.</p>
+    <div class="flow">
+      <div class="step"><span class="n"></span>
+        <h4>A 15-minute call</h4>
+        <p>We show you the working platform and learn what you need to train. No slide deck.</p>
+        <span class="when">Day 0</span></div>
+      <div class="step"><span class="n"></span>
+        <h4>Proposal and contract</h4>
+        <p>Plan, price and scope in writing. You sign digitally and we invoice the setup.</p>
+        <span class="when">2–3 days</span></div>
+      <div class="step"><span class="n"></span>
+        <h4>Your instance</h4>
+        <p>Brand, domain, colours and users. Your academy goes live with your identity.</p>
+        <span class="when">≤ 1 business day</span></div>
+      <div class="step"><span class="n"></span>
+        <h4>Administrator training</h4>
+        <p>One session for whoever runs it: upload content, assign training, read the dashboard.</p>
+        <span class="when">1 session</span></div>
+      <div class="step"><span class="n"></span>
+        <h4>Operation and review</h4>
+        <p>Your team learns, the hours count themselves. We follow up and answer.</p>
+        <span class="when">Ongoing</span></div>
+    </div>
+    <div class="note">
+      <b>Bespoke content.</b> On the <strong>Standard</strong> or <strong>Complete</strong> plans,
+      production of your programmes runs in parallel, on a work plan with dates you approve —
+      the platform does not wait for content to go live.
+    </div>
+  </section>
+
+  <!-- ── HOW TO GET HELP ── -->
+  <section id="pedir">
+    <h2>How to ask for help</h2>
+    <p class="sub">One main channel, so nothing gets lost in side conversations.</p>
+    <div class="report">
+      <div class="card gold">
+        <h3>The channel</h3>
+        <p>Send an email to <span class="ph">[SUPPORT-EMAIL]</span>.</p>
+        <p>You immediately get an <strong>automatic confirmation with a reference</strong>.
+        That reference follows the case to the end — always reply in the same thread.</p>
+        <p style="margin-bottom:0">On <strong>Standard</strong> and <strong>Complete</strong> you also get
+        <strong>direct WhatsApp</strong> with your named contact, for anything urgent.</p>
+      </div>
+      <div class="card">
+        <h3>What to include</h3>
+        <p style="font-size:.88rem">With this, we almost always fix it first time:</p>
+        <ul class="chk" style="font-size:.88rem">
+          <li>What you were trying to do</li>
+          <li>What happened instead</li>
+          <li>Who is affected — one person or the whole team</li>
+          <li>The address of the page where it happens</li>
+          <li>A screenshot, if you can</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SEVERITY + QUOTAS ── -->
+  <section id="niveis">
+    <h2>How long until you hear back</h2>
+    <p class="sub">We classify every request by real impact on your business, not by who shouts loudest.
+    The times below are for a <strong>first human response</strong> — not an autoreply —
+    and count in <strong>business hours</strong>.</p>
+
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>Level</th><th>What it is</th><th>Base</th><th>Standard</th><th>Complete</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="sev p1"><i></i>P1 · Critical</span></td>
+            <td>The academy is unreachable for everyone, or data and evidence integrity is at risk.</td>
+            <td>4 business h</td><td>2 business h</td><td><strong>1 business h</strong></td>
+          </tr>
+          <tr>
+            <td><span class="sev p2"><i></i>P2 · High</span></td>
+            <td>A core function is broken for many users — video will not play, certificates will not issue, hours are not recording.</td>
+            <td>1 business day</td><td>4 business h</td><td>2 business h</td>
+          </tr>
+          <tr>
+            <td><span class="sev p3"><i></i>P3 · Normal</span></td>
+            <td>An isolated or single-user problem, with a workaround available.</td>
+            <td>2 business days</td><td>1 business day</td><td>4 business h</td>
+          </tr>
+          <tr>
+            <td><span class="sev p4"><i></i>P4 · Request</span></td>
+            <td>A question, a change request, an improvement suggestion, a cosmetic issue.</td>
+            <td>3 business days</td><td>2 business days</td><td>1 business day</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>What every plan includes</h3>
+    <div class="tw">
+      <table>
+        <thead>
+          <tr><th>&nbsp;</th><th>Base</th><th>Standard</th><th>Complete</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Support requests</td><td>Unlimited</td><td>Unlimited</td><td>Unlimited</td></tr>
+          <tr><td>Hours</td><td colspan="2">Business days, 9am–6pm (Lisbon)</td><td>Business days, 8am–8pm</td></tr>
+          <tr><td>Channel</td><td>Email</td><td>Email + WhatsApp</td><td>Email + WhatsApp + phone</td></tr>
+          <tr><td>Named contact</td><td class="dash">—</td><td class="tick">✓</td><td class="tick">✓ account manager</td></tr>
+          <tr><td>Administrator training</td><td>1 session</td><td>2 sessions</td><td>Sessions as scoped</td></tr>
+          <tr><td>Follow-up</td><td>On request</td><td>Monthly call (30 min)</td><td>Quarterly review</td></tr>
+          <tr><td>Platform bug fixes</td><td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td></tr>
+          <tr><td>Help with users and assignments</td><td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td></tr>
+          <tr><td>Help exporting evidence</td><td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td></tr>
+          <tr><td>Platform updates</td><td class="tick">✓ included</td><td class="tick">✓ included</td><td class="tick">✓ included</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <b>What is billed separately.</b> Content production outside the contracted scope, custom
+      development, integrations with your systems, on-site training, and data migrations beyond
+      the standard export. We always quote <strong>before</strong> starting — nothing appears on
+      an invoice without prior approval.
+    </div>
+  </section>
+
+  <!-- ── ESCALATION ── -->
+  <section id="escalar">
+    <h2>If it is not resolved</h2>
+    <p class="sub">A short, explicit ladder. You never have to work out who to complain to.</p>
+    <ol class="ladder">
+      <li><b>The support thread</b><span>Reply to the same email. The case keeps its reference and full history.</span></li>
+      <li><b>Deadline missed → escalate</b><span>If your plan’s first-response time is missed, reply in the thread with the word <strong>ESCALATE</strong>. The case is raised a priority level immediately and the service lead is notified.</span></li>
+      <li><b>Review with the service lead</b><span>We book a call within <strong>1 business day</strong> to agree a resolution plan with a date.</span></li>
+      <li><b>Service credit</b><span>If monthly availability falls below the commitment for two consecutive months, you are entitled to a credit on the next invoice, under clause 6 of the <a href="terms.html">Terms</a>.</span></li>
+    </ol>
+  </section>
+
+  <!-- ── AVAILABILITY ── -->
+  <section id="disponibilidade">
+    <h2>Availability and maintenance</h2>
+    <p>We commit to <strong>99.5% availability in each calendar month</strong>. That is the number we
+    can honestly hold to — we would rather promise what we sustain than write a bigger figure
+    we cannot.</p>
+    <ul>
+      <li><strong>Scheduled maintenance</strong> is announced at least <strong>48 hours</strong> ahead and done outside working hours whenever possible.</li>
+      <li><strong>Daily backups</strong>, retained under the retention policy, on infrastructure in the European Union.</li>
+      <li><strong>Your data leaves whenever you want</strong> — exporting training, hours, certificates and evidence is available at any time, in an open format, without depending on our software.</li>
+    </ul>
+    <div class="note">
+      <b>An honest note on incidents.</b> When something goes wrong we say what happened,
+      what we did, and what we changed so it does not repeat. No vague statements.
+    </div>
+  </section>
+
+  <div class="cta">
+    <h2>Still have questions?</h2>
+    <p style="max-width:52ch;margin:0 auto">Talk to us before deciding. Fifteen minutes, the working
+    platform, and the hard questions answered.</p>
+    <a class="btn" href="mailto:[SUPPORT-EMAIL]?subject=Sess%C3%A3o%20de%20estrat%C3%A9gia%20Academy%20Platforms">Book a 15-minute call →</a>
+  </div>
+
+  <footer>
+    <div class="flinks">
+      <a href="./">Site</a>
+      <a href="terms.html">Terms & Conditions</a>
+      <a href="https://academy.edenrise.com/privacy.html" target="_blank" rel="noopener">Privacy Policy (platform)</a>
+      <a href="https://academy.edenrise.com/verify.html" target="_blank" rel="noopener">Public verifier</a>
+    </div>
+    <div class="imprint">
+      © <span class="ph">[ENTIDADE]</span> · sold through Meridante · NIPC <span class="ph">[NIPC]</span> ·
+      <span class="ph">[MORADA]</span> · <span class="ph">[EMAIL]</span><br>
+      Response times are contractual commitments under clause 6 of the Terms and Conditions of Service.
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>

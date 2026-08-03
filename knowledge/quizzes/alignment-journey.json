@@ -1,0 +1,3463 @@
+{
+ "course": "alignment-journey",
+ "modules": {
+  "0": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Physical fitness",
+      "Mental strength",
+      "Nutrition planning",
+      "Sports equipment design"
+     ],
+     "q": "What area of expertise has the trainer worked with professional athletes on?",
+     "why": "The trainer mentions having done work with professional athletes around the world, specifically in the area of mental strength."
+    },
+    "pt": {
+     "opts": [
+      "Fitness física",
+      "Força mental",
+      "Planeamento nutricional",
+      "Desenho de equipamento desportivo"
+     ],
+     "q": "Em que área de especialização o formador trabalhou com atletas profissionais?",
+     "why": "O formador menciona ter feito trabalho com atletas profissionais em todo o mundo, especificamente na área de força mental."
+    },
+    "t0": 26,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750133007,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Curiosity and humility",
+      "Confidence and assertiveness",
+      "Competitiveness and ambition",
+      "Independence and self-reliance"
+     ],
+     "q": "What attitude is required to get the most benefit from this training?",
+     "why": "The trainer emphasizes the importance of coming into the training with a desire to learn and grow, which requires curiosity and humility."
+    },
+    "pt": {
+     "opts": [
+      "Curiosidade e humildade",
+      "Confiança e assertividade",
+      "Competitividade e ambição",
+      "Independência e auto-suficiência"
+     ],
+     "q": "Que atitude é necessária para obter o máximo benefício deste treinamento?",
+     "why": "O formador enfatiza a importância de entrar no treinamento com um desejo de aprender e crescer, o que requer curiosidade e humildade."
+    },
+    "t0": 112,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750133007,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "With a fixed mindset, focusing on existing strengths",
+      "With a growth mindset, being open to new experiences",
+      "With a competitive mindset, comparing yourself to others",
+      "With a passive mindset, waiting for opportunities to come to you"
+     ],
+     "q": "How should you approach personal growth and development?",
+     "why": "The trainer uses the analogy of a body of water to illustrate the importance of being open to growth and change, like a flowing body of water."
+    },
+    "pt": {
+     "opts": [
+      "Com uma mentalidade fixa, focando nas forças existentes",
+      "Com uma mentalidade de crescimento, estando aberto a novas experiências",
+      "Com uma mentalidade competitiva, comparando-se com os outros",
+      "Com uma mentalidade passiva, esperando que as oportunidades venham até si"
+     ],
+     "q": "Como deve abordar o crescimento e desenvolvimento pessoal?",
+     "why": "O formador usa a analogia de um corpo de água para ilustrar a importância de estar aberto ao crescimento e à mudança, como um corpo de água em fluxo."
+    },
+    "t0": 138,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750133007,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "With a rigid plan, trying to complete each stage as quickly as possible",
+      "With an open mind, being willing to learn and adapt",
+      "With a critical eye, evaluating each stage for its usefulness",
+      "With a casual attitude, taking each stage as it comes"
+     ],
+     "q": "What is the best way to approach the different stages of this training?",
+     "why": "The trainer emphasizes the importance of being a lifelong learner and approaching the training with a willingness to learn and grow."
+    },
+    "pt": {
+     "opts": [
+      "Com um plano rígido, tentando completar cada etapa o mais rápido possível",
+      "Com uma mente aberta, estando disposto a aprender e adaptar-se",
+      "Com um olhar crítico, avaliando cada etapa pela sua utilidade",
+      "Com uma atitude casual, levando cada etapa como vem"
+     ],
+     "q": "Qual é a melhor maneira de abordar as diferentes etapas deste treinamento?",
+     "why": "O formador enfatiza a importância de ser um aprendiz ao longo da vida e abordar o treinamento com uma disposição para aprender e crescer."
+    },
+    "t0": 82,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750133007,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to convince them that change is necessary",
+      "Avoid working with them, as they are too rigid",
+      "Encourage them to be open to new ideas and perspectives",
+      "Report them to a supervisor, as they are not being flexible"
+     ],
+     "q": "A colleague is resistant to changing their work processes, what should you do?",
+     "why": "The trainer emphasizes the importance of being open to growth and change, and encouraging others to do the same, rather than trying to force change or avoid those who are resistant."
+    },
+    "pt": {
+     "opts": [
+      "Tentar convencê-los de que a mudança é necessária",
+      "Evitar trabalhar com eles, pois são muito rígidos",
+      "Encorajá-los a estar abertos a novas ideias e perspectivas",
+      "Relatar-lhes a um supervisor, pois não estão sendo flexíveis"
+     ],
+     "q": "Um colega de trabalho é resistente a mudar os processos de trabalho, o que deve fazer?",
+     "why": "O formador enfatiza a importância de estar aberto ao crescimento e à mudança, e encorajar os outros a fazer o mesmo, em vez de tentar forçar a mudança ou evitar aqueles que são resistentes."
+    },
+    "t0": 166,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750133007,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to change their communication style to match yours",
+      "Avoid working with them, as their style is too different",
+      "Make an effort to understand and appreciate their communication style",
+      "Report them to a supervisor, as their style is not effective"
+     ],
+     "q": "You are working with a team member who has a different communication style, what should you do?",
+     "why": "The trainer emphasizes the importance of understanding and appreciating others, and being open to different perspectives and communication styles."
+    },
+    "pt": {
+     "opts": [
+      "Tentar mudar o seu estilo de comunicação para corresponder ao seu",
+      "Evitar trabalhar com eles, pois o seu estilo é muito diferente",
+      "Fazer um esforço para entender e apreciar o seu estilo de comunicação",
+      "Relatar-lhes a um supervisor, pois o seu estilo não é eficaz"
+     ],
+     "q": "Está a trabalhar com um membro da equipa que tem um estilo de comunicação diferente, o que deve fazer?",
+     "why": "O formador enfatiza a importância de entender e apreciar os outros, e estar aberto a diferentes perspectivas e estilos de comunicação."
+    },
+    "t0": 56,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750133007,
+    "verified": true
+   }
+  ],
+  "1": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "It had no significant impact",
+      "It helped him save his life",
+      "It made him more stressed",
+      "It had no effect on his leadership"
+     ],
+     "q": "What was the impact of the above-the-line model on Jabaraaj's life?",
+     "why": "The above-the-line model helped Jabaraaj have the awareness to be a strong leader and navigate a difficult period."
+    },
+    "pt": {
+     "opts": [
+      "Não teve impacto significativo",
+      "Ajudou-o a salvar a sua vida",
+      "Fez com que ele se sentisse mais estressado",
+      "Não teve efeito na sua liderança"
+     ],
+     "q": "Qual foi o impacto do modelo acima da linha na vida de Jabaraaj?",
+     "why": "O modelo acima da linha ajudou Jabaraaj a ter a consciência para ser um líder forte e superar um período difícil."
+    },
+    "t0": 82,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750151322,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Action",
+      "Awareness",
+      "Motivation",
+      "Commitment"
+     ],
+     "q": "What is the starting point for making positive changes according to the trainer?",
+     "why": "The trainer states that everything begins with awareness."
+    },
+    "pt": {
+     "opts": [
+      "Ação",
+      "Consciência",
+      "Motivação",
+      "Compromisso"
+     ],
+     "q": "Qual é o ponto de partida para fazer mudanças positivas de acordo com o treinador?",
+     "why": "O treinador afirma que tudo começa com a consciência."
+    },
+    "t0": 108,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750151322,
+    "corrected": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "Take a break",
+      "Discuss with colleagues",
+      "Wait for further instructions",
+      "Return to the lesson for more discussion"
+     ],
+     "q": "What should you do after watching the animation video?",
+     "why": "The trainer instructs to return to the lesson after watching the animation for further discussion."
+    },
+    "pt": {
+     "opts": [
+      "Fazer uma pausa",
+      "Discutir com colegas",
+      "Esperar por instruções adicionais",
+      "Voltar à lição para mais discussão"
+     ],
+     "q": "O que deve fazer após assistir ao vídeo de animação?",
+     "why": "O treinador instrui a voltar à lição após assistir à animação para mais discussão."
+    },
+    "t0": 135,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750151322,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "As a theoretical concept",
+      "As a practical tool for athletes only",
+      "As a simple yet powerful model for personal use",
+      "As an outdated theory"
+     ],
+     "q": "How should you approach the above-the-line model as presented in the animation?",
+     "why": "The trainer presents the model as simple yet powerful for personal use."
+    },
+    "pt": {
+     "opts": [
+      "Como um conceito teórico",
+      "Como uma ferramenta prática apenas para atletas",
+      "Como um modelo simples mas poderoso para uso pessoal",
+      "Como uma teoria ultrapassada"
+     ],
+     "q": "Como deve abordar o modelo acima da linha como apresentado na animação?",
+     "why": "O treinador apresenta o modelo como simples mas poderoso para uso pessoal."
+    },
+    "t0": 161,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750151322,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to solve the problem immediately",
+      "Seek support from colleagues",
+      "Take a step back to assess your situation and awareness",
+      "Ignore the problem and hope it resolves itself"
+     ],
+     "q": "You are facing a difficult situation at work, similar to Jabaraaj's experience. What should you do first?",
+     "why": "The story of Jabaraaj highlights the importance of awareness in difficult situations."
+    },
+    "pt": {
+     "opts": [
+      "Tentar resolver o problema imediatamente",
+      "Procurar apoio de colegas",
+      "Dar um passo atrás para avaliar a sua situação e consciência",
+      "Ignorar o problema e esperar que se resolva sozinho"
+     ],
+     "q": "Está a enfrentar uma situação difícil no trabalho, semelhante à experiência de Jabaraaj. O que deve fazer primeiro?",
+     "why": "A história de Jabaraaj destaca a importância da consciência em situações difíceis."
+    },
+    "t0": 82,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750151322,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Encourage them to take action immediately",
+      "Help them become aware of their situation and emotions",
+      "Tell them to just be more positive",
+      "Avoid discussing the issue"
+     ],
+     "q": "A colleague is struggling to cope with stress. What principle should you apply to help them?",
+     "why": "The trainer emphasizes the importance of awareness as the starting point for positive change."
+    },
+    "pt": {
+     "opts": [
+      "Encorajá-lo a tomar ação imediatamente",
+      "Ajudá-lo a tornar-se consciente da sua situação e emoções",
+      "Dizer-lhe para ser apenas mais positivo",
+      "Evitar discutir a questão"
+     ],
+     "q": "Um colega está a lutar para lidar com o estresse. Qual princípio deve aplicar para o ajudar?",
+     "why": "O treinador enfatiza a importância da consciência como o ponto de partida para a mudança positiva."
+    },
+    "t0": 108,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750151322,
+    "corrected": true
+   }
+  ],
+  "2": [
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Responsibility",
+      "Justification",
+      "Motivation",
+      "Accountability"
+     ],
+     "q": "What does 'roll' stand for in the context of above the line thinking?",
+     "why": "Roll stands for responsibility, which involves taking ownership of one's results."
+    },
+    "pt": {
+     "opts": [
+      "Responsabilidade",
+      "Justificação",
+      "Motivação",
+      "Prestação de contas"
+     ],
+     "q": "O que significa 'roll' no contexto do pensamento acima da linha?",
+     "why": "Roll significa responsabilidade, que implica assumir a propriedade dos seus resultados."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750343416,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Equally motivated to move towards pleasure",
+      "More motivated to move towards pleasure",
+      "Twice as motivated to move away from pain",
+      "Not motivated at all"
+     ],
+     "q": "What is the primary motivation for humans to move away from pain, according to human behavioural researchers?",
+     "why": "Humans are motivated to move away from pain twice as much as they are motivated to move towards pleasure."
+    },
+    "pt": {
+     "opts": [
+      "Igualmente motivados a se moverem em direção ao prazer",
+      "Mais motivados a se moverem em direção ao prazer",
+      "Duas vezes mais motivados a se afastarem da dor",
+      "Não motivados de todo"
+     ],
+     "q": "Qual é a principal motivação para os humanos se afastarem da dor, de acordo com os investigadores do comportamento humano?",
+     "why": "Os humanos estão motivados a se afastarem da dor duas vezes mais do que estão motivados a se moverem em direção ao prazer."
+    },
+    "t0": 54,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750343416,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Justify your results and actions",
+      "Take responsibility for your results",
+      "Blame circumstances and other people",
+      "Avoid challenges and setbacks"
+     ],
+     "q": "When faced with emotional pain, what should you do to build the mindset muscle of champions?",
+     "why": "Taking responsibility for your results helps you build the mindset muscle of champions."
+    },
+    "pt": {
+     "opts": [
+      "Justificar os seus resultados e ações",
+      "Assumir a responsabilidade pelos seus resultados",
+      "Culpar as circunstâncias e outras pessoas",
+      "Evitar desafios e reveses"
+     ],
+     "q": "Quando enfrenta dor emocional, o que deve fazer para construir o músculo mental dos campeões?",
+     "why": "Assumir a responsabilidade pelos seus resultados ajuda a construir o músculo mental dos campeões."
+    },
+    "t0": 83,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750343416,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Stay below the line and justify your actions",
+      "Try to blame others for your situation",
+      "Shift your response to get back above the line",
+      "Give up and accept your circumstances"
+     ],
+     "q": "What should you do when you recognize you are staying below the line for too long?",
+     "why": "Shifting your response to get back above the line helps you build a healthy response to pressure."
+    },
+    "pt": {
+     "opts": [
+      "Ficar abaixo da linha e justificar as suas ações",
+      "Tentar culpar os outros pela sua situação",
+      "Mudar a sua resposta para voltar acima da linha",
+      "Desistir e aceitar as suas circunstâncias"
+     ],
+     "q": "O que deve fazer quando reconhece que está ficando abaixo da linha por muito tempo?",
+     "why": "Mudar a sua resposta para voltar acima da linha ajuda a construir uma resposta saudável à pressão."
+    },
+    "t0": 112,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750343416,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Blame the team leader for not providing enough support",
+      "Justify the failure by citing external circumstances",
+      "Take responsibility for the failure and explore options for improvement",
+      "Give up on the project and move on to something else"
+     ],
+     "q": "A team member has just failed to meet a project deadline. What can they do to apply above the line thinking?",
+     "why": "Taking responsibility for the failure and exploring options for improvement helps to build a healthy response to pressure."
+    },
+    "pt": {
+     "opts": [
+      "Culpar o líder da equipe por não fornecer apoio suficiente",
+      "Justificar a falha citando circunstâncias externas",
+      "Assumir a responsabilidade pela falha e explorar opções para melhoria",
+      "Desistir do projeto e passar para algo else"
+     ],
+     "q": "Um membro da equipe acaba de falhar em cumprir um prazo de projeto. O que podem fazer para aplicar o pensamento acima da linha?",
+     "why": "Assumir a responsabilidade pela falha e explorar opções para melhoria ajuda a construir uma resposta saudável à pressão."
+    },
+    "t0": 139,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750343416,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Encourage them to give up and try something easier",
+      "Help them to justify their failures and blame external circumstances",
+      "Support them in taking responsibility for their failures and learning from their experiences",
+      "Tell them to just work harder and try to avoid failures"
+     ],
+     "q": "A colleague is struggling to cope with the pressure of repeated failures. What can you learn from Michael Jordan's approach to apply to your colleague's situation?",
+     "why": "Supporting them in taking responsibility for their failures and learning from their experiences helps to build a healthy response to pressure."
+    },
+    "pt": {
+     "opts": [
+      "Encorajá-los a desistir e tentar algo mais fácil",
+      "Ajudá-los a justificar as suas falhas e culpar circunstâncias externas",
+      "Apoiar-lhes a assumir a responsabilidade pelas suas falhas e aprender com as suas experiências",
+      "Dizer-lhes para trabalhar mais duro e tentar evitar falhas"
+     ],
+     "q": "Um colega está tendo dificuldade em lidar com a pressão de falhas repetidas. O que pode aprender da abordagem de Michael Jordan para aplicar à situação do seu colega?",
+     "why": "Apoiar-lhes a assumir a responsabilidade pelas suas falhas e aprender com as suas experiências ajuda a construir uma resposta saudável à pressão."
+    },
+    "t0": 165,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750343416,
+    "corrected": true
+   }
+  ],
+  "3": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "We always grow and flow",
+      "We always diminish and contract",
+      "How we respond changes our life",
+      "We stay the same"
+     ],
+     "q": "What happens when we have pressure in life?",
+     "why": "Pressure can either help us grow and flow or diminish and contract, depending on how we respond."
+    },
+    "pt": {
+     "opts": [
+      "Sempre crescemos e fluimos",
+      "Sempre diminuímos e contraímos",
+      "Como respondemos muda a nossa vida",
+      "Ficamos iguais"
+     ],
+     "q": "O que acontece quando temos pressão na vida?",
+     "why": "A pressão pode nos ajudar a crescer e fluir ou a diminuir e contrair, dependendo de como respondemos."
+    },
+    "t0": 80,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750369321,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Blaming others for what happened",
+      "Taking responsibility for what happened",
+      "Ignoring the problem",
+      "Waiting for someone else to fix it"
+     ],
+     "q": "What does it mean to go above the line when there's pressure?",
+     "why": "Going above the line means taking personal responsibility for what happened and acknowledging one's mistakes."
+    },
+    "pt": {
+     "opts": [
+      "Culpar os outros pelo que aconteceu",
+      "Assumir a responsabilidade pelo que aconteceu",
+      "Ignorar o problema",
+      "Esperar que alguém mais o resolva"
+     ],
+     "q": "O que significa ir acima da linha quando há pressão?",
+     "why": "Ir acima da linha significa assumir a responsabilidade pessoal pelo que aconteceu e reconhecer os próprios erros."
+    },
+    "t0": 105,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750369321,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Blame someone else",
+      "Take responsibility and ask for feedback",
+      "Ignore the mistake and hope no one notices",
+      "Wait for someone else to take action"
+     ],
+     "q": "What should you do when you make a mistake at work?",
+     "why": "Taking responsibility and asking for feedback shows leadership and allows for growth and learning."
+    },
+    "pt": {
+     "opts": [
+      "Culpar alguém mais",
+      "Assumir a responsabilidade e pedir feedback",
+      "Ignorar o erro e esperar que ninguém note",
+      "Esperar que alguém mais tome ação"
+     ],
+     "q": "O que deve fazer quando comete um erro no trabalho?",
+     "why": "Assumir a responsabilidade e pedir feedback mostra liderança e permite crescimento e aprendizado."
+    },
+    "t0": 131,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750369321,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask for feedback",
+      "Procrastinate and hope the problem goes away",
+      "Take immediate action without thinking",
+      "Blame someone else for the problem"
+     ],
+     "q": "What can you do when you're feeling stuck or blocked in a difficult situation?",
+     "why": "Asking for feedback can help you gain new insights and perspectives to move forward."
+    },
+    "pt": {
+     "opts": [
+      "Pedir feedback",
+      "Procrastinar e esperar que o problema desapareça",
+      "Tomar ação imediata sem pensar",
+      "Culpar alguém mais pelo problema"
+     ],
+     "q": "O que pode fazer quando se sente bloqueado ou preso em uma situação difícil?",
+     "why": "Pedir feedback pode ajudá-lo a ganhar novas perspectivas e insights para avançar."
+    },
+    "t0": 158,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750369321,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Blame the obstacles for the delay",
+      "Take responsibility for the delay and ask for help",
+      "Ignore the deadline and hope it gets extended",
+      "Wait for someone else to take action"
+     ],
+     "q": "A team member is struggling to meet a deadline due to unexpected obstacles. What should they do to go above the line?",
+     "why": "Taking responsibility and asking for help shows leadership and a willingness to learn and grow."
+    },
+    "pt": {
+     "opts": [
+      "Culpar os obstáculos pelo atraso",
+      "Assumir a responsabilidade pelo atraso e pedir ajuda",
+      "Ignorar o prazo e esperar que ele seja estendido",
+      "Esperar que alguém mais tome ação"
+     ],
+     "q": "Um membro da equipe está tendo dificuldade em cumprir um prazo devido a obstáculos inesperados. O que eles devem fazer para ir acima da linha?",
+     "why": "Assumir a responsabilidade e pedir ajuda mostra liderança e disposição para aprender e crescer."
+    },
+    "t0": 80,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750369321,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Take responsibility for the mistake and apologize",
+      "Blame someone else for the mistake",
+      "Ignore the mistake and hope it doesn't affect the project",
+      "Wait for someone else to take action"
+     ],
+     "q": "A colleague makes a mistake that affects the team's project. How should they respond to go above the line?",
+     "why": "Taking responsibility and apologizing shows accountability and a willingness to learn from mistakes."
+    },
+    "pt": {
+     "opts": [
+      "Assumir a responsabilidade pelo erro e pedir desculpas",
+      "Culpar alguém mais pelo erro",
+      "Ignorar o erro e esperar que ele não afete o projeto",
+      "Esperar que alguém mais tome ação"
+     ],
+     "q": "Um colega comete um erro que afeta o projeto da equipe. Como eles devem responder para ir acima da linha?",
+     "why": "Assumir a responsabilidade e pedir desculpas mostra responsabilidade e disposição para aprender com os erros."
+    },
+    "t0": 105,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750369321,
+    "corrected": true
+   }
+  ],
+  "4": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Your life becomes less energetic",
+      "Your life has more energy, vitality, richness",
+      "You only solve simple problems",
+      "You become less attractive to others"
+     ],
+     "q": "What happens when you play and stay above the line?",
+     "why": "Playing above the line brings more energy, vitality, and richness to your life."
+    },
+    "pt": {
+     "opts": [
+      "A sua vida torna-se menos energética",
+      "A sua vida tem mais energia, vitalidade, riqueza",
+      "Você só resolve problemas simples",
+      "Você se torna menos atraente para os outros"
+     ],
+     "q": "O que acontece quando você joga e permanece acima da linha?",
+     "why": "Jogar acima da linha traz mais energia, vitalidade e riqueza para a sua vida."
+    },
+    "t0": 25,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750388890,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "The EdenRise Alignment Journey",
+      "The above the line, below the line module",
+      "Team culture module",
+      "Fire truck operation module"
+     ],
+     "q": "What module have you just completed?",
+     "why": "The transcript mentions completing the above the line, below the line module."
+    },
+    "pt": {
+     "opts": [
+      "A Jornada de Alinhamento EdenRise",
+      "O módulo acima da linha, abaixo da linha",
+      "Módulo de cultura de equipe",
+      "Módulo de operação de camião de bombeiros"
+     ],
+     "q": "Qual módulo você acaba de completar?",
+     "why": "A transcrição menciona a conclusão do módulo acima da linha, abaixo da linha."
+    },
+    "t0": 0,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750388890,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Play below the line",
+      "Play above the line",
+      "Solve all problems at once",
+      "Take a break from the training"
+     ],
+     "q": "What should you do to have a more enjoyable life?",
+     "why": "Playing above the line is said to make life more enjoyable."
+    },
+    "pt": {
+     "opts": [
+      "Jogar abaixo da linha",
+      "Jogar acima da linha",
+      "Resolver todos os problemas de uma vez",
+      "Fazer uma pausa no treinamento"
+     ],
+     "q": "O que você deve fazer para ter uma vida mais agradável?",
+     "why": "Jogar acima da linha é dito tornar a vida mais agradável."
+    },
+    "t0": 25,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750388890,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Come back to the model",
+      "Forget about the training",
+      "Try to solve problems on your own",
+      "Ask someone else to remind you"
+     ],
+     "q": "What can you do if you need to remind yourself to play above the line?",
+     "why": "The transcript suggests coming back to the model as a way to remind yourself."
+    },
+    "pt": {
+     "opts": [
+      "Voltar ao modelo",
+      "Esquecer o treinamento",
+      "Tentar resolver problemas sozinho",
+      "Pedir a alguém mais para se lembrar"
+     ],
+     "q": "O que você pode fazer se precisar se lembrar de jogar acima da linha?",
+     "why": "A transcrição sugere voltar ao modelo como uma forma de se lembrar."
+    },
+    "t0": 0,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750388890,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "They are playing above the line",
+      "They are playing below the line",
+      "They are not enjoying their work",
+      "They are not taking breaks"
+     ],
+     "q": "A colleague is struggling to solve problems and seems less vibrant. What might be the issue?",
+     "why": "Playing below the line might lead to struggling with problems and being less vibrant."
+    },
+    "pt": {
+     "opts": [
+      "Eles estão jogando acima da linha",
+      "Eles estão jogando abaixo da linha",
+      "Eles não estão desfrutando do trabalho",
+      "Eles não estão fazendo pausas"
+     ],
+     "q": "Um colega está tendo dificuldades em resolver problemas e parece menos vibrante. Qual pode ser o problema?",
+     "why": "Jogar abaixo da linha pode levar a dificuldades em resolver problemas e ser menos vibrante."
+    },
+    "t0": 25,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750388890,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Play below the line",
+      "Play above the line",
+      "Take a long break",
+      "Focus on the next project"
+     ],
+     "q": "You've just completed a difficult project and feel drained. What can you do to regain energy?",
+     "why": "Playing above the line can bring more energy and vitality to your life."
+    },
+    "pt": {
+     "opts": [
+      "Jogar abaixo da linha",
+      "Jogar acima da linha",
+      "Fazer uma longa pausa",
+      "Focar no próximo projeto"
+     ],
+     "q": "Você acaba de concluir um projeto difícil e se sente esgotado. O que você pode fazer para recuperar energia?",
+     "why": "Jogar acima da linha pode trazer mais energia e vitalidade para a sua vida."
+    },
+    "t0": 0,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750388890,
+    "corrected": true
+   }
+  ],
+  "5": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "There is no success only learning",
+      "There is no failure only feedback",
+      "Failure is the only way to learn",
+      "Success is the ultimate goal"
+     ],
+     "q": "What is the core concept emphasized at the beginning of this module?",
+     "why": "The trainer introduces the idea that there is no failure, only feedback, highlighting its importance for progress."
+    },
+    "pt": {
+     "opts": [
+      "Não há sucesso apenas aprendizagem",
+      "Não há falha apenas feedback",
+      "A falha é a única maneira de aprender",
+      "O sucesso é o objetivo ultimate"
+     ],
+     "q": "Qual é o conceito central enfatizado no início deste módulo?",
+     "why": "O formador introduz a ideia de que não há falha, apenas feedback, destacando a sua importância para o progresso."
+    },
+    "t0": 0,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750410355,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Exploring how to achieve success",
+      "Exploring how to overcome obstacles",
+      "Exploring our relationship to failure or challenges",
+      "Exploring how to become a business leader"
+     ],
+     "q": "What is the main focus of this module?",
+     "why": "The trainer explains that this module is about exploring how we see and approach failure or challenges."
+    },
+    "pt": {
+     "opts": [
+      "Explorar como alcançar o sucesso",
+      "Explorar como superar obstáculos",
+      "Explorar a nossa relação com a falha ou desafios",
+      "Explorar como se tornar um líder empresarial"
+     ],
+     "q": "Qual é o foco principal deste módulo?",
+     "why": "O formador explica que este módulo é sobre explorar como vemos e abordamos a falha ou desafios."
+    },
+    "t0": 26,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750410355,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Give up and move on",
+      "Try to forget it and focus on success",
+      "View it as an opportunity for feedback and learning",
+      "Blame others for the failure"
+     ],
+     "q": "How should you approach a situation where you have failed?",
+     "why": "The trainer emphasizes the importance of viewing failure as feedback, rather than as a negative outcome."
+    },
+    "pt": {
+     "opts": [
+      "Desistir e seguir em frente",
+      "Tentar esquecer e focar no sucesso",
+      "Ver como uma oportunidade para feedback e aprendizagem",
+      "Culpar os outros pela falha"
+     ],
+     "q": "Como deve abordar uma situação em que falhou?",
+     "why": "O formador destaca a importância de ver a falha como feedback, em vez de como um resultado negativo."
+    },
+    "t0": 0,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750410355,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to avoid it",
+      "View it as a threat to your ego",
+      "View it as an opportunity to learn and grow",
+      "Give up and ask for help"
+     ],
+     "q": "What should you do when faced with a challenge or setback?",
+     "why": "The trainer suggests that we should explore our relationship to failure or challenges, implying that we should view them as opportunities for growth."
+    },
+    "pt": {
+     "opts": [
+      "Tentar evitá-lo",
+      "Ver como uma ameaça ao seu ego",
+      "Ver como uma oportunidade para aprender e crescer",
+      "Desistir e pedir ajuda"
+     ],
+     "q": "O que deve fazer quando enfrenta um desafio ou revés?",
+     "why": "O formador sugere que devemos explorar a nossa relação com a falha ou desafios, implicando que devemos vê-los como oportunidades para crescimento."
+    },
+    "t0": 26,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750410355,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "You should have been more careful",
+      "Don't worry, it's not a big deal",
+      "Remember, there is no failure only feedback, let's learn from it",
+      "You're not cut out for this job"
+     ],
+     "q": "A colleague is feeling discouraged after making a mistake. What should you say to them?",
+     "why": "The trainer's emphasis on viewing failure as feedback suggests that we should encourage others to do the same, rather than criticizing or dismissing their mistakes."
+    },
+    "pt": {
+     "opts": [
+      "Você deveria ter sido mais cuidadoso",
+      "Não se preocupe, não é grande coisa",
+      "Lembre-se, não há falha apenas feedback, vamos aprender com isso",
+      "Você não é adequado para este trabalho"
+     ],
+     "q": "Um colega está se sentindo desanimado após cometer um erro. O que deve dizer a ele?",
+     "why": "A ênfase do formador em ver a falha como feedback sugere que devemos encorajar os outros a fazer o mesmo, em vez de criticar ou descartar seus erros."
+    },
+    "t0": 0,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750410355,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to push through the anxiety and focus on success",
+      "View the task as an opportunity to learn and grow, regardless of the outcome",
+      "Avoid the task altogether to avoid feeling anxious",
+      "Seek feedback from others before attempting the task"
+     ],
+     "q": "You are faced with a difficult task and are feeling anxious about the possibility of failure. What should you do?",
+     "why": "The trainer's focus on exploring our relationship to failure or challenges suggests that we should view difficult tasks as opportunities for growth, rather than as threats to our ego or well-being."
+    },
+    "pt": {
+     "opts": [
+      "Tentar superar a ansiedade e focar no sucesso",
+      "Ver a tarefa como uma oportunidade para aprender e crescer, independentemente do resultado",
+      "Evitar a tarefa completamente para evitar se sentir ansioso",
+      "Procurar feedback de outros antes de tentar a tarefa"
+     ],
+     "q": "Você está enfrentando uma tarefa difícil e está se sentindo ansioso sobre a possibilidade de falha. O que deve fazer?",
+     "why": "A ênfase do formador em explorar a nossa relação com a falha ou desafios sugere que devemos ver as tarefas difíceis como oportunidades para crescimento, em vez de como ameaças ao nosso ego ou bem-estar."
+    },
+    "t0": 26,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750410355,
+    "verified": true
+   }
+  ],
+  "6": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "As a source of emotional pain",
+      "As a stepping stone to achieving their desired outcome",
+      "As a reason to give up",
+      "As a personal attack"
+     ],
+     "q": "How do elite individuals in their field often view failure?",
+     "why": "They see failure as a necessary step towards success, rather than as a failure itself."
+    },
+    "pt": {
+     "opts": [
+      "Como uma fonte de dor emocional",
+      "Como um degrau para alcançar o resultado desejado",
+      "Como um motivo para desistir",
+      "Como um ataque pessoal"
+     ],
+     "q": "Como os indivíduos de elite em seu campo veem frequentemente o fracasso?",
+     "why": "Eles veem o fracasso como um passo necessário para o sucesso, em vez de como um fracasso em si."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750433602,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "As a personal failure",
+      "As a stepping stone to success",
+      "As a reason to quit",
+      "As a source of shame"
+     ],
+     "q": "How did Thomas Edison view his many failures?",
+     "why": "He saw his failures as feedback, and believed that each failure brought him closer to finding the solution."
+    },
+    "pt": {
+     "opts": [
+      "Como um fracasso pessoal",
+      "Como um degrau para o sucesso",
+      "Como um motivo para desistir",
+      "Como uma fonte de vergonha"
+     ],
+     "q": "Como Thomas Edison via seus muitos fracassos?",
+     "why": "Ele via seus fracassos como feedback, e acreditava que cada fracasso o aproximava da solução."
+    },
+    "t0": 57,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750433602,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to suppress the pain",
+      "Allow yourself to feel the pain and learn from it",
+      "Give up on your goal",
+      "Blame others for the failure"
+     ],
+     "q": "What should you do when experiencing emotional pain from a failure?",
+     "why": "You should allow yourself to feel the pain and learn from it, in order to grow and improve."
+    },
+    "pt": {
+     "opts": [
+      "Tentar suprimir a dor",
+      "Permitir-se sentir a dor e aprender com ela",
+      "Desistir do seu objetivo",
+      "Culpar os outros pelo fracasso"
+     ],
+     "q": "O que você deve fazer quando experimenta dor emocional por um fracasso?",
+     "why": "Você deve permitir-se sentir a dor e aprender com ela, para crescer e melhorar."
+    },
+    "t0": 137,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750433602,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "By dwelling on the negative emotions",
+      "By focusing on the learning elements and turning them into a positive outcome",
+      "By trying to forget the experience",
+      "By blaming others for the experience"
+     ],
+     "q": "How can you reframe the meaning of a painful experience?",
+     "why": "You can reframe the meaning of a painful experience by focusing on the learning elements and turning them into a positive outcome."
+    },
+    "pt": {
+     "opts": [
+      "Ao se concentrar nas emoções negativas",
+      "Ao se concentrar nos elementos de aprendizado e transformá-los em um resultado positivo",
+      "Ao tentar esquecer a experiência",
+      "Ao culpar os outros pela experiência"
+     ],
+     "q": "Como você pode redefinir o significado de uma experiência dolorosa?",
+     "why": "Você pode redefinir o significado de uma experiência dolorosa ao se concentrar nos elementos de aprendizado e transformá-los em um resultado positivo."
+    },
+    "t0": 167,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750433602,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Focusing on the potential negative consequences of failure",
+      "Focusing on growing and learning from the experience",
+      "Giving up on the assignment",
+      "Seeking help from a peer"
+     ],
+     "q": "A student is struggling with a difficult assignment and is feeling discouraged. What approach could help them overcome their fear of failure?",
+     "why": "Focusing on growing and learning from the experience could help them overcome their fear of failure and increase their confidence."
+    },
+    "pt": {
+     "opts": [
+      "Se concentrar nas possíveis consequências negativas do fracasso",
+      "Se concentrar no crescimento e aprendizado com a experiência",
+      "Desistir da tarefa",
+      "Procurar ajuda de um colega"
+     ],
+     "q": "Um aluno está tendo dificuldade com uma tarefa difícil e está se sentindo desanimado. Qual abordagem poderia ajudá-lo a superar o medo do fracasso?",
+     "why": "Se concentrar no crescimento e aprendizado com a experiência poderia ajudá-lo a superar o medo do fracasso e aumentar sua confiança."
+    },
+    "t0": 111,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750433602,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "A fixed mindset, believing that their abilities are fixed",
+      "A growth mindset, believing that their abilities can be developed",
+      "A pessimistic mindset, believing that they will fail",
+      "A complacent mindset, believing that they are already good enough"
+     ],
+     "q": "An employee is facing a challenging project and is unsure if they can succeed. What mindset could help them stay motivated and focused?",
+     "why": "A growth mindset, believing that their abilities can be developed, could help them stay motivated and focused on achieving their goal."
+    },
+    "pt": {
+     "opts": [
+      "Uma mentalidade fixa, acreditando que suas habilidades são fixas",
+      "Uma mentalidade de crescimento, acreditando que suas habilidades podem ser desenvolvidas",
+      "Uma mentalidade pessimista, acreditando que ele falhará",
+      "Uma mentalidade complacente, acreditando que ele já é bom o suficiente"
+     ],
+     "q": "Um funcionário está enfrentando um projeto desafiador e está incerto se pode ter sucesso. Qual mentalidade poderia ajudá-lo a se manter motivado e focado?",
+     "why": "Uma mentalidade de crescimento, acreditando que suas habilidades podem ser desenvolvidas, poderia ajudá-lo a se manter motivado e focado em alcançar seu objetivo."
+    },
+    "t0": 196,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750433602,
+    "corrected": true
+   }
+  ],
+  "7": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Focusing on what can be learned",
+      "Telling oneself a negative story",
+      "Ignoring the failure",
+      "Blaming others"
+     ],
+     "q": "What is a common negative pattern when experiencing failures or setbacks?",
+     "why": "The trainer mentions that they used to tell themselves a negative story about their failures, asking what's wrong with them."
+    },
+    "pt": {
+     "opts": [
+      "Focar no que pode ser aprendido",
+      "Contar a si mesmo uma história negativa",
+      "Ignorar a falha",
+      "Culpar os outros"
+     ],
+     "q": "Qual é um padrão negativo comum quando se experimentam falhas ou revezes?",
+     "why": "O treinador menciona que costumava contar a si mesmo uma história negativa sobre as suas falhas, perguntando o que estava errado com ele."
+    },
+    "t0": 30,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750454005,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "As a sign of weakness",
+      "As an opportunity to learn",
+      "As a reason to give up",
+      "As a threat to one's ego"
+     ],
+     "q": "How can challenges and setbacks be viewed in a positive way?",
+     "why": "The trainer mentions Thomas Edison as an example of someone who viewed failures as an opportunity to learn."
+    },
+    "pt": {
+     "opts": [
+      "Como um sinal de fraqueza",
+      "Como uma oportunidade para aprender",
+      "Como um motivo para desistir",
+      "Como uma ameaça ao ego"
+     ],
+     "q": "Como os desafios e revezes podem ser vistos de uma forma positiva?",
+     "why": "O treinador menciona Thomas Edison como um exemplo de alguém que via as falhas como uma oportunidade para aprender."
+    },
+    "t0": 115,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750454005,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell yourself a negative story",
+      "Focus on what can be learned",
+      "Blame others",
+      "Give up"
+     ],
+     "q": "What should you do when experiencing a setback or failure?",
+     "why": "The trainer emphasizes the importance of having a positive relationship with oneself and using challenges as opportunities for growth."
+    },
+    "pt": {
+     "opts": [
+      "Contar a si mesmo uma história negativa",
+      "Focar no que pode ser aprendido",
+      "Culpar os outros",
+      "Desistir"
+     ],
+     "q": "O que você deve fazer quando experimenta um revés ou falha?",
+     "why": "O treinador enfatiza a importância de ter uma relação positiva consigo mesmo e usar os desafios como oportunidades para crescimento."
+    },
+    "t0": 144,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750454005,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Focusing on solutions",
+      "Dwelling on negative thoughts",
+      "Blaming others",
+      "Giving up"
+     ],
+     "q": "What is a key aspect of being mentally strong when facing challenges?",
+     "why": "The trainer mentions that looking for solutions is an important aspect of being mentally strong, as discussed in the first module."
+    },
+    "pt": {
+     "opts": [
+      "Focar em soluções",
+      "Permanecer em pensamentos negativos",
+      "Culpar os outros",
+      "Desistir"
+     ],
+     "q": "Qual é um aspecto fundamental para ser mentalmente forte quando enfrentar desafios?",
+     "why": "O treinador menciona que procurar soluções é um aspecto importante para ser mentalmente forte, como discutido no primeiro módulo."
+    },
+    "t0": 170,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750454005,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them to focus on their weaknesses",
+      "Encourage them to view the challenge as an opportunity to learn",
+      "Suggest they blame someone else",
+      "Recommend they give up on the project"
+     ],
+     "q": "A colleague is struggling with a project and is feeling discouraged. What should you advise them to do?",
+     "why": "The trainer emphasizes the importance of having a positive relationship with oneself and using challenges as opportunities for growth."
+    },
+    "pt": {
+     "opts": [
+      "Dizer-lhes para focar nas suas fraquezas",
+      "Encorajá-los a ver o desafio como uma oportunidade para aprender",
+      "Sugerir que culpe alguém mais",
+      "Recomendar que desistam do projeto"
+     ],
+     "q": "Um colega está tendo dificuldades com um projeto e está se sentindo desanimado. O que você deve aconselhá-los a fazer?",
+     "why": "O treinador enfatiza a importância de ter uma relação positiva consigo mesmo e usar os desafios como oportunidades para crescimento."
+    },
+    "t0": 60,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750454005,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Focus on finding solutions",
+      "Dwell on negative thoughts and emotions",
+      "Blame others for your situation",
+      "Give up and avoid the problem"
+     ],
+     "q": "You are facing a difficult situation in your personal life and are feeling overwhelmed. What should you do to move forward?",
+     "why": "The trainer mentions that looking for solutions is an important aspect of being mentally strong, as discussed in the first module."
+    },
+    "pt": {
+     "opts": [
+      "Focar em encontrar soluções",
+      "Permanecer em pensamentos e emoções negativas",
+      "Culpar os outros pela sua situação",
+      "Desistir e evitar o problema"
+     ],
+     "q": "Você está enfrentando uma situação difícil na sua vida pessoal e está se sentindo sobrecarregado. O que você deve fazer para seguir em frente?",
+     "why": "O treinador menciona que procurar soluções é um aspecto importante para ser mentalmente forte, como discutido no primeiro módulo."
+    },
+    "t0": 86,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750454005,
+    "corrected": true
+   }
+  ],
+  "8": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "The individual",
+      "The environment",
+      "The organization's purpose",
+      "The team's goals"
+     ],
+     "q": "What is the starting point of the CAM model?",
+     "why": "The environment is the foundation of the CAM model, setting the tone for the culture and vibe of the organization."
+    },
+    "pt": {
+     "opts": [
+      "O indivíduo",
+      "O ambiente",
+      "O propósito da organização",
+      "Os objetivos da equipa"
+     ],
+     "q": "Qual é o ponto de partida do modelo CAM?",
+     "why": "O ambiente é a base do modelo CAM, definindo o tom para a cultura e a atmosfera da organização."
+    },
+    "t0": 139,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750477136,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Only non-profit organizations",
+      "Only businesses",
+      "A variety of organizations, including churches and companies",
+      "Only government institutions"
+     ],
+     "q": "What types of organizations have benefited from the CAM model?",
+     "why": "The CAM model has been successfully applied to various types of organizations, including churches, charitable organizations, and high-functioning companies."
+    },
+    "pt": {
+     "opts": [
+      "Apenas organizações sem fins lucrativos",
+      "Apenas empresas",
+      "Uma variedade de organizações, incluindo igrejas e empresas",
+      "Apenas instituições governamentais"
+     ],
+     "q": "Que tipo de organizações se beneficiaram do modelo CAM?",
+     "why": "O modelo CAM foi aplicado com sucesso a vários tipos de organizações, incluindo igrejas, organizações caritativas e empresas de alto desempenho."
+    },
+    "t0": 81,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750477136,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "By focusing on the individual's role",
+      "By analyzing the organization's goals",
+      "By considering the atmosphere and vibe of the organization",
+      "By ignoring the culture and focusing on tasks"
+     ],
+     "q": "How should you approach understanding the culture of an organization?",
+     "why": "Understanding the culture of an organization involves considering the atmosphere and vibe of the organization, including how it feels to be in that environment."
+    },
+    "pt": {
+     "opts": [
+      "Focando-se no papel do indivíduo",
+      "Analisando os objetivos da organização",
+      "Considerando a atmosfera e a vibração da organização",
+      "Ignorando a cultura e focando-se nas tarefas"
+     ],
+     "q": "Como deve abordar a compreensão da cultura de uma organização?",
+     "why": "Compreender a cultura de uma organização envolve considerar a atmosfera e a vibração da organização, incluindo como se sente estar nesse ambiente."
+    },
+    "t0": 166,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750477136,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "As just a job",
+      "As a purpose",
+      "As a chore",
+      "As a hobby"
+     ],
+     "q": "How can you view your work at Eden Rise?",
+     "why": "Viewing your work at Eden Rise as a purpose can help you find more meaning and fulfillment in your role."
+    },
+    "pt": {
+     "opts": [
+      "Apenas como um emprego",
+      "Como um propósito",
+      "Como uma tarefa",
+      "Como um hobby"
+     ],
+     "q": "Como pode ver o seu trabalho na Eden Rise?",
+     "why": "Ver o seu trabalho na Eden Rise como um propósito pode ajudá-lo a encontrar mais significado e realização no seu papel."
+    },
+    "t0": 54,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750477136,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "You ask someone about the organization's goals",
+      "You try to change the culture to fit your own preferences",
+      "You observe how people interact with each other",
+      "You ignore the culture and focus on your tasks"
+     ],
+     "q": "You are new to Eden Rise and are trying to understand the culture. What do you do?",
+     "why": "Observing how people interact with each other can help you understand the culture and vibe of the organization."
+    },
+    "pt": {
+     "opts": [
+      "Você pergunta a alguém sobre os objetivos da organização",
+      "Você tenta mudar a cultura para se adequar às suas próprias preferências",
+      "Você observa como as pessoas interagem entre si",
+      "Você ignora a cultura e se concentra nas suas tarefas"
+     ],
+     "q": "Você é novo na Eden Rise e está tentando compreender a cultura. O que você faz?",
+     "why": "Observar como as pessoas interagem entre si pode ajudá-lo a compreender a cultura e a atmosfera da organização."
+    },
+    "t0": 139,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750477136,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "You tell them to just fit in",
+      "You explain the organization's goals and expectations",
+      "You introduce them to the CAM model and its benefits",
+      "You ignore the issue and hope it resolves itself"
+     ],
+     "q": "A new team member is struggling to adapt to the culture at Eden Rise. What can you do to help?",
+     "why": "Introducing the new team member to the CAM model and its benefits can help them understand the culture and vibe of the organization and adapt more easily."
+    },
+    "pt": {
+     "opts": [
+      "Você diz a eles para simplesmente se adaptar",
+      "Você explica os objetivos e expectativas da organização",
+      "Você apresenta a eles o modelo CAM e seus benefícios",
+      "Você ignora a questão e espera que se resolva sozinha"
+     ],
+     "q": "Um novo membro da equipa está tendo dificuldades em se adaptar à cultura na Eden Rise. O que pode fazer para ajudar?",
+     "why": "Apresentar o novo membro da equipa ao modelo CAM e seus benefícios pode ajudá-lo a compreender a cultura e a atmosfera da organização e a se adaptar mais facilmente."
+    },
+    "t0": 81,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750477136,
+    "corrected": true
+   }
+  ],
+  "9": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Only 90 day goal setting",
+      "Only top five goals for the week",
+      "90 day goal setting and top five goals for the week",
+      "No specific goal setting methods"
+     ],
+     "q": "What are the two primary ways of setting goals explored in this module?",
+     "why": "The module covers both 90 day goal setting and top five goals for the week as the two primary ways to set goals."
+    },
+    "pt": {
+     "opts": [
+      "Apenas definição de objetivos para 90 dias",
+      "Apenas cinco principais objetivos para a semana",
+      "Definição de objetivos para 90 dias e cinco principais objetivos para a semana",
+      "Nenhum método específico de definição de objetivos"
+     ],
+     "q": "Quais são as duas principais formas de definir objetivos exploradas neste módulo?",
+     "why": "O módulo aborda tanto a definição de objetivos para 90 dias como os cinco principais objetivos para a semana como as duas principais formas de definir objetivos."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750497036,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "To reduce focus and clarity",
+      "To increase collective energy",
+      "To help with clarity, focus, and directing energies",
+      "To decrease team performance"
+     ],
+     "q": "What is the purpose of setting goals according to this module?",
+     "why": "Setting goals helps with clarity, focus, and directing collective energies."
+    },
+    "pt": {
+     "opts": [
+      "Reduzir o foco e a clareza",
+      "Aumentar a energia coletiva",
+      "Ajudar com a clareza, o foco e a direção das energias",
+      "Diminuir o desempenho da equipe"
+     ],
+     "q": "Qual é o propósito de definir objetivos de acordo com este módulo?",
+     "why": "Definir objetivos ajuda com a clareza, o foco e a direção das energias coletivas."
+    },
+    "t0": 45,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750497036,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Set only long-term goals",
+      "Set only short-term goals",
+      "Set both 90 day goals and top five weekly goals",
+      "Do not set any goals"
+     ],
+     "q": "What should a team do to apply the goal setting principles from this module?",
+     "why": "Teams should set both 90 day goals and top five weekly goals to apply the goal setting principles."
+    },
+    "pt": {
+     "opts": [
+      "Definir apenas objetivos de longo prazo",
+      "Definir apenas objetivos de curto prazo",
+      "Definir tanto objetivos para 90 dias como os cinco principais objetivos semanais",
+      "Não definir objetivos"
+     ],
+     "q": "O que uma equipe deve fazer para aplicar os princípios de definição de objetivos deste módulo?",
+     "why": "As equipes devem definir tanto objetivos para 90 dias como os cinco principais objetivos semanais para aplicar os princípios de definição de objetivos."
+    },
+    "t0": 27,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750497036,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Start with the top five goals for the week",
+      "Start with the 90 day goals",
+      "Alternate between both types of goals",
+      "Do not prioritize"
+     ],
+     "q": "How should a team prioritize their goal setting process?",
+     "why": "Teams should start with the 90 day goals to prioritize their goal setting process."
+    },
+    "pt": {
+     "opts": [
+      "Começar com os cinco principais objetivos para a semana",
+      "Começar com os objetivos para 90 dias",
+      "Alternar entre ambos os tipos de objetivos",
+      "Não priorizar"
+     ],
+     "q": "Como uma equipe deve priorizar o seu processo de definição de objetivos?",
+     "why": "As equipes devem começar com os objetivos para 90 dias para priorizar o seu processo de definição de objetivos."
+    },
+    "t0": 54,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750497036,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Set their own personal goals",
+      "Join the animation session to learn about goals",
+      "Participate in the 90 day goal setting and top five weekly goal setting process",
+      "Wait for instructions from the team lead"
+     ],
+     "q": "A new team member joins the farm and is unsure about how to contribute to the team's goals. What should they do?",
+     "why": "The new team member should participate in the 90 day goal setting and top five weekly goal setting process to understand and contribute to the team's goals."
+    },
+    "pt": {
+     "opts": [
+      "Definir seus próprios objetivos pessoais",
+      "Participar da sessão de animação para aprender sobre objetivos",
+      "Participar do processo de definição de objetivos para 90 dias e dos cinco principais objetivos semanais",
+      "Esperar por instruções do líder da equipe"
+     ],
+     "q": "Um novo membro da equipe se junta à quinta e está incerto sobre como contribuir para os objetivos da equipe. O que eles devem fazer?",
+     "why": "O novo membro da equipe deve participar do processo de definição de objetivos para 90 dias e dos cinco principais objetivos semanais para entender e contribuir para os objetivos da equipe."
+    },
+    "t0": 27,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750497036,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Watch the animation again",
+      "Set new goals every week",
+      "Review and adjust their 90 day goals and top five weekly goals",
+      "Decrease the number of goals"
+     ],
+     "q": "The team is having trouble focusing on their goals. What can they do to improve their focus?",
+     "why": "The team can review and adjust their 90 day goals and top five weekly goals to improve their focus."
+    },
+    "pt": {
+     "opts": [
+      "Assistir à animação novamente",
+      "Definir novos objetivos todas as semanas",
+      "Revisar e ajustar os objetivos para 90 dias e os cinco principais objetivos semanais",
+      "Diminuir o número de objetivos"
+     ],
+     "q": "A equipe está tendo dificuldade em se concentrar nos seus objetivos. O que eles podem fazer para melhorar o seu foco?",
+     "why": "A equipe pode revisar e ajustar os objetivos para 90 dias e os cinco principais objetivos semanais para melhorar o seu foco."
+    },
+    "t0": 54,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750497036,
+    "corrected": true
+   }
+  ],
+  "10": [
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "His ability to concentrate and work towards a goal",
+      "His natural talent",
+      "His experience in the sport",
+      "His ability to work with others"
+     ],
+     "q": "What is the primary asset that has helped golfing legend Jack Nicholas achieve his goals?",
+     "why": "Jack Nicholas stated that his ability to concentrate and work towards a goal has been his greatest asset."
+    },
+    "pt": {
+     "opts": [
+      "Sua capacidade de se concentrar e trabalhar em direção a um objetivo",
+      "Seu talento natural",
+      "Sua experiência no esporte",
+      "Sua capacidade de trabalhar com os outros"
+     ],
+     "q": "Qual é o principal ativo que ajudou o lendário golfista Jack Nicholas a alcançar seus objetivos?",
+     "why": "Jack Nicholas afirmou que sua capacidade de se concentrar e trabalhar em direção a um objetivo foi seu maior ativo."
+    },
+    "t0": 26,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750172357,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "That they are set by someone else",
+      "That they are your own and truly excite and inspire you",
+      "That they are only focused on winning",
+      "That they are too difficult to achieve"
+     ],
+     "q": "What should you ensure when setting long-term goals?",
+     "why": "It is essential to ensure that long-term goals are your own and truly excite and inspire you."
+    },
+    "pt": {
+     "opts": [
+      "Que sejam definidas por alguém else",
+      "Que sejam suas e verdadeiramente o inspirem e o motivem",
+      "Que sejam apenas focadas em vencer",
+      "Que sejam muito difíceis de alcançar"
+     ],
+     "q": "O que você deve garantir ao definir metas de longo prazo?",
+     "why": "É essencial garantir que as metas de longo prazo sejam suas e verdadeiramente o inspirem e o motivem."
+    },
+    "t0": 83,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750172357,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Wait for the right moment to start working towards it",
+      "Set a medium-term goal to work towards something that is not too far away",
+      "Focus only on the outcome",
+      "Give up if it seems too difficult"
+     ],
+     "q": "What should you do after setting a long-term goal?",
+     "why": "After setting a long-term goal, you should set a medium-term goal to work towards something that is not too far away."
+    },
+    "pt": {
+     "opts": [
+      "Esperar o momento certo para começar a trabalhar em direção a ela",
+      "Definir uma meta de médio prazo para trabalhar em direção a algo que não esteja muito longe",
+      "Focar apenas no resultado",
+      "Desistir se parecer muito difícil"
+     ],
+     "q": "O que você deve fazer após definir uma meta de longo prazo?",
+     "why": "Após definir uma meta de longo prazo, você deve definir uma meta de médio prazo para trabalhar em direção a algo que não esteja muito longe."
+    },
+    "t0": 109,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750172357,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Winning and losing",
+      "Getting better",
+      "The outcome",
+      "The process"
+     ],
+     "q": "What should you focus on to reach your goals, according to Steffi Graff's father?",
+     "why": "According to Steffi Graff's father, you should focus on getting better to reach your goals."
+    },
+    "pt": {
+     "opts": [
+      "Vencer e perder",
+      "Melhorar",
+      "O resultado",
+      "O processo"
+     ],
+     "q": "No que você deve se concentrar para alcançar seus objetivos, de acordo com o pai de Steffi Graff?",
+     "why": "De acordo com o pai de Steffi Graff, você deve se concentrar em melhorar para alcançar seus objetivos."
+    },
+    "t0": 165,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750172357,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Break down the task into smaller, short-term achievable goals",
+      "Focus only on the outcome",
+      "Give up on the goal",
+      "Work on the task for a longer period each day"
+     ],
+     "q": "You are working towards a medium-term goal, but you are feeling overwhelmed by the task. What can you do to build confidence and momentum?",
+     "why": "Breaking down the task into smaller, short-term achievable goals can help build confidence and momentum."
+    },
+    "pt": {
+     "opts": [
+      "Dividir a tarefa em metas menores, de curto prazo e alcançáveis",
+      "Focar apenas no resultado",
+      "Desistir da meta",
+      "Trabalhar na tarefa por um período mais longo cada dia"
+     ],
+     "q": "Você está trabalhando em direção a uma meta de médio prazo, mas está se sentindo sobrecarregado pela tarefa. O que você pode fazer para construir confiança e momentum?",
+     "why": "Dividir a tarefa em metas menores, de curto prazo e alcançáveis pode ajudar a construir confiança e momentum."
+    },
+    "t0": 138,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750172357,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Set a new long-term goal",
+      "Create and track smaller, short-term achievable goals",
+      "Focus only on the outcome",
+      "Give up on the goal"
+     ],
+     "q": "You have set a long-term goal, but you are struggling to make progress. What can you do to get back on track?",
+     "why": "Creating and tracking smaller, short-term achievable goals can help you get back on track and make progress towards your long-term goal."
+    },
+    "pt": {
+     "opts": [
+      "Definir uma nova meta de longo prazo",
+      "Criar e acompanhar metas menores, de curto prazo e alcançáveis",
+      "Focar apenas no resultado",
+      "Desistir da meta"
+     ],
+     "q": "Você definiu uma meta de longo prazo, mas está tendo dificuldade em fazer progressos. O que você pode fazer para voltar ao trilho?",
+     "why": "Criar e acompanhar metas menores, de curto prazo e alcançáveis pode ajudar a voltar ao trilho e fazer progressos em direção à sua meta de longo prazo."
+    },
+    "t0": 193,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750172357,
+    "corrected": true
+   }
+  ],
+  "11": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "It helps individuals achieve personal goals",
+      "It helps the company understand its vision and direction",
+      "It is a requirement for employee evaluation",
+      "It is a way to punish underperforming departments"
+     ],
+     "q": "Why is goal setting important for the company?",
+     "why": "Goal setting helps the company understand its vision and direction, and ensures all departments are working towards the same goals."
+    },
+    "pt": {
+     "opts": [
+      "Ajuda os indivíduos a alcançar metas pessoais",
+      "Ajuda a empresa a entender sua visão e direção",
+      "É um requisito para a avaliação de funcionários",
+      "É uma forma de punir departamentos com desempenho insuficiente"
+     ],
+     "q": "Por que é importante definir metas para a empresa?",
+     "why": "Definir metas ajuda a empresa a entender sua visão e direção, e garante que todos os departamentos estejam trabalhando em direção aos mesmos objetivos."
+    },
+    "t0": 25,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750202370,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Spend a lot of time perfecting the template",
+      "Get the first one done quickly and familiarize yourself with the process",
+      "Wait for guidance from a supervisor before starting",
+      "Only complete the template with a team"
+     ],
+     "q": "What is the recommended approach to completing the 90-day goal setting template?",
+     "why": "The recommended approach is to get the first one done quickly and familiarize yourself with the process."
+    },
+    "pt": {
+     "opts": [
+      "Gastar muito tempo aperfeiçoando o modelo",
+      "Concluir o primeiro rapidamente e familiarizar-se com o processo",
+      "Esperar orientação de um supervisor antes de começar",
+      "Concluir o modelo apenas com uma equipe"
+     ],
+     "q": "Qual é a abordagem recomendada para completar o modelo de definição de metas de 90 dias?",
+     "why": "A abordagem recomendada é concluir o primeiro rapidamente e familiarizar-se com o processo."
+    },
+    "t0": 51,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750202370,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Leave it blank until the company defines the department names",
+      "Use a generic term such as 'Operations'",
+      "Enter the name of your actual department, such as 'Landcare department'",
+      "Enter the name of a department you aspire to work in"
+     ],
+     "q": "What should you do when completing the department section of the 90-day goal setting template?",
+     "why": "You should enter the name of your actual department, such as 'Landcare department'."
+    },
+    "pt": {
+     "opts": [
+      "Deixar em branco até que a empresa defina os nomes dos departamentos",
+      "Usar um termo genérico, como 'Operações'",
+      "Inserir o nome do seu departamento atual, como 'departamento de Landcare'",
+      "Inserir o nome de um departamento que você aspira trabalhar"
+     ],
+     "q": "O que você deve fazer ao completar a seção do departamento no modelo de definição de metas de 90 dias?",
+     "why": "Você deve inserir o nome do seu departamento atual, como 'departamento de Landcare'."
+    },
+    "t0": 81,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750202370,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Think only about the specific tasks you perform daily",
+      "Consider the bigger inspiration and purpose behind your work",
+      "Focus on the goals of other departments",
+      "Ignore this section as it's not relevant to your role"
+     ],
+     "q": "How should you approach defining the 'grand vision dream' for your department?",
+     "why": "You should consider the bigger inspiration and purpose behind your work."
+    },
+    "pt": {
+     "opts": [
+      "Pensar apenas nas tarefas específicas que você realiza diariamente",
+      "Considerar a inspiração e propósito maior por trás do seu trabalho",
+      "Focar nos objetivos de outros departamentos",
+      "Ignorar esta seção, pois não é relevante para o seu papel"
+     ],
+     "q": "Como você deve abordar a definição do 'sonho da visão grandiosa' para o seu departamento?",
+     "why": "Você deve considerar a inspiração e propósito maior por trás do seu trabalho."
+    },
+    "t0": 112,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750202370,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Ask a colleague from a different department for their opinion",
+      "Focus on the daily tasks and ignore the 'grand vision dream' section",
+      "Think about how your work contributes to the overall mission of the company",
+      "Wait for guidance from a supervisor before proceeding"
+     ],
+     "q": "You are a new team member in the Building Maintenance Team department. You are struggling to define the 'grand vision dream' for your department. What should you do?",
+     "why": "You should think about how your work contributes to the overall mission of the company."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar a um colega de um departamento diferente sobre sua opinião",
+      "Focar nas tarefas diárias e ignorar a seção do 'sonho da visão grandiosa'",
+      "Pensar sobre como o seu trabalho contribui para a missão geral da empresa",
+      "Esperar orientação de um supervisor antes de prosseguir"
+     ],
+     "q": "Você é um novo membro da equipe no departamento de Manutenção de Edifícios. Você está tendo dificuldade em definir o 'sonho da visão grandiosa' para o seu departamento. O que você deve fazer?",
+     "why": "Você deve pensar sobre como o seu trabalho contribui para a missão geral da empresa."
+    },
+    "t0": 141,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750202370,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Leave the section blank and move on to the next part of the template",
+      "Write down your personal goals and aspirations",
+      "Describe the specific actions you will take to achieve your department's goals",
+      "Call a meeting with your team to discuss the section"
+     ],
+     "q": "You are completing the 90-day goal setting template and reach the 'B, do and have' section. You are unsure what to write. What should you do?",
+     "why": "You should describe the specific actions you will take to achieve your department's goals."
+    },
+    "pt": {
+     "opts": [
+      "Deixar a seção em branco e passar para a próxima parte do modelo",
+      "Escrever os seus objetivos e aspirações pessoais",
+      "Descrever as ações específicas que você tomará para alcançar os objetivos do seu departamento",
+      "Chamar uma reunião com a sua equipe para discutir a seção"
+     ],
+     "q": "Você está completando o modelo de definição de metas de 90 dias e chega à seção 'B, fazer e ter'. Você está incerto sobre o que escrever. O que você deve fazer?",
+     "why": "Você deve descrever as ações específicas que você tomará para alcançar os objetivos do seu departamento."
+    },
+    "t0": 167,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750202370,
+    "corrected": true
+   }
+  ],
+  "12": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Having more meetings",
+      "Having more focus and unity",
+      "Having more time off",
+      "Having more money"
+     ],
+     "q": "What is one of the benefits of creating goals for the team?",
+     "why": "Creating goals helps the team have more focus and unity, allowing them to work together towards a common objective."
+    },
+    "pt": {
+     "opts": [
+      "Ter mais reuniões",
+      "Ter mais foco e unidade",
+      "Ter mais tempo de folga",
+      "Ter mais dinheiro"
+     ],
+     "q": "Qual é uma das vantagens de criar metas para a equipe?",
+     "why": "Criar metas ajuda a equipe a ter mais foco e unidade, permitindo que eles trabalhem juntos em direção a um objetivo comum."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750221049,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Ignore them",
+      "Only track some of them",
+      "Measure and track all of them",
+      "Only evaluate some of them"
+     ],
+     "q": "What should be done with things that are important?",
+     "why": "Anything that is important should be measured, tracked, and evaluated to provide feedback and help with progress."
+    },
+    "pt": {
+     "opts": [
+      "Ignorá-las",
+      "Apenas acompanhar algumas delas",
+      "Medir e acompanhar todas elas",
+      "Apenas avaliar algumas delas"
+     ],
+     "q": "O que deve ser feito com coisas que são importantes?",
+     "why": "Tudo o que é importante deve ser medido, acompanhado e avaliado para fornecer feedback e ajudar com o progresso."
+    },
+    "t0": 53,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750221049,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Just move on to the next week's goals",
+      "Reflect on the challenges and lessons learned",
+      "Only celebrate their achievements",
+      "Ignore their progress and don't reflect"
+     ],
+     "q": "What should a team member do when they have achieved their weekly goals?",
+     "why": "Reflecting on the challenges and lessons learned helps to motivate and empower the team member to move forward in the following weeks."
+    },
+    "pt": {
+     "opts": [
+      "Apenas seguir em frente para as metas da próxima semana",
+      "Refletir sobre os desafios e lições aprendidas",
+      "Apenas celebrar seus sucessos",
+      "Ignorar seu progresso e não refletir"
+     ],
+     "q": "O que um membro da equipe deve fazer quando alcança suas metas semanais?",
+     "why": "Refletir sobre os desafios e lições aprendidas ajuda a motivar e empoderar o membro da equipe a seguir em frente nas semanas seguintes."
+    },
+    "t0": 115,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750221049,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "To their own personal vision",
+      "To the bigger vision of their particular team and their goals",
+      "To the goals of a different team",
+      "To no specific vision or goal"
+     ],
+     "q": "How should an individual's goals and subtasks be connected?",
+     "why": "An individual's goals and subtasks should be connected to the bigger vision of their particular team and their goals for that week and for the 90 days."
+    },
+    "pt": {
+     "opts": [
+      "À sua própria visão pessoal",
+      "À visão maior da sua equipe particular e suas metas",
+      "Às metas de uma equipe diferente",
+      "A nenhuma visão ou meta específica"
+     ],
+     "q": "Como as metas e subtarefas de um indivíduo devem ser conectadas?",
+     "why": "As metas e subtarefas de um indivíduo devem ser conectadas à visão maior da sua equipe particular e suas metas para aquela semana e para os 90 dias."
+    },
+    "t0": 144,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750221049,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "The ESIP model",
+      "The weekly goals model",
+      "The 90-day model",
+      "The team leader model"
+     ],
+     "q": "A team is struggling with their culture and values. What model can they use to diagnose and improve their situation?",
+     "why": "The ESIP model allows teams to diagnose and improve their culture, beliefs, purpose, goals, values, and structures."
+    },
+    "pt": {
+     "opts": [
+      "O modelo ESIP",
+      "O modelo de metas semanais",
+      "O modelo de 90 dias",
+      "O modelo de líder de equipe"
+     ],
+     "q": "Uma equipe está tendo dificuldades com sua cultura e valores. Qual modelo eles podem usar para diagnosticar e melhorar sua situação?",
+     "why": "O modelo ESIP permite que as equipes diagnosticem e melhorem sua cultura, crenças, propósito, metas, valores e estruturas."
+    },
+    "t0": 84,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750221049,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "The team leader",
+      "The team members themselves",
+      "The organization's CEO",
+      "The weekly goals system"
+     ],
+     "q": "Who is typically responsible for holding team members accountable for their weekly goals?",
+     "why": "The team leader is typically responsible for holding team members accountable for their weekly goals."
+    },
+    "pt": {
+     "opts": [
+      "O líder da equipe",
+      "Os próprios membros da equipe",
+      "O CEO da organização",
+      "O sistema de metas semanais"
+     ],
+     "q": "Quem é normalmente responsável por responsabilizar os membros da equipe por suas metas semanais?",
+     "why": "O líder da equipe é normalmente responsável por responsabilizar os membros da equipe por suas metas semanais."
+    },
+    "t0": 172,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750221049,
+    "verified": true
+   }
+  ],
+  "13": [
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Gap analysis",
+      "SWOT analysis",
+      "Risk analysis",
+      "Needs analysis"
+     ],
+     "q": "What analysis do we perform to gauge where we can improve at the end of the 90-day goal period?",
+     "why": "We perform a gap analysis to compare our forecasted goals with our actual achievements."
+    },
+    "pt": {
+     "opts": [
+      "Análise de lacunas",
+      "Análise SWOT",
+      "Análise de riscos",
+      "Análise de necessidades"
+     ],
+     "q": "Que tipo de análise realizamos para avaliar onde podemos melhorar no final do período de 90 dias?",
+     "why": "Realizamos uma análise de lacunas para comparar os nossos objetivos previstos com os nossos resultados reais."
+    },
+    "t0": 28,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750245109,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Floyd Mayweather",
+      "Muhammad Ali",
+      "Mike Tyson",
+      "George Foreman"
+     ],
+     "q": "Who is quoted as saying that nobody calibrates better than him?",
+     "why": "Floyd Mayweather is quoted as saying that nobody calibrates better than him, which contributed to his success as a boxer."
+    },
+    "pt": {
+     "opts": [
+      "Floyd Mayweather",
+      "Muhammad Ali",
+      "Mike Tyson",
+      "George Foreman"
+     ],
+     "q": "Quem é citado como tendo dito que ninguém se calibra melhor do que ele?",
+     "why": "Floyd Mayweather é citado como tendo dito que ninguém se calibra melhor do que ele, o que contribuiu para o seu sucesso como boxeur."
+    },
+    "t0": 57,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750245109,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Spend a lot of time perfecting your goals",
+      "Get it done as quickly as possible",
+      "Review and revise your goals immediately",
+      "Make sure your goals are achievable but not too easy"
+     ],
+     "q": "What should you do when you're going through the goal-setting process for the first time?",
+     "why": "You should get it done and not worry too much about perfection, as you will review and revise your goals every 90 days."
+    },
+    "pt": {
+     "opts": [
+      "Passar muito tempo aperfeiçoando os seus objetivos",
+      "Concluir o mais rápido possível",
+      "Rever e rever os seus objetivos imediatamente",
+      "Certificar-se de que os seus objetivos são alcançáveis mas não demasiado fáceis"
+     ],
+     "q": "O que deve fazer quando estiver a passar pelo processo de definição de objetivos pela primeira vez?",
+     "why": "Deve concluir e não se preocupar demasiado com a perfeição, uma vez que irá rever e rever os seus objetivos a cada 90 dias."
+    },
+    "t0": 45,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750245109,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Stop working on your goals",
+      "Make significant changes to your goals",
+      "Make calibrations and adjustments to improve",
+      "Continue working on your goals without making any changes"
+     ],
+     "q": "What should you do after checking your progress on your weekly and 90-day goals?",
+     "why": "You should make calibrations and adjustments to improve, based on your progress and what you've learned."
+    },
+    "pt": {
+     "opts": [
+      "Parar de trabalhar nos seus objetivos",
+      "Fazer alterações significativas nos seus objetivos",
+      "Fazer calibrações e ajustes para melhorar",
+      "Continuar a trabalhar nos seus objetivos sem fazer qualquer alteração"
+     ],
+     "q": "O que deve fazer após verificar o seu progresso nos seus objetivos semanais e de 90 dias?",
+     "why": "Deve fazer calibrações e ajustes para melhorar, com base no seu progresso e no que aprendeu."
+    },
+    "t0": 85,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750245109,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Give up on that goal",
+      "Try to catch up on that goal immediately",
+      "Perform a gap analysis to identify areas for improvement",
+      "Continue working on your other goals and ignore the area where you fell short"
+     ],
+     "q": "You've just completed your first 90-day goal period and you're reviewing your progress. You notice that you've fallen short of your goals in one area. What should you do next?",
+     "why": "You should perform a gap analysis to identify areas for improvement and make adjustments to get back on track."
+    },
+    "pt": {
+     "opts": [
+      "Desistir desse objetivo",
+      "Tentar recuperar esse objetivo imediatamente",
+      "Realizar uma análise de lacunas para identificar áreas para melhoria",
+      "Continuar a trabalhar nos seus outros objetivos e ignorar a área onde não atingiu"
+     ],
+     "q": "Acabou de concluir o seu primeiro período de 90 dias e está a rever o seu progresso. Nota que não atingiu os seus objetivos em uma área. O que deve fazer em seguida?",
+     "why": "Deve realizar uma análise de lacunas para identificar áreas para melhoria e fazer ajustes para voltar ao caminho certo."
+    },
+    "t0": 28,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750245109,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Make significant changes to your goals",
+      "Take a break and come back to your goals later",
+      "Make micro-calibrations and adjustments",
+      "Give up on your goals and start over"
+     ],
+     "q": "You're working on your goals and you realize that you need to make some adjustments to stay on track. What approach should you take?",
+     "why": "You should make micro-calibrations and adjustments, like Floyd Mayweather, to stay on track and achieve your goals."
+    },
+    "pt": {
+     "opts": [
+      "Fazer alterações significativas nos seus objetivos",
+      "Fazer uma pausa e voltar aos seus objetivos mais tarde",
+      "Fazer micro-calibrações e ajustes",
+      "Desistir dos seus objetivos e começar de novo"
+     ],
+     "q": "Está a trabalhar nos seus objetivos e percebe que precisa fazer alguns ajustes para manter-se no caminho certo. Que abordagem deve adotar?",
+     "why": "Deve fazer micro-calibrações e ajustes, como Floyd Mayweather, para manter-se no caminho certo e atingir os seus objetivos."
+    },
+    "t0": 57,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750245109,
+    "verified": true
+   }
+  ],
+  "14": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Fear is always based on real evidence",
+      "Fear is often based on projected future outcomes",
+      "Fear is only related to past experiences",
+      "Fear is never related to emotions"
+     ],
+     "q": "What is the main idea behind the concept of fear as 'false evidence appearing real'?",
+     "why": "The concept of fear as 'false evidence appearing real' suggests that fear is often based on projected future outcomes rather than actual evidence."
+    },
+    "pt": {
+     "opts": [
+      "O medo é sempre baseado em evidências reais",
+      "O medo é frequentemente baseado em resultados futuros projetados",
+      "O medo está apenas relacionado a experiências passadas",
+      "O medo nunca está relacionado a emoções"
+     ],
+     "q": "Qual é a principal ideia por trás do conceito de medo como 'evidência falsa que parece real'?",
+     "why": "O conceito de medo como 'evidência falsa que parece real' sugere que o medo é frequentemente baseado em resultados futuros projetados em vez de evidências reais."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750271878,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "The intensity of fear determines the meaning given to it",
+      "The meaning given to fear determines its intensity",
+      "The intensity of fear and the meaning given to it are unrelated",
+      "The intensity of fear is always the same as the meaning given to it"
+     ],
+     "q": "What is the relationship between the intensity of fear and the meaning given to it?",
+     "why": "The meaning given to fear can vary independently of its intensity, with different degrees of fear having different meanings."
+    },
+    "pt": {
+     "opts": [
+      "A intensidade do medo determina o significado atribuído a ele",
+      "O significado atribuído ao medo determina sua intensidade",
+      "A intensidade do medo e o significado atribuído a ele são irrelevantes",
+      "A intensidade do medo é sempre a mesma que o significado atribuído a ele"
+     ],
+     "q": "Qual é a relação entre a intensidade do medo e o significado atribuído a ele?",
+     "why": "O significado atribuído ao medo pode variar independentemente de sua intensidade, com diferentes graus de medo tendo significados diferentes."
+    },
+    "t0": 53,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750271878,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to avoid the fear",
+      "Lean in and face the fear",
+      "Let the fear control your actions",
+      "Wait for the fear to pass"
+     ],
+     "q": "What should you do when experiencing fear in order to grow and expand as a person?",
+     "why": "Transforming your relationship to fear involves leaning in and facing it, rather than avoiding or letting it control your actions."
+    },
+    "pt": {
+     "opts": [
+      "Tente evitar o medo",
+      "Incline-se e enfrente o medo",
+      "Deixe o medo controlar suas ações",
+      "Espere o medo passar"
+     ],
+     "q": "O que você deve fazer quando experimenta medo para crescer e se expandir como pessoa?",
+     "why": "Transformar sua relação com o medo envolve inclinar-se e enfrentá-lo, em vez de evitar ou deixar que ele controle suas ações."
+    },
+    "t0": 82,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750271878,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "To eliminate fear completely",
+      "To reduce the intensity of fear",
+      "To be able to feel the fear and take action anyway",
+      "To avoid fear at all costs"
+     ],
+     "q": "What is the ultimate goal of transforming your relationship to fear?",
+     "why": "The ultimate goal of transforming your relationship to fear is to be able to feel the fear and take action anyway, allowing for growth and expansion as a person."
+    },
+    "pt": {
+     "opts": [
+      "Eliminar o medo completamente",
+      "Reduzir a intensidade do medo",
+      "Ser capaz de sentir o medo e tomar ação de qualquer forma",
+      "Evitar o medo a todo custo"
+     ],
+     "q": "Qual é o objetivo final de transformar sua relação com o medo?",
+     "why": "O objetivo final de transformar sua relação com o medo é ser capaz de sentir o medo e tomar ação de qualquer forma, permitindo o crescimento e expansão como pessoa."
+    },
+    "t0": 82,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750271878,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "You're giving the event a highly positive meaning",
+      "You're giving the event a highly negative meaning",
+      "You're giving the event a neutral meaning",
+      "You're unsure about the meaning of the event"
+     ],
+     "q": "If you're experiencing a low-level anxiety about an upcoming event, what does this suggest about the meaning you're giving to the event?",
+     "why": "Experiencing a low-level anxiety about an upcoming event suggests that you're giving the event a meaning that is causing you some concern, but not overwhelming fear."
+    },
+    "pt": {
+     "opts": [
+      "Você está atribuindo ao evento um significado muito positivo",
+      "Você está atribuindo ao evento um significado muito negativo",
+      "Você está atribuindo ao evento um significado neutro",
+      "Você está incerto sobre o significado do evento"
+     ],
+     "q": "Se você está experimentando uma ansiedade de baixo nível sobre um evento futuro, o que isso sugere sobre o significado que você está atribuindo ao evento?",
+     "why": "Experimentar uma ansiedade de baixo nível sobre um evento futuro sugere que você está atribuindo ao evento um significado que está causando alguma preocupação, mas não um medo avassalador."
+    },
+    "t0": 53,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750271878,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them to avoid the project",
+      "Encourage them to lean in and face their fear",
+      "Suggest they wait for the fear to pass",
+      "Recommend they seek support from a supervisor"
+     ],
+     "q": "If a colleague is struggling with fear about a new project, what advice would you give them to help them grow and expand as a person?",
+     "why": "Encouraging the colleague to lean in and face their fear would help them transform their relationship to fear and grow as a person."
+    },
+    "pt": {
+     "opts": [
+      "Diga-lhes para evitar o projeto",
+      "Encoraje-os a inclinar-se e enfrentar o medo",
+      "Sugira que eles esperem o medo passar",
+      "Recomende que eles procurem apoio de um supervisor"
+     ],
+     "q": "Se um colega de trabalho está lutando com o medo sobre um novo projeto, que conselho você daria a eles para ajudá-los a crescer e se expandir como pessoa?",
+     "why": "Encorajar o colega a inclinar-se e enfrentar o medo ajudaria a transformar sua relação com o medo e crescer como pessoa."
+    },
+    "t0": 82,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750271878,
+    "verified": true
+   }
+  ],
+  "15": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Fear is a challenge",
+      "Fear is normal",
+      "Fear is wrong",
+      "Fear is a weakness"
+     ],
+     "q": "What is the first level in the process of moving from shame to gain in relation to fear?",
+     "why": "The first level is where we choose to believe fear is wrong, creating shame and causing us to hide and avoid the feeling of fear."
+    },
+    "pt": {
+     "opts": [
+      "O medo é um desafio",
+      "O medo é normal",
+      "O medo está errado",
+      "O medo é uma fraqueza"
+     ],
+     "q": "Qual é o primeiro nível no processo de passar da vergonha para o ganho em relação ao medo?",
+     "why": "O primeiro nível é onde escolhemos acreditar que o medo está errado, criando vergonha e fazendo-nos esconder e evitar o sentimento de medo."
+    },
+    "t0": 118,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750298027,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Our fear decreases",
+      "Our fear remains the same",
+      "Our fear increases",
+      "We become immune to fear"
+     ],
+     "q": "What happens when we try to avoid feeling fear at level five?",
+     "why": "When we try to avoid feeling fear at level five, our fear increases because we become afraid of the fear itself."
+    },
+    "pt": {
+     "opts": [
+      "O nosso medo diminui",
+      "O nosso medo permanece o mesmo",
+      "O nosso medo aumenta",
+      "Tornamo-nos imunes ao medo"
+     ],
+     "q": "O que acontece quando tentamos evitar sentir medo no nível cinco?",
+     "why": "Quando tentamos evitar sentir medo no nível cinco, o nosso medo aumenta porque também temos medo do medo em si."
+    },
+    "t0": 143,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750298027,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to eliminate the fear",
+      "Focus on the fear and try to understand it",
+      "Accept the fear and focus on what needs to be done to succeed",
+      "Deny the fear and pretend it's not there"
+     ],
+     "q": "What should an athlete do when experiencing fear at level four?",
+     "why": "At level four, the athlete should accept the fear as a normal part of their competitive and daily life and focus on what they need to do to succeed in their sport."
+    },
+    "pt": {
+     "opts": [
+      "Tentar eliminar o medo",
+      "Focar-se no medo e tentar entendê-lo",
+      "Aceitar o medo e focar-se no que precisa ser feito para ter sucesso",
+      "Negar o medo e fingir que não está lá"
+     ],
+     "q": "O que deve fazer um atleta quando experimenta medo no nível quatro?",
+     "why": "No nível quatro, o atleta deve aceitar o medo como uma parte normal da sua vida competitiva e diária e focar-se no que precisa ser feito para ter sucesso no seu desporto."
+    },
+    "t0": 175,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750298027,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "As a weakness to be overcome",
+      "As a challenge to be embraced",
+      "As a normal part of life but not relevant to sport",
+      "As something to be ignored and denied"
+     ],
+     "q": "How should an athlete view fear at level three?",
+     "why": "At level three, the athlete should view fear as a challenge and an important part of the challenges they face in both their sporting goals and life in general."
+    },
+    "pt": {
+     "opts": [
+      "Como uma fraqueza a ser superada",
+      "Como um desafio a ser abraçado",
+      "Como uma parte normal da vida mas não relevante para o desporto",
+      "Como algo a ser ignorado e negado"
+     ],
+     "q": "Como deve um atleta ver o medo no nível três?",
+     "why": "No nível três, o atleta deve ver o medo como um desafio e uma parte importante dos desafios que enfrenta tanto nos seus objetivos desportivos como na vida em geral."
+    },
+    "t0": 204,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750298027,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "Level one: fear is wrong",
+      "Level two: fear is a weakness",
+      "Level three: fear is a challenge",
+      "Level five: fear is wrong and shameful"
+     ],
+     "q": "An athlete is experiencing fear before a big competition and is trying to hide it from their teammates. What level are they likely at?",
+     "why": "The athlete is likely at level five, where they believe fear is wrong and are trying to hide and avoid the feeling of fear, creating shame and increasing the intensity of the fear."
+    },
+    "pt": {
+     "opts": [
+      "Nível um: o medo está errado",
+      "Nível dois: o medo é uma fraqueza",
+      "Nível três: o medo é um desafio",
+      "Nível cinco: o medo está errado e é vergonhoso"
+     ],
+     "q": "Um atleta está a experimentar medo antes de uma grande competição e está a tentar escondê-lo dos seus companheiros de equipa. Em que nível é que eles provavelmente estão?",
+     "why": "O atleta provavelmente está no nível cinco, onde acredita que o medo está errado e está a tentar esconder e evitar o sentimento de medo, criando vergonha e aumentando a intensidade do medo."
+    },
+    "t0": 118,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750298027,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them to stop being negative and focus on winning",
+      "Encourage them to keep talking about their fear and offer support",
+      "Ignore their fear and focus on the game plan",
+      "Tell them they are weak for admitting fear"
+     ],
+     "q": "A new athlete joins the team and is openly talking about their fear of failure. How should the team respond at level four?",
+     "why": "At level four, the team should encourage the athlete to keep talking about their fear and offer support, accepting fear as a normal part of their competitive and daily life."
+    },
+    "pt": {
+     "opts": [
+      "Dizer-lhes para parar de ser negativo e focar-se na vitória",
+      "Encorajar-lhes a continuar a falar sobre o seu medo e oferecer apoio",
+      "Ignorar o medo e focar-se no plano de jogo",
+      "Dizer-lhes que são fracos por admitir medo"
+     ],
+     "q": "Um novo atleta se junta à equipa e está a falar abertamente sobre o seu medo de falhar. Como deve a equipa responder no nível quatro?",
+     "why": "No nível quatro, a equipa deve encorajar o atleta a continuar a falar sobre o seu medo e oferecer apoio, aceitando o medo como uma parte normal da sua vida competitiva e diária."
+    },
+    "t0": 175,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750298027,
+    "corrected": true
+   }
+  ],
+  "16": [
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "You need to feel confident to succeed",
+      "Confidence is not important for success",
+      "You can only succeed if you're feeling fearful",
+      "Confidence is only for leaders"
+     ],
+     "q": "What is a common belief about confidence that the trainer says is a myth?",
+     "why": "The trainer states that many people believe they need to feel confident to succeed, but this is not necessarily true."
+    },
+    "pt": {
+     "opts": [
+      "Você precisa se sentir confiante para ter sucesso",
+      "A confiança não é importante para o sucesso",
+      "Você só pode ter sucesso se estiver se sentindo com medo",
+      "A confiança é apenas para líderes"
+     ],
+     "q": "Qual é uma crença comum sobre a confiança que o treinador diz ser um mito?",
+     "why": "O treinador afirma que muitas pessoas acreditam que precisam se sentir confiantes para ter sucesso, mas isso não é necessariamente verdade."
+    },
+    "t0": 30,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750320680,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "You should only take on challenges if you feel confident",
+      "You can feel not confident and still take on challenges",
+      "You need to feel confident to take on small challenges",
+      "You should avoid challenges if you don't feel confident"
+     ],
+     "q": "What is the trainer's main point about feeling confident and taking on challenges?",
+     "why": "The trainer emphasizes that you can feel not confident and still take on challenges and succeed."
+    },
+    "pt": {
+     "opts": [
+      "Você só deve enfrentar desafios se se sentir confiante",
+      "Você pode se sentir não confiante e ainda enfrentar desafios",
+      "Você precisa se sentir confiante para enfrentar desafios pequenos",
+      "Você deve evitar desafios se não se sentir confiante"
+     ],
+     "q": "Qual é o principal ponto do treinador sobre se sentir confiante e enfrentar desafios?",
+     "why": "O treinador enfatiza que você pode se sentir não confiante e ainda enfrentar desafios e ter sucesso."
+    },
+    "t0": 84,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750320680,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Walk away from the challenge",
+      "Try to feel more confident before taking on the challenge",
+      "Lean in and take on the challenge despite feeling not confident",
+      "Wait for someone else to take on the challenge"
+     ],
+     "q": "What should you do if you're feeling not confident about taking on a challenge?",
+     "why": "The trainer suggests that you can still take on challenges even if you're feeling not confident."
+    },
+    "pt": {
+     "opts": [
+      "Afaste-se do desafio",
+      "Tente se sentir mais confiante antes de enfrentar o desafio",
+      "Incline-se e enfrente o desafio apesar de se sentir não confiante",
+      "Espere alguém mais enfrentar o desafio"
+     ],
+     "q": "O que você deve fazer se estiver se sentindo não confiante sobre enfrentar um desafio?",
+     "why": "O treinador sugere que você ainda pode enfrentar desafios mesmo se estiver se sentindo não confiante."
+    },
+    "t0": 113,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750320680,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "By only taking on challenges when you feel confident",
+      "By embracing your feelings and leaning forward into challenges",
+      "By avoiding challenges altogether",
+      "By waiting for others to take on challenges"
+     ],
+     "q": "How can you apply the trainer's message about confidence to your own life?",
+     "why": "The trainer's message is about embracing your feelings and taking on challenges despite not feeling confident."
+    },
+    "pt": {
+     "opts": [
+      "Apenas enfrentando desafios quando se sentir confiante",
+      "Abraçando seus sentimentos e inclinando-se para frente nos desafios",
+      "Evitando desafios completamente",
+      "Esperando que os outros enfrentem desafios"
+     ],
+     "q": "Como você pode aplicar a mensagem do treinador sobre confiança à sua própria vida?",
+     "why": "A mensagem do treinador é sobre abraçar seus sentimentos e enfrentar desafios apesar de não se sentir confiante."
+    },
+    "t0": 140,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750320680,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Cancel the presentation",
+      "Go ahead with the presentation despite feeling nervous",
+      "Try to feel more confident before giving the presentation",
+      "Ask someone else to give the presentation"
+     ],
+     "q": "You're scheduled to give a presentation to a large audience, but you're feeling nervous and not confident. What should you do?",
+     "why": "The trainer's message suggests that you can still take on challenges even if you're feeling not confident."
+    },
+    "pt": {
+     "opts": [
+      "Cancelar a apresentação",
+      "Prosseguir com a apresentação apesar de se sentir nervoso",
+      "Tentar se sentir mais confiante antes de fazer a apresentação",
+      "Pedir a alguém mais para fazer a apresentação"
+     ],
+     "q": "Você está programado para fazer uma apresentação para uma grande audiência, mas está se sentindo nervoso e não confiante. O que você deve fazer?",
+     "why": "A mensagem do treinador sugere que você ainda pode enfrentar desafios mesmo se estiver se sentindo não confiante."
+    },
+    "t0": 168,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750320680,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them to wait until they feel more confident",
+      "Encourage them to take on the project despite feeling not confident",
+      "Suggest that they take on a smaller project first",
+      "Advise them to avoid taking on new challenges altogether"
+     ],
+     "q": "A colleague is hesitant to take on a new project because they don't feel confident in their abilities. What should you advise them to do?",
+     "why": "The trainer's message is about embracing your feelings and taking on challenges despite not feeling confident."
+    },
+    "pt": {
+     "opts": [
+      "Dizer-lhes para esperar até se sentirem mais confiantes",
+      "Encorajá-los a assumir o projeto apesar de se sentirem não confiantes",
+      "Sugerir que eles assumam um projeto menor primeiro",
+      "Aconselhá-los a evitar assumir novos desafios completamente"
+     ],
+     "q": "Um colega de trabalho está hesitante em assumir um novo projeto porque não se sente confiante em suas habilidades. O que você deve aconselhá-los a fazer?",
+     "why": "A mensagem do treinador é sobre abraçar seus sentimentos e enfrentar desafios apesar de não se sentir confiante."
+    },
+    "t0": 56,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785750320680,
+    "corrected": true
+   }
+  ],
+  "17": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "To focus solely on intellectual growth",
+      "To avoid overemphasizing one aspect of ourselves",
+      "To only consider physical well-being",
+      "To ignore spiritual development"
+     ],
+     "q": "Why is it important to understand the different categories of personal development?",
+     "why": "Understanding the different categories helps us avoid confusion and overfocus on one area, leading to a more balanced personal development."
+    },
+    "pt": {
+     "opts": [
+      "Para se concentrar apenas no crescimento intelectual",
+      "Para evitar a sobrevalorização de um aspecto de nós mesmos",
+      "Para considerar apenas o bem-estar físico",
+      "Para ignorar o desenvolvimento espiritual"
+     ],
+     "q": "Por que é importante compreender as diferentes categorias de desenvolvimento pessoal?",
+     "why": "Compreender as diferentes categorias ajuda-nos a evitar confusão e a sobrevalorização de uma área, levando a um desenvolvimento pessoal mais equilibrado."
+    },
+    "t0": 28,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751036413,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "It helps us to focus on one area of development",
+      "It provides a narrow scope of understanding",
+      "It gives us a reference point for personal growth",
+      "It leads to confusion and disorientation"
+     ],
+     "q": "What is the benefit of being aware of the different dimensions of ourselves and others?",
+     "why": "Being aware of the different dimensions provides a larger scope of understanding and a reference point for personal growth and development."
+    },
+    "pt": {
+     "opts": [
+      "Ajuda-nos a nos concentrarmos em uma área de desenvolvimento",
+      "Fornece uma visão estreita de compreensão",
+      "Dá-nos um ponto de referência para o crescimento pessoal",
+      "Leva à confusão e desorientação"
+     ],
+     "q": "Qual é o benefício de estar ciente das diferentes dimensões de nós mesmos e dos outros?",
+     "why": "Estar ciente das diferentes dimensões fornece uma visão mais ampla de compreensão e um ponto de referência para o crescimento e desenvolvimento pessoal."
+    },
+    "t0": 58,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751036413,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Focus solely on intellectual growth",
+      "Ignore your feelings and continue as usual",
+      "Explore and balance different aspects of yourself",
+      "Prioritize physical well-being over all else"
+     ],
+     "q": "What should you do if you feel like something is missing in your personal development?",
+     "why": "Exploring and balancing different aspects of yourself can help you identify and address the missing element in your personal development."
+    },
+    "pt": {
+     "opts": [
+      "Concentrar-se apenas no crescimento intelectual",
+      "Ignorar os seus sentimentos e continuar como de costume",
+      "Explorar e equilibrar diferentes aspectos de si mesmo",
+      "Priorizar o bem-estar físico acima de tudo"
+     ],
+     "q": "O que deve fazer se sentir que algo está faltando no seu desenvolvimento pessoal?",
+     "why": "Explorar e equilibrar diferentes aspectos de si mesmo pode ajudá-lo a identificar e abordar o elemento que está faltando no seu desenvolvimento pessoal."
+    },
+    "t0": 45,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751036413,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "By focusing only on physical tasks",
+      "By ignoring the spiritual aspects of your work",
+      "By considering the different dimensions of yourself and others",
+      "By prioritizing intellectual growth over all else"
+     ],
+     "q": "How can you apply the understanding of body, soul, and spirit in your work at Eden Rise?",
+     "why": "Considering the different dimensions of yourself and others can help you have a more holistic approach to your work and interactions at Eden Rise."
+    },
+    "pt": {
+     "opts": [
+      "Concentrando-se apenas nas tarefas físicas",
+      "Ignorando os aspectos espirituais do seu trabalho",
+      "Considerando as diferentes dimensões de si mesmo e dos outros",
+      "Priorizando o crescimento intelectual acima de tudo"
+     ],
+     "q": "Como pode aplicar a compreensão do corpo, alma e espírito no seu trabalho na Eden Rise?",
+     "why": "Considerar as diferentes dimensões de si mesmo e dos outros pode ajudá-lo a ter uma abordagem mais holística do seu trabalho e interações na Eden Rise."
+    },
+    "t0": 58,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751036413,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "They are not prioritizing their physical well-being",
+      "They are overemphasizing their intellectual growth",
+      "They are struggling with a spiritual or emotional aspect of themselves",
+      "They are simply lazy or unmotivated"
+     ],
+     "q": "A colleague seems to be struggling with their work, appearing unbalanced and stressed. What might be the underlying issue?",
+     "why": "The underlying issue might be that they are overemphasizing one aspect of themselves, such as intellectual growth, and neglecting other important dimensions."
+    },
+    "pt": {
+     "opts": [
+      "Não está a priorizar o seu bem-estar físico",
+      "Está a sobrevalorizar o seu crescimento intelectual",
+      "Está a lutar com um aspecto espiritual ou emocional de si mesmo",
+      "É simplesmente preguiçoso ou desmotivado"
+     ],
+     "q": "Um colega de trabalho parece estar a lutar com o seu trabalho, aparecendo desequilibrado e estressado. Qual pode ser o problema subjacente?",
+     "why": "O problema subjacente pode ser que está a sobrevalorizar um aspecto de si mesmo, como o crescimento intelectual, e a negligenciar outras dimensões importantes."
+    },
+    "t0": 28,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751036413,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "They are not aware of the project's physical requirements",
+      "They are lacking a spiritual or emotional connection to the project",
+      "They are not intellectually stimulated by the project",
+      "They are simply not interested in the project's objectives"
+     ],
+     "q": "You are leading a team project at Eden Rise and notice that some team members seem disconnected from the project's goals. What might be the reason for this disconnection?",
+     "why": "The reason for the disconnection might be that they are lacking a spiritual or emotional connection to the project, highlighting the importance of considering the different dimensions of team members."
+    },
+    "pt": {
+     "opts": [
+      "Não estão cientes dos requisitos físicos do projeto",
+      "Estão a falta de uma conexão espiritual ou emocional com o projeto",
+      "Não estão intelectualmente estimulados pelo projeto",
+      "Simplemente não estão interessados nos objetivos do projeto"
+     ],
+     "q": "Está a liderar um projeto de equipa na Eden Rise e nota que alguns membros da equipa parecem desconectados dos objetivos do projeto. Qual pode ser o motivo para esta desconexão?",
+     "why": "O motivo para a desconexão pode ser que estão a falta de uma conexão espiritual ou emocional com o projeto, destacando a importância de considerar as diferentes dimensões dos membros da equipa."
+    },
+    "t0": 58,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751036413,
+    "corrected": true
+   }
+  ],
+  "18": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "The physical body has no effect on the soul",
+      "Taking care of the physical body can help improve the soul",
+      "The soul is separate from the physical body",
+      "The physical body is controlled by the soul"
+     ],
+     "q": "What is the correlation between the physical body and the soul?",
+     "why": "The physical body has a correlation to the soul, and taking care of the physical body can help improve the soul."
+    },
+    "pt": {
+     "opts": [
+      "O corpo físico não tem efeito na alma",
+      "Cuidar do corpo físico pode ajudar a melhorar a alma",
+      "A alma é separada do corpo físico",
+      "O corpo físico é controlado pela alma"
+     ],
+     "q": "Qual é a correlação entre o corpo físico e a alma?",
+     "why": "O corpo físico tem uma correlação com a alma, e cuidar do corpo físico pode ajudar a melhorar a alma."
+    },
+    "t0": 30,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751060004,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Only emotions",
+      "Emotions, will, and mind",
+      "Only will and mind",
+      "Only emotions and will"
+     ],
+     "q": "What components make up the soul?",
+     "why": "The soul is comprised of emotions, will, and mind."
+    },
+    "pt": {
+     "opts": [
+      "Apenas emoções",
+      "Emoções, vontade e mente",
+      "Apenas vontade e mente",
+      "Apenas emoções e vontade"
+     ],
+     "q": "Quais componentes compõem a alma?",
+     "why": "A alma é composta por emoções, vontade e mente."
+    },
+    "t0": 56,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751060004,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Focus only on your emotional state",
+      "Take care of your physical body",
+      "Ignore your physical body and focus on your mind",
+      "Only focus on your spiritual growth"
+     ],
+     "q": "What should you do to help improve your overall well-being?",
+     "why": "Taking care of your physical body can help improve your overall well-being."
+    },
+    "pt": {
+     "opts": [
+      "Focar apenas no seu estado emocional",
+      "Cuidar do seu corpo físico",
+      "Ignorar seu corpo físico e focar na sua mente",
+      "Apenas focar no seu crescimento espiritual"
+     ],
+     "q": "O que você deve fazer para ajudar a melhorar seu bem-estar geral?",
+     "why": "Cuidar do seu corpo físico pode ajudar a melhorar seu bem-estar geral."
+    },
+    "t0": 30,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751060004,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Rationalizing your beliefs away with your intellect",
+      "Focusing on your emotional state",
+      "Ignoring your physical body",
+      "Seeking knowledge and intelligence"
+     ],
+     "q": "What should you avoid doing when seeking alignment with your spirit?",
+     "why": "You should avoid rationalizing your beliefs away with your intellect when seeking alignment with your spirit."
+    },
+    "pt": {
+     "opts": [
+      "Racionalizar suas crenças com sua inteligência",
+      "Focar no seu estado emocional",
+      "Ignorar seu corpo físico",
+      "Buscar conhecimento e inteligência"
+     ],
+     "q": "O que você deve evitar fazer quando busca alinhar-se com seu espírito?",
+     "why": "Você deve evitar racionalizar suas crenças com sua inteligência quando busca alinhar-se com seu espírito."
+    },
+    "t0": 145,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751060004,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them that their emotions are not valid",
+      "Help them understand the correlation between their physical body and soul",
+      "Encourage them to focus only on their mind",
+      "Ignore their emotional state and focus on their spiritual growth"
+     ],
+     "q": "You meet someone who is very dominant in their emotions and believes that what they feel is reality. What should you do?",
+     "why": "You should help them understand the correlation between their physical body and soul."
+    },
+    "pt": {
+     "opts": [
+      "Dizer-lhes que suas emoções não são válidas",
+      "Ajudá-los a entender a correlação entre seu corpo físico e alma",
+      "Encorajá-los a focar apenas na mente",
+      "Ignorar seu estado emocional e focar no crescimento espiritual"
+     ],
+     "q": "Você encontra alguém que é muito dominante em suas emoções e acredita que o que sente é a realidade. O que você deve fazer?",
+     "why": "Você deve ajudá-los a entender a correlação entre seu corpo físico e alma."
+    },
+    "t0": 174,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751060004,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them that their body is not a reliable source of information",
+      "Help them understand the importance of balancing their physical, emotional, and spiritual aspects",
+      "Encourage them to focus only on their physical body",
+      "Ignore their physical sensations and focus on their emotional state"
+     ],
+     "q": "You are working with someone who believes that their body holds all the information and that what they feel physically is reality. What should you do?",
+     "why": "You should help them understand the importance of balancing their physical, emotional, and spiritual aspects."
+    },
+    "pt": {
+     "opts": [
+      "Dizer-lhes que seu corpo não é uma fonte confiável de informações",
+      "Ajudá-los a entender a importância de equilibrar seus aspectos físicos, emocionais e espirituais",
+      "Encorajá-los a focar apenas no corpo físico",
+      "Ignorar suas sensações físicas e focar no estado emocional"
+     ],
+     "q": "Você está trabalhando com alguém que acredita que seu corpo contém todas as informações e que o que sente fisicamente é a realidade. O que você deve fazer?",
+     "why": "Você deve ajudá-los a entender a importância de equilibrar seus aspectos físicos, emocionais e espirituais."
+    },
+    "t0": 202,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1785751060004,
+    "corrected": true
+   }
+  ]
+ }
+}

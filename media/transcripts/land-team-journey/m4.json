@@ -1,0 +1,412 @@
+{
+ "language": "pt",
+ "segments": [
+  {
+   "t0": 0.0,
+   "t1": 3.8,
+   "text": "Imagine duas pessoas a começar o mesmo trabalho no mesmo dia."
+  },
+  {
+   "t0": 3.8,
+   "t1": 6.9,
+   "text": "Cinco anos depois, uma tornou-se líder."
+  },
+  {
+   "t0": 6.9,
+   "t1": 10.44,
+   "text": "A outra continua a fazer o mesmo trabalho da mesma forma."
+  },
+  {
+   "t0": 10.44,
+   "t1": 12.08,
+   "text": "O que fez a diferença?"
+  },
+  {
+   "t0": 12.08,
+   "t1": 15.64,
+   "text": "Geralmente, não foi talento, foi a aprendizagem."
+  },
+  {
+   "t0": 15.64,
+   "t1": 19.82,
+   "text": "As pessoas que crescem mais depressa são as pessoas que nunca deixam de aprender."
+  },
+  {
+   "t0": 19.82,
+   "t1": 24.32,
+   "text": "Mantém-se curiosas, fazem perguntas, estudam, escutam,"
+  },
+  {
+   "t0": 24.32,
+   "t1": 27.0,
+   "text": "procuram formas melhores de fazer as coisas."
+  },
+  {
+   "t0": 27.0,
+   "t1": 28.9,
+   "text": "São aprendizes para a vida."
+  },
+  {
+   "t0": 28.9,
+   "t1": 31.78,
+   "text": "Um aprendiz para a vida não diz, eu já sei."
+  },
+  {
+   "t0": 31.78,
+   "t1": 33.46,
+   "text": "Em vez disso, pergunta."
+  },
+  {
+   "t0": 33.46,
+   "t1": 35.06,
+   "text": "O que posso aprender hoje?"
+  },
+  {
+   "t0": 35.06,
+   "t1": 38.2,
+   "text": "Todos os dias são uma oportunidade para melhorar."
+  },
+  {
+   "t0": 38.2,
+   "t1": 40.38,
+   "text": "Talvez aprenda uma nova competência."
+  },
+  {
+   "t0": 40.38,
+   "t1": 42.1,
+   "text": "Talvez aprenda com um erro."
+  },
+  {
+   "t0": 42.1,
+   "t1": 44.38,
+   "text": "Talvez aprenda com um colega de equipa."
+  },
+  {
+   "t0": 44.38,
+   "t1": 46.08,
+   "text": "Talvez aprenda com a IA."
+  },
+  {
+   "t0": 46.08,
+   "t1": 49.6,
+   "text": "Talvez aprenda observando alguém com mais experiência do que si."
+  },
+  {
+   "t0": 49.6,
+   "t1": 51.86,
+   "text": "Cada lição torna o mais forte."
+  },
+  {
+   "t0": 51.86,
+   "t1": 53.58,
+   "text": "Aqui está algo importante."
+  },
+  {
+   "t0": 53.58,
+   "t1": 56.14,
+   "text": "Fazer perguntas não é sinal de fraqueza."
+  },
+  {
+   "t0": 56.14,
+   "t1": 57.56,
+   "text": "É sinal de sabedoria."
+  },
+  {
+   "t0": 57.64,
+   "t1": 60.18,
+   "text": "Se não tem a certeza, pergunte."
+  },
+  {
+   "t0": 60.18,
+   "t1": 62.56,
+   "text": "Se não percebe, pergunte."
+  },
+  {
+   "t0": 62.56,
+   "t1": 67.04,
+   "text": "Se vir alguém a fazer algo melhor do que si, peça-lhe que o ensine."
+  },
+  {
+   "t0": 67.04,
+   "t1": 70.24,
+   "text": "A maioria das pessoas tem prazer em partilhar o que sabe."
+  },
+  {
+   "t0": 70.24,
+   "t1": 74.28,
+   "text": "Uma boa pergunta hoje pode poupar-lhe muitas horas amanhã."
+  },
+  {
+   "t0": 74.28,
+   "t1": 76.24,
+   "text": "Vamos pensar numa criança."
+  },
+  {
+   "t0": 76.24,
+   "t1": 79.56,
+   "text": "As crianças aprendem depressa porque são curiosas."
+  },
+  {
+   "t0": 79.56,
+   "t1": 80.96,
+   "text": "Fazem perguntas."
+  },
+  {
+   "t0": 80.96,
+   "t1": 83.08,
+   "text": "Experimentam coisas novas."
+  },
+  {
+   "t0": 83.08,
+   "t1": 86.04,
+   "text": "Não se envergonham de dizer, não sei."
+  },
+  {
+   "t0": 86.04,
+   "t1": 89.6,
+   "text": "Como adultos, nunca devíamos perder essa atitude."
+  },
+  {
+   "t0": 89.6,
+   "t1": 91.24,
+   "text": "Mantenha-se curioso."
+  },
+  {
+   "t0": 91.24,
+   "t1": 93.8,
+   "text": "Mantenha-se disponível para aprender."
+  },
+  {
+   "t0": 93.8,
+   "t1": 96.48,
+   "text": "Mantenha-se com fome de aprender."
+  },
+  {
+   "t0": 96.48,
+   "t1": 100.16,
+   "text": "Aqui está um hábito simples que pode usar todos os dias."
+  },
+  {
+   "t0": 100.16,
+   "t1": 104.62,
+   "text": "No final do seu dia de trabalho, faça-se próprio três perguntas."
+  },
+  {
+   "t0": 104.62,
+   "t1": 106.24,
+   "text": "O que aprendi hoje?"
+  },
+  {
+   "t0": 106.24,
+   "t1": 108.16,
+   "text": "Que erro me ensinou algo?"
+  },
+  {
+   "t0": 108.16,
+   "t1": 110.48,
+   "text": "O que vou fazer melhor amanhã?"
+  },
+  {
+   "t0": 110.48,
+   "t1": 115.36,
+   "text": "Se responder a estas perguntas todos os dias, vai continuar a crescer."
+  },
+  {
+   "t0": 115.36,
+   "t1": 119.68,
+   "text": "Lembre-se, a aprendizagem não acontece só numa sala de aula."
+  },
+  {
+   "t0": 119.68,
+   "t1": 121.08,
+   "text": "Aprende-se a ler."
+  },
+  {
+   "t0": 121.08,
+   "t1": 122.8,
+   "text": "Aprende-se a escutar."
+  },
+  {
+   "t0": 122.8,
+   "t1": 124.36,
+   "text": "Aprende-se a observar."
+  },
+  {
+   "t0": 124.36,
+   "t1": 126.04,
+   "text": "Aprende-se a fazer."
+  },
+  {
+   "t0": 126.04,
+   "t1": 127.68,
+   "text": "Aprende-se a perguntar."
+  },
+  {
+   "t0": 127.68,
+   "t1": 131.0,
+   "text": "E hoje também pode aprender com a IA."
+  },
+  {
+   "t0": 131.0,
+   "t1": 134.16,
+   "text": "Antes de terminar uma tarefa, pergunte a IA."
+  },
+  {
+   "t0": 134.16,
+   "t1": 136.16,
+   "text": "Como poderia melhorar isto?"
+  },
+  {
+   "t0": 136.16,
+   "t1": 137.68,
+   "text": "O que é que falhei?"
+  },
+  {
+   "t0": 137.68,
+   "t1": 139.4,
+   "text": "Há uma forma melhor?"
+  },
+  {
+   "t0": 139.4,
+   "t1": 143.4,
+   "text": "Pense na IA como um treinador que está disponível a qualquer altura."
+  },
+  {
+   "t0": 143.4,
+   "t1": 144.44,
+   "text": "Use-a."
+  },
+  {
+   "t0": 144.48,
+   "t1": 145.96,
+   "text": "Mas não fique por aí."
+  },
+  {
+   "t0": 145.96,
+   "t1": 148.32,
+   "text": "Aprende-se com seus colegas de equipa."
+  },
+  {
+   "t0": 148.32,
+   "t1": 150.28,
+   "text": "Aprende-se com seus líderes."
+  },
+  {
+   "t0": 150.28,
+   "t1": 152.88,
+   "text": "Aprende-se com pessoas com mais experiência."
+  },
+  {
+   "t0": 152.88,
+   "t1": 155.36,
+   "text": "Aprende-se com seus próprios sucessos."
+  },
+  {
+   "t0": 155.36,
+   "t1": 157.76,
+   "text": "Aprende-se com seus próprios erros."
+  },
+  {
+   "t0": 157.76,
+   "t1": 161.88,
+   "text": "As pessoas que têm sucesso na vida não são as pessoas que sabem tudo."
+  },
+  {
+   "t0": 161.88,
+   "t1": 164.76,
+   "text": "São as pessoas que nunca deixam de aprender."
+  },
+  {
+   "t0": 164.76,
+   "t1": 167.0,
+   "text": "Aqui está um último pensamento."
+  },
+  {
+   "t0": 167.0,
+   "t1": 170.0,
+   "text": "O seu maior investimento não é uma máquina."
+  },
+  {
+   "t0": 170.0,
+   "t1": 171.44,
+   "text": "Não é um edifício."
+  },
+  {
+   "t0": 171.44,
+   "t1": 173.2,
+   "text": "Nem sequer é um negócio."
+  },
+  {
+   "t0": 173.2,
+   "t1": 176.28,
+   "text": "O seu maior investimento é você próprio."
+  },
+  {
+   "t0": 176.28,
+   "t1": 179.52,
+   "text": "Cada nova competência que aprende fica consigo."
+  },
+  {
+   "t0": 179.52,
+   "t1": 182.28,
+   "text": "Cada lição torna o mais valioso."
+  },
+  {
+   "t0": 182.28,
+   "t1": 186.36,
+   "text": "Cada dia em que escolhe aprender, torna-se melhor do que era ontem."
+  },
+  {
+   "t0": 186.36,
+   "t1": 188.8,
+   "text": "Por isso, faça disto o seu hábito."
+  },
+  {
+   "t0": 188.8,
+   "t1": 190.04,
+   "text": "Seja curioso."
+  },
+  {
+   "t0": 190.04,
+   "t1": 191.36,
+   "text": "Faça perguntas."
+  },
+  {
+   "t0": 191.36,
+   "t1": 192.32,
+   "text": "Estude."
+  },
+  {
+   "t0": 192.32,
+   "t1": 193.32,
+   "text": "Pratique."
+  },
+  {
+   "t0": 193.32,
+   "t1": 194.36,
+   "text": "Escute."
+  },
+  {
+   "t0": 194.36,
+   "t1": 195.36,
+   "text": "Aprenda."
+  },
+  {
+   "t0": 195.36,
+   "t1": 197.12,
+   "text": "E nunca deixe de crescer."
+  },
+  {
+   "t0": 197.12,
+   "t1": 201.04,
+   "text": "Porque o dia em que deixar de aprender é o dia em que deixa de melhorar."
+  },
+  {
+   "t0": 201.04,
+   "t1": 205.36,
+   "text": "Mas se se tornar um aprendiz para a vida, o seu potencial não tem limite."
+  }
+ ],
+ "model": "whisper-small",
+ "generatedAt": 1785511104083
+}

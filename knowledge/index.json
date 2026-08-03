@@ -1,0 +1,1397 @@
+{
+ "generatedAt": 1785750342358,
+ "courses": {
+  "alignment-journey": {
+   "title": "The EdenRise Alignment Journey",
+   "modules": [
+    {
+     "mod": 0,
+     "title": "Warm Welcome",
+     "language": "en",
+     "translated": null,
+     "segments": 59,
+     "durationSec": 325,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "going",
+      "people",
+      "life",
+      "grow",
+      "training",
+      "things",
+      "through",
+      "help"
+     ],
+     "regime": null,
+     "summary": "A very warm welcome. Super excited to invite you into this training to welcome you to this training where you're going to be learning a tremendous amount of very interesting things that are going to empower your personal life and your working life. Whether you",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/0",
+     "moments": [
+      {
+       "t0": 26,
+       "teaches": "What area of expertise has the trainer worked with professional athletes on?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 112,
+       "teaches": "What attitude is required to get the most benefit from this training?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 138,
+       "teaches": "How should you approach personal growth and development?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 82,
+       "teaches": "What is the best way to approach the different stages of this training?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 166,
+       "teaches": "A colleague is resistant to changing their work processes, what should you do?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 56,
+       "teaches": "You are working with a team member who has a different communication style, what should you do?",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 1,
+     "title": "Above the Line · Intro",
+     "language": "en",
+     "translated": null,
+     "segments": 35,
+     "durationSec": 169,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "model",
+      "village",
+      "jabaraaj",
+      "line",
+      "about",
+      "time",
+      "simple",
+      "little"
+     ],
+     "regime": null,
+     "summary": "Okay, welcome to the very first module above the line, below the line thinking. Now this is a simple powerful model to help you know how you're doing when it comes to pressure, comes to different stresses in your life. It's very very",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/1",
+     "moments": [
+      {
+       "t0": 82,
+       "teaches": "What was the impact of the above-the-line model on Jabaraaj's life?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 108,
+       "teaches": "What is the starting point for making positive changes according to the trainer?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 135,
+       "teaches": "What should you do after watching the animation video?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 161,
+       "teaches": "How should you approach the above-the-line model as presented in the animation?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 82,
+       "teaches": "You are facing a difficult situation at work, similar to Jabaraaj's experience. What should you do first?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 108,
+       "teaches": "A colleague is struggling to cope with stress. What principle should you apply to help them?",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 2,
+     "title": "Above the Line · Simple & Powerful Thinking",
+     "language": "en",
+     "translated": null,
+     "segments": 40,
+     "durationSec": 177,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "line",
+      "choose",
+      "above",
+      "move",
+      "over",
+      "champions",
+      "roll",
+      "time"
+     ],
+     "regime": null,
+     "summary": "Above the line is a simple and powerful thinking model that helps you get the most out of your unique potential by providing you a clear overview on how you choose to respond to the emotional pain you can experience as you move through the different challenges",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/2",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 3,
+     "title": "Above the Line · Deep Dive",
+     "language": "en",
+     "translated": null,
+     "segments": 181,
+     "durationSec": 609,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "line",
+      "above",
+      "going",
+      "below",
+      "people",
+      "pressure",
+      "life",
+      "model"
+     ],
+     "regime": null,
+     "summary": "Welcome back, trust you enjoyed the animation and it gave you an overview of this model. Now we're going to take a deep dive, look into it and unpack it together and explore how this can apply in our personal lives and in our working lives.",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/3",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 4,
+     "title": "Above the Line · Summary",
+     "language": "en",
+     "translated": null,
+     "segments": 14,
+     "durationSec": 51,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "going",
+      "line",
+      "above",
+      "life"
+     ],
+     "regime": null,
+     "summary": "Okay, congratulations. You've completed the above the line, below the line module. I trust you got a lot of value from it.",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/4",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 5,
+     "title": "No Failure, Only Feedback · Intro",
+     "language": "en",
+     "translated": null,
+     "segments": 8,
+     "durationSec": 68,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "failure",
+      "important",
+      "going"
+     ],
+     "regime": null,
+     "summary": "Warm welcome to this module. There is no failure only feedback. So what does this mean and why is this so important? In fact, this is so important that if this is not in place when I've been working with business leaders, athletes, if this component is not in ",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/5",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 6,
+     "title": "No Failure, Only Feedback · Animation",
+     "language": "en",
+     "translated": null,
+     "segments": 50,
+     "durationSec": 246,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "failure",
+      "failures",
+      "meaning",
+      "experience",
+      "pain",
+      "feedback",
+      "place",
+      "three"
+     ],
+     "regime": null,
+     "summary": "The level of emotional pain we feel is directly related to the meaning we give an experience. This video explores the meaning we place on failure. What does failure mean to you?",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/6",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 7,
+     "title": "No Failure, Only Feedback · Summary",
+     "language": "en",
+     "translated": null,
+     "segments": 93,
+     "durationSec": 579,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "going",
+      "failure",
+      "setbacks",
+      "challenges",
+      "relationship",
+      "setback",
+      "grow",
+      "those"
+     ],
+     "regime": null,
+     "summary": "Okay, welcome back. I hope you enjoyed the animation and learned something from that, or at least it triggered some different ways to consider the things we experience in terms of challenges, setbacks, failures and so on. Now let's unpack this. Let's go a bit ",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/7",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 8,
+     "title": "ESIP · Introduction",
+     "language": "en",
+     "translated": null,
+     "segments": 235,
+     "durationSec": 948,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "here",
+      "systems",
+      "going",
+      "people",
+      "things",
+      "model",
+      "grow",
+      "rise"
+     ],
+     "regime": null,
+     "summary": "Hey, John here. A very warm welcome to the CAM model, otherwise known as ESIP. Now, this is a model that we use here in Eden Rise, which at first glance,",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/8",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 9,
+     "title": "Goal Setting · Intro",
+     "language": "en",
+     "translated": null,
+     "segments": 12,
+     "durationSec": 62,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "goals",
+      "going",
+      "setting",
+      "focus",
+      "animation"
+     ],
+     "regime": null,
+     "summary": "A very warm welcome to the Goal Setting Module. Setting Goals is long been known as a very powerful tool to help your clarity, your focus, to help companies have their focus, have teams have focus and to really know what you're putting your energies and collec",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/9",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 10,
+     "title": "Goal Setting · Animation",
+     "language": "en",
+     "translated": null,
+     "segments": 43,
+     "durationSec": 200,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "goals",
+      "term",
+      "long",
+      "goal",
+      "towards",
+      "setting",
+      "medium",
+      "short"
+     ],
+     "regime": null,
+     "summary": "Setting goals is the first step in turning the invisible into the visible, Tony Robbins. The power of setting goals has long been known as a vital tool champions use for turning their dreams into reality.",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/10",
+     "moments": [
+      {
+       "t0": 26,
+       "teaches": "What is the primary asset that has helped golfing legend Jack Nicholas achieve his goals?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 83,
+       "teaches": "What should you ensure when setting long-term goals?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 109,
+       "teaches": "What should you do after setting a long-term goal?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 165,
+       "teaches": "What should you focus on to reach your goals, according to Steffi Graff's father?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 138,
+       "teaches": "You are working towards a medium-term goal, but you are feeling overwhelmed by the task. What can you do to build confid",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 193,
+       "teaches": "You have set a long-term goal, but you are struggling to make progress. What can you do to get back on track?",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 11,
+     "title": "Goal Setting · 90-Day Goals",
+     "language": "en",
+     "translated": null,
+     "segments": 168,
+     "durationSec": 575,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "here",
+      "department",
+      "team",
+      "goals",
+      "want",
+      "again",
+      "know",
+      "doing"
+     ],
+     "regime": null,
+     "summary": "Hey team, a very warm welcome to your 90-day goal setting template. Now this works in partnership with the top five goals that you set every week. Now again, why goal setting important?",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/11",
+     "moments": [
+      {
+       "t0": 25,
+       "teaches": "Why is goal setting important for the company?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 51,
+       "teaches": "What is the recommended approach to completing the 90-day goal setting template?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 81,
+       "teaches": "What should you do when completing the department section of the 90-day goal setting template?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 112,
+       "teaches": "How should you approach defining the 'grand vision dream' for your department?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 141,
+       "teaches": "You are a new team member in the Building Maintenance Team department. You are struggling to define the 'grand vision dr",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 167,
+       "teaches": "You are completing the 90-day goal setting template and reach the 'B, do and have' section. You are unsure what to write",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 12,
+     "title": "Goal Setting · Top 5 Goals",
+     "language": "en",
+     "translated": null,
+     "segments": 157,
+     "durationSec": 570,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "goals",
+      "team",
+      "important",
+      "really",
+      "week",
+      "want",
+      "working",
+      "work"
+     ],
+     "regime": null,
+     "summary": "Hey, John here and a very warm welcome to the weekly top five goals system. Now this is really exciting and this is specific to the goal setting for the week. Now why is this important?",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/12",
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "What is one of the benefits of creating goals for the team?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 53,
+       "teaches": "What should be done with things that are important?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 115,
+       "teaches": "What should a team member do when they have achieved their weekly goals?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 144,
+       "teaches": "How should an individual's goals and subtasks be connected?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 84,
+       "teaches": "A team is struggling with their culture and values. What model can they use to diagnose and improve their situation?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 172,
+       "teaches": "Who is typically responsible for holding team members accountable for their weekly goals?",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 13,
+     "title": "Goal Setting · Summary",
+     "language": "en",
+     "translated": null,
+     "segments": 17,
+     "durationSec": 94,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "doing",
+      "goals",
+      "going",
+      "okay",
+      "goal",
+      "days",
+      "review",
+      "where"
+     ],
+     "regime": null,
+     "summary": "Welcome back. So there you have it. That's goal setting. That's our first look at it. We looked at the 90-day goals. We looked at the top five goals. It's important to know when going through this. The first time I'm going through this, just get it done. Doesn",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/13",
+     "moments": [
+      {
+       "t0": 28,
+       "teaches": "What analysis do we perform to gauge where we can improve at the end of the 90-day goal period?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 57,
+       "teaches": "Who is quoted as saying that nobody calibrates better than him?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 45,
+       "teaches": "What should you do when you're going through the goal-setting process for the first time?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 85,
+       "teaches": "What should you do after checking your progress on your weekly and 90-day goals?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 28,
+       "teaches": "You've just completed your first 90-day goal period and you're reviewing your progress. You notice that you've fallen sh",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 57,
+       "teaches": "You're working on your goals and you realize that you need to make some adjustments to stay on track. What approach shou",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 14,
+     "title": "Beyond Fear · Intro",
+     "language": "en",
+     "translated": null,
+     "segments": 17,
+     "durationSec": 95,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "fear",
+      "going",
+      "look",
+      "animation",
+      "might",
+      "anxiety"
+     ],
+     "regime": null,
+     "summary": "A very warm welcome to this module on fear. False evidence appearing real. So often fear lives in our projected future in most cases and it has a structure to it and we're going to look at that coming up. Now particularly it's normally the perception that what",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/14",
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "What is the main idea behind the concept of fear as 'false evidence appearing real'?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 53,
+       "teaches": "What is the relationship between the intensity of fear and the meaning given to it?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 82,
+       "teaches": "What should you do when experiencing fear in order to grow and expand as a person?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 82,
+       "teaches": "What is the ultimate goal of transforming your relationship to fear?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 53,
+       "teaches": "If you're experiencing a low-level anxiety about an upcoming event, what does this suggest about the meaning you're givi",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 82,
+       "teaches": "If a colleague is struggling with fear about a new project, what advice would you give them to help them grow and expand",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 15,
+     "title": "Beyond Fear · Animation",
+     "language": "en",
+     "translated": null,
+     "segments": 49,
+     "durationSec": 353,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "fear",
+      "level",
+      "experience",
+      "feeling",
+      "because",
+      "some",
+      "athletes",
+      "feel"
+     ],
+     "regime": null,
+     "summary": "Fear. We all experience it in various forms and degrees of intensity. What is it for you? Not living up to your expectations? Letting your family or coach down? Looking bad in front of others? Or the feeling that you are a failure? Is it some of the above? All",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/15",
+     "moments": [
+      {
+       "t0": 118,
+       "teaches": "What is the first level in the process of moving from shame to gain in relation to fear?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 143,
+       "teaches": "What happens when we try to avoid feeling fear at level five?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 175,
+       "teaches": "What should an athlete do when experiencing fear at level four?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 204,
+       "teaches": "How should an athlete view fear at level three?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 118,
+       "teaches": "An athlete is experiencing fear before a big competition and is trying to hide it from their teammates. What level are t",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 175,
+       "teaches": "A new athlete joins the team and is openly talking about their fear of failure. How should the team respond at level fou",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 16,
+     "title": "Beyond Fear · Unpack & Summary",
+     "language": "en",
+     "translated": null,
+     "segments": 150,
+     "durationSec": 730,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "fear",
+      "feeling",
+      "feel",
+      "going",
+      "because",
+      "good",
+      "confident",
+      "about"
+     ],
+     "regime": null,
+     "summary": "Welcome back, I trust you enjoyed the animation so let's unpack fear a bit more. So in this animation we saw the invitation to change the relationship that you have to fear. Now this is something that first begins with awareness.",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/16",
+     "moments": [
+      {
+       "t0": 30,
+       "teaches": "What is a common belief about confidence that the trainer says is a myth?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 84,
+       "teaches": "What is the trainer's main point about feeling confident and taking on challenges?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 113,
+       "teaches": "What should you do if you're feeling not confident about taking on a challenge?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 140,
+       "teaches": "How can you apply the trainer's message about confidence to your own life?",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 168,
+       "teaches": "You're scheduled to give a presentation to a large audience, but you're feeling nervous and not confident. What should y",
+       "audit": "unaudited"
+      },
+      {
+       "t0": 56,
+       "teaches": "A colleague is hesitant to take on a new project because they don't feel confident in their abilities. What should you a",
+       "audit": "unaudited"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 17,
+     "title": "Body, Soul & Spirit · Intro",
+     "language": "en",
+     "translated": null,
+     "segments": 15,
+     "durationSec": 86,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "spirit",
+      "body",
+      "soul",
+      "module",
+      "something"
+     ],
+     "regime": null,
+     "summary": "Body, Soul and Spirit. Now this is more of a larger overarching module in terms of identifying categories within our personal development and journey as beings. And we're going to unpack all the details of each of the sections coming up.",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/17",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 18,
+     "title": "Body, Soul & Spirit · Deep Dive",
+     "language": "en",
+     "translated": null,
+     "segments": 111,
+     "durationSec": 757,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "soul",
+      "spirit",
+      "body",
+      "where",
+      "physical",
+      "people",
+      "emotions",
+      "because"
+     ],
+     "regime": null,
+     "summary": "Welcome to the deep dive on body, soul and spirit. Let's begin with the physical body. The physical body is often referred to in ancient Biblical scriptures as the Earthly Vessel.",
+     "url": "https://academy.edenrise.com/#/play/alignment-journey/18",
+     "moments": [],
+     "questions": 0
+    }
+   ]
+  },
+  "fire-truck-training": {
+   "title": "Fire Truck Training",
+   "modules": [
+    {
+     "mod": 0,
+     "title": "Starting & Driving the Truck",
+     "language": "en",
+     "translated": null,
+     "segments": 129,
+     "durationSec": 355,
+     "capability": "safety",
+     "tags": [
+      "safety",
+      "yeah",
+      "okay",
+      "here",
+      "right",
+      "pressure",
+      "start",
+      "these",
+      "drive"
+     ],
+     "regime": "SST",
+     "summary": "Ok, so we activated the electricity outside at the battery storage place and now we have here different buttons. When you push the black one down, then you see everything starts.",
+     "url": "https://academy.edenrise.com/#/play/fire-truck-training/0",
+     "moments": [
+      {
+       "t0": 25,
+       "teaches": "What happens when the pressure for the brakes is low?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 80,
+       "teaches": "What is the function of the throttle button?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 107,
+       "teaches": "What should you do before starting the engine every morning?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 192,
+       "teaches": "What should you do with the buttons that block the axles?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 134,
+       "teaches": "What happens if you try to drive the fire truck without enough pressure in the brake system?",
+       "audit": "verified"
+      },
+      {
+       "t0": 165,
+       "teaches": "What should you do if the fire truck is not moving straight while driving?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 1,
+     "title": "Filling the Water Tank",
+     "language": "en",
+     "translated": null,
+     "segments": 146,
+     "durationSec": 611,
+     "capability": "safety",
+     "tags": [
+      "safety",
+      "here",
+      "water",
+      "also",
+      "yeah",
+      "because",
+      "fill",
+      "tank",
+      "these"
+     ],
+     "regime": "SST",
+     "summary": "Welcome to the Union Rise Firetruck Training with Supermike, Joël and Steph. We're here today at the firetruck and we're going to learn the best firetruck skills to protect the local region with responsibility, skill and dedication. The first thing we do today",
+     "url": "https://academy.edenrise.com/#/play/fire-truck-training/1",
+     "moments": [
+      {
+       "t0": 30,
+       "teaches": "Where do we fill the fire truck with water?",
+       "audit": "verified"
+      },
+      {
+       "t0": 93,
+       "teaches": "How do we stop the engine of the fire truck?",
+       "audit": "verified"
+      },
+      {
+       "t0": 211,
+       "teaches": "What is important when working with the fire truck's materials?",
+       "audit": "verified"
+      },
+      {
+       "t0": 121,
+       "teaches": "How should the big fire gun be used?",
+       "audit": "verified"
+      },
+      {
+       "t0": 61,
+       "teaches": "If the electric system is down due to a fire, how can we still get water for the fire truck?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 179,
+       "teaches": "If we need to fill the fire truck's tank from a well, which hose should we use?",
+       "audit": "verified"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 2,
+     "title": "Off-Road, Pump & Spray",
+     "language": "en",
+     "translated": null,
+     "segments": 81,
+     "durationSec": 582,
+     "capability": "safety",
+     "tags": [
+      "safety",
+      "yeah",
+      "power",
+      "because",
+      "here",
+      "right",
+      "also",
+      "where",
+      "only"
+     ],
+     "regime": "SST",
+     "summary": "Yeah, so for situations like this when we go downhill, it's easy to take the second gear, clutch it in, loose the brake and then we have the button underneath the clutch pedal where we also can",
+     "url": "https://academy.edenrise.com/#/play/fire-truck-training/2",
+     "moments": [
+      {
+       "t0": 26,
+       "teaches": "What happens when you use the button under the clutch pedal to brake while driving the fire truck?",
+       "audit": "verified"
+      },
+      {
+       "t0": 147,
+       "teaches": "What is the primary reason for leaving the engine on when arriving at a fire fighting location?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 174,
+       "teaches": "What should you do when arriving at a fire fighting location with the fire truck?",
+       "audit": "verified"
+      },
+      {
+       "t0": 246,
+       "teaches": "What should you do after pushing the orange button to start the pump on the fire truck?",
+       "audit": "verified"
+      },
+      {
+       "t0": 92,
+       "teaches": "You are driving the fire truck on a narrow road with limited space to turn around. What should you do?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 119,
+       "teaches": "You are driving the fire truck off-road in a hilly area. What should you be aware of?",
+       "audit": "verified"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 3,
+     "title": "Power, Safety & the Drill",
+     "language": "en",
+     "translated": null,
+     "segments": 183,
+     "durationSec": 568,
+     "capability": "safety",
+     "tags": [
+      "safety",
+      "here",
+      "fire",
+      "everything",
+      "because",
+      "yeah",
+      "hose",
+      "inside",
+      "important"
+     ],
+     "regime": "SST",
+     "summary": "Now with the Stefinator, welcome to the Stefinator, maximum pumps, maximum pumps. And now, you see it's power, now it's maximum. Steff makes it look easy.",
+     "url": "https://academy.edenrise.com/#/play/fire-truck-training/3",
+     "moments": [
+      {
+       "t0": 54,
+       "teaches": "What happens when the emergency switch is activated on the Stefinator?",
+       "audit": "verified"
+      },
+      {
+       "t0": 136,
+       "teaches": "What type of clothes should be worn when fighting a fire?",
+       "audit": "verified"
+      },
+      {
+       "t0": 80,
+       "teaches": "What should be done after the emergency switch is activated and the engine is off?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 168,
+       "teaches": "What should be done to prevent the water in the tank from rusting and getting green?",
+       "audit": "verified"
+      },
+      {
+       "t0": 108,
+       "teaches": "You are fighting a fire with a team of two people. What is the normal way to operate the fire gun and hose?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 194,
+       "teaches": "You notice that the water in the tank has started to get green. What should you do?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    }
+   ]
+  },
+  "land-team-journey": {
+   "title": "Above the Line",
+   "modules": [
+    {
+     "mod": 0,
+     "title": "Above the Line, Below the Line",
+     "language": "pt",
+     "translated": null,
+     "segments": 114,
+     "durationSec": 304,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "linha",
+      "acima",
+      "abaixo",
+      "feedback",
+      "dias",
+      "desculpas",
+      "culpa",
+      "perguntas"
+     ],
+     "regime": null,
+     "summary": "Hoje vamos aprender uma das ideias mais importantes desta formação. Chama-se acima da linha e abaixo da linha. É muito simples, mas pode mudar a forma como trabalha, como comunica e como cresce.",
+     "url": "https://academy.edenrise.com/#/play/land-team-journey/0",
+     "moments": [
+      {
+       "t0": 51,
+       "teaches": "What characterizes being 'below the line'?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 104,
+       "teaches": "What is the primary focus of being 'above the line'?",
+       "audit": "verified"
+      },
+      {
+       "t0": 104,
+       "teaches": "When faced with a problem, what should you do to stay 'above the line'?",
+       "audit": "verified"
+      },
+      {
+       "t0": 182,
+       "teaches": "What is the first step to take when you realize you are 'below the line'?",
+       "audit": "verified"
+      },
+      {
+       "t0": 157,
+       "teaches": "A colleague makes a mistake that affects your work. How should you respond to stay 'above the line'?",
+       "audit": "verified"
+      },
+      {
+       "t0": 130,
+       "teaches": "You notice a team member is not pulling their weight. What 'above the line' behavior should you exhibit?",
+       "audit": "verified"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 1,
+     "title": "No Failure, Only Feedback",
+     "language": "pt",
+     "translated": null,
+     "segments": 105,
+     "durationSec": 268,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "feedback",
+      "aprender",
+      "melhor",
+      "alguem",
+      "fracasso",
+      "erro",
+      "bebe",
+      "tornou"
+     ],
+     "regime": null,
+     "summary": "Pense num bebê a aprender a andar. O bebê cai? Sim, muitas vezes. O bebê diz, só um fracasso.",
+     "url": "https://academy.edenrise.com/#/play/land-team-journey/1",
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "What is the key phrase to remember according to the trainer?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 131,
+       "teaches": "How does the second person in the example react to feedback?",
+       "audit": "verified"
+      },
+      {
+       "t0": 104,
+       "teaches": "What should you do when you make a mistake at work?",
+       "audit": "verified"
+      },
+      {
+       "t0": 186,
+       "teaches": "What attitude is required to learn from people who are more advanced than you?",
+       "audit": "verified"
+      },
+      {
+       "t0": 53,
+       "teaches": "A colleague is struggling with a task and has made several mistakes. What can you learn from their experience?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 159,
+       "teaches": "You are given feedback on your performance and you don't agree with it. What should you do?",
+       "audit": "verified"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 2,
+     "title": "Attention to Detail",
+     "language": "pt",
+     "translated": null,
+     "segments": 89,
+     "durationSec": 243,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "trabalho",
+      "atencao",
+      "chao",
+      "detalhe",
+      "ferramentas",
+      "estao",
+      "lugar",
+      "pequenas"
+     ],
+     "regime": null,
+     "summary": "Imagine que entre em dois locais de trabalho. O primeiro está desarrumado. As ferramentas estão largadas no chão.",
+     "url": "https://academy.edenrise.com/#/play/land-team-journey/2",
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "Why do most people choose a well-organized workspace over a disorganized one?",
+       "audit": "verified"
+      },
+      {
+       "t0": 80,
+       "teaches": "What is the main goal of attention to detail?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 135,
+       "teaches": "What should you do when you notice a small problem in your work?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 162,
+       "teaches": "What should you do before finishing a task to ensure attention to detail?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 110,
+       "teaches": "Two employees, John and Mike, complete a painting task. John leaves the area messy, while Mike cleans up and organizes t",
+       "audit": "verified"
+      },
+      {
+       "t0": 190,
+       "teaches": "You receive an email from a colleague with several spelling errors and missing information. How does this reflect on the",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 3,
+     "title": "Total Responsibility",
+     "language": "en",
+     "translated": null,
+     "segments": 66,
+     "durationSec": 204,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "fire",
+      "yeah",
+      "soldier",
+      "careful",
+      "here",
+      "sorry"
+     ],
+     "regime": null,
+     "summary": "So what's happening here Mike? Here it's a big fire. All the wheat is burning.",
+     "url": "https://academy.edenrise.com/#/play/land-team-journey/3",
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "What is the first step when using the fire gun?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 53,
+       "teaches": "What is the purpose of the orange button?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 27,
+       "teaches": "What should you do after setting the adapters and outlets?",
+       "audit": "verified"
+      },
+      {
+       "t0": 112,
+       "teaches": "What should you consider when asking someone to operate a vehicle in a fire?",
+       "audit": "verified"
+      },
+      {
+       "t0": 137,
+       "teaches": "You are working with a team to put out a fire and one of the team members is a soldier with experience in operating heav",
+       "audit": "corrected"
+      },
+      {
+       "t0": 189,
+       "teaches": "You are working with a team to put out a fire and one of the team members is using a microphone to communicate with the ",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 4,
+     "title": "A Learner for Life",
+     "language": "pt",
+     "translated": null,
+     "segments": 81,
+     "durationSec": 205,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "aprende",
+      "aprender",
+      "perguntas",
+      "aprenda",
+      "talvez",
+      "vida",
+      "hoje",
+      "melhor"
+     ],
+     "regime": null,
+     "summary": "Imagine duas pessoas a começar o mesmo trabalho no mesmo dia. Cinco anos depois, uma tornou-se líder. A outra continua a fazer o mesmo trabalho da mesma forma.",
+     "url": "https://academy.edenrise.com/#/play/land-team-journey/4",
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "What is a key characteristic of someone who is an 'aprendiz para a vida', or a lifelong learner?",
+       "audit": "verified"
+      },
+      {
+       "t0": 54,
+       "teaches": "What does it mean when someone asks questions, according to the lesson?",
+       "audit": "verified"
+      },
+      {
+       "t0": 80,
+       "teaches": "What should you do at the end of each workday to continue growing and learning?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 131,
+       "teaches": "How can you use AI to improve your work and learning?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 105,
+       "teaches": "You're working on a project and encounter an obstacle. What should you do?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 158,
+       "teaches": "You've made a mistake on a task and are not sure how to improve. What should you do?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 5,
+     "title": "t Assume, Clarify\", ",
+     "language": "pt",
+     "translated": null,
+     "segments": 84,
+     "durationSec": 254,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "grandes",
+      "outra",
+      "comunicacao",
+      "equipas",
+      "problema",
+      "presumimos",
+      "respeita",
+      "cadeiras"
+     ],
+     "regime": null,
+     "summary": "Imagine isto. O seu chefe diz, por favor, mudem as cadeiras de lugar. Uma pessoa move cinco cadeiras, outra pessoa move todas as cadeiras da sala, outra pessoa não move nenhuma porque pensou que era para amanhã.",
+     "url": "https://academy.edenrise.com/#/play/land-team-journey/5",
+     "moments": [
+      {
+       "t0": 28,
+       "teaches": "What is one of the most valuable skills that a team can learn?",
+       "audit": "verified"
+      },
+      {
+       "t0": 56,
+       "teaches": "What is a common mistake that can lead to problems in team communication?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 82,
+       "teaches": "What should you do when you're unsure about the meaning of a task or instruction?",
+       "audit": "verified"
+      },
+      {
+       "t0": 107,
+       "teaches": "How should you listen to someone who is speaking to you?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 137,
+       "teaches": "You're working on a task that's taking longer than expected. What should you do to keep your team informed?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 163,
+       "teaches": "You've encountered an issue while working on a task. What should you do to address the problem?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 6,
+     "title": "Module 7",
+     "language": "pt",
+     "translated": null,
+     "segments": 70,
+     "durationSec": 218,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "melhor",
+      "aprender",
+      "pedir",
+      "alguem",
+      "benchmark",
+      "pergunte",
+      "forma",
+      "pode"
+     ],
+     "regime": null,
+     "summary": "Alguma vez passou uma hora a fazer algo, só para descobrir que outra pessoa fazia em 10 minutos? Isso acontece a todos nós. Uma das formas mais rápidas de crescer é deixar de presumir que a sua forma é a melhor forma.",
+     "url": "https://academy.edenrise.com/#/play/land-team-journey/6",
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "What is a key characteristic of the best people in the world?",
+       "audit": "verified"
+      },
+      {
+       "t0": 53,
+       "teaches": "What does making a benchmark mean?",
+       "audit": "verified"
+      },
+      {
+       "t0": 78,
+       "teaches": "What should you do before sending an email or creating a document?",
+       "audit": "verified"
+      },
+      {
+       "t0": 105,
+       "teaches": "What is a sign of wisdom in the workplace?",
+       "audit": "verified"
+      },
+      {
+       "t0": 131,
+       "teaches": "Two employees are building the same table. One starts immediately and works for 4 hours, while the other spends 5 minute",
+       "audit": "corrected"
+      },
+      {
+       "t0": 158,
+       "teaches": "You are preparing a presentation and want to improve it. What should you do?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    }
+   ]
+  }
+ }
+}

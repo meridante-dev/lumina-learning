@@ -19,13 +19,21 @@
 <meta property="og:title" content="Academy Platforms — Construa equipas melhores, uma lição de cada vez">
 <meta property="og:description" content="Formação que a sua equipa gosta de ver — e as 40 horas obrigatórias por lei, tratadas. Numa só plataforma.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="https://meridante-dev.github.io/lumina/img/hero-3d.jpg">
+<meta property="og:image" content="https://meridante-dev.github.io/academy-platforms/img/social-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://meridante-dev.github.io/academy-platforms/">
+<meta property="og:locale" content="pt_PT">
+<meta property="og:site_name" content="Academy Platforms">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://meridante-dev.github.io/lumina/img/hero-3d.jpg">
+<meta name="twitter:image" content="https://meridante-dev.github.io/academy-platforms/img/social-card.jpg">
 <meta name="theme-color" content="#012A4A">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Academy">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23012A4A'/%3E%3Cpath d='M13 17 L31 8 V41 L13 50 Z' fill='none' stroke='%23A9D6E5' stroke-width='2.8'/%3E%3Cpath d='M27 23 L45 14 V47 L27 56 Z' fill='none' stroke='%2361A5C2' stroke-width='2.8'/%3E%3C/svg%3E">
-<link rel="canonical" href="https://meridante-dev.github.io/lumina/">
-<link rel="preload" as="image" href="img/eden-home.jpg" fetchpriority="high">
+<link rel="canonical" href="https://meridante-dev.github.io/academy-platforms/">
+<link rel="preload" as="image" href="img/academy-cover.jpg" fetchpriority="high">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,8 +41,8 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Organization","name":"Academy Platforms",
-"url":"https://meridante-dev.github.io/lumina/",
-"logo":"https://meridante-dev.github.io/lumina/img/hero-3d.jpg",
+"url":"https://meridante-dev.github.io/academy-platforms/",
+"logo":"https://meridante-dev.github.io/academy-platforms/img/social-card.jpg",
 "slogan":"Your expertise. Structured, delivered and scaled.",
 "description":"Infraestrutura de academias corporativas — plataformas de aprendizagem com a marca do cliente, com evidência verificável.",
 "brand":{"@type":"Brand","name":"Academy Platforms"}}
@@ -144,7 +152,7 @@ header.hid{transform:translateY(-102%)}
 /* hero */
 .hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:var(--deep)}
 .hero-inner{position:relative;z-index:2;width:100%;max-width:1560px;margin:0 auto;
-  padding:clamp(120px,15vh,170px) var(--pad) 0;display:flex;flex-direction:column;align-items:center;
+  padding:clamp(120px,15vh,170px) var(--pad) clamp(64px,8vh,110px);display:flex;flex-direction:column;align-items:center;
   text-align:center;max-width:1240px;gap:0}
 .hero-inner>div:first-child{display:flex;flex-direction:column;align-items:center;width:100%}
 .hero h1{font-size:clamp(2.7rem,6vw,5.4rem);margin:.4em auto .34em;max-width:13.5em;color:var(--ivory);line-height:1.1;text-wrap:balance}
@@ -468,13 +476,13 @@ footer a:hover{color:var(--gold)}
 .farrow::after{content:'';position:absolute;right:-2px;top:-4px;border-left:7px solid rgba(169,214,229,.75);
   border-top:5px solid transparent;border-bottom:5px solid transparent}
 /* device */
-.dev{position:relative;flex:0 0 clamp(126px,10.5vw,158px);border-radius:20px;padding:6px;
+.dev{position:relative;flex:0 0 clamp(126px,10.5vw,158px);min-width:0;border-radius:20px;padding:6px;
   background:linear-gradient(165deg, rgba(169,214,229,.34), rgba(1,42,74,.92));
   box-shadow:0 24px 44px -26px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.2)}
 .devnotch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:34px;height:4px;
   border-radius:3px;background:rgba(0,0,0,.55);z-index:3}
 .devscr{background:#04182b;border-radius:15px;overflow:hidden;padding:17px 8px 8px;
-  display:flex;flex-direction:column;gap:5px;min-height:262px}
+  display:flex;flex-direction:column;gap:5px;aspect-ratio:9/19.2}
 .dhead{display:flex;align-items:center;gap:6px;font-size:.46rem;color:rgba(169,214,229,.85);
   justify-content:center;position:relative}
 .dhead .dx{position:absolute;left:0;opacity:.7}
@@ -483,8 +491,10 @@ footer a:hover{color:var(--gold)}
   box-shadow:0 0 0 0 rgba(255,77,94,.6);animation:recPulse 1.15s ease-out infinite}
 @keyframes recPulse{70%{box-shadow:0 0 0 7px rgba(255,77,94,0)}100%{box-shadow:0 0 0 0 rgba(255,77,94,0)}}
 .dtime{font-family:var(--mono);font-size:.45rem;color:var(--ivory)}
-.dshot{border-radius:6px;overflow:hidden;aspect-ratio:4/3;position:relative}
-.dshot.sm{aspect-ratio:16/10}
+/* the capture/preview is the hero of the screen — it absorbs the slack so the
+   phone reads full instead of half-empty */
+.dshot{border-radius:6px;overflow:hidden;position:relative;flex:1 1 auto;min-height:54px}
+.dshot.sm{flex:1 1 auto}
 .dshot img{width:100%;height:100%;object-fit:cover;display:block}
 .dmeta b{display:block;font-size:.5rem;color:var(--ivory);line-height:1.3}
 .dmeta span{font-size:.42rem;color:rgba(169,214,229,.5)}
@@ -521,9 +531,13 @@ footer a:hover{color:var(--gold)}
   background:rgba(169,214,229,.12);color:rgba(169,214,229,.75)}
 .dchips em.on{background:var(--sky2);color:#01243f}
 .dlbl{font-size:.4rem;color:rgba(169,214,229,.5);margin-top:2px}
-.dtop{display:flex;gap:5px;background:rgba(169,214,229,.08);border-radius:6px;padding:4px}
-.dtv{position:relative;width:46px;height:34px;border-radius:4px;overflow:hidden;flex:none}
+/* top result plays large — the answer fills the phone, not a stamp in a list */
+.dtop{display:flex;flex-direction:column;gap:4px;background:rgba(169,214,229,.08);
+  border-radius:6px;padding:4px;flex:1 1 auto;min-height:0}
+.dtv{position:relative;width:100%;border-radius:4px;overflow:hidden;flex:1 1 auto;min-height:52px}
 .dtv video{width:100%;height:100%;object-fit:cover;display:block}
+.dtv::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 55%,rgba(1,24,43,.55))}
 .dtt b{display:block;font-size:.44rem;color:var(--ivory);line-height:1.25}
 .dtt em{font-style:normal;font-size:.38rem;color:rgba(169,214,229,.55)}
 .drow{display:flex;gap:5px;align-items:center}
@@ -548,7 +562,7 @@ footer a:hover{color:var(--gold)}
 @media(max-width:1100px){
   /* one card at a time, rotating — all panels share a grid cell so the
      container is as tall as the tallest and nothing jumps between slides */
-  .flow3{grid-template-columns:1fr;gap:0;position:relative}
+  .flow3{grid-template-columns:1fr;gap:0;position:relative;touch-action:pan-y}
   .farrow{display:none}
   .fp{grid-area:1/1;max-width:520px;margin:0 auto;width:100%;
     opacity:0;transform:translateX(26px) scale(.985);pointer-events:none;
@@ -563,6 +577,63 @@ footer a:hover{color:var(--gold)}
 .appnote{max-width:30em;text-align:center;color:var(--mut);font-size:.92rem}
 @media(max-width:640px){.phone{width:min(280px,78vw)}}
 [data-rv]{will-change:transform,opacity}
+/* ── o filme ── */
+.film{margin-top:clamp(28px,3.5vw,46px)}
+.fwrap{position:relative;border-radius:var(--r);overflow:hidden;background:#02101d;
+  border:1px solid rgba(169,214,229,.2);aspect-ratio:16/9;
+  box-shadow:0 70px 120px -56px rgba(0,0,0,.92), inset 0 1px 0 rgba(255,255,255,.1)}
+.fwrap video{width:100%;height:100%;object-fit:cover;display:block}
+.fwrap video::cue{font-family:var(--sans);font-size:.92em;line-height:1.4;
+  background:rgba(2,16,29,.82);color:#EAF4FA}
+.fplay{position:absolute;inset:0;width:100%;border:0;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  background:linear-gradient(180deg,rgba(2,16,29,.34),rgba(2,16,29,.62));
+  transition:opacity .5s var(--ease),backdrop-filter .5s}
+.fplay.gone{opacity:0;pointer-events:none}
+.orb2{position:relative;width:88px;height:88px;border-radius:50%;display:grid;place-items:center;
+  background:linear-gradient(135deg,#CFE4EC 0%,#89C2D9 32%,#C58A2A 68%,#F5A623 100%);
+  box-shadow:0 18px 44px -12px rgba(0,0,0,.7), 0 0 34px -6px rgba(245,166,35,.45)}
+.orb2::after{content:'';position:absolute;inset:4px;border-radius:50%;background:#04182B}
+.orb2 svg{width:30px;height:30px;color:var(--gold);position:relative;z-index:1;margin-left:4px;
+  filter:drop-shadow(0 0 7px rgba(245,166,35,.6))}
+.fplay::before{content:'';position:absolute;left:50%;top:50%;width:88px;height:88px;margin:-44px 0 0 -44px;
+  border-radius:50%;border:1px solid rgba(245,166,35,.5);animation:fhalo 3.4s ease-out infinite;pointer-events:none}
+@keyframes fhalo{0%{transform:scale(1);opacity:.6}70%,100%{transform:scale(1.7);opacity:0}}
+.fplay .ftxt{text-align:center;position:relative;z-index:1}
+.fplay .ftxt b{display:block;font-family:var(--serif);font-weight:400;font-size:1.5rem;color:var(--ivory)}
+.fplay .ftxt em{display:block;font-family:var(--mono);font-style:normal;font-size:.6rem;
+  letter-spacing:.22em;text-transform:uppercase;color:rgba(169,214,229,.72);margin-top:8px}
+.fcap{margin-top:16px;text-align:center;font-size:.82rem;color:var(--dim);max-width:60ch;
+  margin-inline:auto;line-height:1.6}
+@media(max-width:640px){
+  .orb2{width:70px;height:70px}.orb2 svg{width:25px;height:25px}
+  .fplay::before{width:70px;height:70px;margin:-35px 0 0 -35px}
+  .fplay .ftxt b{font-size:1.2rem}
+  .fplay{gap:14px}
+  .fcap{font-size:.76rem}
+}
+@media(prefers-reduced-motion:reduce){.fplay::before{animation:none}}
+
+/* pricing board */
+.model .bd{padding:26px 26px 30px;display:flex;flex-direction:column;flex:1}
+.model .mt{font-family:var(--sans);font-size:.62rem;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--gold);line-height:1.5}
+.model .px{font-family:var(--serif);font-size:2.5rem;line-height:1;margin:14px 0 4px;color:var(--ivory)}
+.model .px .from{font-family:var(--sans);font-size:.68rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);display:block;margin-bottom:7px}
+.model .px .mo{font-family:var(--sans);font-size:1rem;font-weight:500;color:var(--mut);letter-spacing:0}
+.model h3{font-family:var(--serif);font-weight:400;font-size:1.44rem;line-height:1.2;
+  margin:16px 0 8px;color:var(--ivory)}
+.model .md{font-size:.9rem;color:var(--dim);margin-bottom:18px}
+.model ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin:0 0 20px}
+.model li{position:relative;padding-left:19px;font-size:.9rem;line-height:1.45;color:var(--mut)}
+.model li::before{content:"";position:absolute;left:0;top:.55em;width:5px;height:5px;
+  border-radius:50%;background:var(--gold);opacity:.85}
+.model .pxnote{margin-top:auto;font-family:var(--serif);font-style:italic;font-size:1rem;
+  line-height:1.45;color:rgba(234,244,250,.86);background:rgba(169,214,229,.07);
+  border:1px solid rgba(169,214,229,.14);border-radius:14px;padding:16px 18px}
+.model .btn{margin-top:18px;align-self:stretch;justify-content:center}
+
 /* mobile */
 @media(max-width:980px){
   .mbar{display:block}
@@ -682,7 +753,7 @@ footer a:hover{color:var(--gold)}
       <div class="tilt" id="tilt">
         <figure class="browser">
           <div class="bbar"><span class="dots"><i></i><i></i><i></i></span><span class="url">academy.edenrise.com</span></div>
-          <img src="img/eden-home.jpg" alt="Academia EdenRise — ambiente de aprendizagem com a marca do cliente" fetchpriority="high">
+          <img src="img/academy-cover.jpg" alt="Academia EdenRise — a experiência tipo Netflix: programa em destaque e capas dos cursos" fetchpriority="high">
         </figure>
         <div class="glare" aria-hidden="true"></div>
       </div>
@@ -811,8 +882,8 @@ footer a:hover{color:var(--gold)}
                 <div class="dchips"><em data-i="f3_x0">Tudo</em><em class="on" data-i="f3_x1">Vídeos</em><em data-i="f3_x2">Documentos</em></div>
                 <div class="dlbl" data-i="f3_top">Melhor resultado</div>
                 <div class="dtop">
-                  <span class="dtv"><video class="pumpvid" muted loop playsinline preload="none"
-                        poster="img/pump-thumb.jpg"><source src="img/pump-loop.mp4" type="video/mp4"></video>
+                  <span class="dtv"><video class="pumpvid" muted loop playsinline preload="metadata"
+                        poster="img/pump-poster.jpg"><source src="img/pump-loop.mp4" type="video/mp4"></video>
                     <span class="dplay">▶</span></span>
                   <span class="dtt"><b data-i="f1_v">Como operar a bomba</b><em>Vídeo · 2:14</em></span>
                 </div>
@@ -837,6 +908,36 @@ footer a:hover{color:var(--gold)}
   </div>
 </section>
 
+<!-- ================= O FILME ================= -->
+<section class="sec band-deep" id="filme">
+  <div class="wrap">
+    <div class="shead" data-rv>
+      <span class="eyebrow" data-i="fl_eb">Veja em ação</span>
+      <h2 data-i="fl_h2">Mantenha o seu negócio a funcionar —<br><em>seja quem for que está de turno.</em></h2>
+      <p data-i="fl_p">Dê a cada colaborador respostas imediatas a partir do conhecimento da própria
+        empresa — para trabalhar com confiança desde o primeiro dia.</p>
+    </div>
+
+    <figure class="film" data-rv>
+      <div class="fwrap">
+        <video id="film" playsinline preload="metadata" poster="img/film-poster.jpg"
+               aria-label="Academy Platforms — filme de apresentação">
+          <source src="media/academy-film.mp4" type="video/mp4">
+          <track id="trkPt" kind="subtitles" srclang="pt" label="Português" src="media/film.pt.vtt" default>
+          <track id="trkEn" kind="subtitles" srclang="en" label="English" src="media/film.en.vtt">
+        </video>
+        <button class="fplay" id="fplay" aria-label="Reproduzir o filme">
+          <span class="orb2">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>
+          </span>
+        </button>
+      </div>
+      <figcaption class="fcap" data-i="fl_cap">Quando a sua equipa pergunta, a Academy entrega a
+        resposta certa num instante — e revela os problemas recorrentes que a gestão precisa de resolver.</figcaption>
+    </figure>
+  </div>
+</section>
+
 <!-- ================= PLATAFORMA ================= -->
 <section class="sec band" id="plataforma">
   <div class="wrap">
@@ -852,21 +953,21 @@ footer a:hover{color:var(--gold)}
         <div class="rcard">
           <figure class="browser">
             <div class="bbar"><span class="dots"><i></i><i></i><i></i></span><span class="url">academy.edenrise.com</span></div>
-            <img src="img/eden-rails.jpg" alt="Trilhas de programas, formações atribuídas com prazos e percurso gerado por IA" loading="lazy">
+            <img src="img/eden-paths-2026.jpg" alt="Percursos de aprendizagem gerados por IA, com marcos e módulos por desbloquear" loading="lazy">
           </figure>
           <p class="pcap" data-i="ex_c0"><b>Programas e atribuições</b> — trilhas editoriais, prazos, percursos gerados para cada pessoa.</p>
         </div>
         <div class="rcard">
           <figure class="browser">
             <div class="bbar"><span class="dots"><i></i><i></i><i></i></span><span class="url">academy.edenrise.com</span></div>
-            <img src="img/eden-home.jpg" alt="Página inicial da academia com percurso de aprendizagem" loading="lazy">
+            <img src="img/academy-cover.jpg" alt="Página inicial da academia com programa em destaque e capas dos cursos" loading="lazy">
           </figure>
           <p class="pcap" data-i="ex_c1"><b>Ambiente do formando</b> — programas em destaque, percurso pessoal, progresso.</p>
         </div>
         <div class="rcard">
           <figure class="browser">
             <div class="bbar"><span class="dots"><i></i><i></i><i></i></span><span class="url">…/belong-academy</span></div>
-            <img src="img/belong-home.jpg" alt="Belong Academy — o mesmo motor com outra marca" loading="lazy">
+            <img src="img/belong-home-2026.jpg" alt="Belong Academy — o mesmo motor com outra marca" loading="lazy">
           </figure>
           <p class="pcap" data-i="ex_c2"><b>White-label real</b> — o mesmo motor, a marca do segundo cliente, no ar em menos de um dia.</p>
         </div>
@@ -903,90 +1004,85 @@ footer a:hover{color:var(--gold)}
 
 <!-- ================= NÚMEROS ================= -->
 
-<!-- ================= SISTEMA DE SERVIÇO ================= -->
-<section class="sec" id="servico">
-  <div class="wrap">
-    <div class="shead" data-rv>
-      <span class="eyebrow" data-i="sv_eb">Como funciona</span>
-      <h2 data-i="sv_h2">Abrir. Carregar em play.<br><em>Está cumprido.</em></h2>
-    </div>
-    <div class="steps" data-rv>
-      <div class="step"><span class="n">01</span><h3 data-i="sv1_h">Abrir</h3><p data-i="sv1_p">A sua equipa entra na academia com a marca da empresa.</p></div>
-      <div class="step"><span class="n">02</span><h3 data-i="sv2_h">Escolher</h3><p data-i="sv2_p">Uma série de formação: acolhimento, segurança, liderança.</p></div>
-      <div class="step"><span class="n">03</span><h3 data-i="sv3_h">Play</h3><p data-i="sv3_p">Episódios curtos. No telemóvel ou no computador.</p></div>
-      <div class="step"><span class="n">04</span><h3 data-i="sv4_h">Aprender</h3><p data-i="sv4_p">Perguntas rápidas pelo meio para o que interessa ficar.</p></div>
-      <div class="step"><span class="n">05</span><h3 data-i="sv5_h">Acompanhar</h3><p data-i="sv5_p">Vê quem fez o quê, ao vivo, sem pedir nada a ninguém.</p></div>
-      <div class="step"><span class="n">06</span><h3 data-i="sv6_h">Certificar</h3><p data-i="sv6_p">Certificados emitidos sozinhos. As 40 horas ficam registadas.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= CASOS DE USO ================= -->
-
 <!-- ================= MODELOS ================= -->
-<!-- infinite marquee: what an academy carries -->
-<div class="marq" aria-hidden="true">
-  <div class="track">
-    <span class="mi" data-i="uc1">Onboarding de colaboradores</span><span class="mi" data-i="uc2">Conformidade e standards</span><span class="mi" data-i="uc3">Desenvolvimento de liderança</span><span class="mi" data-i="uc4">Formação operacional</span><span class="mi" data-i="uc5">Educação de clientes</span><span class="mi" data-i="uc6">Academias de parceiros</span><span class="mi" data-i="uc7">Formação de franchising</span><span class="mi" data-i="uc8">Equipas multilingues</span><span class="mi" data-i="uc1">Onboarding de colaboradores</span><span class="mi" data-i="uc2">Conformidade e standards</span><span class="mi" data-i="uc3">Desenvolvimento de liderança</span><span class="mi" data-i="uc4">Formação operacional</span><span class="mi" data-i="uc5">Educação de clientes</span><span class="mi" data-i="uc6">Academias de parceiros</span><span class="mi" data-i="uc7">Formação de franchising</span><span class="mi" data-i="uc8">Equipas multilingues</span>
-  </div>
-</div>
-
-
 <section class="sec" id="modelos">
   <div class="wrap">
     <div class="shead" data-rv>
       <span class="eyebrow" data-i="md_eb">Planos</span>
-      <h2 data-i="md_h2">Preço simples.<br><em>Todos incluídos.</em></h2>
-      <p data-i="md_p">Um valor fixo por mês, por empresa. Colaboradores ilimitados — formar toda a gente não devia custar mais.</p>
+      <h2 data-i="md_h2">Três formas de começar.<br><em>Escolha quanto fazemos por si.</em></h2>
+      <p data-i="md_p">Um valor de instalação, depois uma mensalidade. Cursos ilimitados dentro do uso justo.</p>
     </div>
     <div class="models">
+
       <div class="model" data-rv>
-        <figure class="mimg"><img src="img/eden-home.jpg" alt="" loading="lazy"></figure>
-        <div class="mt">Foundation</div>
-        <h3 data-i="m1_h">Pronta a usar</h3>
-        <p class="md" data-i="m1_d">A academia com a sua marca, pronta a operar.</p>
-        <ul>
-          <li data-i="m1_l1"><b>Plataforma completa</b> com a sua marca e domínio</li>
-          <li data-i="m1_l2">Conformidade PT/UE: 40h do Art. 131.º do Código do Trabalho, Relatório Único, Art. 4.º do Regulamento de IA</li>
-          <li data-i="m1_l3">Escada de evidência completa + verificador público</li>
-          <li data-i="m1_l4">Utilizadores ilimitados · dados na UE</li>
-        </ul>
-        <div class="px">€399<small> /mês por instância</small></div>
-        <p class="pxn" data-i="m1_n">+ €1.500 setup · anual = 2 meses grátis · <b>Programa fundador: 3 vagas a €199/mês, fixado 12 meses</b> — em contrapartida, caso de estudo com nome e chamada mensal de feedback.</p>
-        <a class="btn btn-ghost" href="#contacto" data-i="m1_c">Falar connosco</a>
+        <figure class="mimg"><img src="img/academy-cover.jpg" alt="" loading="lazy"></figure>
+        <div class="bd">
+          <div class="mt" data-i="m1_t">01 · Plataforma Academia Base</div>
+          <div class="px"><span class="from" data-i="px_from">Desde</span> <span data-i="m1_px">€400</span><small class="mo" data-i="m1_mo"> · €70/mês</small></div>
+          <h3 data-i="m1_h">A sua academia com marca própria e apresentador IA — pronta a usar.</h3>
+          <p class="md" data-i="m1_d">A sua equipa cria e carrega o conteúdo.</p>
+          <ul>
+            <li data-i="m1_l1">Plataforma de academia com marca própria</li>
+            <li data-i="m1_l2">Estrutura de aprendizagem à medida</li>
+            <li data-i="m1_l3">Cursos ilimitados dentro do uso justo</li>
+            <li data-i="m1_l4">Carregamento de vídeo, PDF e documentos</li>
+            <li data-i="m1_l5">Questionários e certificados</li>
+            <li data-i="m1_l6">Acompanhamento do progresso dos formandos</li>
+            <li data-i="m1_l7">1 avatar IA · 1 voz IA</li>
+            <li data-i="m1_l8">Acesso ao avatar / voz entregue</li>
+            <li data-i="m1_l9">Starter Academy Care incluído</li>
+          </ul>
+          <p class="pxnote" data-i="m1_n">Nós construímos a academia e o apresentador IA. Você traz o conteúdo.</p>
+          <a class="btn btn-ghost" href="#contacto" data-i="m1_c">Falar connosco</a>
+        </div>
       </div>
+
       <div class="model sig" data-rv>
-        <figure class="mimg"><img src="img/eden-rails.jpg" alt="" loading="lazy"></figure>
-        <div class="mt">Signature</div>
-        <h3 data-i="m2_h">Nós criamos os cursos</h3>
-        <p class="md" data-i="m2_d">A infraestrutura, mais a biblioteca inicial produzida convosco.</p>
-        <ul>
-          <li data-i="m2_l1">Tudo o que está em <b>Foundation</b></li>
-          <li data-i="m2_l2">Biblioteca inicial de programas produzida a partir do vosso conhecimento</li>
-          <li data-i="m2_l3">Avatar e voz de marca para conteúdos de vídeo</li>
-          <li data-i="m2_l4">Percursos de onboarding desenhados connosco</li>
-        </ul>
-        <div class="px" data-i="m2_x">Sob consulta</div>
-        <p class="pxn" data-i="m2_n">Âmbito definido na sessão de estratégia.</p>
-        <a class="btn btn-gold" href="#contacto" data-book data-i="m2_c">Marcar sessão</a>
+        <figure class="mimg"><img src="img/eden-library-2026.jpg" alt="" loading="lazy"></figure>
+        <div class="bd">
+          <div class="mt" data-i="m2_t">02 · Standard + Lançamento IA</div>
+          <div class="px"><span class="from" data-i="px_from">Desde</span> <span data-i="m2_px">€800</span><small class="mo" data-i="m2_mo"> · €190/mês</small></div>
+          <h3 data-i="m2_h">Comece com as suas primeiras lições em IA já produzidas.</h3>
+          <p class="md" data-i="m2_d">Criamos o primeiro lote e formamos a sua equipa.</p>
+          <ul>
+            <li data-i="m2_l1">Tudo o que está no Base</li>
+            <li data-i="m2_l2">5 lições de lançamento apresentadas por IA</li>
+            <li data-i="m2_l3">Até 3 min cada · 15 min no total</li>
+            <li data-i="m2_l4">Agente gerador de guiões</li>
+            <li data-i="m2_l5">Acolhimento da equipa</li>
+            <li data-i="m2_l6">Formação para criar lições futuras</li>
+            <li data-i="m2_l7">Atualização trimestral e apoio</li>
+            <li data-i="m2_l8">Growth Hosting incluído</li>
+          </ul>
+          <p class="pxnote" data-i="m2_n">A academia, o apresentador IA, as primeiras lições e o sistema para continuar a criar.</p>
+          <a class="btn btn-gold" href="#contacto" data-book data-i="m2_c">Marcar sessão</a>
+        </div>
       </div>
+
       <div class="model" data-rv>
-        <figure class="mimg"><img src="img/belong-home.jpg" alt="" loading="lazy"></figure>
-        <div class="mt">Enterprise</div>
-        <h3 data-i="m3_h">Nós tratamos de tudo</h3>
-        <p class="md" data-i="m3_d">Produção completa, conteúdo contínuo e gestão estratégica.</p>
-        <ul>
-          <li data-i="m3_l1">Tudo o que está em <b>Signature</b></li>
-          <li data-i="m3_l2">Produção contínua de programas e atualização de standards</li>
-          <li data-i="m3_l3">Relatórios executivos de conclusão e competência</li>
-          <li data-i="m3_l4">Gestão estratégica da academia como serviço</li>
-        </ul>
-        <div class="px" data-i="m3_x">Sob consulta</div>
-        <p class="pxn" data-i="m3_n">Para organizações com operação de formação contínua.</p>
-        <a class="btn btn-ghost" href="#contacto" data-i="m3_c">Falar connosco</a>
+        <figure class="mimg"><img src="img/belong-home-2026.jpg" alt="" loading="lazy"></figure>
+        <div class="bd">
+          <div class="mt" data-i="m3_t">03 · Departamento Academia Completo</div>
+          <div class="px"><span class="from" data-i="px_from">Desde</span> <span data-i="m3_px">€1.200</span><small class="mo" data-i="m3_mo"> · €490/mês</small></div>
+          <h3 data-i="m3_h">O seu departamento de vídeo IA — sem ter de o contratar.</h3>
+          <p class="md" data-i="m3_d">Planeamos, produzimos, carregamos e gerimos mensalmente.</p>
+          <ul>
+            <li data-i="m3_l1">Tudo o que está no Standard</li>
+            <li data-i="m3_l2">Lançamento completo de curso (âmbito acordado)</li>
+            <li data-i="m3_l3">Apoio mensal de conteúdo</li>
+            <li data-i="m3_l4">Até 2 vídeos IA curtos / mês</li>
+            <li data-i="m3_l5">Até 6 min finalizados / mês</li>
+            <li data-i="m3_l6">Edição e carregamento</li>
+            <li data-i="m3_l7">Gestão da plataforma</li>
+            <li data-i="m3_l8">Gestor dedicado</li>
+            <li data-i="m3_l9">Academy Hosting incluído</li>
+          </ul>
+          <p class="pxnote" data-i="m3_n">Ajudamos a operar e a fazer crescer a academia consigo.</p>
+          <a class="btn btn-ghost" href="#contacto" data-i="m3_c">Falar connosco</a>
+        </div>
       </div>
+
     </div>
-  </div>
 </section>
 
 <!-- ================= A PROVA ================= -->
@@ -1100,6 +1196,8 @@ footer a:hover{color:var(--gold)}
         <a href="https://academy.edenrise.com/privacy.html" target="_blank" rel="noopener" data-i="ft_l1">Política de Privacidade (plataforma)</a>
         <a href="https://academy.edenrise.com/verify.html" target="_blank" rel="noopener" data-i="ft_l2">Verificador público</a>
         <a href="#prova" data-i="ft_l3">A prova</a>
+        <a href="termos.html" data-doc="termos" data-i="ft_l4">Termos e Condições</a>
+        <a href="suporte.html" data-doc="suporte" data-i="ft_l5">Suporte e SLA</a>
       </div>
     </div>
     <div class="fimprint" data-i="ft_imp">
@@ -1171,28 +1269,6 @@ sv6_h:"Certify", sv6_p:"Certificates issue themselves. The 40 hours are on recor
 uc_eb:"Use cases", uc_h2:"One platform.<br><em>Every kind of training.</em>",
 uc1:"Employee onboarding", uc2:"Compliance and standards", uc3:"Leadership development", uc4:"Operational training",
 uc5:"Customer education", uc6:"Partner academies", uc7:"Franchise training", uc8:"Multilingual workforces", uc_p:"From day one to the mandatory 40 hours — one place for everything your team needs to learn.",
-md_eb:"Plans",
-md_h2:"Simple pricing.<br><em>Everyone included.</em>",
-md_p:"One flat monthly fee per company. Unlimited employees — training everyone shouldn't cost more.",
-m1_h:"Ready to run", m1_d:"Your branded academy, ready to operate.",
-m1_l1:"<b>Complete platform</b> in your brand and domain",
-m1_l2:"PT/EU compliance: the Labour Code Art. 131 40 hours, Relatório Único, AI Act Art. 4",
-m1_l3:"Full evidence ladder + public verifier",
-m1_l4:"Unlimited users · EU data",
-m1_n:"+ €1,500 setup · annual = 2 months free · <b>Founding programme: 3 slots at €199/month, locked 12 months</b> — in return, a named case study and a monthly feedback call.",
-m1_c:"Talk to us",
-m2_h:"We make the courses", m2_d:"The infrastructure, plus the initial library produced with you.",
-m2_l1:"Everything in <b>Foundation</b>",
-m2_l2:"Initial programme library produced from your knowledge",
-m2_l3:"Brand avatar and voice for video content",
-m2_l4:"Onboarding paths designed with us",
-m2_x:"On request", m2_n:"Scope defined in the strategy session.", m2_c:"Book a session",
-m3_h:"We run it for you", m3_d:"Complete production, ongoing content and strategic management.",
-m3_l1:"Everything in <b>Signature</b>",
-m3_l2:"Ongoing programme production and standards updates",
-m3_l3:"Executive completion and competency reporting",
-m3_l4:"Strategic academy management as a service",
-m3_x:"On request", m3_n:"For organisations with a continuous training operation.", m3_c:"Talk to us",
 pv_eb:"The proof",
 pv_h2:"Training an auditor can <em>verify alone</em>",
 pv_p:"Every lesson, quiz and certificate is recorded permanently. If an inspector asks, the proof is there — <b>provably not back-dated</b> and checkable by them, <b>without depending on our software</b>.",
@@ -1221,7 +1297,10 @@ ct_c1:"Book a 15-minute call", cal_h:"Pick a time", skip:"Skip to content", ct_c
 ft_tag:"Your expertise. Structured, delivered and scaled.",
 ft_desc:"Corporate Academy Design &amp; Learning Technology",
 ft_pr:"No tracking cookies, no third-party analytics — that's why there's no banner.",
+fl_eb:"See it in action", fl_h2:"Keep your business running—<br><em>no matter who's on shift.</em>", fl_p:"Give every employee instant answers from your company's own knowledge, so they can work confidently from day one.", fl_cap:"When your team asks questions, Academy delivers the right answer instantly—and reveals the recurring challenges leaders need to solve.",
+md_eb:"Plans", md_h2:"Three ways to start.<br><em>Choose how much we do for you.</em>", md_p:"One setup fee, then a monthly rate. Unlimited courses within fair use.", px_from:"From", m1_px:"€400", m1_mo:" · €70/mo", m2_px:"€800", m2_mo:" · €190/mo", m3_px:"€1,200", m3_mo:" · €490/mo", m1_t:"01 · Base Academy Platform", m1_h:"Your own branded academy with an AI presenter — ready to use.", m1_d:"Your team creates and uploads the content.", m1_l1:"Branded academy platform", m1_l2:"Learning structure built to fit", m1_l3:"Unlimited courses within fair use", m1_l4:"Video, PDF and document upload", m1_l5:"Quizzes and certificates", m1_l6:"Learner progress tracking", m1_l7:"1 AI avatar · 1 AI voice", m1_l8:"Avatar / voice access delivered", m1_l9:"Starter Academy Care included", m1_n:"We build the academy and the AI presenter. You bring the content.", m1_c:"Talk to us", m2_t:"02 · Standard + AI Launch", m2_h:"Start with your first AI-presented lessons already produced.", m2_d:"We produce the first batch and train your team.", m2_l1:"Everything in Base", m2_l2:"5 launch lessons presented by AI", m2_l3:"Up to 3 min each · 15 min in total", m2_l4:"Script-generating agent", m2_l5:"Team onboarding", m2_l6:"Training to create future lessons", m2_l7:"Quarterly update and support", m2_l8:"Growth Hosting included", m2_n:"The academy, the AI presenter, the first lessons, and the system to keep creating.", m2_c:"Book a session", m3_t:"03 · Complete Academy Department", m3_h:"Your AI video department — without having to hire one.", m3_d:"We plan, produce, upload and manage it monthly.", m3_l1:"Everything in Standard", m3_l2:"Full course launch (agreed scope)", m3_l3:"Monthly content support", m3_l4:"Up to 2 short AI videos / month", m3_l5:"Up to 6 finished min / month", m3_l6:"Editing and uploading", m3_l7:"Platform management", m3_l8:"Dedicated manager", m3_l9:"Academy Hosting included", m3_n:"We help you operate and grow the academy.", m3_c:"Talk to us",
 ft_l1:"Privacy Policy (platform)", ft_l2:"Public verifier", ft_l3:"The proof",
+ft_l4:"Terms & Conditions", ft_l5:"Support & SLA",
 ft_imp:'© <span class="ph">[ENTITY]</span> · sold through Meridante · <span class="ph">[ENTIDADE]</span> · NIPC <span class="ph">[NIPC]</span> · <span class="ph">[morada]</span> · <span class="ph">[email]</span><br>This site is general information and does not constitute legal advice. The platform produces supporting documentation for the employer\'s obligations; certificates issued are internal training certificates.',
 };
 const EVENTS_I18N = {
@@ -1250,6 +1329,12 @@ function setLang(lg){
   document.documentElement.lang=LANG;
   document.querySelectorAll('.langsw button').forEach(b=>b.classList.toggle('on',b.dataset.lang===LANG));
   try{ localStorage.setItem('lum-lang',LANG); }catch(e){}
+  /* the standalone doc pages exist in both languages — point at the right one */
+  document.querySelectorAll('a[data-doc]').forEach(a=>{
+    const m={termos:['termos.html','terms.html'],suporte:['suporte.html','support.html']}[a.dataset.doc];
+    if(m) a.setAttribute('href', LANG==='en'?m[1]:m[0]);
+  });
+  if(window.__filmTracks) window.__filmTracks();
   if(window.__rebuildChain) window.__rebuildChain();
 }
 document.querySelectorAll('.langsw button').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
@@ -1446,8 +1531,10 @@ function initHero3D(){
   const field2=field(Math.round(150*PERF),22,-5,CLOUD,.12,.2);
 
   if(mobile){
-    group.position.set(.6,3.1,0); group.rotation.z=.12;
-    group.scale.setScalar(.46); cv.style.opacity='.62';
+    // full-screen presence: the helix rises through the whole viewport,
+    // weighted right so the left-aligned type stays readable
+    group.position.set(.55,.15,0); group.rotation.z=.42;
+    group.scale.set(.8,1.18,.8); cv.style.opacity='.55';
   } else {
     // the cinematic backdrop — centred, filling the frame behind the centred stack
     group.position.set(0,.1,0); group.rotation.z=1.02;
@@ -1803,6 +1890,30 @@ const CAL_ORIGIN = 'https://cal.com';
     sync();
   })();
 
+/* ── o filme: click-to-play with sound, subtitles follow the site language ── */
+  (function(){
+    const v=document.getElementById('film'), b=document.getElementById('fplay');
+    if(!v||!b) return;
+    function tracks(){
+      const want=(document.documentElement.lang==='en')?'en':'pt';
+      for(let i=0;i<v.textTracks.length;i++){
+        const t=v.textTracks[i];
+        t.mode = (t.language===want) ? 'showing' : 'disabled';
+      }
+    }
+    b.addEventListener('click',()=>{
+      b.classList.add('gone');
+      v.controls=true; v.muted=false; tracks();
+      v.play().catch(()=>{ v.muted=true; v.play().catch(()=>{}); });
+    });
+    v.addEventListener('loadedmetadata',tracks);
+    window.__filmTracks=tracks;                 /* setLang calls this */
+    v.addEventListener('ended',()=>{ v.controls=false; b.classList.remove('gone'); });
+    /* never let it run off-screen */
+    new IntersectionObserver(es=>{ if(!es[0].isIntersecting && !v.paused) v.pause(); },
+      {threshold:0}).observe(v);
+  })();
+
   /* the result video plays only while the flow is on screen */
   (function(){
     const v=document.querySelector('.pumpvid'); if(!v) return;
@@ -1884,100 +1995,191 @@ const CAL_ORIGIN = 'https://cal.com';
 
 <!-- ══ Assistente Academy — free Workers AI chatbot ══ -->
 <style>
-#awx-fab{position:fixed;right:18px;bottom:22px;z-index:95;width:58px;height:58px;border-radius:50%;
-  border:0;cursor:pointer;background:var(--gold);color:#2A1B02;box-shadow:0 14px 34px -10px rgba(0,0,0,.55);
-  display:grid;place-items:center;transition:transform .35s var(--ease),box-shadow .35s}
-#awx-fab:hover{transform:translateY(-3px) scale(1.04)}
-#awx-fab svg{width:26px;height:26px}
-#awx-fab .x{display:none;font-size:22px;font-weight:700;line-height:1}
-#awx-fab.open .x{display:block}#awx-fab.open svg{display:none}
-@media(max-width:980px){#awx-fab{bottom:calc(86px + env(safe-area-inset-bottom))}}
-#awx{position:fixed;right:18px;bottom:94px;z-index:94;width:min(392px,calc(100vw - 24px));
-  max-height:min(600px,72dvh);display:none;flex-direction:column;border-radius:22px;overflow:hidden;
-  background:linear-gradient(180deg,rgba(1,58,99,.97),rgba(1,42,74,.985));
-  border:1px solid rgba(169,214,229,.28);box-shadow:0 46px 90px -30px rgba(0,0,0,.75);
-  backdrop-filter:blur(16px)}
-#awx.on{display:flex}
+#awx-fab{position:fixed;right:20px;bottom:24px;z-index:95;width:62px;height:62px;padding:0;
+  border:0;background:none;cursor:pointer;transition:transform .4s var(--ease)}
+#awx-fab:hover{transform:translateY(-3px) scale(1.05)}
+#awx-fab .orb{position:relative;width:62px;height:62px;border-radius:50%;
+  background:linear-gradient(135deg,#CFE4EC 0%,#89C2D9 32%,#C58A2A 68%,#F5A623 100%);
+  box-shadow:0 14px 34px -10px rgba(0,0,0,.7), 0 0 26px -6px rgba(245,166,35,.4);
+  display:grid;place-items:center;overflow:hidden;transition:box-shadow .4s}
+#awx-fab .orb::after{content:'';position:absolute;inset:5px;border-radius:50%;
+  background:#04182B;box-shadow:inset 0 2px 8px rgba(0,0,0,.6)}
+#awx-fab:hover .orb{box-shadow:0 20px 44px -12px rgba(0,0,0,.75), 0 0 38px -4px rgba(245,166,35,.6)}
+#awx-fab::before{content:'';position:absolute;inset:0;border-radius:50%;
+  border:1px solid rgba(245,166,35,.45);animation:awxhalo 3.6s ease-out infinite;pointer-events:none}
+@keyframes awxhalo{0%{transform:scale(1);opacity:.55}70%,100%{transform:scale(1.55);opacity:0}}
+#awx-fab .orb svg{width:24px;height:24px;color:var(--gold);position:relative;z-index:1;
+  filter:drop-shadow(0 0 6px rgba(245,166,35,.5))}
+#awx-fab .lbl{display:none}
+#awx-fab .x{display:none;font-size:22px;font-weight:700;line-height:1;color:var(--gold);position:relative;z-index:1}
+#awx-fab.open .x{display:block}#awx-fab.open .orb svg{display:none}
+#awx-fab.open::before{animation:none;opacity:0}
+@media(max-width:980px){#awx-fab{bottom:calc(88px + env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){#awx-fab::before,#awx-fab .orb::before{animation:none}}
+#awx{position:fixed;right:18px;bottom:94px;z-index:94;width:min(384px,calc(100vw - 24px));
+  max-height:min(580px,72dvh);display:none;flex-direction:column;border-radius:24px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(1,58,99,.96),rgba(1,42,74,.99));
+  border:1px solid rgba(169,214,229,.16);box-shadow:0 40px 84px -30px rgba(0,0,0,.8);
+  backdrop-filter:blur(20px) saturate(1.1)}
+#awx.on{display:flex;animation:awxin .42s var(--ease)}
+@keyframes awxin{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
 @media(max-width:980px){#awx{bottom:calc(156px + env(safe-area-inset-bottom))}}
 @media(max-width:480px){#awx{right:12px;left:12px;width:auto}}
-#awx .hd{padding:16px 18px 13px;border-bottom:1px solid rgba(169,214,229,.16);display:flex;gap:12px;align-items:center}
-#awx .hd .dot{width:9px;height:9px;border-radius:50%;background:#7fd6a2;box-shadow:0 0 10px rgba(127,214,162,.8);flex:none}
-#awx .hd b{font-family:var(--serif);font-weight:400;font-size:1.15rem;letter-spacing:.02em}
-#awx .hd small{display:block;font-size:.66rem;color:var(--mut);margin-top:1px}
-#awx .msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin}
-#awx .m{max-width:86%;padding:10px 14px;border-radius:15px;font-size:.86rem;line-height:1.55;white-space:pre-wrap;word-break:break-word}
-#awx .m.u{align-self:flex-end;background:var(--gold);color:#2A1B02;border-bottom-right-radius:5px;font-weight:500}
-#awx .m.a{align-self:flex-start;background:rgba(169,214,229,.1);border:1px solid rgba(169,214,229,.16);
-  color:var(--ivory);border-bottom-left-radius:5px}
-#awx .chips{display:flex;gap:7px;flex-wrap:wrap;padding:0 16px 10px}
-#awx .chip{border:1px solid rgba(169,214,229,.3);background:transparent;color:var(--sky2);border-radius:99px;
-  padding:7px 13px;font-size:.72rem;cursor:pointer;font-family:var(--sans);transition:all .3s}
-#awx .chip:hover{border-color:var(--gold);color:var(--gold)}
-#awx form{display:flex;gap:8px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));
-  border-top:1px solid rgba(169,214,229,.16)}
-#awx input{flex:1;background:rgba(169,214,229,.09);border:1px solid rgba(169,214,229,.22);border-radius:12px;
-  padding:11px 14px;color:var(--ivory);font-family:var(--sans);font-size:.86rem;outline:none;min-width:0}
-#awx input::placeholder{color:var(--dim)}
-#awx input:focus{border-color:var(--gold)}
-#awx .snd{border:0;border-radius:12px;background:var(--gold);color:#2A1B02;width:44px;flex:none;cursor:pointer;
-  display:grid;place-items:center;transition:transform .3s}
-#awx .snd:hover{transform:translateY(-1px)}
-#awx .snd svg{width:17px;height:17px}
-#awx .typing{align-self:flex-start;display:flex;gap:5px;padding:12px 15px}
-#awx .typing i{width:6px;height:6px;border-radius:50%;background:var(--sky2);opacity:.5;animation:awxb 1.1s infinite}
+/* header — one line, nothing more */
+#awx .hd{padding:16px 20px 14px;display:flex;gap:9px;align-items:center}
+#awx .hd .dot{width:6px;height:6px;border-radius:50%;background:#7fd6a2;box-shadow:0 0 8px rgba(127,214,162,.9);flex:none}
+#awx .hd b{font-family:var(--serif);font-weight:400;font-size:1.06rem;letter-spacing:.01em;color:var(--ivory)}
+#awx .msgs{flex:1;overflow-y:auto;padding:6px 18px 14px;display:flex;flex-direction:column;gap:9px;
+  scrollbar-width:thin;scrollbar-color:rgba(169,214,229,.2) transparent}
+#awx .msgs::-webkit-scrollbar{width:5px}
+#awx .msgs::-webkit-scrollbar-thumb{background:rgba(169,214,229,.18);border-radius:99px}
+#awx .m{max-width:84%;padding:10px 15px;border-radius:17px;font-size:.855rem;line-height:1.62;
+  white-space:pre-wrap;word-break:break-word;animation:awxpop .34s var(--ease)}
+@keyframes awxpop{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+#awx .m.u{align-self:flex-end;background:var(--gold);color:#2A1B02;border-bottom-right-radius:6px;font-weight:500}
+#awx .m.a{align-self:flex-start;background:rgba(169,214,229,.07);color:var(--ivory);border-bottom-left-radius:6px}
+/* suggestion chips — short labels only */
+#awx .chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 18px 12px}
+#awx .chip{border:1px solid rgba(169,214,229,.2);background:transparent;color:var(--sky2);border-radius:99px;
+  padding:6px 13px;font-size:.71rem;cursor:pointer;font-family:var(--sans);letter-spacing:.01em;
+  transition:border-color .3s,color .3s,background .3s}
+#awx .chip:hover{border-color:rgba(245,166,35,.6);color:var(--gold);background:rgba(245,166,35,.06)}
+/* composer */
+#awx form{display:flex;gap:9px;align-items:center;padding:12px 14px 6px;
+  border-top:1px solid rgba(169,214,229,.09)}
+#awx input{flex:1;background:rgba(169,214,229,.06);border:1px solid rgba(169,214,229,.14);border-radius:99px;
+  padding:12px 17px;color:var(--ivory);font-family:var(--sans);font-size:.85rem;outline:none;min-width:0;
+  transition:border-color .3s,background .3s}
+#awx input::placeholder{color:rgba(169,214,229,.45)}
+#awx input:focus{border-color:rgba(245,166,35,.5);background:rgba(169,214,229,.09)}
+/* 16px prevents iOS auto-zoom on focus */
+@media(max-width:480px){#awx input{font-size:16px;padding:11px 16px}}
+/* send — circular, state-aware */
+#awx .snd{position:relative;border:0;border-radius:50%;width:38px;height:38px;flex:none;cursor:pointer;
+  display:grid;place-items:center;background:var(--gold);color:#08243D;
+  transition:transform .28s var(--ease),background .28s,box-shadow .28s,opacity .28s}
+#awx .snd svg{width:16px;height:16px;transition:transform .28s var(--ease)}
+#awx .snd:disabled{background:rgba(169,214,229,.11);color:rgba(169,214,229,.5);cursor:default;transform:scale(.9)}
+#awx .snd:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 9px 22px -7px rgba(245,166,35,.6)}
+#awx .snd:not(:disabled):hover svg{transform:translateY(-1.5px)}
+#awx .snd:not(:disabled):active{transform:scale(.93)}
+#awx .snd:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#awx .snd.busy{background:rgba(169,214,229,.11);color:transparent;pointer-events:none;transform:none}
+#awx .snd.busy::after{content:'';position:absolute;width:15px;height:15px;border-radius:50%;
+  border:2px solid rgba(169,214,229,.22);border-top-color:var(--gold);animation:awxspin .72s linear infinite}
+@keyframes awxspin{to{transform:rotate(360deg)}}
+/* voice input — Whisper */
+#awx .mic{position:relative;border:1px solid rgba(169,214,229,.15);border-radius:50%;width:38px;height:38px;
+  flex:none;cursor:pointer;display:grid;place-items:center;background:rgba(169,214,229,.05);color:var(--sky2);
+  transition:transform .28s var(--ease),background .28s,border-color .28s,color .28s}
+#awx .mic svg{width:16px;height:16px}
+#awx .mic:hover{border-color:rgba(245,166,35,.5);color:var(--gold);transform:translateY(-1.5px)}
+#awx .mic:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#awx .mic.rec{background:var(--gold);color:#08243D;border-color:transparent;animation:awxrec 1.5s ease-out infinite}
+@keyframes awxrec{0%{box-shadow:0 0 0 0 rgba(245,166,35,.55)}70%,100%{box-shadow:0 0 0 9px rgba(245,166,35,0)}}
+#awx .mic.busy{color:transparent;pointer-events:none}
+#awx .mic.busy::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;
+  border:2px solid rgba(169,214,229,.22);border-top-color:var(--gold);animation:awxspin .72s linear infinite}
+/* assistant rich text — paragraphs, lists, emphasis */
+#awx .m.a{white-space:normal}
+#awx .m.a p{margin:0 0 .72em}
+#awx .m.a p:last-child{margin-bottom:0}
+#awx .m.a ul,#awx .m.a ol{margin:.2em 0 .72em;padding-left:1.15em}
+#awx .m.a ul:last-child,#awx .m.a ol:last-child{margin-bottom:0}
+#awx .m.a li{margin:.32em 0;padding-left:.1em}
+#awx .m.a li::marker{color:rgba(245,166,35,.75)}
+#awx .m.a strong{color:var(--gold);font-weight:600}
+#awx .m.a em{font-style:italic;color:var(--sky2)}
+@media(prefers-reduced-motion:reduce){#awx.on,#awx .m{animation:none}#awx .snd,#awx .snd svg{transition:none}}
+#awx .typing{align-self:flex-start;display:flex;gap:4px;padding:13px 16px}
+#awx .typing i{width:5px;height:5px;border-radius:50%;background:var(--sky2);opacity:.45;animation:awxb 1.1s infinite}
 #awx .typing i:nth-child(2){animation-delay:.18s}#awx .typing i:nth-child(3){animation-delay:.36s}
 @keyframes awxb{40%{opacity:1;transform:translateY(-3px)}}
-#awx .note{font-size:.6rem;color:var(--dim);text-align:center;padding:0 16px 10px}
+#awx .note{font-size:.575rem;color:rgba(169,214,229,.38);text-align:center;letter-spacing:.04em;
+  padding:0 18px calc(11px + env(safe-area-inset-bottom))}
 </style>
 <button id="awx-fab" aria-label="Assistente Academy" aria-expanded="false">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg>
-  <span class="x">✕</span>
+  <span class="orb">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2.6l1.8 5.4a2.4 2.4 0 0 0 1.5 1.5l5.4 1.8-5.4 1.8a2.4 2.4 0 0 0-1.5 1.5L12 20l-1.8-5.4a2.4 2.4 0 0 0-1.5-1.5L3.3 11.3l5.4-1.8a2.4 2.4 0 0 0 1.5-1.5L12 2.6z"/>
+    </svg>
+    <span class="x">✕</span>
+  </span>
+  <span class="lbl" id="awx-fablbl">Assistente<small>IA · Academy</small></span>
 </button>
 <div id="awx" role="dialog" aria-label="Assistente Academy">
-  <div class="hd"><span class="dot"></span>
-    <div><b>Assistente Academy</b><small id="awx-sub">Pergunte qualquer coisa sobre a plataforma</small></div>
-  </div>
+  <div class="hd"><span class="dot"></span><b id="awx-sub">Assistente</b></div>
   <div class="msgs" id="awx-msgs"></div>
   <div class="chips" id="awx-chips"></div>
-  <div class="note" id="awx-note">Respostas geradas por IA — podem conter imprecisões.</div>
   <form id="awx-form">
     <input id="awx-in" autocomplete="off" placeholder="Escreva a sua pergunta…">
-    <button class="snd" type="submit" aria-label="Enviar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    <button class="mic" id="awx-mic" type="button" aria-label="Falar" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg>
+    </button>
+    <button class="snd" id="awx-snd" type="submit" aria-label="Enviar" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5.5 11.5 12 5l6.5 6.5"/></svg>
     </button>
   </form>
+  <div class="note" id="awx-note">IA · pode conter imprecisões</div>
 </div>
 <script>
 (function(){
   const API='https://academy-chat.edenrise.workers.dev';
   const T={
-    pt:{sub:'Pergunte qualquer coisa sobre a plataforma',ph:'Escreva a sua pergunta…',
-        note:'Respostas geradas por IA — podem conter imprecisões.',
-        hi:'Olá! Sou o assistente da Academy Platforms. Posso explicar a plataforma, os planos, as 40 horas obrigatórias ou a prova de evidência. Em que posso ajudar?',
-        err:'Não consegui responder agora. Tente outra vez, ou marque uma chamada de 15 minutos pelo botão no site.',
-        chips:['Quanto custa?','Como tratam as 40 horas?','O que é a prova de evidência?','Posso usar a minha marca?']},
-    en:{sub:'Ask anything about the platform',ph:'Type your question…',
-        note:'AI-generated answers — may contain inaccuracies.',
-        hi:"Hi! I'm the Academy Platforms assistant. I can explain the platform, plans, Portugal's 40 mandatory hours or the evidence chain. How can I help?",
-        err:"I couldn't answer right now. Please try again, or book a 15-minute call via the button on the site.",
-        chips:['How much does it cost?','How are the 40 hours handled?','What is the evidence chain?','Can I use my own brand?']}
+    pt:{sub:'Assistente',ph:'Escreva a sua pergunta…',
+        note:'IA · pode conter imprecisões',
+        hi:'Olá. Em que posso ajudar?',
+        err:'Não consegui responder agora. Tente novamente.',
+        chips:['Preços','40 horas','Evidência','Marca própria']},
+    en:{sub:'Assistant',ph:'Ask anything…',
+        note:'AI · may contain inaccuracies',
+        hi:'Hello. How can I help?',
+        err:"I couldn't answer just now. Please try again.",
+        chips:['Pricing','40 hours','Evidence','Own brand']}
   };
   const fab=document.getElementById('awx-fab'),box=document.getElementById('awx'),
         msgs=document.getElementById('awx-msgs'),form=document.getElementById('awx-form'),
-        inp=document.getElementById('awx-in'),chipbox=document.getElementById('awx-chips');
+        inp=document.getElementById('awx-in'),chipbox=document.getElementById('awx-chips'),
+        snd=document.getElementById('awx-snd');
   let history=[],greeted=false,busy=false;
+  const syncSend=()=>{ if(!busy) snd.disabled = !inp.value.trim(); };
+  inp.addEventListener('input',syncSend);
   const lang=()=>{const b=document.querySelector('.langsw button.on');return (b&&b.dataset.lang==='en')?'en':'pt';};
   function applyLang(){const t=T[lang()];
     document.getElementById('awx-sub').textContent=t.sub;
+    const fl=document.getElementById('awx-fablbl');if(fl)fl.innerHTML=(lang()==='en'?'Assistant':'Assistente')+'<small>'+(lang()==='en'?'AI · Academy':'IA · Academy')+'</small>';
     document.getElementById('awx-note').textContent=t.note;
     inp.placeholder=t.ph;
     chipbox.innerHTML='';
     t.chips.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='chip';
       b.textContent=c;b.onclick=()=>{inp.value=c;form.requestSubmit();};chipbox.appendChild(b);});
   }
+  /* assistant replies get light, SAFE markdown: escape first, then only our own tags */
+  const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const inline=s=>esc(s)
+        .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+        .replace(/(^|[\s(])\*([^*\n]+)\*/g,'$1<em>$2</em>');
+  function fmt(t){
+    return t.trim().split(/\n{2,}/).map(block=>{
+      const ls=block.split('\n').filter(l=>l.trim());
+      let html='',buf=[],mode=null;
+      const flush=()=>{ if(!buf.length)return;
+        html += mode==='ul' ? '<ul>'+buf.map(l=>'<li>'+inline(l)+'</li>').join('')+'</ul>'
+              : mode==='ol' ? '<ol>'+buf.map(l=>'<li>'+inline(l)+'</li>').join('')+'</ol>'
+              : '<p>'+buf.map(inline).join('<br>')+'</p>';
+        buf=[]; };
+      for(const l of ls){
+        let m;
+        if((m=l.match(/^\s*[-•*]\s+(.*)$/))){ if(mode!=='ul'){flush();mode='ul';} buf.push(m[1]); }
+        else if((m=l.match(/^\s*\d+[.)]\s+(.*)$/))){ if(mode!=='ol'){flush();mode='ol';} buf.push(m[1]); }
+        else { if(mode!=='p'){flush();mode='p';} buf.push(l); }
+      }
+      flush(); return html;
+    }).join('');
+  }
   function add(role,text){const d=document.createElement('div');d.className='m '+(role==='user'?'u':'a');
-    d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;}
+    if(role==='user') d.textContent=text; else d.innerHTML=fmt(text);
+    msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;}
   fab.addEventListener('click',()=>{
     const open=!box.classList.contains('on');
     box.classList.toggle('on',open);fab.classList.toggle('open',open);
@@ -1991,7 +2193,7 @@ const CAL_ORIGIN = 'https://cal.com';
     e.preventDefault();
     const q=inp.value.trim();if(!q||busy)return;
     inp.value='';add('user',q);history.push({role:'user',content:q});
-    chipbox.style.display='none';busy=true;
+    chipbox.style.display='none';busy=true;snd.disabled=true;snd.classList.add('busy');
     const tp=document.createElement('div');tp.className='typing';tp.innerHTML='<i></i><i></i><i></i>';
     msgs.appendChild(tp);msgs.scrollTop=msgs.scrollHeight;
     try{
@@ -2001,10 +2203,64 @@ const CAL_ORIGIN = 'https://cal.com';
       if(j.reply){add('assistant',j.reply);history.push({role:'assistant',content:j.reply});}
       else add('assistant',T[lang()].err);
     }catch(_){tp.remove();add('assistant',T[lang()].err);}
-    busy=false;
+    busy=false;snd.classList.remove('busy');syncSend();inp.focus();
   });
+
+  /* ── voice input → Whisper on Workers AI ── */
+  const mic=document.getElementById('awx-mic');
+  const canRecord = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder);
+  if(canRecord){
+    mic.hidden=false;
+    let rec=null,chunks=[],recording=false;
+    mic.addEventListener('click',async()=>{
+      if(recording){ rec.stop(); return; }
+      let stream;
+      try{ stream=await navigator.mediaDevices.getUserMedia({audio:true}); }
+      catch(_){ mic.hidden=true; return; }            // denied / unavailable — fall back to typing
+      const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4']
+        .find(m=>window.MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(m));
+      rec=new MediaRecorder(stream, mime?{mimeType:mime}:undefined);
+      chunks=[];
+      rec.ondataavailable=e=>{ if(e.data&&e.data.size) chunks.push(e.data); };
+      rec.onstop=async()=>{
+        stream.getTracks().forEach(t=>t.stop());
+        recording=false; mic.classList.remove('rec');
+        if(!chunks.length) return;
+        mic.classList.add('busy');
+        try{
+          const blob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});
+          const r=await fetch(API+'/transcribe',{method:'POST',
+            headers:{'Content-Type':blob.type||'application/octet-stream'},body:blob});
+          const j=await r.json();
+          if(j.text){ inp.value=(inp.value?inp.value.trim()+' ':'')+j.text; syncSend(); inp.focus(); }
+        }catch(_){}
+        mic.classList.remove('busy');
+      };
+      rec.start(); recording=true; mic.classList.add('rec');
+      setTimeout(()=>{ if(recording) rec.stop(); },60000);   // hard stop at 60s
+    });
+  }
 })();
 </script>
 
+
+<style>
+/* ── mobile hero: one full screen, giant type, product at the fold ── */
+@media(max-width:980px){
+  .hero-inner{min-height:100svh;justify-content:flex-start;align-items:flex-start;text-align:left;
+    padding-top:clamp(104px,14vh,130px);padding-bottom:0}
+  .hero .eyebrow{background:none;border:0;padding:0;font-size:.6rem;letter-spacing:.24em;
+    color:var(--gold);gap:.9em}
+  .hero .eyebrow::before{width:22px;height:1px;background:var(--gold)}
+  .hero h1{text-align:left;font-size:clamp(2.9rem,12.5vw,3.6rem);line-height:.99;
+    letter-spacing:-.015em;margin:.42em 0 .38em}
+  .hero .lead{text-align:left;margin:0 0 1.7em;font-size:1.06rem;line-height:1.55;max-width:30ch}
+  .hero-cta{align-items:stretch}
+  .hero-cta .btn{justify-content:space-between}
+  .pframe{margin-top:auto;margin-bottom:0;width:106%;max-width:none;align-self:center}
+  .pframe .back,.pframe .back2{display:none}
+  .scue{display:none}
+}
+</style>
 </body>
 </html>

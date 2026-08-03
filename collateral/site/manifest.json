@@ -1,0 +1,13 @@
+{
+  "name": "Academy Platforms",
+  "short_name": "Academy",
+  "description": "Formação que a sua equipa gosta de ver — e as 40 horas obrigatórias, tratadas.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#012A4A",
+  "theme_color": "#012A4A",
+  "icons": [
+    { "src": "img/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

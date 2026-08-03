@@ -1,0 +1,47 @@
+{
+ "language": "en",
+ "segments": [
+  {
+   "t0": 0.0,
+   "t1": 9.0,
+   "text": "Warm welcome to this module. There is no failure only feedback. So what does this mean and why is this so important?"
+  },
+  {
+   "t0": 9.0,
+   "t1": 19.0,
+   "text": "In fact, this is so important that if this is not in place when I've been working with business leaders, athletes, if this component is not in place,"
+  },
+  {
+   "t0": 19.0,
+   "t1": 26.0,
+   "text": "as in if they haven't learnt this lesson, progress does not happen. That's how important it is."
+  },
+  {
+   "t0": 26.0,
+   "t1": 39.0,
+   "text": "So this module is all about exploring how do we see and what is our relationship to failure or challenges or setbacks?"
+  },
+  {
+   "t0": 39.0,
+   "t1": 46.0,
+   "text": "How do we approach it? How does it make us feel? How do we react to how we feel? What is our perception of it?"
+  },
+  {
+   "t0": 46.0,
+   "t1": 55.0,
+   "text": "Because this is absolutely key. So in the next video, we're going to look at an animation that I put together for the athletes I used to work with."
+  },
+  {
+   "t0": 55.0,
+   "t1": 62.0,
+   "text": "And it's going to look at the relationship that we have to failure. How do we see it?"
+  },
+  {
+   "t0": 62.0,
+   "t1": 68.0,
+   "text": "And then when we come back from that, we're going to unpack this a bit more together. Enjoy."
+  }
+ ],
+ "model": "whisper-small",
+ "generatedAt": 1785511864502
+}
