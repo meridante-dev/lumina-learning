@@ -1351,22 +1351,77 @@ function logAsk(q, via) {
   if (S.askLog.length > 50) S.askLog = S.askLog.slice(-50);
   save();
 }
+/* client-side moment search over knowledge/search.json — the same scoring
+   shape as LandFlow's search_lessons, so the app and the walkie-talkie find
+   the same moments for the same words */
+let _searchIdx = null;
+function loadSearchIdx() {
+  if (_searchIdx !== undefined && _searchIdx !== null) return Promise.resolve(_searchIdx);
+  return fetch('knowledge/search.json').then(r => r.ok ? r.json() : [])
+    .then(j => (_searchIdx = j)).catch(() => (_searchIdx = []));
+}
+const _fold = x => String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function searchMoments(q, topN) {
+  const terms = _fold(q).split(/[^a-z0-9]+/).filter(w => w.length >= 3);
+  if (!terms.length || !_searchIdx) return [];
+  const hits = [];
+  for (const mod of _searchIdx) {
+    const metaHay = _fold(mod.t + ' ' + mod.ct);
+    for (const [t0, text] of mod.s) {
+      const hay = _fold(text);
+      let score = 0;
+      for (const w of terms) { if (hay.includes(w)) score += w.length; if (metaHay.includes(w)) score += 1; }
+      if (score > 3) hits.push({ score, course: mod.c, courseTitle: mod.ct, mod: mod.m, title: mod.t, t0, text });
+    }
+  }
+  hits.sort((a, b) => b.score - a.score);
+  /* one moment per lesson — three quotes from the same minute is noise */
+  const seen = new Set(), out = [];
+  for (const h of hits) {
+    const k = h.course + ':' + h.mod;
+    if (seen.has(k)) continue;
+    seen.add(k); out.push(h);
+    if (out.length >= (topN || 4)) break;
+  }
+  return out;
+}
+function momentsHTML(moments) {
+  if (!moments.length) return '';
+  return `<div class="ob-eyebrow" style="margin-top:4px;">⏱ ${t('ask_moments')}</div>
+    <div class="ask-moments">${moments.map(m => `
+      <div class="ask-moment" data-action="ask-moment" data-id="${m.course}" data-mod="${m.mod}" data-t="${Math.max(0, m.t0 - 4)}" role="button" tabindex="0">
+        <span class="am-tc">${fmtTc(m.t0)}</span>
+        <div class="am-body"><b>${esc(m.title)}</b><span class="am-course">${esc(m.courseTitle)}</span>
+          <p>“${esc(m.text.length > 150 ? m.text.slice(0, 150) + '…' : m.text)}”</p></div>
+        <span class="ask-go">▶</span>
+      </div>`).join('')}</div>`;
+}
 async function openAsk(q) {
   q = (q || '').trim(); if (!q) return;
   logAsk(q, 'ask');
-  if (!aiKey()) { toast(t('studio_need_key'), 'ℹ️'); return; }
   ensureAskModal();
   $('#askQ').textContent = q;
   const eb = $('#askModal .ob-eyebrow'); if (eb) eb.innerHTML = `✦ ${t('ask_h')} <span class="grounded-inline">· 🔒 ${t('grounded_note')}</span>`;
   $('#askBody').innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:20px;height:20px;"></span> ${t('ask_thinking')}</div>`;
   $('#askModal').classList.add('open');
+  /* MOMENTS FIRST — found locally in the real transcripts, rendered before any
+     model answers, and still there when no model can. The lesson itself is the
+     primary source; the AI is commentary on top of it. */
+  await loadSearchIdx();
+  const moments = searchMoments(q);
+  if (!aiKey()) {
+    $('#askBody').innerHTML = moments.length
+      ? momentsHTML(moments)
+      : `<p class="ask-answer">${t('ask_no_moments')}</p>`;
+    return;
+  }
   try {
     const raw = await llmComplete({ maxTokens: 700,
       system: `You are the ${brandAcademy()} guide (${brandShortDesc()}). Answer the member's question warmly and practically, grounded ONLY in the course library below. HONESTY RULE: if the library doesn't cover the question, say so plainly in the answer ("our courses don't cover this yet") and point to the nearest course — never bluff or invent. Reply as raw JSON: {"answer":str(2-4 sentences, concrete),"refs":[{"courseId":str(an id from the library),"why":str(short)}]} — 0-3 refs, best first. ${_lang() === 'pt' ? 'Responde em português europeu.' : ''}\n\nLIBRARY:\n${libraryContext()}${aiGuardrails()}`,
       messages: [{ role: 'user', content: q }] });
     const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
     const refs = (j.refs || []).map(r => ({ r, c: courseById(r.courseId) })).filter(x => x.c);
-    $('#askBody').innerHTML = `<p class="ask-answer">${esc(j.answer || '')}</p>
+    $('#askBody').innerHTML = `${momentsHTML(moments)}<p class="ask-answer">${esc(j.answer || '')}</p>
       ${refs.length ? `<div class="ob-eyebrow" style="margin-top:16px;">${t('ask_refs')}</div>
       <div class="ask-refs">${refs.map(({ r, c }) => `
         <div class="ask-ref" data-action="ask-ref" data-id="${c.id}" role="button" tabindex="0">
@@ -1376,7 +1431,8 @@ async function openAsk(q) {
         </div>`).join('')}</div>` : ''}
       ${aiModelLabel() ? `<div class="ask-model">✦ ${t('ask_by')} ${esc(aiModelLabel())}</div>` : ''}`;
   } catch (e) {
-    $('#askBody').innerHTML = `<div class="auth-err on">${t('ask_fail')}</div>`;
+    /* the model failed; the lesson quotes still answer */
+    $('#askBody').innerHTML = momentsHTML(moments) || `<div class="auth-err on">${t('ask_fail')}</div>`;
   }
 }
 function askBarHTML() {
@@ -4925,23 +4981,53 @@ function showCheckpoint(q, c) {
 }
 
 /* ---------- notes & transcript ---------- */
-function makeTranscript(c, mod) {
-  const t = c.modules[mod];
-  return [
-    ['0:00', `Welcome back. This module is “${t}” — by the end you'll be able to apply it in your own work at ${brandName()}.`],
-    ['0:48', `First, the common misconception: most teams treat ${t.toLowerCase()} as a one-off task. It's a habit, not an event.`],
-    ['2:15', `Here's the framework — three parts, and the middle one is where ${c.cat.toLowerCase()} teams usually slip.`],
-    ['4:40', `Quick example from a real ${c.cat.toLowerCase()} case. Notice what changes the moment the owner is named.`],
-    ['7:02', `Practice prompt: pause the video and try this on something you shipped last month.`],
-    ['9:30', `Recap and what's next — the assessment will adapt to how you do on the practice prompt.`]
-  ];
+/* ===== REAL TRANSCRIPTS IN THE PLAYER ======================================
+   makeTranscript() used to FABRICATE plausible transcript lines — invented
+   quotes, on the platform whose pitch is provable records. Gone. The drawer
+   now shows the Whisper transcript of the actual lesson: each line clickable
+   (seeks the video), the current line highlighted as the trainer speaks. */
+const _trCache = {};
+function loadTranscript(courseId, mod) {
+  const k = courseId + ':' + mod;
+  if (_trCache[k] !== undefined) return Promise.resolve(_trCache[k]);
+  return fetch('media/transcripts/' + courseId + '/m' + mod + '.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(j => (_trCache[k] = j && j.segments ? j : null))
+    .catch(() => (_trCache[k] = null));
 }
-let notesTimer = 0;
+function seekTo(sec) {
+  if (vimeoPlayer) { vimeoPlayer.setCurrentTime(sec).catch(() => {}); return; }
+  try { videoEl.currentTime = sec; } catch (e) {}
+}
+function fmtTc(t) { return Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0'); }
+let _trSegs = null;
+function trHighlight(pos) {
+  if (!_trSegs || !document.querySelector('#notesDrawer.open')) return;
+  const idx = _trSegs.findIndex(sg => pos >= sg.t0 && pos < sg.t1 + 0.5);
+  if (idx < 0) return;
+  const lines = document.querySelectorAll('#ndTranscript .nd-line');
+  const cur = document.querySelector('#ndTranscript .nd-line.now');
+  if (cur && +cur.dataset.i === idx) return;
+  if (cur) cur.classList.remove('now');
+  const el = lines[idx];
+  if (el) { el.classList.add('now'); el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+}
+
 function refreshNotesDrawer() {
   if (!playing) return;
   const c = courseById(playing.courseId);
-  $('#ndTranscript').innerHTML = makeTranscript(c, playing.mod)
-    .map(([tc, tx]) => `<div class="nd-line"><span class="tc">${tc}</span><span>${tx}</span></div>`).join('');
+  const box = $('#ndTranscript');
+  box.innerHTML = `<div class="nd-line"><span class="tc">…</span><span>${t('tr_loading')}</span></div>`;
+  const want = playing.courseId + ':' + playing.mod;
+  loadTranscript(playing.courseId, playing.mod).then(tr => {
+    if (!playing || playing.courseId + ':' + playing.mod !== want) return;
+    _trSegs = tr ? tr.segments : null;
+    box.innerHTML = tr
+      ? tr.segments.map((sg, i) => `<div class="nd-line" data-i="${i}" data-t="${sg.t0}" role="button" tabindex="0"><span class="tc">${fmtTc(sg.t0)}</span><span>${esc(sg.text)}</span></div>`).join('')
+      : `<div class="nd-line"><span class="tc">–</span><span>${t('tr_none')}</span></div>`;
+    box.querySelectorAll('.nd-line[data-t]').forEach(el =>
+      el.addEventListener('click', () => seekTo(+el.dataset.t)));
+  });
   const saved = (S.notes[playing.courseId] || {})[playing.mod] || '';
   $('#ndNotes').value = saved;
   $('#ndSaved').textContent = saved ? '· saved' : '';
@@ -5004,6 +5090,7 @@ function watchStart(key, method) {
 function watchMark(pos, duration) {
   if (!watchEv || !isFinite(pos)) return;
   if (duration && isFinite(duration)) watchEv.dur = duration;
+  trHighlight(pos);
   const prev = watchEv.last;
   watchEv.last = pos;
   if (prev == null) { watchEv.segs.push([pos, pos]); return; }
@@ -6278,6 +6365,11 @@ document.addEventListener('click', e => {
       break;
     }
     case 'open-reviews': openReviewSession(); break;
+    case 'ask-moment': {
+      const am = $('#askModal'); if (am) am.classList.remove('open');
+      openPlayer(b.dataset.id, +b.dataset.mod, +b.dataset.t);
+      break;
+    }
     case 'resume-check': {
       const k = Object.keys(S.pendingChecks || {})[0];
       if (k) { const [cid, mod] = k.split(':'); openPlayer(cid, +mod); }

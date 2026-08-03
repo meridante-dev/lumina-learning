@@ -1,5 +1,5 @@
 {
- "generatedAt": 1785750342358,
+ "generatedAt": 1785757532672,
  "courses": {
   "alignment-journey": {
    "title": "The EdenRise Alignment Journey",
@@ -31,32 +31,32 @@
       {
        "t0": 26,
        "teaches": "What area of expertise has the trainer worked with professional athletes on?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 112,
        "teaches": "What attitude is required to get the most benefit from this training?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 138,
        "teaches": "How should you approach personal growth and development?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 82,
        "teaches": "What is the best way to approach the different stages of this training?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 166,
        "teaches": "A colleague is resistant to changing their work processes, what should you do?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 56,
        "teaches": "You are working with a team member who has a different communication style, what should you do?",
-       "audit": "unaudited"
+       "audit": "verified"
       }
      ],
      "questions": 6
@@ -88,32 +88,32 @@
       {
        "t0": 82,
        "teaches": "What was the impact of the above-the-line model on Jabaraaj's life?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 108,
        "teaches": "What is the starting point for making positive changes according to the trainer?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 135,
        "teaches": "What should you do after watching the animation video?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 161,
        "teaches": "How should you approach the above-the-line model as presented in the animation?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 82,
        "teaches": "You are facing a difficult situation at work, similar to Jabaraaj's experience. What should you do first?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 108,
        "teaches": "A colleague is struggling to cope with stress. What principle should you apply to help them?",
-       "audit": "unaudited"
+       "audit": "corrected"
       }
      ],
      "questions": 6
@@ -141,8 +141,39 @@
      "regime": null,
      "summary": "Above the line is a simple and powerful thinking model that helps you get the most out of your unique potential by providing you a clear overview on how you choose to respond to the emotional pain you can experience as you move through the different challenges",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/2",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "What does 'roll' stand for in the context of above the line thinking?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 54,
+       "teaches": "What is the primary motivation for humans to move away from pain, according to human behavioural researchers?",
+       "audit": "verified"
+      },
+      {
+       "t0": 83,
+       "teaches": "When faced with emotional pain, what should you do to build the mindset muscle of champions?",
+       "audit": "verified"
+      },
+      {
+       "t0": 112,
+       "teaches": "What should you do when you recognize you are staying below the line for too long?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 139,
+       "teaches": "A team member has just failed to meet a project deadline. What can they do to apply above the line thinking?",
+       "audit": "verified"
+      },
+      {
+       "t0": 165,
+       "teaches": "A colleague is struggling to cope with the pressure of repeated failures. What can you learn from Michael Jordan's appro",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 3,
@@ -167,8 +198,39 @@
      "regime": null,
      "summary": "Welcome back, trust you enjoyed the animation and it gave you an overview of this model. Now we're going to take a deep dive, look into it and unpack it together and explore how this can apply in our personal lives and in our working lives.",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/3",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 80,
+       "teaches": "What happens when we have pressure in life?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 105,
+       "teaches": "What does it mean to go above the line when there's pressure?",
+       "audit": "verified"
+      },
+      {
+       "t0": 131,
+       "teaches": "What should you do when you make a mistake at work?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 158,
+       "teaches": "What can you do when you're feeling stuck or blocked in a difficult situation?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 80,
+       "teaches": "A team member is struggling to meet a deadline due to unexpected obstacles. What should they do to go above the line?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 105,
+       "teaches": "A colleague makes a mistake that affects the team's project. How should they respond to go above the line?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 4,
@@ -189,8 +251,39 @@
      "regime": null,
      "summary": "Okay, congratulations. You've completed the above the line, below the line module. I trust you got a lot of value from it.",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/4",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 25,
+       "teaches": "What happens when you play and stay above the line?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 0,
+       "teaches": "What module have you just completed?",
+       "audit": "verified"
+      },
+      {
+       "t0": 25,
+       "teaches": "What should you do to have a more enjoyable life?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 0,
+       "teaches": "What can you do if you need to remind yourself to play above the line?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 25,
+       "teaches": "A colleague is struggling to solve problems and seems less vibrant. What might be the issue?",
+       "audit": "verified"
+      },
+      {
+       "t0": 0,
+       "teaches": "You've just completed a difficult project and feel drained. What can you do to regain energy?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 5,
@@ -210,8 +303,39 @@
      "regime": null,
      "summary": "Warm welcome to this module. There is no failure only feedback. So what does this mean and why is this so important? In fact, this is so important that if this is not in place when I've been working with business leaders, athletes, if this component is not in ",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/5",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 0,
+       "teaches": "What is the core concept emphasized at the beginning of this module?",
+       "audit": "verified"
+      },
+      {
+       "t0": 26,
+       "teaches": "What is the main focus of this module?",
+       "audit": "verified"
+      },
+      {
+       "t0": 0,
+       "teaches": "How should you approach a situation where you have failed?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 26,
+       "teaches": "What should you do when faced with a challenge or setback?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 0,
+       "teaches": "A colleague is feeling discouraged after making a mistake. What should you say to them?",
+       "audit": "verified"
+      },
+      {
+       "t0": 26,
+       "teaches": "You are faced with a difficult task and are feeling anxious about the possibility of failure. What should you do?",
+       "audit": "verified"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 6,
@@ -236,8 +360,39 @@
      "regime": null,
      "summary": "The level of emotional pain we feel is directly related to the meaning we give an experience. This video explores the meaning we place on failure. What does failure mean to you?",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/6",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "How do elite individuals in their field often view failure?",
+       "audit": "verified"
+      },
+      {
+       "t0": 57,
+       "teaches": "How did Thomas Edison view his many failures?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 137,
+       "teaches": "What should you do when experiencing emotional pain from a failure?",
+       "audit": "verified"
+      },
+      {
+       "t0": 167,
+       "teaches": "How can you reframe the meaning of a painful experience?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 111,
+       "teaches": "A student is struggling with a difficult assignment and is feeling discouraged. What approach could help them overcome t",
+       "audit": "verified"
+      },
+      {
+       "t0": 196,
+       "teaches": "An employee is facing a challenging project and is unsure if they can succeed. What mindset could help them stay motivat",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 7,
@@ -262,8 +417,39 @@
      "regime": null,
      "summary": "Okay, welcome back. I hope you enjoyed the animation and learned something from that, or at least it triggered some different ways to consider the things we experience in terms of challenges, setbacks, failures and so on. Now let's unpack this. Let's go a bit ",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/7",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 30,
+       "teaches": "What is a common negative pattern when experiencing failures or setbacks?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 115,
+       "teaches": "How can challenges and setbacks be viewed in a positive way?",
+       "audit": "verified"
+      },
+      {
+       "t0": 144,
+       "teaches": "What should you do when experiencing a setback or failure?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 170,
+       "teaches": "What is a key aspect of being mentally strong when facing challenges?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 60,
+       "teaches": "A colleague is struggling with a project and is feeling discouraged. What should you advise them to do?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 86,
+       "teaches": "You are facing a difficult situation in your personal life and are feeling overwhelmed. What should you do to move forwa",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 8,
@@ -288,8 +474,39 @@
      "regime": null,
      "summary": "Hey, John here. A very warm welcome to the CAM model, otherwise known as ESIP. Now, this is a model that we use here in Eden Rise, which at first glance,",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/8",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 139,
+       "teaches": "What is the starting point of the CAM model?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 81,
+       "teaches": "What types of organizations have benefited from the CAM model?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 166,
+       "teaches": "How should you approach understanding the culture of an organization?",
+       "audit": "verified"
+      },
+      {
+       "t0": 54,
+       "teaches": "How can you view your work at Eden Rise?",
+       "audit": "verified"
+      },
+      {
+       "t0": 139,
+       "teaches": "You are new to Eden Rise and are trying to understand the culture. What do you do?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 81,
+       "teaches": "A new team member is struggling to adapt to the culture at Eden Rise. What can you do to help?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 9,
@@ -311,14 +528,45 @@
      "regime": null,
      "summary": "A very warm welcome to the Goal Setting Module. Setting Goals is long been known as a very powerful tool to help your clarity, your focus, to help companies have their focus, have teams have focus and to really know what you're putting your energies and collec",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/9",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 27,
+       "teaches": "What are the two primary ways of setting goals explored in this module?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 45,
+       "teaches": "What is the purpose of setting goals according to this module?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 27,
+       "teaches": "What should a team do to apply the goal setting principles from this module?",
+       "audit": "verified"
+      },
+      {
+       "t0": 54,
+       "teaches": "How should a team prioritize their goal setting process?",
+       "audit": "verified"
+      },
+      {
+       "t0": 27,
+       "teaches": "A new team member joins the farm and is unsure about how to contribute to the team's goals. What should they do?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 54,
+       "teaches": "The team is having trouble focusing on their goals. What can they do to improve their focus?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 10,
      "title": "Goal Setting · Animation",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 43,
      "durationSec": 200,
      "capability": "leadership",
@@ -341,32 +589,32 @@
       {
        "t0": 26,
        "teaches": "What is the primary asset that has helped golfing legend Jack Nicholas achieve his goals?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 83,
        "teaches": "What should you ensure when setting long-term goals?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 109,
        "teaches": "What should you do after setting a long-term goal?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 165,
        "teaches": "What should you focus on to reach your goals, according to Steffi Graff's father?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 138,
        "teaches": "You are working towards a medium-term goal, but you are feeling overwhelmed by the task. What can you do to build confid",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 193,
        "teaches": "You have set a long-term goal, but you are struggling to make progress. What can you do to get back on track?",
-       "audit": "unaudited"
+       "audit": "corrected"
       }
      ],
      "questions": 6
@@ -398,32 +646,32 @@
       {
        "t0": 25,
        "teaches": "Why is goal setting important for the company?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 51,
        "teaches": "What is the recommended approach to completing the 90-day goal setting template?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 81,
        "teaches": "What should you do when completing the department section of the 90-day goal setting template?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 112,
        "teaches": "How should you approach defining the 'grand vision dream' for your department?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 141,
        "teaches": "You are a new team member in the Building Maintenance Team department. You are struggling to define the 'grand vision dr",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 167,
        "teaches": "You are completing the 90-day goal setting template and reach the 'B, do and have' section. You are unsure what to write",
-       "audit": "unaudited"
+       "audit": "corrected"
       }
      ],
      "questions": 6
@@ -455,32 +703,32 @@
       {
        "t0": 27,
        "teaches": "What is one of the benefits of creating goals for the team?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 53,
        "teaches": "What should be done with things that are important?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 115,
        "teaches": "What should a team member do when they have achieved their weekly goals?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 144,
        "teaches": "How should an individual's goals and subtasks be connected?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 84,
        "teaches": "A team is struggling with their culture and values. What model can they use to diagnose and improve their situation?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 172,
        "teaches": "Who is typically responsible for holding team members accountable for their weekly goals?",
-       "audit": "unaudited"
+       "audit": "verified"
       }
      ],
      "questions": 6
@@ -489,7 +737,7 @@
      "mod": 13,
      "title": "Goal Setting · Summary",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 17,
      "durationSec": 94,
      "capability": "leadership",
@@ -512,32 +760,32 @@
       {
        "t0": 28,
        "teaches": "What analysis do we perform to gauge where we can improve at the end of the 90-day goal period?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 57,
        "teaches": "Who is quoted as saying that nobody calibrates better than him?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 45,
        "teaches": "What should you do when you're going through the goal-setting process for the first time?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 85,
        "teaches": "What should you do after checking your progress on your weekly and 90-day goals?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 28,
        "teaches": "You've just completed your first 90-day goal period and you're reviewing your progress. You notice that you've fallen sh",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 57,
        "teaches": "You're working on your goals and you realize that you need to make some adjustments to stay on track. What approach shou",
-       "audit": "unaudited"
+       "audit": "verified"
       }
      ],
      "questions": 6
@@ -567,32 +815,32 @@
       {
        "t0": 27,
        "teaches": "What is the main idea behind the concept of fear as 'false evidence appearing real'?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 53,
        "teaches": "What is the relationship between the intensity of fear and the meaning given to it?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 82,
        "teaches": "What should you do when experiencing fear in order to grow and expand as a person?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 82,
        "teaches": "What is the ultimate goal of transforming your relationship to fear?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 53,
        "teaches": "If you're experiencing a low-level anxiety about an upcoming event, what does this suggest about the meaning you're givi",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 82,
        "teaches": "If a colleague is struggling with fear about a new project, what advice would you give them to help them grow and expand",
-       "audit": "unaudited"
+       "audit": "verified"
       }
      ],
      "questions": 6
@@ -624,32 +872,32 @@
       {
        "t0": 118,
        "teaches": "What is the first level in the process of moving from shame to gain in relation to fear?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 143,
        "teaches": "What happens when we try to avoid feeling fear at level five?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 175,
        "teaches": "What should an athlete do when experiencing fear at level four?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 204,
        "teaches": "How should an athlete view fear at level three?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 118,
        "teaches": "An athlete is experiencing fear before a big competition and is trying to hide it from their teammates. What level are t",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 175,
        "teaches": "A new athlete joins the team and is openly talking about their fear of failure. How should the team respond at level fou",
-       "audit": "unaudited"
+       "audit": "corrected"
       }
      ],
      "questions": 6
@@ -681,32 +929,32 @@
       {
        "t0": 30,
        "teaches": "What is a common belief about confidence that the trainer says is a myth?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 84,
        "teaches": "What is the trainer's main point about feeling confident and taking on challenges?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 113,
        "teaches": "What should you do if you're feeling not confident about taking on a challenge?",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 140,
        "teaches": "How can you apply the trainer's message about confidence to your own life?",
-       "audit": "unaudited"
+       "audit": "verified"
       },
       {
        "t0": 168,
        "teaches": "You're scheduled to give a presentation to a large audience, but you're feeling nervous and not confident. What should y",
-       "audit": "unaudited"
+       "audit": "corrected"
       },
       {
        "t0": 56,
        "teaches": "A colleague is hesitant to take on a new project because they don't feel confident in their abilities. What should you a",
-       "audit": "unaudited"
+       "audit": "corrected"
       }
      ],
      "questions": 6
@@ -715,7 +963,7 @@
      "mod": 17,
      "title": "Body, Soul & Spirit · Intro",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 15,
      "durationSec": 86,
      "capability": "leadership",
@@ -731,14 +979,45 @@
      "regime": null,
      "summary": "Body, Soul and Spirit. Now this is more of a larger overarching module in terms of identifying categories within our personal development and journey as beings. And we're going to unpack all the details of each of the sections coming up.",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/17",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 28,
+       "teaches": "Why is it important to understand the different categories of personal development?",
+       "audit": "verified"
+      },
+      {
+       "t0": 58,
+       "teaches": "What is the benefit of being aware of the different dimensions of ourselves and others?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 45,
+       "teaches": "What should you do if you feel like something is missing in your personal development?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 58,
+       "teaches": "How can you apply the understanding of body, soul, and spirit in your work at Eden Rise?",
+       "audit": "verified"
+      },
+      {
+       "t0": 28,
+       "teaches": "A colleague seems to be struggling with their work, appearing unbalanced and stressed. What might be the underlying issu",
+       "audit": "corrected"
+      },
+      {
+       "t0": 58,
+       "teaches": "You are leading a team project at Eden Rise and notice that some team members seem disconnected from the project's goals",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     },
     {
      "mod": 18,
      "title": "Body, Soul & Spirit · Deep Dive",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 111,
      "durationSec": 757,
      "capability": "leadership",
@@ -757,8 +1036,39 @@
      "regime": null,
      "summary": "Welcome to the deep dive on body, soul and spirit. Let's begin with the physical body. The physical body is often referred to in ancient Biblical scriptures as the Earthly Vessel.",
      "url": "https://academy.edenrise.com/#/play/alignment-journey/18",
-     "moments": [],
-     "questions": 0
+     "moments": [
+      {
+       "t0": 30,
+       "teaches": "What is the correlation between the physical body and the soul?",
+       "audit": "verified"
+      },
+      {
+       "t0": 56,
+       "teaches": "What components make up the soul?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 30,
+       "teaches": "What should you do to help improve your overall well-being?",
+       "audit": "verified"
+      },
+      {
+       "t0": 145,
+       "teaches": "What should you avoid doing when seeking alignment with your spirit?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 174,
+       "teaches": "You meet someone who is very dominant in their emotions and believes that what they feel is reality. What should you do?",
+       "audit": "verified"
+      },
+      {
+       "t0": 202,
+       "teaches": "You are working with someone who believes that their body holds all the information and that what they feel physically i",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
     }
    ]
   },

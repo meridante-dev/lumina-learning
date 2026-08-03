@@ -4076,3 +4076,22 @@ nav.topnav { gap: 16px; padding-top: 12px; padding-bottom: 12px; }
 .ck-card::-webkit-scrollbar { width: 5px; }
 .ck-card::-webkit-scrollbar-thumb { background: rgba(231,237,227,.16); border-radius: 99px; }
 .ck-card::-webkit-scrollbar-track { background: transparent; }
+
+/* ── moments: the lesson answering in its own voice ────────────────────────── */
+.ask-moments { display: flex; flex-direction: column; gap: 10px; margin: 10px 0 16px; }
+.ask-moment { display: flex; gap: 14px; align-items: flex-start; cursor: pointer;
+  border: 1px solid rgba(231,237,227,.1); border-radius: 12px; padding: 12px 14px;
+  transition: border-color .18s, background .18s; }
+.ask-moment:hover { border-color: rgba(166,195,165,.4); background: rgba(166,195,165,.05); }
+.am-tc { font-family: var(--font-body); font-size: 11.5px; font-weight: 700; color: var(--accent-2);
+  background: rgba(166,195,165,.1); border-radius: 7px; padding: 3px 8px; flex-shrink: 0; margin-top: 2px; }
+.am-body { min-width: 0; flex: 1; }
+.am-body b { font-size: 13.5px; }
+.am-course { font-size: 11.5px; color: var(--text-faint); margin-left: 8px; }
+.am-body p { font-size: 13px; color: var(--text-dim); font-style: italic; margin: 4px 0 0; line-height: 1.5; }
+.ask-moment .ask-go { align-self: center; }
+/* transcript lines: clickable, and the spoken one glows */
+.nd-line[data-t] { cursor: pointer; border-radius: 8px; padding: 5px 8px; margin: 0 -8px; transition: background .15s; }
+.nd-line[data-t]:hover { background: rgba(231,237,227,.05); }
+.nd-line.now { background: rgba(166,195,165,.1); }
+.nd-line.now .tc { color: var(--accent-2); font-weight: 700; }

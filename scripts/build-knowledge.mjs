@@ -94,5 +94,25 @@ for (const course of readdirSync(TR).filter(d => !d.includes('.'))) {
 
 mkdirSync(join(ROOT, 'knowledge'), { recursive: true });
 writeFileSync(join(ROOT, 'knowledge', 'index.json'), JSON.stringify(index, null, 1));
+
+/* knowledge/search.json — the app's client-side ask index: every transcript
+   segment (original + translations when present) in one compact fetch, so
+   "how do I fill the tank?" can answer with real moments and no AI at all. */
+const search = [];
+for (const [course, c] of Object.entries(index.courses)) {
+  for (const m of c.modules) {
+    const segs = [];
+    const files = [`m${m.mod}.json`, `m${m.mod}.en.json`, `m${m.mod}.pt.json`];
+    for (const f of files) {
+      const fp = join(TR, course, f);
+      if (!existsSync(fp)) continue;
+      for (const sg of JSON.parse(readFileSync(fp, 'utf8')).segments)
+        segs.push([Math.round(sg.t0), sg.text]);
+    }
+    search.push({ c: course, ct: c.title, m: m.mod, t: m.title, s: segs });
+  }
+}
+writeFileSync(join(ROOT, 'knowledge', 'search.json'), JSON.stringify(search));
+console.log(`knowledge/search.json: ${search.length} modules, ${search.reduce((a, x) => a + x.s.length, 0)} segments`);
 const total = Object.values(index.courses).reduce((a, c) => a + c.modules.length, 0);
 console.log(`knowledge/index.json: ${Object.keys(index.courses).length} courses, ${total} modules`);
