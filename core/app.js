@@ -5428,7 +5428,9 @@ function scheduleReview(courseId, mod, view) {
   let e = S.reviewQueue.find(x => x.k === k);
   if (!e) { e = { k, courseId, mod, step: 0 }; S.reviewQueue.push(e); }
   e.step = 0;
-  e.q = view.q; e.t0 = view.t0;
+  /* the WHOLE view is stored — the session re-asks this exact question with
+     these exact options months later, no bank lookup, no language drift */
+  e.view = { q: view.q, opts: view.opts, a: view.a, why: view.why, t0: view.t0 };
   e.due = Date.now() + REVIEW_STEPS[0] * 864e5;
   save();
 }

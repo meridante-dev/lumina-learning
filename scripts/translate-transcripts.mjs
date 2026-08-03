@@ -30,7 +30,10 @@ async function translateBatch(texts, from, to) {
 
 INPUT:
 ${JSON.stringify(texts)}`;
+  /* a stalled connection must fail, not hang the whole run — the first launch
+     sat 15 minutes on one silent socket */
   const r = await fetch(API, {
+    signal: AbortSignal.timeout(120000),
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Origin': 'https://academy.edenrise.com',
                'X-Build-Key': (await import('fs')).readFileSync(process.env.HOME + '/.academy-build-key', 'utf8').trim() },
@@ -65,7 +68,9 @@ async function main() {
         const out = [];
         for (let i = 0; i < tr.segments.length; i += 28) {          // batches keep JSON inside the token budget
           const batch = tr.segments.slice(i, i + 28);
-          const texts = await translateBatch(batch.map(s => s.text), from, to);
+          let texts;
+          try { texts = await translateBatch(batch.map(s => s.text), from, to); }
+          catch (e) { texts = await translateBatch(batch.map(s => s.text), from, to); }   // one retry, then fail loud
           batch.forEach((s, j) => out.push({ t0: s.t0, t1: s.t1, text: texts[j] }));
           await new Promise(r => setTimeout(r, 800));
         }
