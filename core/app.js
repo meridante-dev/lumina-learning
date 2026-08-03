@@ -701,6 +701,25 @@ function renderHome() {
 }
 
 let libFilter = 'All', libQuery = '';
+let libTag = null;
+function topicsHTML() {
+  if (!KNOW) { loadKnowledgeIdx().then(k => { if (k && (location.hash || '').includes('library')) render(); }); return ''; }
+  const cloud = tagCloud(16);
+  if (!cloud.length) return '';
+  const lessons = libTag ? allLessons().filter(l => (l.tags || []).includes(libTag)) : [];
+  return `<div class="topics-band">
+    <div class="ob-eyebrow">${t('topics_h')}</div>
+    <div class="filter-row topics-row">${cloud.map(([tg, n]) =>
+      `<button class="filter-chip tag-chip ${tg === libTag ? 'active' : ''}" data-action="lib-tag" data-tag="${esc(tg)}">#${esc(tg)} <i>${n}</i></button>`).join('')}</div>
+    ${libTag ? `<div class="topic-lessons">${lessons.map(l => `
+      <div class="ask-moment" data-action="play-mod" data-id="${l.course}" data-mod="${l.mod}" role="button" tabindex="0">
+        <span class="am-tc">${Math.round(l.durationSec / 60)}m</span>
+        <div class="am-body"><b>${esc(l.title)}</b><span class="am-course">${esc(l.courseTitle)}</span>
+          <p>${(l.tags || []).slice(0, 5).map(x => '#' + esc(x)).join(' · ')}</p></div>
+        <span class="ask-go">▶</span>
+      </div>`).join('') || `<p class="empty-note">${t('nothing_matches')}</p>`}</div>` : ''}
+  </div>`;
+}
 function renderLibrary() {
   const cats = ['All', ...new Set(CATALOG.map(c => c.cat))];
   let list = CATALOG.filter(c => (libFilter === 'All' || c.cat === libFilter) &&
@@ -711,6 +730,7 @@ function renderLibrary() {
     <div class="lib-search">⌕ <input id="libSearch" placeholder="${t('filter_library')}" value="${esc(libQuery)}"></div>
     <div class="filter-row">${cats.map(c => `<button class="filter-chip ${c === libFilter ? 'active' : ''}" data-action="lib-filter" data-cat="${c}">${c === 'All' ? t('all') : tcat(c)}</button>`).join('')}</div>
     <button class="link-quiet lib-ask" data-action="ai-missing">${t('missing_ask')}</button>
+    ${topicsHTML()}
     <div class="grid">${list.map(c => cardHTML(c)).join('')}</div>
     ${list.length ? '' : `<p class="empty-note">${t('nothing_matches')}</p>`}
   </div>${footerHTML()}</div>`;
@@ -1360,6 +1380,26 @@ function loadSearchIdx() {
   return fetch('knowledge/search.json').then(r => r.ok ? r.json() : [])
     .then(j => (_searchIdx = j)).catch(() => (_searchIdx = []));
 }
+/* the knowledge manifest — tags, capabilities, per-module metadata. One fetch,
+   powers the Library's Topics browse and the tag chips. */
+let KNOW = null;
+function loadKnowledgeIdx() {
+  if (KNOW) return Promise.resolve(KNOW);
+  return fetch('knowledge/index.json').then(r => r.ok ? r.json() : null)
+    .then(j => (KNOW = j)).catch(() => null);
+}
+function allLessons() {
+  if (!KNOW) return [];
+  const out = [];
+  for (const [cid, c] of Object.entries(KNOW.courses))
+    for (const m of c.modules) out.push(Object.assign({ course: cid, courseTitle: c.title }, m));
+  return out;
+}
+function tagCloud(n) {
+  const freq = {};
+  allLessons().forEach(l => (l.tags || []).forEach(tg => { freq[tg] = (freq[tg] || 0) + 1; }));
+  return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, n || 18);
+}
 const _fold = x => String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 function searchMoments(q, topN) {
   const terms = _fold(q).split(/[^a-z0-9]+/).filter(w => w.length >= 3);
@@ -1409,6 +1449,9 @@ async function openAsk(q) {
      primary source; the AI is commentary on top of it. */
   await loadSearchIdx();
   const moments = searchMoments(q);
+  /* the search itself is evidence: what people ask and DON'T find is the
+     course-creation radar — found:0 events are content gaps, in the ledger */
+  ledgerAppend('knowledge_search', { q: q.slice(0, 120), found: moments.length });
   if (!aiKey()) {
     $('#askBody').innerHTML = moments.length
       ? momentsHTML(moments)
@@ -5026,7 +5069,10 @@ function refreshNotesDrawer() {
       ? tr.segments.map((sg, i) => `<div class="nd-line" data-i="${i}" data-t="${sg.t0}" role="button" tabindex="0"><span class="tc">${fmtTc(sg.t0)}</span><span>${esc(sg.text)}</span></div>`).join('')
       : `<div class="nd-line"><span class="tc">–</span><span>${t('tr_none')}</span></div>`;
     box.querySelectorAll('.nd-line[data-t]').forEach(el =>
-      el.addEventListener('click', () => seekTo(+el.dataset.t)));
+      el.addEventListener('click', () => {
+        ledgerAppend('moment_open', { courseId: playing.courseId, mod: playing.mod, t: +el.dataset.t, via: 'transcript' });
+        seekTo(+el.dataset.t);
+      }));
   });
   const saved = (S.notes[playing.courseId] || {})[playing.mod] || '';
   $('#ndNotes').value = saved;
@@ -5739,7 +5785,8 @@ const PALETTE_ACTIONS = [
   { t: 'Regenerate my AI path', icon: '↺', run: () => regenPath() }
 ];
 let palIdx = 0;
-function openPalette() { $('#palette').classList.add('open');
+function openPalette() {
+  loadSearchIdx(); $('#palette').classList.add('open');
   const pr = $('#palResults'); if (pr) pr.setAttribute('role', 'listbox');
   const pi = $('#palInput');
   if (pi) { pi.setAttribute('role', 'combobox'); pi.setAttribute('aria-expanded', 'true');
@@ -5823,6 +5870,14 @@ function drawPalette(q) {
     `<div class="palette-item" data-pal="course:${c.id}"><span class="pi-icon t-grad-${c.grad}">${svgIcon(c.icon)}</span><div><div>${esc(c.title)}</div><div class="pi-meta">${esc(c.cat)} · ${fmtMins(courseMins(c))} · ★ ${c.rating}</div></div></div>`).join('');
   if (acts.length) html += `<div class="palette-group">Actions</div>` + acts.map((a, i) =>
     `<div class="palette-item" data-pal="act:${PALETTE_ACTIONS.indexOf(a)}"><span class="pi-icon" style="background:var(--surface-2)">${a.icon}</span><div>${a.t}</div></div>`).join('');
+  /* inside-the-lessons hits: the palette searches what the trainer SAYS, not
+     just what the course is called. Index loads on first open; until it has,
+     the group simply isn't there. */
+  if (q.length >= 4 && _searchIdx) {
+    const mm = searchMoments(q, 3);
+    if (mm.length) html += `<div class="palette-group">${t('pal_moments')}</div>` + mm.map(m =>
+      `<div class="palette-item" data-pal="moment:${m.course}:${m.mod}:${Math.max(0, m.t0 - 4)}"><span class="pi-icon" style="background:rgba(166,195,165,.12)">⏱</span><div><div>${esc(m.title)} · <span style="color:var(--text-faint)">${fmtTc(m.t0)}</span></div><div class="pi-sub">“${esc(m.text.slice(0, 70))}…”</div></div></div>`).join('');
+  }
   if (q && aiKey()) html += `<div class="palette-group">✦</div><div class="palette-item" data-pal="ask:${esc(q)}"><span class="pi-icon" style="background:var(--surface-2)">✦</span><div>${t('ask_more')}“${esc(q)}”</div></div>`;
   $('#palResults').innerHTML = html || `<div class="palette-empty">No matches for “${esc(q)}” — try the AI tutor.</div>`;
   highlightPal();
@@ -5846,6 +5901,12 @@ function runPal(el) {
   const kind = _p.slice(0, _i), val = _p.slice(_i + 1);
   closePalette();
   if (kind === 'ask') { openAsk(val); return; }
+  if (kind === 'moment') {
+    const [cid, mod, tt] = val.split(':');
+    ledgerAppend('moment_open', { courseId: cid, mod: +mod, t: +tt, via: 'palette' });
+    openPlayer(cid, +mod, +tt);
+    return;
+  }
   if (kind === 'course') {
     S.palRecents = [val, ...(S.palRecents || []).filter(x => x !== val)].slice(0, 5); save();
     location.hash = '#/course/' + val;
@@ -6361,13 +6422,25 @@ document.addEventListener('click', e => {
       /* from the check's feedback or a review card: close overlays, reopen the
          player four seconds before the moment that teaches the answer */
       const ck = $('#ckOv'); if (ck) { ck.classList.remove('on'); ck.innerHTML = ''; }
-      openPlayer(b.dataset.id, +b.dataset.mod, +b.dataset.t);
+      openPlayer(el.dataset.id, +el.dataset.mod, +el.dataset.t);
       break;
     }
     case 'open-reviews': openReviewSession(); break;
     case 'ask-moment': {
       const am = $('#askModal'); if (am) am.classList.remove('open');
-      openPlayer(b.dataset.id, +b.dataset.mod, +b.dataset.t);
+      ledgerAppend('moment_open', { courseId: el.dataset.id, mod: +el.dataset.mod, t: +el.dataset.t, via: 'ask' });
+      openPlayer(el.dataset.id, +el.dataset.mod, +el.dataset.t);
+      break;
+    }
+    case 'play-mod': {
+      ledgerAppend('moment_open', { courseId: el.dataset.id, mod: +el.dataset.mod, via: 'topics' });
+      openPlayer(el.dataset.id, +el.dataset.mod);
+      break;
+    }
+    case 'lib-tag': {
+      libTag = libTag === el.dataset.tag ? null : el.dataset.tag;
+      if (libTag) ledgerAppend('tag_open', { tag: libTag });
+      render();
       break;
     }
     case 'resume-check': {

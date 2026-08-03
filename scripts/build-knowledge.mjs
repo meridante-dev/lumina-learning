@@ -47,7 +47,11 @@ const STOP = new Set(`the and for you your that this with have from are was were
 just like our their they them there then than into onto out very much more most been being them we is it in of to on at as by an or if do does did
 que com para uma umas uns não nos nas dos das este esta isto isso aqui ali mais menos muito pouco como quando onde porque também pelo pela seus suas
 vamos vai ser estar tem têm foi eram são está estão fazer feito depois antes agora sempre nunca todos todas cada qual quais coisa coisas pessoa pessoas
-sobre entre até desde porque porquê então assim mesmo mesma outros outras`.split(/\s+/));
+sobre entre até desde porque porquê então assim mesmo mesma outros outras
+also where going here there because really actually thing things right know want need make comes come look looking
+well yeah okay gonna little bit lot different important goes said says take takes put trying try
+vou vais aqui acolá realmente atenção verdade situação exemplo maneira forma parte ainda
+temos posso podes pode podem foram estas estes essa esse essas esses minha meu tua teu sua seu`.split(/\s+/));
 
 function tagsFrom(segments, n = 8) {
   const freq = {};

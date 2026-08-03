@@ -4095,3 +4095,10 @@ nav.topnav { gap: 16px; padding-top: 12px; padding-bottom: 12px; }
 .nd-line[data-t]:hover { background: rgba(231,237,227,.05); }
 .nd-line.now { background: rgba(166,195,165,.1); }
 .nd-line.now .tc { color: var(--accent-2); font-weight: 700; }
+
+/* ── topics: the knowledge, browsable ──────────────────────────────────────── */
+.topics-band { margin: 26px 0 6px; }
+.topics-band .ob-eyebrow { margin-bottom: 10px; }
+.topics-row { margin-bottom: 4px; }
+.tag-chip i { font-style: normal; font-size: 10.5px; opacity: .55; margin-left: 4px; }
+.topic-lessons { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 8px; max-width: 720px; }
