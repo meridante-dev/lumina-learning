@@ -5605,6 +5605,10 @@ function completeModule(courseId, mod) {
      job-relevance — so attendance alone must not mint an hour. */
   markCheckPending(courseId, mod);
   ledgerAppend('module_complete', { courseId, mod, mins: (c.moduleDurations && c.moduleDurations[mod]) || 12 });
+  /* ONE PRODUCT: the estate's brain learns of this within one message — the completion writes
+     LandFlow's person_shown, and the worker gets the return message in Telegram. Guarded: the
+     Academy must work even if LandFlow is unreachable. */
+  try { window.lfModuleComplete && window.lfModuleComplete(courseId, mod); } catch (e) {}
   if (mod >= c.modules.length - 1) ledgerAppend('course_complete', { courseId });
   if (S.review[courseId] === mod) { delete S.review[courseId]; toast('Review module cleared — nice recovery', '↺'); }
   bumpStreak();
