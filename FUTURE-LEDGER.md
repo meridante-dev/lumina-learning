@@ -52,3 +52,17 @@ Updated 2026-08-03. Remove items only when done, never when merely old.*
   pixels eyeballed only on desktop).
 - Spaced-review push nudges (the queue exists; nudge-mailer could mention due reviews).
 - Per-skill mastery from check results (data now exists per question type + capability).
+
+## From the Craveiral/Belong discovery (Lykke, 6 Aug — extract in ~/craveiral-belong)
+- Course `kind: formation | howto` split + reference library surface (task #51). The legal line
+  is structure+record, not topic — LEGAL-40H-LINE.md corrects the in-meeting framing.
+- **Nepali** subtitles/translation (staff langs EN/PT/NE) once Belong content exists.
+- 15-min "power punch" app-usage course, tenant-generic.
+- Manager-delegated per-department learning paths (admin UI over GOAL_PRESETS).
+- LandFlow **WhatsApp front door** for Craveiral (they are WhatsApp-native; priced +€30/mo):
+  inter-department router with human-in-loop, follow-up reminders, cleaners' checklist variant.
+- Claude skills transfer kit for Lykke (Whisper/ElevenLabs/video→SOP) + in-person AI training.
+- Belong instance has ZERO filmed content — the whole EdenRise pipeline (film→Whisper→quiz-gen→
+  verify→brain) is proven and waiting; Alina's wine course is the agreed quick win.
+- Correction discipline: João's in-meeting "AI Act released 2 weeks ago" is wrong (Art.4 applies
+  since Feb 2025; GPAI 2 Aug 2026) — proposals must use the spec's sourced dates.
