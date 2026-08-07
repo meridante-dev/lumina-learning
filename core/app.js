@@ -731,8 +731,13 @@ function renderLibrary() {
     <div class="filter-row">${cats.map(c => `<button class="filter-chip ${c === libFilter ? 'active' : ''}" data-action="lib-filter" data-cat="${c}">${c === 'All' ? t('all') : tcat(c)}</button>`).join('')}</div>
     <button class="link-quiet lib-ask" data-action="ai-missing">${t('missing_ask')}</button>
     ${topicsHTML()}
-    <div class="grid">${list.map(c => cardHTML(c)).join('')}</div>
-    ${list.length ? '' : `<p class="empty-note">${t('nothing_matches')}</p>`}
+    <div class="grid">${list.filter(c => !isHowto(c)).map(c => cardHTML(c)).join('')}</div>
+    ${list.filter(c => !isHowto(c)).length ? '' : `<p class="empty-note">${t('nothing_matches')}</p>`}
+    ${list.some(isHowto) ? `<div class="howto-shelf">
+      <div class="ob-eyebrow">${t('howto_h')}</div>
+      <p class="page-sub" style="margin-top:4px;">${t('howto_sub')}</p>
+      <div class="grid">${list.filter(isHowto).map(c => cardHTML(c)).join('')}</div>
+    </div>` : ''}
   </div>${footerHTML()}</div>`;
 }
 
@@ -5386,7 +5391,7 @@ function resolveTakeaways(toQuiz) {
      just seen the key learnings, which is the moment the question is a retrieval
      cue rather than a gotcha — and it is the event that credits the hour. */
   const lc = n.checkFor;
-  if (lc && !(S.trainingLog || []).some(e => e.courseId === lc.courseId && e.mod === lc.mod)) {
+  if (lc && !isHowto(courseById(lc.courseId)) && !(S.trainingLog || []).some(e => e.courseId === lc.courseId && e.mod === lc.mod)) {
     const c = courseById(lc.courseId);
     if (c) { showModuleCheck(c, lc.mod, () => resolveTakeawaysNext(n, toQuiz)); return; }
   }
@@ -5428,6 +5433,17 @@ function isJobRelevant(c, pf) {
   const mine = (skillsOf(c) || []);
   return mine.some(k => caps.includes(k));
 }
+/* ===== FORMATION vs HOW-TO (the Lykke split, 2026-08-06) ====================
+   Two kinds of video live in one academy. FORMATION: structured modules with a
+   declared duration, on the training plan — they run the check and credit
+   art. 131.º hours. HOW-TO: reference clips ("how to operate the pump",
+   "where's the ladder") — the search machine's food, LandFlow's food, always
+   available, and NEVER a claimed training hour. The legal line is structure +
+   plan + record (LEGAL-40H-LINE.md), so the kind is an editorial declaration
+   per course: howto content simply never enters the crediting machinery, which
+   is safer than crediting it and arguing later. */
+const isHowto = c => !!(c && c.kind === 'howto');
+
 /* REQ-L-021 — the regime a course belongs to, if any, and our standing position
    on it. Never claims the regime is satisfied. */
 function courseRegime(c) {
@@ -5448,6 +5464,9 @@ function courseRegime(c) {
    for, which nothing in this product could previously fill. */
 function creditTraining(courseId, mod, assessment) {
   const c = courseById(courseId); if (!c) return null;
+  /* a how-to clip can never mint an hour — not even by a coding mistake
+     elsewhere; the refusal lives at the ledger's door */
+  if (isHowto(c)) return null;
   S.trainingLog = S.trainingLog || [];
   if (S.trainingLog.some(e => e.courseId === courseId && e.mod === mod)) return null;
   const mins = (c.moduleDurations && c.moduleDurations[mod]) || 12;
@@ -5499,6 +5518,7 @@ function creditTraining(courseId, mod, assessment) {
 /* Lessons watched but not yet checked. Kept explicit so a learner is never told
    they are further along their 40h than the record can support. */
 function markCheckPending(courseId, mod) {
+  if (isHowto(courseById(courseId))) return;   /* nothing pending: nothing owed */
   const k = courseId + ':' + mod;
   S.pendingChecks = S.pendingChecks || {};
   if (!S.trainingLog || !S.trainingLog.some(e => e.courseId === courseId && e.mod === mod)) {
@@ -6223,6 +6243,7 @@ document.addEventListener('click', e => {
     case 'goto': location.hash = route; break;
     case 'play': openPlayer(id, mod != null ? +mod : undefined); break;
     case 'toggle-path':
+      if (isHowto(courseById(id))) { toast(t('howto_no_path'), 'ℹ️'); break; }
       if (inPath(id)) { S.path = S.path.filter(x => x !== id); toast(`Removed from your path`, '－'); }
       else { S.path.push(id); toast(`Added to your AI path — it'll be sequenced after your current step`, '✦'); }
       save(); render(); break;
