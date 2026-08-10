@@ -66,3 +66,16 @@ Updated 2026-08-03. Remove items only when done, never when merely old.*
   verify→brain) is proven and waiting; Alina's wine course is the agreed quick win.
 - Correction discipline: João's in-meeting "AI Act released 2 weeks ago" is wrong (Art.4 applies
   since Feb 2025; GPAI 2 Aug 2026) — proposals must use the spec's sourced dates.
+
+## Your educator (shipped edr163 — data pending)
+- **EDUCATORS in brands/edenrise/content.js is EMPTY on purpose.** The engine, all four surfaces
+  and the disclosure layer are live; only real names/roles/quotes are missing, because inventing
+  colleagues would be fabrication on a page the team reads. One-line edit per course:
+  `educator: 'id'` (or `moduleEducators: [...]` when experts differ per module).
+- Portraits are optional — monograms are tinted deterministically (FNV-1a) so no photoshoot blocks
+  a tenant. Add `portrait: 'media/educators/<id>.webp'` when photos exist.
+- `presentation: 'avatar'` marks a synthetic-likeness module and always renders the disclosure
+  badge (AI Act art. 50(4)). Consent to use a person's likeness is a JOÃO-SIDE paperwork item
+  before any avatar module ships — not a code gate.
+- Educator as a Library filter/browse axis (the band is home-only today).
+- ⚖️ Lawyer: confirm the trainer line on the training record satisfies REQ-L-003 as worded.
