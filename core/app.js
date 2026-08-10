@@ -5491,7 +5491,7 @@ function presentationOf(c, mod) {
 }
 function presentationBadge(c, mod) {
   return presentationOf(c, mod) === 'avatar'
-    ? `<span class="edu-badge synth" title="${esc(t('edu_avatar_note'))}">◇ ${t('edu_avatar')}</span>` : '';
+    ? `<span class="edu-badge synth" title="${esc(t('edu_avatar_note'))}">${t('edu_avatar')}</span>` : '';
 }
 const coursesOfEducator = (id) => CATALOG.filter(c => c.educator === id || (c.moduleEducators || []).includes(id));
 
@@ -5499,7 +5499,8 @@ const coursesOfEducator = (id) => CATALOG.filter(c => c.educator === id || (c.mo
 function eduBylineHTML(c, mod) {
   const e = educatorFor(c, mod); if (!e) return '';
   return `<button class="edu-byline" data-action="edu-open" data-edu="${e.id}">
-    ${eduAvatarHTML(e, 'xs')}<span>${t('edu_with')} <b>${esc(e.name)}</b></span>${presentationBadge(c, mod)}</button>`;
+    ${eduAvatarHTML(e, 'xs')}<span class="edu-nm">${esc(e.name)}</span>${e.role
+      ? `<span class="edu-rl">${esc(eduField(e.role))}</span>` : ''}${presentationBadge(c, mod)}</button>`;
 }
 
 /* 2 · THE STRIP — who teaches THIS module, under the video.
@@ -5508,17 +5509,13 @@ function eduBylineHTML(c, mod) {
    module's own educator and falls back to the course's only when unset. */
 function eduStripHTML(c, mod) {
   const e = educatorFor(c, mod); if (!e) return '';
-  const line = eduField(e.line);
-  return `<div class="edu-strip-in">
+  return `<button class="edu-strip" data-action="edu-open" data-edu="${e.id}">
     ${eduAvatarHTML(e, 'sm')}
-    <div class="edu-strip-copy">
-      <div class="edu-strip-top"><span class="edu-strip-lbl">${t('edu_with')}</span>
-        <b>${esc(e.name)}</b>${e.role ? `<span class="edu-strip-role">${esc(eduField(e.role))}</span>` : ''}
-        ${presentationBadge(c, mod)}</div>
-      ${line ? `<div class="edu-strip-line">${esc(line)}</div>` : ''}
-    </div>
-    <button class="btn btn-glass btn-sm" data-action="edu-open" data-edu="${e.id}">${t('edu_about')}</button>
-  </div>`;
+    <span class="edu-nm">${esc(e.name)}</span>
+    ${e.role ? `<span class="edu-rl">${esc(eduField(e.role))}</span>` : ''}
+    ${presentationBadge(c, mod)}
+    <span class="edu-go">${t('edu_about')}</span>
+  </button>`;
 }
 
 /* 3 · THE BAND — educators as a browse axis, the Fitness+/Peloton move */
@@ -5526,14 +5523,13 @@ function educatorsBandHTML() {
   const ids = Object.keys(EDU_ALL()).filter(id => coursesOfEducator(id).length);
   if (!ids.length) return '';
   return `<section class="rail-section edu-band">
-    <div class="rail-head"><h2>${t('edu_band_h')}</h2><span class="hint">${t('edu_band_sub')}</span></div>
+    <div class="rail-head"><h2>${t('edu_band_h')}</h2></div>
     <div class="rail-wrap"><div class="rail edu-rail">${ids.map(id => {
-      const e = Object.assign({ id }, EDU_ALL()[id]), n = coursesOfEducator(id).length;
+      const e = Object.assign({ id }, EDU_ALL()[id]);
       return `<button class="edu-tile" data-action="edu-open" data-edu="${id}">
         ${eduAvatarHTML(e, 'md')}
-        <div class="edu-tile-name">${esc(e.name)}</div>
-        <div class="edu-tile-role">${esc(eduField(e.role))}</div>
-        <div class="edu-tile-n">${n} ${n === 1 ? t('course_one') : t('courses_n')}</div>
+        <span class="edu-nm">${esc(e.name)}</span>
+        <span class="edu-rl">${esc(eduField(e.role))}</span>
       </button>`;
     }).join('')}</div></div>
   </section>`;
@@ -5551,13 +5547,12 @@ function openEducator(id) {
     <button class="modal-x" data-action="edu-close" aria-label="Close">&#10005;</button>
     <div class="edu-sheet-top">${eduAvatarHTML(e, 'lg')}
       <div><h3>${esc(e.name)}</h3>
-        <div class="edu-role">${esc(eduField(e.role))}${e.external ? ` &middot; <span class="edu-ext">${t('edu_external')}</span>` : ''}</div>
+        <div class="edu-rl">${esc(eduField(e.role))}${e.external ? ` &middot; ${t('edu_external')}` : ''}</div>
       </div></div>
     ${eduField(e.line) ? `<p class="edu-line">${esc(eduField(e.line))}</p>` : ''}
     ${eduField(e.why) ? `<blockquote class="edu-why">${esc(eduField(e.why))}</blockquote>` : ''}
-    <div class="ob-eyebrow" style="margin-top:18px;">${t('edu_teaches')}</div>
     <div class="edu-sheet-list">${list.map(c => `<button class="module-row" data-action="edu-goto" data-id="${c.id}">
-      <div class="m-num">&#9654;</div><div class="m-title">${esc(ctitle(c))}</div>
+      <div class="m-title">${esc(ctitle(c))}</div>
       <span class="m-dur">${fmtMins(courseMins(c))}</span></button>`).join('')}</div>
   </div>`;
   document.body.appendChild(ov);

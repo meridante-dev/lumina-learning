@@ -4105,97 +4105,81 @@ nav.topnav { gap: 16px; padding-top: 12px; padding-bottom: 12px; }
 /* the quick-answers shelf sits apart from formation — visibly reference, not curriculum */
 .howto-shelf { margin-top: 40px; padding-top: 26px; border-top: 1px solid rgba(231,237,227,.08); }
 
-/* ════════ PREMIUM LAYER 12 · YOUR EDUCATOR ════════════════════════════════
-   The teacher rendered as a person, not a credit line. Portraits are circular
-   and ringed (Fitness+/Peloton read); the monogram fallback is a first-class
-   design, not a placeholder, so a tenant with no photography still looks
-   composed. The "why" is set in the display serif — it is the one place a
-   human voice speaks in the first person. */
-.edu-av { width:44px; height:44px; border-radius:50%; background-size:cover; background-position:center;
-  display:inline-flex; align-items:center; justify-content:center; flex:none;
-  box-shadow:0 0 0 1px rgba(231,237,227,.14), 0 0 0 4px rgba(14,20,15,.6); }
-.edu-av.mono { background:linear-gradient(150deg, var(--olive), var(--forest) 60%, var(--cork));
-  font-family:var(--font-display); font-size:15px; letter-spacing:.04em; color:var(--ivory); }
-.edu-av.xs { width:26px; height:26px; font-size:10px; box-shadow:0 0 0 1px rgba(231,237,227,.16); }
-.edu-av.md { width:88px; height:88px; font-size:27px; }
-.edu-av.lg { width:74px; height:74px; font-size:23px; }
+/* ════════ THE EDUCATOR — rebuilt to DESIGN.md ═════════════════════════════
+   The first cut broke six laws: a bordered card in the player and a bordered
+   pill on the hero (law 3 — separate with space and darkness, not outlines),
+   a box inside the player box (law 4), eight half-pixel type sizes (law 5),
+   a filled-and-bordered disclosure chip (law 7 — a state chip is COLOUR only),
+   an encouragement subtitle under the band header (law 1), and a decorative ◇
+   (law 9). Rebuilt with nothing but type, space and one tonal disc.
 
-/* byline — quiet, tappable, never competing with the title */
-.edu-byline { display:inline-flex; align-items:center; flex-wrap:nowrap; gap:9px; margin:10px 0 2px; padding:5px 10px 5px 5px;
-  background:rgba(231,237,227,.05); border:1px solid var(--line); border-radius:999px;
-  color:var(--text-dim); font-size:13px; line-height:1.4; white-space:nowrap; cursor:pointer;
-  transition:background .2s, border-color .2s; }
-.edu-byline:hover { background:rgba(231,237,227,.09); border-color:rgba(200,164,93,.35); }
-.edu-byline b { color:var(--text); font-weight:600; }
+   Sizes here are only 11 / 13 / 15 / 18 / 22. Gold stays scarce (law 8): the
+   role is muted, not accented, because it repeats on every tile. */
 
-/* the badge must never wrap: two lines burst the byline pill it sits inside */
-.edu-badge.synth { flex:none; align-self:center; white-space:nowrap; margin-left:4px; padding:3px 9px;
-  border-radius:999px; font-size:10px; line-height:1.3; letter-spacing:.07em;
-  text-transform:uppercase; background:rgba(79,127,137,.18); border:1px solid rgba(79,127,137,.4); color:#9fc4cd; }
+/* the disc — the only mass in the component */
+.edu-av { border-radius: 50%; background-size: cover; background-position: center;
+  display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.edu-av.mono { font-family: var(--font-display); color: var(--ivory); letter-spacing: .04em; }
+.edu-av.xs { width: 22px; height: 22px; font-size: 11px; }
+.edu-av.sm { width: 34px; height: 34px; font-size: 13px; }
+.edu-av.md { width: 72px; height: 72px; font-size: 22px; }
+.edu-av.lg { width: 60px; height: 60px; font-size: 18px; }
 
-/* shared copy styles (educator sheet) */
-.edu-line { font-size:14.5px; color:var(--text-dim); margin:10px 0 0; line-height:1.55; }
-.edu-why { font-family:var(--font-display); font-size:17px; line-height:1.5; font-style:italic;
-  color:var(--text); margin:14px 0 0; padding-left:16px; border-left:2px solid rgba(200,164,93,.5); }
+/* tonal, not colour-coded: five low-saturation earths so a team of eight stays
+   legible without importing a second palette into a warm green UI (law 8) */
+.edu-av.mono.t1 { background: #4a5c46; }
+.edu-av.mono.t2 { background: #6b5a45; }
+.edu-av.mono.t3 { background: #4a6670; }
+.edu-av.mono.t4 { background: #7d5f4c; }
+.edu-av.mono.t5 { background: #5f7358; }
 
-/* the module strip — one line under the video, never stealing its height */
-.player-edu-strip:empty { display:none; }
-.edu-strip-in { display:flex; align-items:center; gap:13px; margin:0 28px;
-  padding:11px 16px; border:1px solid var(--line); border-radius:14px;
-  background:linear-gradient(160deg, rgba(231,237,227,.06), rgba(231,237,227,.02)); }
-.edu-strip-copy { min-width:0; flex:1; }
-.edu-strip-top { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:14px; color:var(--text); }
-.edu-strip-lbl { color:var(--text-faint); }
-.edu-strip-role { color:var(--accent); font-size:12.5px; }
-.edu-strip-role::before { content:'· '; color:var(--text-faint); }
-.edu-strip-line { font-size:12.5px; color:var(--text-faint); margin-top:2px;
-  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.edu-av.sm { width:38px; height:38px; font-size:13px; }
-@media (max-width:640px) {
-  .edu-strip-in { margin:0 14px; padding:9px 12px; gap:10px; }
-  .edu-strip-line { display:none; }
+/* shared type — one treatment wherever the educator appears */
+.edu-nm { font-size: 15px; color: var(--text); font-weight: 600; }
+.edu-rl { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .1em; }
+.edu-badge.synth { font-size: 11px; color: #9fc4cd; text-transform: uppercase; letter-spacing: .1em; }
+
+/* hero byline — text on the page, no container */
+.edu-byline { display: inline-flex; align-items: center; gap: 9px; margin: 12px 0 0;
+  padding: 0; background: none; border: 0; cursor: pointer; }
+.edu-byline .edu-nm { border-bottom: 1px solid transparent; transition: border-color .2s; }
+.edu-byline:hover .edu-nm { border-bottom-color: rgba(231,237,227,.35); }
+
+/* module strip — sits between the video and the pills on plain darkness */
+.player-edu-strip:empty { display: none; }
+.edu-strip { display: flex; align-items: center; gap: 12px; width: calc(100% - 56px);
+  margin: 14px 28px 0; padding: 0; background: none; border: 0; cursor: pointer; text-align: left; }
+.edu-strip .edu-go { margin-left: auto; font-size: 13px; color: var(--text-faint);
+  border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+.edu-strip:hover .edu-go { color: var(--text-dim); border-bottom-color: rgba(231,237,227,.28); }
+
+/* the band — discs and names, two layers (law 1) */
+.edu-rail { gap: 34px; padding: 4px 0; }
+/* 118px broke "Land & machinery" into a hanging "LAND &" — a tenant writes the
+   role, so the tile has to hold two words of it and clamp anything longer */
+.edu-tile { flex: none; width: 138px; display: flex; flex-direction: column; align-items: center;
+  gap: 4px; background: none; border: 0; padding: 0; cursor: pointer;
+  transition: transform .25s var(--lift); }
+.edu-tile .edu-rl { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; line-height: 1.45; text-wrap: balance; }
+.edu-tile .edu-av { margin-bottom: 8px; transition: filter .25s; }
+.edu-tile .edu-nm, .edu-tile .edu-rl { text-align: center; }
+.edu-tile:hover { transform: translateY(-3px); }
+.edu-tile:hover .edu-av { filter: brightness(1.14); }
+
+/* the sheet — the one place with room for their own words */
+.edu-sheet { max-width: 500px; text-align: left; }
+.edu-sheet-top { display: flex; gap: 16px; align-items: center; }
+.edu-sheet-top h3 { font-family: var(--font-display); font-size: 22px; margin: 0 0 3px; }
+.edu-line { font-size: 15px; color: var(--text-dim); margin: 18px 0 0; line-height: 1.62; }
+.edu-why { font-family: var(--font-display); font-size: 18px; line-height: 1.5; font-style: italic;
+  color: var(--text); margin: 14px 0 0; padding-left: 16px; border-left: 1px solid rgba(200,164,93,.45); }
+.edu-sheet-list { margin-top: 22px; }
+.edu-sheet-list .module-row { width: 100%; background: none; border: 0;
+  border-top: 1px solid var(--line); display: flex; justify-content: space-between; }
+
+@media (max-width: 640px) {
+  .edu-strip { width: calc(100% - 28px); margin: 12px 14px 0; }
+  .edu-rail { gap: 20px; }
+  .edu-tile { width: 112px; }
+  .edu-av.md { width: 60px; height: 60px; font-size: 18px; }
 }
-  background:linear-gradient(160deg, rgba(231,237,227,.055), rgba(231,237,227,.02)); }
-.edu-panel-body { display:flex; gap:20px; align-items:flex-start; margin-top:12px; }
-.edu-copy { min-width:0; }
-.edu-copy h3 { font-family:var(--font-display); font-size:23px; margin:0 0 2px; color:var(--text); }
-.edu-role { font-size:13px; color:var(--accent); letter-spacing:.02em; }
-.edu-ext { color:var(--text-faint); }
-.edu-line { font-size:14.5px; color:var(--text-dim); margin:10px 0 0; line-height:1.55; }
-.edu-why { font-family:var(--font-display); font-size:17px; line-height:1.5; font-style:italic;
-  color:var(--text); margin:14px 0 0; padding-left:16px; border-left:2px solid rgba(200,164,93,.5); }
-.edu-panel .link-quiet { margin-top:14px; display:inline-block; }
-
-/* the band — browse by person */
-.edu-rail { gap:26px; padding:6px 0 4px; }
-.edu-tile { flex:none; width:132px; background:none; border:0; cursor:pointer; text-align:center;
-  color:var(--text-dim); transition:transform .25s cubic-bezier(.2,.7,.3,1); }
-.edu-tile:hover { transform:translateY(-4px); }
-.edu-tile:hover .edu-av { box-shadow:0 0 0 1px rgba(200,164,93,.6), 0 0 0 5px rgba(14,20,15,.6), 0 10px 26px rgba(0,0,0,.45); }
-.edu-tile .edu-av { transition:box-shadow .25s; }
-.edu-tile-name { margin-top:11px; font-size:14px; color:var(--text); font-weight:600; }
-.edu-tile-role { font-size:12px; color:var(--accent); margin-top:1px; }
-.edu-tile-n { font-size:11.5px; color:var(--text-faint); margin-top:3px; }
-
-/* the sheet */
-.edu-sheet { max-width:520px; text-align:left; }
-.edu-sheet-top { display:flex; gap:16px; align-items:center; }
-.edu-sheet-top h3 { font-family:var(--font-display); font-size:24px; margin:0 0 2px; }
-.edu-sheet-list { margin-top:8px; }
-.edu-sheet-list .module-row { width:100%; background:none; border:0; border-bottom:1px solid var(--line); }
-
-@media (max-width:640px) {
-  .edu-panel { padding:20px 18px; }
-  .edu-panel-body { gap:15px; }
-  .edu-av.lg { width:58px; height:58px; font-size:18px; }
-  .edu-av.md { width:74px; height:74px; font-size:23px; }
-  .edu-tile { width:112px; }
-}
-/* deterministic monogram tints — five clearly separated hues drawn from the
-   brand palette. Two-stop gradients: a three-stop set ended every ramp in cork
-   and rendered as four indistinguishable browns, which defeats the point. */
-.edu-av.mono.t1 { background:linear-gradient(150deg,#5f7d59,#33482f); }        /* forest */
-.edu-av.mono.t2 { background:linear-gradient(150deg,#9c7c52,#5f4a2f); }        /* cork */
-.edu-av.mono.t3 { background:linear-gradient(150deg,#5b8f9a,#2f5560); }        /* atlantic */
-.edu-av.mono.t4 { background:linear-gradient(150deg,#c58a63,#8a5236); }        /* clay */
-.edu-av.mono.t5 { background:linear-gradient(150deg,#aabfa2,#63805c); }        /* sage */

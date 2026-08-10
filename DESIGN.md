@@ -109,6 +109,32 @@ surfaces deliberately: **few, large, varied, made of light**. Uniformity is the 
 **Law 17 · Depth comes from light, not from borders.** Gradient washes, blur and shadow do the work
 that 172 outlines used to attempt.
 
+## Pass 4 — the educator (2026-08-07)
+
+The first cut of "Your educator" was built to taste and broke six laws at once. Recorded because the
+failure mode is instructive: **a new component written in isolation reaches for containers**, and
+every container it reached for was already illegal here.
+
+| Law | What it did | Rebuilt as |
+|---|---|---|
+| 1 | "The people who know it best" under the band header | header alone; the faces are the subtitle |
+| 3 | bordered card in the player, bordered pill on the hero | no border, no background — type on darkness |
+| 4 | a box inside the player box | the strip has no box at all |
+| 5 | eight half-pixel sizes (14.5 / 12.5 / 10.5 …) | 11 / 13 / 15 / 18 / 22 only |
+| 7 | disclosure chip with fill **and** border | colour-only state chip |
+| 9 | a decorative ◇ on the badge | deleted |
+
+Also: the monogram tints were saturated teal/terracotta — a second palette smuggled into a warm
+green UI (law 8). They are now five low-saturation earths that read as tonal, not colour-coded.
+
+Two things the pixels caught that the DOM did not: the badge's modifier class `avatar` collided with
+the existing `.avatar` chip (34px grid) and burst the pill into two lines; and a 118px tile broke
+"Land & machinery" into a hanging "LAND &". Neither is visible in an assertion.
+
+**Law 20 — a component is not premium because it is decorated.** Every box, border, gradient and
+shadow the first cut added had to be removed to make it look expensive. Reach for type and space
+first; a container needs a reason.
+
 ## Where the laws live in code
 - `core/styles.css` — two appended blocks: **PREMIUM LAYER** and **PREMIUM LAYER 2**. Reversible by
   deletion; nothing above them was rewritten except mechanical scale-snapping.
