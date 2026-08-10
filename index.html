@@ -6,7 +6,7 @@
 <title>EdenRise Academy — Regenerative Living, Learned</title>
 <meta name="description" content="EdenRise Academy — learn regenerative living, land stewardship and the rhythm of the land, guided by adaptive AI learning paths and a personal AI tutor.">
 <meta name="theme-color" content="#0e140f">
-<link rel="icon" type="image/svg+xml" href="favicon.svg?v=edr163">
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=edr164">
 <meta property="og:title" content="EdenRise Academy — Regenerative Living, Learned">
 <meta property="og:description" content="Where nature leads, the land heals, and stewardship shapes everything we learn.">
 <meta property="og:type" content="website">
@@ -33,12 +33,12 @@
      same-origin, or the file downloads twice. -->
 <link rel="preload" href="fonts/inter-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/cormorant-garamond-600-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link id="brandFonts" href="fonts/fonts.css?v=edr163" rel="stylesheet">
-<script src="brands/edenrise/brand.js?v=edr163"></script>
-<script src="brands/_example/brand.js?v=edr163"></script>
-<script src="core/brandkit.js?v=edr163"></script>
-<script src="core/ots.js?v=edr163"></script>
-<link rel="stylesheet" href="core/styles.css?v=edr163">
+<link id="brandFonts" href="fonts/fonts.css?v=edr164" rel="stylesheet">
+<script src="brands/edenrise/brand.js?v=edr164"></script>
+<script src="brands/_example/brand.js?v=edr164"></script>
+<script src="core/brandkit.js?v=edr164"></script>
+<script src="core/ots.js?v=edr164"></script>
+<link rel="stylesheet" href="core/styles.css?v=edr164">
 <script>/* per-brand key: several academies share one origin (see app.js STATE_KEY) */
 var _b=(window.BRAND&&window.BRAND.id)||'edenrise';window.AUTH_MODE_KEY=_b==='edenrise'?'eden-auth-mode':_b+'-auth-mode';
 try{var m=localStorage.getItem(window.AUTH_MODE_KEY);document.documentElement.setAttribute('data-gate',(m==='guest'||m==='firebase')?'off':'on');}catch(e){document.documentElement.setAttribute('data-gate','on');}</script>
@@ -164,7 +164,6 @@ try{var m=localStorage.getItem(window.AUTH_MODE_KEY);document.documentElement.se
       <div class="pt" id="playerTitle"></div>
       <div class="ps" id="playerSub"></div>
       <div class="player-goal" id="playerGoal"></div>
-      <div class="player-edu" id="playerEdu"></div>
     </div>
     <span class="spacer"></span>
     <button class="btn btn-glass btn-sm" data-action="ai-open">✦ Ask the tutor</button>
@@ -185,6 +184,11 @@ try{var m=localStorage.getItem(window.AUTH_MODE_KEY);document.documentElement.se
       <div class="sim-track"><div class="fill" id="simFill"></div></div>
     </div>
   </div>
+  <!-- who teaches THIS module: directly under the video, the position Netflix
+       uses for "about this episode". Compact on purpose — the player is a
+       fixed full-viewport column and a full panel here would squeeze the
+       video; the depth lives one tap away in the educator sheet. -->
+  <div class="player-edu-strip" id="playerEduStrip"></div>
   <div class="player-bottom">
     <div class="mod-pills" id="playerPills"></div>
     <button class="btn btn-glass btn-sm" id="notesToggle">📝 Notes &amp; transcript</button>
@@ -286,11 +290,11 @@ try{var m=localStorage.getItem(window.AUTH_MODE_KEY);document.documentElement.se
 
 <div id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
 
-<script src="brands/edenrise/content.js?v=edr163"></script>
-<script src="data.js?v=edr163"></script>
-<script src="core/app.js?v=edr163"></script>
-<script src="core/landflow.js?v=edr163"></script>
-<script type="module" src="core/auth.js?v=edr163"></script>
+<script src="brands/edenrise/content.js?v=edr164"></script>
+<script src="data.js?v=edr164"></script>
+<script src="core/app.js?v=edr164"></script>
+<script src="core/landflow.js?v=edr164"></script>
+<script type="module" src="core/auth.js?v=edr164"></script>
 <script>
 /* Safety net: if the Firebase module can't load (blocked CDN, offline), make sure
    the "continue as guest" button still dismisses the gate so no one is stuck. */

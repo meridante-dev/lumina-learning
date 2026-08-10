@@ -907,7 +907,6 @@ function renderCourse(id) {
     <div class="rail-head" style="margin-top:14px;"><h2>${t('modules_h')}</h2><span class="hint">${t('tap_module')}</span></div>
     <div class="module-list">${modules}</div>
     <div class="page-pad" style="padding-top:0;">
-      ${educatorPanelHTML(c)}
       ${resourcesHTML(c)}
       ${missionCardHTML(c)}
       ${coachCardHTML(c)}
@@ -4843,7 +4842,7 @@ function openPlayer(courseId, mod, startAt) {
   $('#playerTitle').textContent = ctitle(c);
   $('#playerSub').textContent = `${t('module')} ${mod + 1} ${t('of')} ${c.modules.length} · ${cmods(c)[mod]}`;
   const pg = $('#playerGoal'); if (pg) { const goal = (takeawaysFor(c, mod) || [])[0] || ''; pg.textContent = goal ? ` ${t('lesson_goal')}: ${goal}` : ''; }
-  const pe = $('#playerEdu'); if (pe) pe.innerHTML = eduBylineHTML(c, mod);
+  const pe = $('#playerEduStrip'); if (pe) pe.innerHTML = eduStripHTML(c, mod);
   $('#playerPills').innerHTML = c.modules.map((m, i) => {
     const p = prog(courseId);
     const mm = modMedia(c, i);
@@ -5503,23 +5502,23 @@ function eduBylineHTML(c, mod) {
     ${eduAvatarHTML(e, 'xs')}<span>${t('edu_with')} <b>${esc(e.name)}</b></span>${presentationBadge(c, mod)}</button>`;
 }
 
-/* 2 · THE PANEL — the course page's human moment */
-function educatorPanelHTML(c) {
-  const e = educatorFor(c); if (!e) return '';
-  const why = eduField(e.why), line = eduField(e.line), more = coursesOfEducator(e.id).filter(x => x.id !== c.id);
-  return `<section class="edu-panel reveal">
-    <div class="ob-eyebrow">${t('edu_your')}</div>
-    <div class="edu-panel-body">
-      ${eduAvatarHTML(e, 'lg')}
-      <div class="edu-copy">
-        <h3>${esc(e.name)}</h3>
-        <div class="edu-role">${esc(eduField(e.role))}${e.external ? ` · <span class="edu-ext">${t('edu_external')}</span>` : ''}</div>
-        ${line ? `<p class="edu-line">${esc(line)}</p>` : ''}
-        ${why ? `<blockquote class="edu-why">${esc(why)}</blockquote>` : ''}
-        ${more.length ? `<button class="link-quiet" data-action="edu-open" data-edu="${e.id}">${t('edu_more')} ${esc(e.name)} →</button>` : ''}
-      </div>
+/* 2 · THE STRIP — who teaches THIS module, under the video.
+   Per-module by design: one course can carry several experts (the sommelier
+   teaches the list, the bar lead teaches service), so the strip resolves the
+   module's own educator and falls back to the course's only when unset. */
+function eduStripHTML(c, mod) {
+  const e = educatorFor(c, mod); if (!e) return '';
+  const line = eduField(e.line);
+  return `<div class="edu-strip-in">
+    ${eduAvatarHTML(e, 'sm')}
+    <div class="edu-strip-copy">
+      <div class="edu-strip-top"><span class="edu-strip-lbl">${t('edu_with')}</span>
+        <b>${esc(e.name)}</b>${e.role ? `<span class="edu-strip-role">${esc(eduField(e.role))}</span>` : ''}
+        ${presentationBadge(c, mod)}</div>
+      ${line ? `<div class="edu-strip-line">${esc(line)}</div>` : ''}
     </div>
-  </section>`;
+    <button class="btn btn-glass btn-sm" data-action="edu-open" data-edu="${e.id}">${t('edu_about')}</button>
+  </div>`;
 }
 
 /* 3 · THE BAND — educators as a browse axis, the Fitness+/Peloton move */

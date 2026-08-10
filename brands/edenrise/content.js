@@ -412,10 +412,17 @@ const COURSE_SKILLS = {
    tenant is never blocked on a photoshoot) · external:true when the trainer is
    NOT an employee (that name flows onto the certificate).
 
+   BINDING IS PER MODULE. The educator shows inside the lesson, under the video,
+   so a course can carry several experts:
+     moduleEducators: ['tiago', 'alina', 'tiago', 'tiago']   // one per module
+     educator: 'tiago'                                        // fallback default
+     modulePresentation: [null, null, 'avatar', null]         // synthetic likeness
+   A module with an entry in moduleEducators wins; otherwise the course default
+   applies. `presentation`/`modulePresentation` of 'avatar' always renders the
+   disclosure badge next to the name.
+
    ⚠️ JOÃO — the names below are the ONLY thing missing. I have not invented
-   colleagues: filling in who actually presents each course is a one-line edit
-   per course (`educator: 'id'`, or `moduleEducators: [...]` when experts differ
-   per module). Everything else is built and live.
+   colleagues. Everything else is built and live.
    ========================================================================= */
 const EDUCATORS = {
   /* example shape — replace with real people, then set `educator:` on courses
@@ -426,7 +433,7 @@ const EDUCATORS = {
             pt: 'Responsável pela carta e conhece os produtores alentejanos pelo nome.' },
     why:  { en: 'A guest asking about a wine is asking about a place. I want you to be able to answer.',
             pt: 'Quem pergunta por um vinho está a perguntar por um lugar. Quero que saibam responder.' },
-    portrait: 'media/educators/alina.webp',
+    portrait: 'media/educators/alina.webp',   // optional — a monogram renders without it
   },
   */
 };
