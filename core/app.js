@@ -695,6 +695,7 @@ function renderHome() {
     <div class="stat"><div class="num">${Object.values(S.progress).filter(p => p.done).length + S.quizzesPassed}</div><div class="lbl">${t('skills_verified')}</div><div class="delta">${S.quizzesPassed ? `▲ ${S.quizzesPassed} ${t('from_quizzes')}` : t('no_data')}</div></div>
     <div class="stat"><div class="num">${avgQuizScore() != null ? avgQuizScore() + '%' : t('no_data')}</div><div class="lbl">${t('avg_score')}</div><div class="delta">${(S.quizScores || []).length ? (S.quizScores.length + ' ' + t('stats_quizzes')) : t('earn_first')}</div></div>
   </section>
+  ${educatorsBandHTML()}
   ${railHTML(t('trending'), t('community_learning'), trending.map((c, i) => cardHTML(c, { rank: c.trending })))}
   ${railHTML(`${t('because_completed')} “${_lang() === 'pt' ? 'Solo Vivo' : 'Living Soil'}”`, t('ai_recommendations'), recs.map(c => cardHTML(c)))}
   ${footerHTML()}</div>`;
@@ -881,6 +882,7 @@ function renderCourse(id) {
             ${c.updated ? `<span class="sep"></span><span class="fresh-tag">${t('updated_lbl')} ${fmtYm(c.updated)}</span>` : ''}
           </div>
           <h1>${ctitle(c)}</h1>
+          ${eduBylineHTML(c)}
           <p class="course-hook">${chook(c)}</p>
           <p class="desc">${chooksub(c)} ${cdesc(c)}</p>
           <div class="hero-actions">
@@ -905,6 +907,7 @@ function renderCourse(id) {
     <div class="rail-head" style="margin-top:14px;"><h2>${t('modules_h')}</h2><span class="hint">${t('tap_module')}</span></div>
     <div class="module-list">${modules}</div>
     <div class="page-pad" style="padding-top:0;">
+      ${educatorPanelHTML(c)}
       ${resourcesHTML(c)}
       ${missionCardHTML(c)}
       ${coachCardHTML(c)}
@@ -2261,6 +2264,7 @@ function buildCertHTML(o) {
     <div>${esc(o.code || '')}</div>
     <div class="line">${esc(companyName())}<div class="role">${pt ? 'Entidade empregadora · formação organizada por' : 'Employer · training organised by'}</div></div>
   </div>
+  ${o.trainer ? `<div class="prov">${pt ? 'Formador' : 'Trainer'} <b>${esc(o.trainer)}</b></div>` : ''}
   ${contentProvider() ? `<div class="prov">${pt ? 'Conteúdo fornecido por' : 'Content supplied by'} <b>${esc(contentProvider())}</b></div>` : ''}
   <div class="note">${certFooterNote()}${o.extraNote ? ' · ' + o.extraNote : ''}</div>
 </div></body></html>`;
@@ -2287,6 +2291,9 @@ function premiumCourseCert(courseId) {
     who: certIdentity(),
     did: pt ? 'concluiu com aproveitamento o percurso de formação' : 'has successfully completed the training course',
     what: ctitle(c),
+    /* REQ-L-003 names the trainer, not only the supplying organisation — the
+       educator object is where that name now comes from */
+    trainer: (() => { const e = educatorFor(c); return e ? e.name + (e.external ? (pt ? ' (externo)' : ' (external)') : '') : ''; })(),
     meta: `${h}h · <b>${fmtCertDate(certDate(c.id))}</b>`,
   }));
   ledgerAppend('cert_issued', { courseId, kind: 'course' });
@@ -4836,6 +4843,7 @@ function openPlayer(courseId, mod, startAt) {
   $('#playerTitle').textContent = ctitle(c);
   $('#playerSub').textContent = `${t('module')} ${mod + 1} ${t('of')} ${c.modules.length} · ${cmods(c)[mod]}`;
   const pg = $('#playerGoal'); if (pg) { const goal = (takeawaysFor(c, mod) || [])[0] || ''; pg.textContent = goal ? ` ${t('lesson_goal')}: ${goal}` : ''; }
+  const pe = $('#playerEdu'); if (pe) pe.innerHTML = eduBylineHTML(c, mod);
   $('#playerPills').innerHTML = c.modules.map((m, i) => {
     const p = prog(courseId);
     const mm = modMedia(c, i);
@@ -5433,6 +5441,130 @@ function isJobRelevant(c, pf) {
   const mine = (skillsOf(c) || []);
   return mine.some(k => caps.includes(k));
 }
+/* ===== YOUR EDUCATOR ========================================================
+   How the premium tier does this: MasterClass makes the instructor the product
+   (a cinematic portrait, not a credit line); Apple Fitness+ and Peloton make
+   the trainer a BROWSE AXIS you feel loyal to; Coursera states credibility in
+   one line. All three agree on the same thing — the teacher is a first-class
+   object with a face, a role and a reason, never a text byline under a title.
+
+   Here it earns more than polish. The educator at a tenant is a COLLEAGUE, so
+   the panel is the mechanism that turns "Patrick explains the ice" into visible
+   standing in the company. Three surfaces, in rising commitment: a byline where
+   you are already looking, a panel on the course page, and a portrait band on
+   home that makes people browsable.
+
+   DISCLOSURE. `presentation:'avatar'` marks a module presented by a synthetic
+   likeness rather than a filmed person. It always renders a visible badge —
+   the learner must never have to wonder whether they watched their colleague or
+   a rendering of them, and AI Act art. 50(4) obliges disclosure of synthetic
+   likeness besides. Same discipline as machineTranslated:true on a transcript.
+   ========================================================================= */
+const EDU_ALL = () => (typeof EDUCATORS === 'object' && EDUCATORS) || {};
+/* module-level educator wins over course-level: one course can carry several
+   experts (the bar lead teaches service, the sommelier teaches the list) */
+function educatorFor(c, mod) {
+  if (!c) return null;
+  const id = (mod != null && c.moduleEducators && c.moduleEducators[mod]) || c.educator;
+  const e = id && EDU_ALL()[id];
+  return e ? Object.assign({ id }, e) : null;
+}
+const eduField = (v) => !v ? '' : (typeof v === 'string' ? v : (v[_lang()] || v.en || ''));
+const eduInitials = (n) => (n || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '·';
+/* a tenant is never blocked on a photoshoot: absent a portrait we render an
+   elegant monogram rather than a grey silhouette */
+function eduAvatarHTML(e, cls) {
+  if (!e) return '';
+  /* the monogram is tinted deterministically from the name: with eight
+     colleagues on the band, identical gradients would read as one blur, and a
+     person's tile must stay the same colour every time they see it. FNV-1a with
+     the high bits taken — a plain char-sum put 4 of 8 Portuguese names on the
+     same tone, which is the collision this is meant to avoid. */
+  let _h = 2166136261;
+  for (const ch of (e.name || '')) _h = Math.imul(_h ^ ch.charCodeAt(0), 16777619);
+  const tone = ((_h >>> 16) % 5) + 1;
+  return e.portrait
+    ? `<span class="edu-av ${cls || ''}" style="background-image:url('${e.portrait}')"></span>`
+    : `<span class="edu-av mono t${tone} ${cls || ''}">${esc(eduInitials(e.name))}</span>`;
+}
+function presentationOf(c, mod) {
+  return (c && ((mod != null && c.modulePresentation && c.modulePresentation[mod]) || c.presentation)) || 'filmed';
+}
+function presentationBadge(c, mod) {
+  return presentationOf(c, mod) === 'avatar'
+    ? `<span class="edu-badge synth" title="${esc(t('edu_avatar_note'))}">◇ ${t('edu_avatar')}</span>` : '';
+}
+const coursesOfEducator = (id) => CATALOG.filter(c => c.educator === id || (c.moduleEducators || []).includes(id));
+
+/* 1 · BYLINE — where the eye already is (course hero, player header) */
+function eduBylineHTML(c, mod) {
+  const e = educatorFor(c, mod); if (!e) return '';
+  return `<button class="edu-byline" data-action="edu-open" data-edu="${e.id}">
+    ${eduAvatarHTML(e, 'xs')}<span>${t('edu_with')} <b>${esc(e.name)}</b></span>${presentationBadge(c, mod)}</button>`;
+}
+
+/* 2 · THE PANEL — the course page's human moment */
+function educatorPanelHTML(c) {
+  const e = educatorFor(c); if (!e) return '';
+  const why = eduField(e.why), line = eduField(e.line), more = coursesOfEducator(e.id).filter(x => x.id !== c.id);
+  return `<section class="edu-panel reveal">
+    <div class="ob-eyebrow">${t('edu_your')}</div>
+    <div class="edu-panel-body">
+      ${eduAvatarHTML(e, 'lg')}
+      <div class="edu-copy">
+        <h3>${esc(e.name)}</h3>
+        <div class="edu-role">${esc(eduField(e.role))}${e.external ? ` · <span class="edu-ext">${t('edu_external')}</span>` : ''}</div>
+        ${line ? `<p class="edu-line">${esc(line)}</p>` : ''}
+        ${why ? `<blockquote class="edu-why">${esc(why)}</blockquote>` : ''}
+        ${more.length ? `<button class="link-quiet" data-action="edu-open" data-edu="${e.id}">${t('edu_more')} ${esc(e.name)} →</button>` : ''}
+      </div>
+    </div>
+  </section>`;
+}
+
+/* 3 · THE BAND — educators as a browse axis, the Fitness+/Peloton move */
+function educatorsBandHTML() {
+  const ids = Object.keys(EDU_ALL()).filter(id => coursesOfEducator(id).length);
+  if (!ids.length) return '';
+  return `<section class="rail-section edu-band">
+    <div class="rail-head"><h2>${t('edu_band_h')}</h2><span class="hint">${t('edu_band_sub')}</span></div>
+    <div class="rail-wrap"><div class="rail edu-rail">${ids.map(id => {
+      const e = Object.assign({ id }, EDU_ALL()[id]), n = coursesOfEducator(id).length;
+      return `<button class="edu-tile" data-action="edu-open" data-edu="${id}">
+        ${eduAvatarHTML(e, 'md')}
+        <div class="edu-tile-name">${esc(e.name)}</div>
+        <div class="edu-tile-role">${esc(eduField(e.role))}</div>
+        <div class="edu-tile-n">${n} ${n === 1 ? t('course_one') : t('courses_n')}</div>
+      </button>`;
+    }).join('')}</div></div>
+  </section>`;
+}
+
+/* 4 · THE SHEET — everything they teach, in one place */
+function openEducator(id) {
+  const e = Object.assign({ id }, EDU_ALL()[id] || {}); if (!e.name) return;
+  const list = coursesOfEducator(id);
+  document.querySelectorAll('#eduModal').forEach(x => x.remove());
+  const ov = document.createElement('div');
+  ov.className = 'take-overlay open'; ov.id = 'eduModal';
+  ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
+  ov.innerHTML = `<div class="take-card edu-sheet">
+    <button class="modal-x" data-action="edu-close" aria-label="Close">&#10005;</button>
+    <div class="edu-sheet-top">${eduAvatarHTML(e, 'lg')}
+      <div><h3>${esc(e.name)}</h3>
+        <div class="edu-role">${esc(eduField(e.role))}${e.external ? ` &middot; <span class="edu-ext">${t('edu_external')}</span>` : ''}</div>
+      </div></div>
+    ${eduField(e.line) ? `<p class="edu-line">${esc(eduField(e.line))}</p>` : ''}
+    ${eduField(e.why) ? `<blockquote class="edu-why">${esc(eduField(e.why))}</blockquote>` : ''}
+    <div class="ob-eyebrow" style="margin-top:18px;">${t('edu_teaches')}</div>
+    <div class="edu-sheet-list">${list.map(c => `<button class="module-row" data-action="edu-goto" data-id="${c.id}">
+      <div class="m-num">&#9654;</div><div class="m-title">${esc(ctitle(c))}</div>
+      <span class="m-dur">${fmtMins(courseMins(c))}</span></button>`).join('')}</div>
+  </div>`;
+  document.body.appendChild(ov);
+  ledgerAppend('educator_open', { educator: id, courses: list.length });
+}
+
 /* ===== FORMATION vs HOW-TO (the Lykke split, 2026-08-06) ====================
    Two kinds of video live in one academy. FORMATION: structured modules with a
    declared duration, on the training plan — they run the check and credit
@@ -6396,6 +6528,9 @@ document.addEventListener('click', e => {
     }
     case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
     case 'member-detail': openMemberDetail(el.dataset.uid); break;
+    case 'edu-open': openEducator(el.dataset.edu); break;
+    case 'edu-close': { const ev = $('#eduModal'); if (ev) ev.remove(); break; }
+    case 'edu-goto': { const ev = $('#eduModal'); if (ev) ev.remove(); location.hash = '#/course/' + el.dataset.id; break; }
     case 'mdet-close': { const mv = $('#mdetModal'); if (mv) mv.remove(); break; }
     case 'mdet-register': downloadMemberRegister(el.dataset.uid); break;
     case 'mdet-exit': downloadExitStatement(el.dataset.uid); break;

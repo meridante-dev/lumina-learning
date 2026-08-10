@@ -399,6 +399,38 @@ const COURSE_SKILLS = {
    the platform must never state or imply that it DISCHARGES the special regime.
    Fire Truck Training is the live example: plausibly SST, and exactly the kind
    of course a client would assume covers their safety obligation. */
+/* ===== EDUCATORS — the people who teach ====================================
+   A premium academy names its teacher. Here that is not decoration: at
+   EdenRise (and at every tenant) the educator is a COLLEAGUE, and putting
+   their face and their "why" on the module is how passing knowledge down
+   becomes a form of dignity rather than a chore. It also does legal work —
+   REQ-L-003 requires the training record to name the trainer, not only the
+   supplier organisation.
+
+   Fields: name · role · line (one credibility sentence) · why (their own words,
+   first person) · portrait (optional — a monogram is rendered when absent, so a
+   tenant is never blocked on a photoshoot) · external:true when the trainer is
+   NOT an employee (that name flows onto the certificate).
+
+   ⚠️ JOÃO — the names below are the ONLY thing missing. I have not invented
+   colleagues: filling in who actually presents each course is a one-line edit
+   per course (`educator: 'id'`, or `moduleEducators: [...]` when experts differ
+   per module). Everything else is built and live.
+   ========================================================================= */
+const EDUCATORS = {
+  /* example shape — replace with real people, then set `educator:` on courses
+  'alina': {
+    name: 'Alina',
+    role: { en: 'Wine & bar', pt: 'Vinhos e bar' },
+    line: { en: 'Runs the bar list and knows the Alentejo growers by name.',
+            pt: 'Responsável pela carta e conhece os produtores alentejanos pelo nome.' },
+    why:  { en: 'A guest asking about a wine is asking about a place. I want you to be able to answer.',
+            pt: 'Quem pergunta por um vinho está a perguntar por um lugar. Quero que saibam responder.' },
+    portrait: 'media/educators/alina.webp',
+  },
+  */
+};
+
 const COURSE_REGIME = {
   'fire-truck-training': 'SST'
 };
