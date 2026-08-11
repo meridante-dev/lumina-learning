@@ -4183,3 +4183,74 @@ nav.topnav { gap: 16px; padding-top: 12px; padding-bottom: 12px; }
   .edu-tile { width: 112px; }
   .edu-av.md { width: 60px; height: 60px; font-size: 18px; }
 }
+
+/* ════════ QUICK WINS + ATTRIBUTION ═══════════════════════════════════════
+   Same laws as the educator pass: type and space, no boxes-in-boxes, sizes
+   from 11/13/15/18/22 only, gold scarce. The attribution block is deliberately
+   quiet — it is a licence condition, not a badge to show off. */
+.attrib { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.attrib-lic { font-size: 13px; color: var(--text-dim); line-height: 1.55; }
+.attrib-lic a { color: var(--accent); text-decoration: none; }
+.attrib-lic a:hover { text-decoration: underline; }
+.attrib-src { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.attrib-src span { font-size: 13px; color: var(--text-faint); }
+.attrib-lbl { text-transform: uppercase; letter-spacing: .1em; font-size: 11px; }
+.edu-creds { margin: 12px 0 0; padding-left: 18px; }
+.edu-creds li { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+.edu-more { display: inline-block; margin-top: 14px; font-size: 13px; color: var(--accent); text-decoration: none; }
+.edu-more:hover { text-decoration: underline; }
+
+.qw-secs { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); }
+.qw-card { flex: 0 0 260px; scroll-snap-align: start; cursor: pointer; background: none; border: 0;
+  padding: 0; text-align: left; transition: transform .25s var(--lift); }
+.qw-card:hover { transform: translateY(-3px); }
+.qw-card h3 { font-family: var(--font-display); font-size: 18px; margin: 6px 0 4px; color: var(--text); }
+.qw-card p { font-size: 13px; color: var(--text-dim); line-height: 1.55; margin: 0; }
+.qw-by { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--text-faint); margin-top: 8px; }
+.qw-deeper { font-size: 13px; color: var(--accent-2); margin-top: 6px; }
+.qw-nodeep { font-size: 13px; color: var(--text-faint); }
+
+.qw-sheet { max-width: 560px; text-align: left; }
+.qw-video { position: relative; padding-top: 56.25%; margin: 14px 0; border-radius: 14px; overflow: hidden; }
+.qw-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.qw-line { font-size: 15px; color: var(--text-dim); line-height: 1.62; }
+.qw-next { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.qw-next .btn { margin-top: 8px; }
+
+.qw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 12px; }
+.qw-cur { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0;
+  border-top: 1px solid var(--line); }
+.qw-cur.on .qw-cur-body b { color: var(--accent-2); }
+.qw-cur-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.qw-cur-body b { font-size: 15px; }
+.qw-cur-body span { font-size: 13px; color: var(--text-faint); }
+.qw-cur-acts { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; flex: none; }
+.qw-sched { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 10px; }
+.qw-sched label { display: flex; flex-direction: column; gap: 5px; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--text-faint); }
+.qw-sched select, .qw-sched input { background: var(--surface); border: 1px solid var(--line);
+  color: var(--text); border-radius: 10px; padding: 8px 10px; font-size: 13px; }
+.qw-note { font-size: 13px; color: var(--text-faint); margin-top: 14px; }
+
+/* ════════ CAPABILITY GRAPH ═══════════════════════════════════════════════
+   Rows, not tiles (law 2/3): a capability is a fact with a date, and the state
+   is carried by one accent on the left edge rather than a coloured box. */
+.cap-list { margin-top: 12px; }
+.cap-row { display: flex; align-items: baseline; gap: 14px; padding: 12px 0 12px 14px;
+  border-top: 1px solid var(--line); border-left: 2px solid transparent; }
+.cap-row:first-child { border-top: 0; }
+.cap-name { flex: 1; min-width: 0; font-size: 15px; color: var(--text); font-weight: 600; }
+.cap-meta { font-size: 13px; color: var(--text-faint); }
+.cap-state { font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text-faint); min-width: 108px; text-align: right; }
+.cap-proven { border-left-color: rgba(166,195,165,.55); }
+.cap-proven .cap-state { color: var(--accent-2); }
+.cap-expiring { border-left-color: rgba(200,164,93,.7); }
+.cap-expiring .cap-state { color: var(--accent); }
+.cap-lapsed { border-left-color: rgba(185,133,98,.8); }
+.cap-lapsed .cap-state { color: #d9a07c; }
+.cap-gap { border-left-color: rgba(231,237,227,.16); }
+@media (max-width: 640px) {
+  .cap-row { flex-wrap: wrap; gap: 4px 12px; }
+  .cap-state { min-width: 0; text-align: left; width: 100%; }
+}

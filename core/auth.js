@@ -1,4 +1,4 @@
-/* ============ EdenRise Academy — Firebase auth + per-profile cloud sync ============
+/* ============ Academy core — Firebase auth + per-profile cloud sync ============
    Loads the Firebase modular SDK from the gstatic CDN (no build step). Handles
    Google + email/password sign-in, stores each learner's state under users/{uid}
    in Firestore, and bridges to app.js via window.EdenApp / window.EdenCloud.        */
@@ -16,16 +16,20 @@ import {
   increment, arrayUnion, arrayRemove
 } from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
 
-/* Firebase project comes from the active brand (brandkit.js). Each white-label
-   company points at its OWN project; the founding EdenRise values are the fallback. */
+/* Firebase project comes from the active brand (brandkit.js). Each instance
+   points at its OWN project.
+
+   THE FALLBACK FAILS CLOSED — ON PURPOSE. In the founding repo this fell back
+   to EdenRise's live project with a real API key, so an instance whose
+   brand.js was missing or mistyped would silently read and write EdenRise's
+   Firestore, with EdenRise's staff as its superadmins. Cross-tenant leakage
+   should never be the default branch. A PLACEHOLDER key trips BACKEND_READY
+   below and the app runs in honest guest-only preview until a real project is
+   wired — which is also exactly the state a new client should ship in. */
 const firebaseConfig = (window.BRAND && window.BRAND.firebase) || {
-  apiKey: 'AIzaSyBt4pfWRLWUdAjVL8xoEoR7o4wFCjUCUjs',
-  authDomain: 'edenrise-academy.firebaseapp.com',
-  projectId: 'edenrise-academy',
-  storageBucket: 'edenrise-academy.firebasestorage.app',
-  messagingSenderId: '295112713200',
-  appId: '1:295112713200:web:4f3beb0324b9b995383335',
-  measurementId: 'G-SWLQKTVJQS'
+  apiKey: 'PLACEHOLDER_NOT_CONFIGURED',
+  authDomain: '', projectId: '', storageBucket: '',
+  messagingSenderId: '', appId: ''
 };
 
 /* A white-label brand ships with a PLACEHOLDER Firebase key until its own
@@ -57,9 +61,9 @@ if (BACKEND_READY) getRedirectResult(auth).catch(() => {});
    so the saved state is namespaced per brand (the founding brand keeps the
    legacy key). Auth mode is namespaced for the same reason: signing in to one
    academy was marking every other academy on the origin as signed in. */
-const BRAND_SLUG = (window.BRAND && window.BRAND.id) || 'edenrise';
-const KEY  = BRAND_SLUG === 'edenrise' ? 'edenrise-state-v2' : BRAND_SLUG + '-state-v2';
-const MODE = BRAND_SLUG === 'edenrise' ? 'eden-auth-mode' : BRAND_SLUG + '-auth-mode';   // 'firebase' | 'guest' | 'out'
+const BRAND_SLUG = (window.BRAND && window.BRAND.id) || 'app';
+const KEY  = BRAND_SLUG + '-state-v2';
+const MODE = (window.BRAND && window.BRAND.authModeKey) || (BRAND_SLUG + '-auth-mode');   // 'firebase' | 'guest' | 'out'
 const $ = s => document.querySelector(s);
 const T = k => (typeof window.t === 'function' ? window.t(k) : k);
 const isPT = () => (typeof S !== 'undefined' && S.lang === 'pt');
@@ -74,11 +78,11 @@ function showErr(msg) { const e = $('#authErr'); if (e) { e.textContent = msg ||
 /* ---------- state <-> Firestore ---------- */
 function localState() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
 /* ---- multi-tenant helpers ---- */
-const SUPERADMINS = (window.BRAND && window.BRAND.superadmins) || ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'];
+const SUPERADMINS = (window.BRAND && window.BRAND.superadmins) || [];   /* never inherit another tenant's admins */
 /* The founding tenant of THIS deployment = the active brand. On the EdenRise
    project that is 'edenrise'; on a white-label's own project (e.g. Belong) new
    learners must be stamped with THEIR company, not the founding brand's. */
-const BRAND_ID = (window.BRAND && window.BRAND.id) || 'edenrise';
+const BRAND_ID = (window.BRAND && window.BRAND.id) || 'app';
 const cid = () => ((localState().profile || {}).companyId) || BRAND_ID;
 const isSuperEmail = e => SUPERADMINS.includes((e || '').trim().toLowerCase());
 const metaDocId = c => (c || cid()) === 'edenrise' ? '__meta' : '__meta_' + (c || cid());

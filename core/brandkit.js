@@ -14,7 +14,7 @@
   const key =
        (override && REG[override] && override)
     || Object.keys(REG).find(k => (REG[k].hostnames || []).includes(host))
-    || (REG.edenrise ? 'edenrise' : Object.keys(REG)[0]);   /* default: founding brand */
+    || Object.keys(REG)[0];                       /* default: the only registered brand */
 
   const B = REG[key] || {};
   window.BRAND = B;

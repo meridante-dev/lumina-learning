@@ -15,7 +15,10 @@
  */
 (function () {
   'use strict';
-  var LF = 'https://landflow.edenrise.workers.dev';
+  /* the companion-app endpoint belongs to THIS instance. Hard-coded, every
+     stamped academy called the founding tenant's worker. Absent = feature off. */
+  var LF = (window.BRAND && window.BRAND.landflow) || '';
+  if (!LF) return;
   var TKEY = 'lf_token', QKEY = 'lf_queue';
 
   function tok() { try { return localStorage.getItem(TKEY); } catch (e) { return null; } }

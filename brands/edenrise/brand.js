@@ -32,6 +32,11 @@
     measurementId: 'G-SWLQKTVJQS'
   },
   superadmins: ['admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'],
+  /* Declared because the core no longer guesses either of these.
+     authModeKey preserves the key this deployment's learners already hold —
+     renaming it would sign every returning learner back out to the gate. */
+  authModeKey: 'eden-auth-mode',
+  landflow: 'https://landflow.edenrise.workers.dev',
   themeColor: '#0e140f',
   wordSub: 'Academy',     /* the small word under the logo name */
   /* REQ-L-003 — who supplied the content, printed on every proof document.

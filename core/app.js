@@ -7,11 +7,15 @@
    different brand's app, which then rendered a path of courses that do not
    exist. The founding brand keeps the legacy key so no live EdenRise learner
    loses local progress; every other brand gets its own. */
-const BRAND_SLUG = (window.BRAND && window.BRAND.id) || 'edenrise';
-const STATE_KEY = BRAND_SLUG === 'edenrise' ? 'edenrise-state-v2' : BRAND_SLUG + '-state-v2';
+const BRAND_SLUG = (window.BRAND && window.BRAND.id) || 'app';
+const STATE_KEY = BRAND_SLUG + '-state-v2';
 /* same reasoning for the sign-in flag: it decided whether the auth gate shows,
    so one academy's session was opening the gate on all of them */
-const MODE_KEY  = BRAND_SLUG === 'edenrise' ? 'eden-auth-mode' : BRAND_SLUG + '-auth-mode';
+/* Brand-declarable so an existing deployment keeps the key its learners
+   already carry. The founding instance's key was 'eden-auth-mode'; renaming
+   it in core would have shown every returning learner the sign-in gate — a
+   silent mass logout dressed as a cleanup. Default is <id>-auth-mode. */
+const MODE_KEY  = (window.BRAND && window.BRAND.authModeKey) || (BRAND_SLUG + '-auth-mode');
 let S;
 try { S = Object.assign({}, structuredClone(DEFAULT_STATE), JSON.parse(localStorage.getItem(STATE_KEY) || '{}')); }
 catch { S = structuredClone(DEFAULT_STATE); }
@@ -120,7 +124,7 @@ function ledgerAppend(type, data = {}) {
       if (type === 'pretest' && L.some(e => e.type === type && e.courseId === data.courseId)) return;
       const core = Object.assign({
         id: Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
-        brandId: BRAND.id || 'edenrise',
+        brandId: BRAND.id || 'app',
         type,
         at: new Date().toISOString(),
         prevHash: L.length ? L[L.length - 1].hash : 'genesis'
@@ -695,6 +699,7 @@ function renderHome() {
     <div class="stat"><div class="num">${Object.values(S.progress).filter(p => p.done).length + S.quizzesPassed}</div><div class="lbl">${t('skills_verified')}</div><div class="delta">${S.quizzesPassed ? `▲ ${S.quizzesPassed} ${t('from_quizzes')}` : t('no_data')}</div></div>
     <div class="stat"><div class="num">${avgQuizScore() != null ? avgQuizScore() + '%' : t('no_data')}</div><div class="lbl">${t('avg_score')}</div><div class="delta">${(S.quizScores || []).length ? (S.quizScores.length + ' ' + t('stats_quizzes')) : t('earn_first')}</div></div>
   </section>
+  ${quickWinsShelfHTML()}
   ${educatorsBandHTML()}
   ${railHTML(t('trending'), t('community_learning'), trending.map((c, i) => cardHTML(c, { rank: c.trending })))}
   ${railHTML(`${t('because_completed')} “${_lang() === 'pt' ? 'Solo Vivo' : 'Living Soil'}”`, t('ai_recommendations'), recs.map(c => cardHTML(c)))}
@@ -2936,7 +2941,7 @@ function paintTrends() {
     <div class="chart-card"><h3>Courses completed · last 4 weeks</h3><div class="bars sm">${bars(comps)}</div></div>`;
 }
 function studioTabsHTML() {
-  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['broadcasts', 'Broadcasts'], ['digests', 'Digests'], ['live', 'Live sessions'], ['company', 'Company'], ['settings', 'Settings']];
+  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['capabilities', 'Capabilities'], ['quickwins', 'Quick wins'], ['broadcasts', 'Broadcasts'], ['digests', 'Digests'], ['live', 'Live sessions'], ['company', 'Company'], ['settings', 'Settings']];
   if (isSuperAdmin()) tabs.push(['companies', 'Companies']);
   return `<div class="comm-pills studio-tabs">${tabs.map(([id, label]) =>
     `<button class="ch-item ${adminTab === id ? 'active' : ''}" data-action="admin-tab" data-tab="${id}"><span>${label}</span></button>`).join('')}</div>`;
@@ -3611,7 +3616,7 @@ function adminSettingsHTML() {
 }
 
 function renderAdmin() {
-  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, broadcasts: adminBroadcastsHTML, digests: adminDigestsHTML, live: adminLiveHTML, company: adminCompanyHTML, companies: adminCompaniesHTML, settings: adminSettingsHTML };
+  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, capabilities: adminCapabilitiesHTML, quickwins: adminQuickWinsHTML, broadcasts: adminBroadcastsHTML, digests: adminDigestsHTML, live: adminLiveHTML, company: adminCompanyHTML, companies: adminCompaniesHTML, settings: adminSettingsHTML };
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">${brandName()} Studio</h1>
     <p class="page-sub">The back office — people, content, broadcasts and the live schedule in one place.</p>
@@ -3705,6 +3710,7 @@ function renderProgress(embedded) {
       <p class="sect-sub sub-auto">${t('story_sub')}</p>
       <div id="storyBody">${S.learnStory && S.learnStory.text && S.learnStory.lang === S.lang ? `<p class="story-text">${esc(S.learnStory.text)}</p><button class="link-quiet" data-action="story-gen">${t('story_refresh')}</button>` : `<button class="btn btn-glass btn-sm" data-action="story-gen">${t('story_btn')}</button>`}</div>
     </div>
+    ${capabilitiesPanelHTML()}
     ${transferPanelHTML()}
     ${verifiedPanelHTML()}
     ${embedded ? '' : compliancePanelHTML()}
@@ -5550,13 +5556,373 @@ function openEducator(id) {
         <div class="edu-rl">${esc(eduField(e.role))}${e.external ? ` &middot; ${t('edu_external')}` : ''}</div>
       </div></div>
     ${eduField(e.line) ? `<p class="edu-line">${esc(eduField(e.line))}</p>` : ''}
+    ${(e.credentials || []).length ? `<ul class="edu-creds">${e.credentials.map(c => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
     ${eduField(e.why) ? `<blockquote class="edu-why">${esc(eduField(e.why))}</blockquote>` : ''}
+    ${attributionHTML(e)}
+    ${e.profileUrl ? `<a class="edu-more" href="${esc(e.profileUrl)}" target="_blank" rel="noopener noreferrer">${t('edu_learn_more')} &#8599;</a>` : ''}
     <div class="edu-sheet-list">${list.map(c => `<button class="module-row" data-action="edu-goto" data-id="${c.id}">
       <div class="m-title">${esc(ctitle(c))}</div>
       <span class="m-dur">${fmtMins(courseMins(c))}</span></button>`).join('')}</div>
   </div>`;
   document.body.appendChild(ov);
   ledgerAppend('educator_open', { educator: id, courses: list.length });
+}
+
+/* A quick win plays like a lesson but ends like an invitation: the whole point
+   is the handoff to the course behind it. It writes quickwin_played to the
+   ledger and NOTHING to the training log — thirty seconds is not an hour. */
+function openQuickWin(q) {
+  const d = qwDeeper(q), e = q.educator ? Object.assign({ id: q.educator }, EDU_ALL()[q.educator] || {}) : null;
+  document.querySelectorAll('#qwModal').forEach(x => x.remove());
+  const ov = document.createElement('div');
+  ov.className = 'take-overlay open'; ov.id = 'qwModal';
+  ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
+  const m = q.media || {};
+  ov.innerHTML = `<div class="take-card qw-sheet">
+    <button class="modal-x" data-action="qw-close" aria-label="Close">&#10005;</button>
+    <div class="qw-secs">${q.seconds || 30}s${q.theme ? ` &middot; ${esc(q.theme)}` : ''}</div>
+    <h3>${esc(qwField(q.title))}</h3>
+    ${m.type === 'vimeo' ? `<div class="qw-video"><iframe src="https://player.vimeo.com/video/${esc(m.id)}?${m.h ? 'h=' + esc(m.h) + '&' : ''}title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`
+      : m.type === 'youtube' ? `<div class="qw-video"><iframe src="https://www.youtube-nocookie.com/embed/${esc(m.id)}?rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`
+      : `<p class="qw-soon">${t('coming_soon')}</p>`}
+    <p class="qw-line">${esc(qwField(q.line))}</p>
+    ${e && e.name ? `<button class="edu-byline" data-action="edu-open" data-edu="${e.id}">${eduAvatarHTML(e, 'xs')}<span class="edu-nm">${esc(e.name)}</span></button>` : ''}
+    ${attributionHTML(e || {}, sourcesOf(q))}
+    ${d ? `<div class="qw-next">
+        <div class="ob-eyebrow">${d.done ? t('qw_deeper_done') : d.started ? t('qw_deeper_resume') : t('qw_deeper')}</div>
+        <button class="btn btn-primary btn-sm" data-action="qw-goto" data-id="${d.course.id}">${esc(ctitle(d.course))}</button>
+      </div>` : ''}
+  </div>`;
+  document.body.appendChild(ov);
+  ledgerAppend('quickwin_played', { id: q.id, theme: q.theme || null, deeper: q.deeper || null });
+}
+
+/* ===== CURATION CONSOLE — the tenant's menu, in the tenant's words ==========
+   A hundred clips are built; a client approves the ones that sound like them.
+   Pending is the default state and nothing drips from pending, so a clip
+   reaches a team only because someone said yes — never because nobody said no.
+
+   The drip is scheduled here too: cadence, channel and hour. The channel list
+   is honest about what is wired — a client that lives on WhatsApp is told the
+   truth about what it takes rather than shown a switch that does nothing. */
+function adminQuickWinsHTML() {
+  const st = qwState(), pend = qwPending(), ap = qwApproved(), all = QW_ALL();
+  if (!all.length) return `<section class="admin-section"><h2>${t('qw_h')}</h2>
+    <p class="page-sub">${t('qw_none')}</p></section>`;
+  const card = (q, approved) => {
+    const d = qwDeeper(q);
+    return `<div class="qw-cur ${approved ? 'on' : ''}">
+      <div class="qw-cur-body">
+        <div class="qw-secs">${q.seconds || 30}s${q.theme ? ` &middot; ${esc(q.theme)}` : ''}</div>
+        <b>${esc(qwField(q.title))}</b>
+        <span>${esc(qwField(q.line))}</span>
+        ${d ? `<span class="qw-deeper">${t('qw_opens_into')} ${esc(ctitle(d.course))}</span>`
+             : `<span class="qw-nodeep">${t('qw_no_deeper')}</span>`}
+      </div>
+      <div class="qw-cur-acts">
+        <button class="btn btn-glass btn-sm" data-action="qw-approve" data-qw="${q.id}">${t('qw_yes')}</button>
+        <button class="link-quiet" data-action="qw-reject" data-qw="${q.id}">${t('qw_no')}</button>
+      </div></div>`;
+  };
+  const sch = st.schedule || {};
+  return `<section class="admin-section">
+    <h2>${t('qw_h')}</h2>
+    <p class="page-sub">${ap.length} ${t('qw_approved_of')} ${all.length}</p>
+
+    <div class="ob-eyebrow" style="margin-top:20px;">${t('qw_drip')}</div>
+    <div class="qw-sched">
+      <label>${t('qw_cadence')}
+        <select data-action="qw-sched" data-k="cadence">
+          ${['off','daily','2d','weekly'].map(v => `<option value="${v}"${(sch.cadence || 'off') === v ? ' selected' : ''}>${t('qw_c_' + v)}</option>`).join('')}
+        </select></label>
+      <label>${t('qw_channel')}
+        <select data-action="qw-sched" data-k="channel">
+          ${['email','telegram','whatsapp'].map(v => `<option value="${v}"${(sch.channel || 'email') === v ? ' selected' : ''}>${t('qw_ch_' + v)}</option>`).join('')}
+        </select></label>
+      <label>${t('qw_at')}
+        <input type="time" value="${esc(sch.at || '08:00')}" data-action="qw-sched" data-k="at"></label>
+    </div>
+    ${sch.channel === 'whatsapp' ? `<p class="qw-note">${t('qw_wa_note')}</p>` : ''}
+    ${(() => { const n = qwNext(); return n
+      ? `<p class="qw-note">${t('qw_next_up')} <b>${esc(qwField(n.title))}</b>
+           <button class="link-quiet" data-action="qw-send-now" data-qw="${n.id}">${t('qw_send_now')}</button></p>`
+      : `<p class="qw-note">${t('qw_nothing_queued')}</p>`; })()}
+
+    ${pend.length ? `<div class="ob-eyebrow" style="margin-top:24px;">${t('qw_to_review')} (${pend.length})</div>
+      <div class="qw-grid">${pend.map(q => card(q, false)).join('')}</div>` : ''}
+    ${ap.length ? `<div class="ob-eyebrow" style="margin-top:24px;">${t('qw_in_rotation')} (${ap.length})</div>
+      <div class="qw-grid">${ap.map(q => card(q, true)).join('')}</div>` : ''}
+  </section>`;
+}
+
+/* ===== CAPABILITY GRAPH =====================================================
+   The shift the category made, and the one this platform was already storing
+   the data for without reading it: a CATALOGUE answers "what did they
+   complete"; a GRAPH answers "who can do what, on what evidence, and when does
+   it lapse". Completion is an event. Capability is a state that decays.
+
+   THREE RULES THAT KEEP IT HONEST:
+
+   1 · EVIDENCE-DERIVED, NEVER ASSERTED. A capability exists only because a
+       credited module proved it — no self-rating, no manager tick. Every entry
+       can name the modules and dates behind it, which is also what makes it
+       survivable in an audit.
+
+   2 · THE LEGAL GATE AND THE CAPABILITY GATE ARE DIFFERENT QUESTIONS, and
+       conflating them would be a real defect. `countable:false` means a module
+       did not credit art. 131.º hours because it was not job-relevant to that
+       person — it does NOT mean nothing was learned. So the graph reads every
+       credited module, and the hours ledger keeps its own stricter filter.
+
+   3 · IT LAPSES. A capability proven by a course carrying recertMonths expires
+       on that clock; everything else ages. "Trained in 2023" is not "can do it
+       today", and a graph that cannot say so is a completion report wearing a
+       different hat. */
+const CAP_EXPIRING_DAYS = 45;
+
+function capabilityGraph(st) {
+  const state = st || S;
+  const log = (state.trainingLog || []).slice().sort((a, b) => a.at - b.at);
+  const out = {};
+  for (const e of log) {
+    const caps = (e.ev && e.ev.capabilities && e.ev.capabilities.length)
+      ? e.ev.capabilities
+      : (e.ev && e.ev.capability ? [e.ev.capability] : []);
+    if (!caps.length) continue;
+    const c = courseById(e.courseId);
+    const recert = c && c.recertMonths ? c.recertMonths : null;
+    for (const cap of caps) {
+      const g = out[cap] || (out[cap] = { cap, evidence: [], provenAt: 0, expiresAt: null, scores: [] });
+      g.evidence.push({ courseId: e.courseId, mod: e.mod, title: e.title, at: e.at, countable: e.countable !== false });
+      g.provenAt = Math.max(g.provenAt, e.at);
+      const chk = e.ev && e.ev.check;
+      if (chk && typeof chk.score === 'number' && typeof chk.total === 'number' && chk.total > 0) {
+        g.scores.push(chk.score / chk.total);
+      }
+      /* the LATEST proof governs. Taking the earliest looks more conservative
+         and is simply wrong: recertification exists so that re-proving resets
+         the clock, so a min() would tell someone who retrained yesterday that
+         they had lapsed, and no amount of retraining would ever clear it. A
+         capability lapses when ALL of its evidence has lapsed. */
+      if (recert) {
+        const exp = e.at + recert * 2629800000;
+        g.expiresAt = g.expiresAt == null ? exp : Math.max(g.expiresAt, exp);
+      }
+    }
+  }
+  const now = Date.now();
+  for (const g of Object.values(out)) {
+    g.modules = g.evidence.length;
+    g.score = g.scores.length ? g.scores.reduce((a, b) => a + b, 0) / g.scores.length : null;
+    g.ageDays = Math.floor((now - g.provenAt) / 86400000);
+    if (g.expiresAt == null) g.state = 'proven';
+    else if (g.expiresAt < now) g.state = 'lapsed';
+    else g.state = (g.expiresAt - now) / 86400000 <= CAP_EXPIRING_DAYS ? 'expiring' : 'proven';
+    g.daysLeft = g.expiresAt == null ? null : Math.ceil((g.expiresAt - now) / 86400000);
+    delete g.scores;
+  }
+  return out;
+}
+const capsHeld = (st) => Object.values(capabilityGraph(st)).filter(g => g.state !== 'lapsed').map(g => g.cap);
+
+/* what this person's ROLE asks for, minus what they can prove — the gap that
+   should drive assignment rather than a manager's memory */
+function capabilityGaps(st, pf) {
+  const need = roleCapabilities(pf || (st || S).profile);
+  if (!need.length) return [];
+  const have = capsHeld(st);
+  return need.filter(c => have.indexOf(c) < 0);
+}
+/* the course that would close a gap fastest — first course teaching it */
+const courseForCapability = cap => CATALOG.find(c => (skillsOf(c) || []).indexOf(cap) > -1) || null;
+
+/* REVERSE LOOKUP — the question an operations manager actually asks.
+   "Who can drive the truck?" is unanswerable from a completion report and
+   trivial from a graph. Reads the same member snapshots the cockpit uses. */
+function capabilityHolders(cap) {
+  const out = [];
+  for (const m of (adminMembers || [])) {
+    const g = capabilityGraph(m.state || {})[cap];
+    if (g) out.push({ uid: m.uid, name: (m.profile || {}).name || (m.profile || {}).username || (m.email || '—'), g });
+  }
+  return out.sort((a, b) => (a.g.state === b.g.state ? b.g.provenAt - a.g.provenAt
+    : (a.g.state === 'proven' ? -1 : b.g.state === 'proven' ? 1 : a.g.state === 'expiring' ? -1 : 1)));
+}
+/* every capability the org holds, with how thin the cover is — a capability one
+   person holds is a bus-factor risk, which is the other thing a graph can see */
+function orgCapabilities() {
+  const map = {};
+  for (const m of (adminMembers || [])) {
+    for (const g of Object.values(capabilityGraph(m.state || {}))) {
+      const o = map[g.cap] || (map[g.cap] = { cap: g.cap, proven: 0, expiring: 0, lapsed: 0 });
+      o[g.state]++;
+    }
+  }
+  return Object.values(map).sort((a, b) => (a.proven + a.expiring) - (b.proven + b.expiring));
+}
+
+/* learner-facing: what you can prove, and what your role still asks for.
+   Deliberately not a score or a level — the platform's whole claim is evidence,
+   so each row can name the modules and dates behind it. */
+function capabilitiesPanelHTML() {
+  const g = capabilityGraph(), caps = Object.values(g);
+  const gaps = capabilityGaps();
+  if (!caps.length && !gaps.length) return '';
+  const row = c => `<div class="cap-row cap-${c.state}">
+    <div class="cap-name">${esc(tcap(c.cap))}</div>
+    <div class="cap-meta">${c.modules} ${c.modules === 1 ? t('cap_module') : t('cap_modules')}${
+      c.score != null ? ` · ${Math.round(c.score * 100)}%` : ''}</div>
+    <div class="cap-state">${
+      c.state === 'lapsed'   ? t('cap_lapsed')
+      : c.state === 'expiring' ? `${t('cap_expires_in')} ${c.daysLeft}d`
+      : c.expiresAt          ? `${t('cap_valid')} ${c.daysLeft}d`
+      : `${t('cap_proven')} ${fmtAgo(c.provenAt)}`}</div>
+  </div>`;
+  return `<section class="rail-section">
+    <div class="rail-head"><h2>${t('cap_h')}</h2></div>
+    ${caps.length ? `<div class="cap-list">${caps.sort((a, b) =>
+        (a.state === b.state ? b.provenAt - a.provenAt : a.state === 'lapsed' ? -1 : b.state === 'lapsed' ? 1 : 0))
+      .map(row).join('')}</div>` : `<p class="page-sub">${t('cap_none')}</p>`}
+    ${gaps.length ? `<div class="ob-eyebrow" style="margin-top:22px;">${t('cap_gaps')}</div>
+      <div class="cap-list">${gaps.map(cap => { const c = courseForCapability(cap);
+        return `<div class="cap-row cap-gap">
+          <div class="cap-name">${esc(tcap(cap))}</div>
+          <div class="cap-meta">${c ? esc(ctitle(c)) : t('cap_no_course')}</div>
+          <div class="cap-state">${c ? `<button class="link-quiet" data-action="goto" data-route="#/course/${c.id}">${t('cap_close_gap')}</button>` : ''}</div>
+        </div>`; }).join('')}</div>` : ''}
+  </section>`;
+}
+const tcap = k => { try { return t('skill_' + k) !== 'skill_' + k ? t('skill_' + k) : k; } catch (e) { return k; } }
+const fmtAgo = ts => { const d = Math.floor((Date.now() - ts) / 86400000);
+  return d < 1 ? t('cap_today') : d < 30 ? d + 'd' : Math.round(d / 30) + 'mo'; };
+
+/* manager-facing: the question a completion report cannot answer. */
+function adminCapabilitiesHTML() {
+  if (!adminMembers) return `<section class="admin-section"><h2>${t('cap_org_h')}</h2>
+    <p class="page-sub">${t('loading')}</p></section>`;
+  const org = orgCapabilities();
+  if (!org.length) return `<section class="admin-section"><h2>${t('cap_org_h')}</h2>
+    <p class="page-sub">${t('cap_org_none')}</p></section>`;
+  return `<section class="admin-section">
+    <h2>${t('cap_org_h')}</h2>
+    <p class="page-sub">${t('cap_org_sub')}</p>
+    <div class="cap-list">${org.map(o => {
+      const cover = o.proven + o.expiring;
+      return `<div class="cap-row ${cover === 0 ? 'cap-lapsed' : cover === 1 ? 'cap-expiring' : ''}">
+        <div class="cap-name">${esc(tcap(o.cap))}</div>
+        <div class="cap-meta">${cover === 1 ? t('cap_one_person') : cover === 0 ? t('cap_nobody') : cover + ' ' + t('cap_people')}</div>
+        <div class="cap-state">${o.lapsed ? `${o.lapsed} ${t('cap_lapsed').toLowerCase()}` : ''}
+          <button class="link-quiet" data-action="cap-who" data-cap="${esc(o.cap)}">${t('cap_who')}</button></div>
+      </div>`; }).join('')}</div>
+  </section>`;
+}
+function openCapabilityHolders(cap) {
+  const holders = capabilityHolders(cap);
+  document.querySelectorAll('#capModal').forEach(x => x.remove());
+  const ov = document.createElement('div');
+  ov.className = 'take-overlay open'; ov.id = 'capModal';
+  ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true');
+  ov.innerHTML = `<div class="take-card">
+    <button class="modal-x" data-action="cap-close" aria-label="Close">&#10005;</button>
+    <h3 style="font-family:var(--font-display);font-size:22px;margin:0 0 4px;">${esc(tcap(cap))}</h3>
+    <p class="page-sub">${holders.length} ${holders.length === 1 ? t('cap_holder') : t('cap_holders')}</p>
+    <div class="cap-list">${holders.length ? holders.map(h => `<div class="cap-row cap-${h.g.state}">
+      <div class="cap-name">${esc(h.name)}</div>
+      <div class="cap-meta">${h.g.modules} ${h.g.modules === 1 ? t('cap_module') : t('cap_modules')}</div>
+      <div class="cap-state">${h.g.state === 'lapsed' ? t('cap_lapsed')
+        : h.g.state === 'expiring' ? `${t('cap_expires_in')} ${h.g.daysLeft}d` : t('cap_proven')}</div>
+    </div>`).join('') : `<p class="page-sub">${t('cap_nobody')}</p>`}</div>
+  </div>`;
+  document.body.appendChild(ov);
+  ledgerAppend('capability_query', { capability: cap, holders: holders.length });
+}
+
+/* ===== ATTRIBUTION — a licence obligation, enforced ==========================
+   An academy's standing is rarely one person's: a named trainer, the body whose
+   models they teach under, and the published work a lesson leans on. Permission
+   to use a body's models is normally granted PROVIDED THE BODY IS NAMED, so the
+   attribution is a condition of use, not a credit.
+
+   Hence orgOf(): an educator whose `org` has no agreed licence string returns
+   NOTHING — the affiliation cannot be shown without the wording that makes
+   showing it lawful. Failing closed is the point; the alternative is an editor
+   eventually shipping the logo without the line.
+
+   It must also not overclaim. Naming a body says its MODELS are incorporated;
+   it must never read as though that body's people wrote the lesson. That string
+   lives in ORGS and is not editable per lesson, so the line cannot drift. */
+const ORG_ALL = () => (typeof ORGS === 'object' && ORGS) || {};
+function orgOf(e) {
+  const o = e && e.org && ORG_ALL()[e.org];
+  if (!o) return null;
+  const lic = eduField(o.licence);
+  if (!lic) return null;                 /* no agreed wording → do not display */
+  return Object.assign({ id: e.org, licenceText: lic }, o);
+}
+function sourcesOf(x) { return (x && Array.isArray(x.sources) && x.sources) || []; }
+function attributionHTML(e, extraSources) {
+  const o = orgOf(e), src = (extraSources || []).concat(sourcesOf(e));
+  if (!o && !src.length) return '';
+  return `<div class="attrib">
+    ${o ? `<div class="attrib-lic">${esc(o.licenceText)}${o.url
+        ? ` <a href="${esc(o.url)}" target="_blank" rel="noopener noreferrer">${esc(o.name)} &#8599;</a>` : ''}</div>` : ''}
+    ${src.length ? `<div class="attrib-src"><span class="attrib-lbl">${t('attrib_refs')}</span>${
+      src.map(x => `<span>${esc(x.name)}${x.work ? ' &mdash; ' + esc(x.work) : ''}</span>`).join('')}</div>` : ''}
+  </div>`;
+}
+
+/* ===== QUICK WINS ===========================================================
+   Thirty-second lessons, curated by the tenant and drip-fed to their team.
+
+   They are NOT courses and are not in CATALOG, so they cannot reach
+   creditTraining() at all. Deliberate: `kind:'howto'` is a flag someone could
+   flip, whereas a quick win is a different kind of object. Thirty seconds fails
+   both gates in LEGAL-40H-LINE.md (structure, job-relevance) and must never
+   appear in a training record.
+
+   CURATION is the tenant's, in their own words — the brief carried the client's
+   actual sentences ("it's a bit weird, it's not our culture" / "I like that,
+   that's my style"), so those are the two buttons. Default is PENDING, never
+   approved: nothing reaches a team's group because a menu item existed and
+   nobody said no. */
+const QW_ALL = () => (typeof QUICKWINS !== 'undefined' && Array.isArray(QUICKWINS) ? QUICKWINS : []);
+const qwById = id => QW_ALL().find(q => q.id === id) || null;
+const qwField = (v) => eduField(v);
+function qwState() { S.quickwins = S.quickwins || { approved: [], rejected: [], sent: [] }; return S.quickwins; }
+const qwApproved = () => QW_ALL().filter(q => qwState().approved.indexOf(q.id) > -1);
+const qwPending  = () => QW_ALL().filter(q => qwState().approved.indexOf(q.id) < 0 && qwState().rejected.indexOf(q.id) < 0);
+
+/* the drip: the next approved clip this audience has not had, wrapping when the
+   menu is exhausted so a schedule never silently stops */
+function qwNext() {
+  const ap = qwApproved(); if (!ap.length) return null;
+  const sent = qwState().sent || [];
+  const unsent = ap.filter(q => sent.indexOf(q.id) < 0);
+  return (unsent.length ? unsent : ap)[0] || null;
+}
+
+/* the pairing that makes a 30-second clip worth building: hook, then depth */
+function qwDeeper(q) {
+  const c = q && q.deeper && courseById(q.deeper);
+  if (!c) return null;
+  return { course: c, started: !!prog(c.id), done: isDone(c.id) };
+}
+function quickWinCardHTML(q) {
+  const d = qwDeeper(q), e = q.educator ? Object.assign({ id: q.educator }, EDU_ALL()[q.educator] || {}) : null;
+  return `<article class="qw-card" data-action="qw-open" data-qw="${q.id}">
+    <div class="qw-secs">${q.seconds || 30}s</div>
+    <h3>${esc(qwField(q.title))}</h3>
+    <p>${esc(qwField(q.line))}</p>
+    ${e && e.name ? `<div class="qw-by">${esc(e.name)}</div>` : ''}
+    ${d ? `<div class="qw-deeper">${d.done ? t('qw_deeper_done') : d.started ? t('qw_deeper_resume') : t('qw_deeper')} &middot; ${esc(ctitle(d.course))}</div>` : ''}
+  </article>`;
+}
+function quickWinsShelfHTML() {
+  const ap = qwApproved(); if (!ap.length) return '';
+  return `<section class="rail-section">
+    <div class="rail-head"><h2>${t('qw_h')}</h2></div>
+    <div class="rail-wrap"><div class="rail">${ap.slice(0, 12).map(quickWinCardHTML).join('')}</div></div>
+  </section>`;
 }
 
 /* ===== FORMATION vs HOW-TO (the Lykke split, 2026-08-06) ====================
@@ -6522,6 +6888,29 @@ document.addEventListener('click', e => {
     }
     case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
     case 'member-detail': openMemberDetail(el.dataset.uid); break;
+    case 'cap-who': openCapabilityHolders(el.dataset.cap); break;
+    case 'cap-close': { const v = $('#capModal'); if (v) v.remove(); break; }
+    case 'qw-approve': { const st = qwState(); const id = el.dataset.qw;
+      st.rejected = st.rejected.filter(x => x !== id);
+      if (st.approved.indexOf(id) < 0) st.approved.push(id);
+      save(); ledgerAppend('quickwin_curated', { id, verdict: 'approved' });
+      toast(t('qw_yes_done'), '\u2713'); render(); break; }
+    case 'qw-reject': { const st = qwState(); const id = el.dataset.qw;
+      st.approved = st.approved.filter(x => x !== id);
+      if (st.rejected.indexOf(id) < 0) st.rejected.push(id);
+      save(); ledgerAppend('quickwin_curated', { id, verdict: 'rejected' });
+      render(); break; }
+    case 'qw-sched': { const st = qwState(); st.schedule = st.schedule || {};
+      st.schedule[el.dataset.k] = el.value; save(); render(); break; }
+    case 'qw-send-now': { const q = qwById(el.dataset.qw); if (!q) break;
+      const st = qwState(); if ((st.sent || []).indexOf(q.id) < 0) (st.sent = st.sent || []).push(q.id);
+      save(); ledgerAppend('quickwin_sent', { id: q.id, via: 'manual' });
+      toast(t('qw_sent'), '\u2713'); render(); break; }
+    case 'qw-open': { const q = qwById(el.dataset.qw); if (q) openQuickWin(q); break; }
+    case 'qw-close': { const v = $('#qwModal'); if (v) v.remove(); break; }
+    case 'qw-goto': { const v = $('#qwModal'); if (v) v.remove();
+      ledgerAppend('quickwin_to_course', { course: el.dataset.id });
+      location.hash = '#/course/' + el.dataset.id; break; }
     case 'edu-open': openEducator(el.dataset.edu); break;
     case 'edu-close': { const ev = $('#eduModal'); if (ev) ev.remove(); break; }
     case 'edu-goto': { const ev = $('#eduModal'); if (ev) ev.remove(); location.hash = '#/course/' + el.dataset.id; break; }
