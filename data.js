@@ -152,6 +152,7 @@ const MAIL = {
 const _lang = () => (typeof S !== 'undefined' && S.lang) || 'en';
 const UI = {
   en: {
+    lang_fallback:'in English — Portuguese version coming',
     nav_home:'Home', nav_library:'Library', nav_paths:'Paths', nav_live:'Live', nav_progress:'Progress', nav_analytics:'Analytics', nav_admin:'Team', nav_me:'My learning', nav_settings:'Settings', nav_community:'Community',
     comm_title:'Community', comm_sub:'', comm_channels:'Community', comm_paths:'Learning paths', ch_intro:'Introductions', ch_general:'General', ch_wins:'Wins & harvests',
     comm_new:'Start a discussion', comm_title_ph:'Title — ask a question or start a topic', comm_body_ph:'Share your thoughts…', comm_msg_ph:'Write a message…', comm_post:'Post', comm_send:'Send', comm_reply:'Reply', comm_replies:'replies', comm_reply_one:'reply',
@@ -294,6 +295,7 @@ const UI = {
     auth_forgot:'Forgot password?', auth_reset_sent:'Reset link sent — check your inbox', auth_reset_need_email:'Type your email above first, then tap "Forgot password?" again.', auth_verify_sent:'Welcome! We sent a verification link to your email'
   },
   pt: {
+    lang_fallback:'em inglês — versão portuguesa a caminho',
     nav_home:'Início', nav_library:'Biblioteca', nav_paths:'Percursos', nav_live:'Ao Vivo', nav_progress:'Progresso', nav_analytics:'Análises', nav_admin:'Equipa', nav_me:'A minha aprendizagem', nav_settings:'Definições', nav_community:'Comunidade',
     comm_title:'Comunidade', comm_sub:'', comm_channels:'Comunidade', comm_paths:'Percursos', ch_intro:'Apresentações', ch_general:'Geral', ch_wins:'Conquistas',
     comm_new:'Iniciar uma discussão', comm_title_ph:'Título — faça uma pergunta ou inicie um tema', comm_body_ph:'Partilhe as suas ideias…', comm_msg_ph:'Escreva uma mensagem…', comm_post:'Publicar', comm_send:'Enviar', comm_reply:'Responder', comm_replies:'respostas', comm_reply_one:'resposta',

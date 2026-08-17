@@ -68,8 +68,11 @@ const coursePct = id => {
 };
 const isDone = id => !!(prog(id) && prog(id).done);
 const inPath = id => S.path.includes(id);
-const courseMins = c => c.moduleDurations ? c.moduleDurations.reduce((a, b) => a + (b || 12), 0) : c.modules.length * 12;
-const moduleDur = (c, i) => (c.moduleDurations && c.moduleDurations[i]) ? c.moduleDurations[i] + 'm' : '12m';
+const modDurs = c => (c && c['moduleDurations_' + _lang()]) || (c && c.moduleDurations) || null;
+/* the PT cut of a course can run minutes longer than the EN one, and the hours a
+   learner is credited must follow the video they actually watched */
+const courseMins = c => modDurs(c) ? c.modules.map((_, i) => (modDurs(c)[i] || (c.moduleDurations || [])[i] || 12)).reduce((a, b) => a + b, 0) : c.modules.length * 12;
+const moduleDur = (c, i) => { const d = modDurs(c); return (d && d[i]) ? d[i] + 'm' : ((c.moduleDurations || [])[i] ? c.moduleDurations[i] + 'm' : '12m'); };
 /* studio meta (admin-managed, loaded from Firestore courses/__meta) */
 let studioMeta = null;
 let heroIntroDecided = false;   /* hero entrance: one decision per page load, see renderNow */
@@ -4702,7 +4705,26 @@ function initMotion() {
 const playerEl = $('#player'), videoEl = $('#playerVideo');
 const simStage = $('#simStage'), simFill = $('#simFill');
 const vimeoWrap = $('#vimeoWrap'), soonStage = $('#soonStage');
-const modMedia = (c, i) => (c.moduleMedia && c.moduleMedia[i]) || null;
+/* ===== PER-LANGUAGE VIDEO ==================================================
+   A bilingual academy that plays English footage to a Portuguese reader is not
+   bilingual, it is translated chrome over a monolingual product. Where a course
+   has been recorded in both, `moduleMedia_pt` holds that cut and the reader's
+   language decides which one plays.
+
+   FALLBACK IS DISCLOSED, NOT SILENT. When a module exists in one language only
+   (Above the Line's "Science of Gratitude" is English-only today), the other
+   language falls back rather than showing an empty player — but the learner is
+   told the video is in another language. Silently serving English to someone who
+   chose Portuguese is the thing that makes people stop trusting the switch. */
+const modMedia = (c, i) => {
+  const byLang = c && c['moduleMedia_' + _lang()];
+  return (byLang && byLang[i]) || (c && c.moduleMedia && c.moduleMedia[i]) || null;
+};
+/* true when this module is only available in a language other than the reader's */
+const modLangFallback = (c, i) => {
+  const l = _lang(), byLang = c && c['moduleMedia_' + l];
+  return !!(byLang && !byLang[i] && c.moduleMedia && c.moduleMedia[i]);
+};
 /* A course "has real content" when its modules carry actual media — Vimeo or
    YouTube ids the client filmed — rather than falling through to the shared
    sample clips. The hero must lead with one of those: a billboard for a course
@@ -4849,6 +4871,8 @@ function openPlayer(courseId, mod, startAt) {
   $('#playerSub').textContent = `${t('module')} ${mod + 1} ${t('of')} ${c.modules.length} · ${cmods(c)[mod]}`;
   const pg = $('#playerGoal'); if (pg) { const goal = (takeawaysFor(c, mod) || [])[0] || ''; pg.textContent = goal ? ` ${t('lesson_goal')}: ${goal}` : ''; }
   const pe = $('#playerEduStrip'); if (pe) pe.innerHTML = eduStripHTML(c, mod);
+  const pg2 = $('#playerSub');
+  if (pg2 && modLangFallback(c, mod)) pg2.textContent += ' · ' + t('lang_fallback');
   $('#playerPills').innerHTML = c.modules.map((m, i) => {
     const p = prog(courseId);
     const mm = modMedia(c, i);

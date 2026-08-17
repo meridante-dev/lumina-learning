@@ -16,6 +16,22 @@ const CATALOG = [
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
     modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Total Responsibility', "Don't Assume, Clarify", 'Benchmarking Excellence', 'Attention to Detail', 'Lifelong Learner', 'The Science of Gratitude'],
     moduleDurations: [4, 4, 6, 6, 6, 5, 5, 5],   /* real Vimeo lengths: 4:09 4:04 5:40 5:40 5:35 5:29 5:21 5:28 */
+    /* The Portuguese cut, from the "Approved PT" Vimeo folder. The academy plays
+       whichever matches the reader's language (modMedia in core/app.js).
+       Module 8 has no PT recording yet — it falls back to English WITH a notice,
+       because silently serving English to someone who chose Portuguese is what
+       makes people stop trusting the language switch. */
+    moduleMedia_pt: [
+      { type: 'vimeo', id: '1206810959' },   /* 1. Acima da Linha, Abaixo da Linha */
+      { type: 'vimeo', id: '1206811136' },   /* 2. Não Há Fracasso, Só Feedback */
+      { type: 'vimeo', id: '1217937969' },   /* 3. Responsabilidade Total */
+      { type: 'vimeo', id: '1217938258' },   /* 4. Comunicação — Esclareça */
+      { type: 'vimeo', id: '1217938100' },   /* 5. Benchmark de Excelência */
+      { type: 'vimeo', id: '1217937799' },   /* 6. Atenção ao Detalhe */
+      { type: 'vimeo', id: '1217939147' }    /* 7. Seja Aprendiz */
+      /* 8. A Ciência da Gratidão — not recorded in PT yet */
+    ],
+    moduleDurations_pt: [5, 4, 6, 6, 6, 6, 6],   /* real: 5:06 4:29 6:19 6:20 6:19 5:39 5:48 */
     moduleMedia: [
       { type: 'vimeo', id: '1217932399' },   /* 1. Above the Line, Below the Line */
       { type: 'vimeo', id: '1217936795' },   /* 2. No Failure, Only Feedback */
@@ -360,7 +376,7 @@ const COURSE_PT = {
     'Para Além do Medo · Introdução', 'Para Além do Medo · Animação', 'Para Além do Medo · Desmontar e Sintetizar',
     'Corpo, Alma e Espírito · Introdução', 'Corpo, Alma e Espírito · Análise Profunda'
   ] },
-  'land-team-journey': { title:'Acima da Linha', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Atenção ao Detalhe','Responsabilidade Total','Seja um Aprendiz para a Vida','Não Presuma, Esclareça','Benchmark de Excelência'] },
+  'land-team-journey': { title:'Acima da Linha', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Responsabilidade Total','Comunicação — Esclareça','Benchmark de Excelência','Atenção ao Detalhe','Seja Aprendiz','A Ciência da Gratidão'] },
   'land-literacy': { title:'Ler a Terra', desc:'Antes de mudar uma paisagem, aprenda a lê-la. Declive, água, solo, sol e sucessão — a literacia com que começa todo o ato de zeladoria.', modules:['Ficar quieto: como observar','Ler o declive e a água','O solo ao toque e à vista','Sol, sombra e exposição','Sucessão e o que a terra quer','Mapear o seu terreno'] },
   'living-soil': { title:'Solo Vivo', desc:'O solo não é terra morta — é uma comunidade viva. Conheça o microbioma sob os seus pés e as práticas que o alimentam em vez de o esgotar.', modules:['A teia alimentar do solo','Porque deixámos de lavrar','Compostagem como inoculante','Culturas de cobertura e raízes vivas','Cobertura morta e solo nu','Ler uma análise de solo'] },
   'water-cycles': { title:'A Água e a Paisagem Viva', desc:'Domine o pequeno ciclo da água de que a sua terra depende. Este programa adapta-se ao seu terreno — a IA da EdenRise reordena cada módulo conforme o que já sabe.', modules:['O pequeno ciclo da água','Para onde vai a sua água','Abrandar, espalhar, infiltrar','Valas de infiltração em curva de nível','Charcos e represas','Reidratar terra seca','Águas cinzentas, com cuidado','Proteger uma horta da seca','Ler uma bacia','Nascentes e olheiros','Medir a infiltração','Avaliação final'] },
