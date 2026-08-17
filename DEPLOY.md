@@ -25,5 +25,6 @@ When the build work is done, deploy like this:
 
 ## Security note (public repo)
 - Never commit AI provider keys — the team Gemini key lives ONLY in Firestore `config/org` (written via Admin → Settings or the Firestore REST API).
+- **Firestore rules cannot be compile-checked on this machine.** `firebase emulators:exec` needs a Java runtime that is not installed, so there is no local syntax check. `firebase deploy --only firestore:rules` validates before applying, which means a syntax error fails safe rather than shipping — but it also means the deploy command IS the first check. `node test/run.mjs` covers the *semantics* (both admin predicates requiring `realIdentity()`, and events/anchors/proofs staying create-only), not the syntax.
 - The Firebase web config in auth.js is public by design; security lives in `firestore.rules` (deploy with `firebase deploy --only firestore:rules --project edenrise-academy` — the `--project` flag is required, a stale global alias points elsewhere).
 - `MAIL.secret` in data.js is public by design (client-only app); the real wall is the **recipient allowlist inside the Apps Script** (`ALLOWED_DOMAINS`/`ALLOWED_EXTRA` in apps-script/nudge-mailer.gs) — keep it in place when redeploying the script.
