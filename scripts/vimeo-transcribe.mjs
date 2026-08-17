@@ -47,7 +47,7 @@ const titles = (block.match(/modules: \[([\s\S]*?)\]/)[1]
    what the PT presenter actually said, including every timestamp. */
 const arrayFor = key => {
   const m = block.match(new RegExp(key + ': \\[([\\s\\S]*?)\\n    \\]'));
-  return m ? [...m[1].matchAll(/id: '(\\d{9,10})'/g)].map(x => x[1]) : [];
+  return m ? [...m[1].matchAll(/id: '(\d{9,10})'/g)].map(x => x[1]) : [];
 };
 const media = LANG ? arrayFor('moduleMedia_' + LANG) : arrayFor('moduleMedia');
 if (!media.length) { console.error(`✗ no moduleMedia${LANG ? '_' + LANG : ''} for ${courseId}`); process.exit(1); }
