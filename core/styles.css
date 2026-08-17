@@ -4254,3 +4254,213 @@ nav.topnav { gap: 16px; padding-top: 12px; padding-bottom: 12px; }
   .cap-row { flex-wrap: wrap; gap: 4px 12px; }
   .cap-state { min-width: 0; text-align: left; width: 100%; }
 }
+
+/* ════════ THE REEL FEED ══════════════════════════════════════════════════
+   Phone-shaped everywhere: a 9:16 column centred on black, so one set of rules
+   serves a phone and a desktop and the format never lies about itself.
+
+   Immersive means immersive — `body.reels-open` removes the app header and the
+   tutor button, which in the first build sat ON TOP of the feed and dropped the
+   FAB onto the primary CTA.
+
+   Sizes stay on the scale (11/13/15/18/22/30), gold stays scarce, and the only
+   containers are the ones carrying meaning (law 3, law 5, law 8). */
+/* The app chrome is `nav.topnav`, not <header> — the first guess hid nothing
+   and left the burger sitting on top of the feed's own exit button. */
+body.reels-open .topnav,
+body.reels-open header,
+body.reels-open .ai-fab,
+body.reels-open .bottom-nav { display: none !important; }
+body.reels-open { overflow: hidden; }
+
+.reel-wrap { position: fixed; inset: 0; z-index: 260; background: #000; }
+.reel-feed {
+  position: absolute; inset: 0;
+  overflow-y: scroll; scroll-snap-type: y mandatory;
+  scrollbar-width: none; overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.reel-feed::-webkit-scrollbar { display: none; }
+.reel {
+  position: relative; height: 100dvh; width: 100%;
+  scroll-snap-align: start; scroll-snap-stop: always;
+  display: flex; align-items: flex-end; justify-content: center; overflow: hidden;
+}
+
+/* ---- the plate: poster first, media on top when mounted ---- */
+.reel-poster, .reel-media {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: min(100vw, calc(100dvh * 9 / 16)); height: 100%;
+}
+.reel-poster { display: grid; place-items: center; padding: 14vh 9vw;
+  background-size: cover; background-position: center; }
+.reel-media:empty { display: none; }
+.reel-vid { width: 100%; height: 100%; object-fit: cover; border: 0; display: block; }
+.reel-hook {
+  font-family: var(--font-display); font-size: 30px; line-height: 1.22;
+  color: var(--ivory); text-align: center; text-wrap: balance;
+  text-shadow: 0 2px 30px rgba(0,0,0,.4);
+}
+.reel-poster.t1 { background-color: #24331f; background-image: linear-gradient(168deg,#4a5c46,#141d12); }
+.reel-poster.t2 { background-color: #2c231a; background-image: linear-gradient(168deg,#6b5a45,#1d1710); }
+.reel-poster.t3 { background-color: #1b2a2f; background-image: linear-gradient(168deg,#4a6670,#101a1e); }
+.reel-poster.t4 { background-color: #33221a; background-image: linear-gradient(168deg,#7d5f4c,#21150f); }
+.reel-poster.t5 { background-color: #23301f; background-image: linear-gradient(168deg,#5f7358,#131c11); }
+.reel-poster.has-art .reel-hook { display: none; }
+
+.reel-scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,.88) 0%, rgba(0,0,0,.5) 26%, rgba(0,0,0,.06) 56%, transparent 72%);
+}
+
+/* ---- top: where you are, and how to leave ---- */
+.reel-top {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 6;
+  width: min(100vw, calc(100dvh * 9 / 16));
+  padding: calc(12px + env(safe-area-inset-top,0px)) 16px 0;
+  display: flex; align-items: center; gap: 14px;
+}
+.reel-x {
+  flex: none; width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  background: rgba(0,0,0,.34); border: 1px solid rgba(255,255,255,.14);
+  color: #fff; font-size: 16px; backdrop-filter: blur(10px);
+}
+.reel-prog { flex: 1; display: flex; gap: 3px; }
+.reel-prog span {
+  flex: 1; height: 2px; border-radius: 2px; background: rgba(255,255,255,.22);
+  transition: background .35s ease;
+}
+.reel-prog span.on { background: rgba(255,255,255,.85); }
+
+/* ---- copy: one column, generous, never fighting the video ---- */
+.reel-copy {
+  position: relative; z-index: 2;
+  width: min(100vw, calc(100dvh * 9 / 16));
+  padding: 0 20px calc(34px + env(safe-area-inset-bottom,0px));
+  display: flex; flex-direction: column; align-items: flex-start; gap: 9px;
+}
+.reel-copy-mid { justify-content: center; height: 100%; padding-bottom: 0; }
+.reel-copy h2 { font-family: var(--font-display); font-size: 22px; line-height: 1.24;
+  margin: 0; color: #fff; text-wrap: balance; }
+.reel-copy p { font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.8); margin: 0; }
+.reel-meta { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.58); }
+.reel-ph { font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+  color: #d9c08c; border: 1px solid rgba(217,192,140,.38); border-radius: 99px; padding: 3px 10px; }
+/* the handoff: a line, not a slab */
+.reel-deeper {
+  margin-top: 8px; padding: 0; background: none; border: 0; cursor: pointer;
+  display: inline-flex; align-items: baseline; gap: 8px; text-align: left;
+  color: #fff; font-size: 15px;
+}
+.reel-deeper .rd-verb { color: rgba(255,255,255,.62); }
+.reel-deeper .rd-name { font-weight: 600; border-bottom: 1px solid rgba(255,255,255,.28);
+  padding-bottom: 1px; transition: border-color .2s; }
+.reel-deeper .rd-arrow { color: rgba(255,255,255,.62); transition: transform .2s var(--lift); }
+.reel-deeper:hover .rd-name { border-bottom-color: rgba(255,255,255,.7); }
+.reel-deeper:hover .rd-arrow { transform: translateX(3px); }
+.reel-copy .edu-byline { margin: 2px 0 0; }
+.reel-copy .edu-nm { color: #fff; }
+
+/* the copy settles as the slide lands — the only motion in the feed */
+.reel-copy > * { opacity: 0; transform: translateY(9px); }
+.reel.current .reel-copy > * { opacity: 1; transform: none;
+  transition: opacity .42s var(--lift), transform .42s var(--lift); }
+.reel.current .reel-copy > *:nth-child(2) { transition-delay: .04s; }
+.reel.current .reel-copy > *:nth-child(3) { transition-delay: .08s; }
+.reel.current .reel-copy > *:nth-child(4) { transition-delay: .12s; }
+.reel.current .reel-copy > *:nth-child(5) { transition-delay: .16s; }
+
+/* ---- actions ---- */
+.reel-rail {
+  position: absolute; right: max(14px, calc((100vw - (100dvh * 9 / 16)) / 2 + 14px));
+  bottom: 30vh; z-index: 3; display: flex; flex-direction: column; gap: 14px;
+}
+.reel-act {
+  width: 42px; height: 42px; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+  background: rgba(0,0,0,.34); border: 1px solid rgba(255,255,255,.14);
+  color: #fff; backdrop-filter: blur(10px); transition: transform .2s var(--lift), color .2s;
+}
+.reel-act:active { transform: scale(.92); }
+.reel-act.on { color: var(--accent); border-color: rgba(200,164,93,.55); }
+.reel-feed:not(.sound) .reel-act .wave { opacity: 0; }
+.reel-feed.sound .reel-act .slash { opacity: 0; }
+
+.reel-pause { background: radial-gradient(ellipse at 50% 38%, #1d2c20, #050705 72%); }
+.reel-pause .reel-copy-mid { align-items: flex-start; gap: 12px; }
+
+/* ---- first-run affordance ----
+   It lived bottom-centre and landed on top of the handoff line. Left-aligned
+   copy and a centred hint will always fight for the same corner, so the hint
+   moves to the action rail, where nothing else sits, and drops its label — the
+   chevron says it, and one nudging arrow is less noise than two words. */
+.reel-hint {
+  position: absolute; z-index: 5; pointer-events: none;
+  right: max(14px, calc((100vw - (100dvh * 9 / 16)) / 2 + 14px));
+  bottom: calc(30vh - 42px);
+  width: 42px; display: grid; place-items: center;
+  color: rgba(255,255,255,.55); transition: opacity .45s ease;
+}
+.reel-hint.gone { opacity: 0; }
+.reel-hint span {
+  width: 13px; height: 13px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg); animation: reelNudge 1.9s ease-in-out infinite;
+}
+.reel-hint.gone { opacity: 0; }
+.reel-hint span {
+  width: 15px; height: 15px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg); animation: reelNudge 1.9s ease-in-out infinite;
+}
+@keyframes reelNudge { 0%,100% { transform: rotate(45deg) translate(0,0); opacity: .5; }
+  50% { transform: rotate(45deg) translate(3px,3px); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-copy > *, .reel.current .reel-copy > * { opacity: 1; transform: none; transition: none; }
+  .reel-hint span { animation: none; }
+  .reel-feed { scroll-behavior: auto; }
+}
+
+/* ---- home tease ---- */
+.reel-chip { flex: 0 0 128px; scroll-snap-align: start; background: none; border: 0; padding: 0;
+  cursor: pointer; transition: transform .25s var(--lift); }
+.reel-chip:hover { transform: translateY(-3px); }
+.reel-chip-art { aspect-ratio: 9/16; border-radius: 14px; display: grid; place-items: center;
+  padding: 15px; overflow: hidden; }
+.reel-chip-art span { font-family: var(--font-display); font-size: 15px; line-height: 1.24;
+  color: var(--ivory); text-align: center; text-wrap: balance; }
+.reel-chip-art.t1 { background: linear-gradient(168deg,#4a5c46,#141d12); }
+.reel-chip-art.t2 { background: linear-gradient(168deg,#6b5a45,#1d1710); }
+.reel-chip-art.t3 { background: linear-gradient(168deg,#4a6670,#101a1e); }
+.reel-chip-art.t4 { background: linear-gradient(168deg,#7d5f4c,#21150f); }
+.reel-chip-art.t5 { background: linear-gradient(168deg,#5f7358,#131c11); }
+.reel-chip-meta { font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--text-faint); margin-top: 8px; text-align: center; }
+
+/* ---- the reel check: rises over the clip, never traps ---- */
+.rc {
+  position: absolute; left: 50%; bottom: 0; z-index: 7;
+  width: min(100vw, calc(100dvh * 9 / 16));
+  transform: translate(-50%, 100%); opacity: 0;
+  padding: 20px 20px calc(24px + env(safe-area-inset-bottom,0px));
+  background: linear-gradient(to top, rgba(6,8,6,.97), rgba(6,8,6,.9));
+  border-top: 1px solid rgba(231,237,227,.1);
+  transition: transform .34s var(--lift), opacity .34s var(--lift);
+}
+.rc.up { transform: translate(-50%, 0); opacity: 1; }
+.rc-q { font-family: var(--font-display); font-size: 18px; line-height: 1.35; color: #fff; }
+.rc-opts { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.rc-opt {
+  text-align: left; padding: 12px 14px; border-radius: 12px; cursor: pointer;
+  background: rgba(231,237,227,.06); border: 1px solid rgba(231,237,227,.12);
+  color: var(--text); font-size: 15px; line-height: 1.4;
+  transition: background .18s, border-color .18s;
+}
+.rc-opt:hover:not(:disabled) { background: rgba(231,237,227,.11); }
+.rc-opt:disabled { cursor: default; }
+.rc-opt.right { border-color: rgba(166,195,165,.65); background: rgba(166,195,165,.14); }
+.rc-opt.wrong { border-color: rgba(185,133,98,.6); background: rgba(185,133,98,.12); }
+.rc-why { font-size: 15px; line-height: 1.55; color: var(--text-dim); margin-top: 13px; }
+.rc-why b { color: var(--text); font-weight: 600; }
+.rc-skip { margin-top: 14px; padding: 0; background: none; border: 0; cursor: pointer;
+  font-size: 13px; color: var(--text-faint); }
+.rc-skip:hover { color: var(--text-dim); }
+@media (prefers-reduced-motion: reduce) { .rc { transition: none; } }

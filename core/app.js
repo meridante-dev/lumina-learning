@@ -68,11 +68,8 @@ const coursePct = id => {
 };
 const isDone = id => !!(prog(id) && prog(id).done);
 const inPath = id => S.path.includes(id);
-const modDurs = c => (c && c['moduleDurations_' + _lang()]) || (c && c.moduleDurations) || null;
-/* the PT cut of a course can run minutes longer than the EN one, and the hours a
-   learner is credited must follow the video they actually watched */
-const courseMins = c => modDurs(c) ? c.modules.map((_, i) => (modDurs(c)[i] || (c.moduleDurations || [])[i] || 12)).reduce((a, b) => a + b, 0) : c.modules.length * 12;
-const moduleDur = (c, i) => { const d = modDurs(c); return (d && d[i]) ? d[i] + 'm' : ((c.moduleDurations || [])[i] ? c.moduleDurations[i] + 'm' : '12m'); };
+const courseMins = c => c.moduleDurations ? c.moduleDurations.reduce((a, b) => a + (b || 12), 0) : c.modules.length * 12;
+const moduleDur = (c, i) => (c.moduleDurations && c.moduleDurations[i]) ? c.moduleDurations[i] + 'm' : '12m';
 /* studio meta (admin-managed, loaded from Firestore courses/__meta) */
 let studioMeta = null;
 let heroIntroDecided = false;   /* hero entrance: one decision per page load, see renderNow */
@@ -702,6 +699,16 @@ function renderHome() {
     <div class="stat"><div class="num">${Object.values(S.progress).filter(p => p.done).length + S.quizzesPassed}</div><div class="lbl">${t('skills_verified')}</div><div class="delta">${S.quizzesPassed ? `▲ ${S.quizzesPassed} ${t('from_quizzes')}` : t('no_data')}</div></div>
     <div class="stat"><div class="num">${avgQuizScore() != null ? avgQuizScore() + '%' : t('no_data')}</div><div class="lbl">${t('avg_score')}</div><div class="delta">${(S.quizScores || []).length ? (S.quizScores.length + ' ' + t('stats_quizzes')) : t('earn_first')}</div></div>
   </section>
+  ${reelsAll().length ? `<section class="rail-section reel-tease">
+    <div class="rail-head"><h2>${t('reel_h')}</h2>
+      <button class="see-all" data-action="goto" data-route="#/reels">${t('reel_open')}</button></div>
+    <div class="rail-wrap"><div class="rail">${reelsAll().slice(0, 8).map((r, i) => `
+      <button class="reel-chip" data-action="goto" data-route="#/reels">
+        <div class="reel-chip-art t${((r.theme || r.id).split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 5) + 1}">
+          <span>${esc(reelField(r.title))}</span></div>
+        <div class="reel-chip-meta">${r.seconds || 30}s</div>
+      </button>`).join('')}</div></div>
+  </section>` : ''}
   ${quickWinsShelfHTML()}
   ${educatorsBandHTML()}
   ${railHTML(t('trending'), t('community_learning'), trending.map((c, i) => cardHTML(c, { rank: c.trending })))}
@@ -2944,7 +2951,7 @@ function paintTrends() {
     <div class="chart-card"><h3>Courses completed · last 4 weeks</h3><div class="bars sm">${bars(comps)}</div></div>`;
 }
 function studioTabsHTML() {
-  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['capabilities', 'Capabilities'], ['quickwins', 'Quick wins'], ['broadcasts', 'Broadcasts'], ['digests', 'Digests'], ['live', 'Live sessions'], ['company', 'Company'], ['settings', 'Settings']];
+  const tabs = [['cockpit', 'People'], ['content', 'Content'], ['capabilities', 'Capabilities'], ['coverage', 'Checks'], ['quickwins', 'Quick wins'], ['broadcasts', 'Broadcasts'], ['digests', 'Digests'], ['live', 'Live sessions'], ['company', 'Company'], ['settings', 'Settings']];
   if (isSuperAdmin()) tabs.push(['companies', 'Companies']);
   return `<div class="comm-pills studio-tabs">${tabs.map(([id, label]) =>
     `<button class="ch-item ${adminTab === id ? 'active' : ''}" data-action="admin-tab" data-tab="${id}"><span>${label}</span></button>`).join('')}</div>`;
@@ -3619,7 +3626,7 @@ function adminSettingsHTML() {
 }
 
 function renderAdmin() {
-  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, capabilities: adminCapabilitiesHTML, quickwins: adminQuickWinsHTML, broadcasts: adminBroadcastsHTML, digests: adminDigestsHTML, live: adminLiveHTML, company: adminCompanyHTML, companies: adminCompaniesHTML, settings: adminSettingsHTML };
+  const bodies = { cockpit: adminCockpitHTML, content: adminContentHTML, capabilities: adminCapabilitiesHTML, coverage: adminCoverageHTML, quickwins: adminQuickWinsHTML, broadcasts: adminBroadcastsHTML, digests: adminDigestsHTML, live: adminLiveHTML, company: adminCompanyHTML, companies: adminCompaniesHTML, settings: adminSettingsHTML };
   return `<div class="page"><div class="page-pad">
     <h1 class="page-title">${brandName()} Studio</h1>
     <p class="page-sub">The back office — people, content, broadcasts and the live schedule in one place.</p>
@@ -4306,7 +4313,7 @@ function saveProfile() {
 }
 
 /* ---------- router ---------- */
-const routes = { me: renderMe, home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin, profile: renderProfile, community: renderCommunity };
+const routes = { reels: renderReels, me: renderMe, home: renderHome, library: renderLibrary, paths: renderPaths, live: renderLive, progress: renderProgress, analytics: renderAnalytics, admin: renderAdmin, profile: renderProfile, community: renderCommunity };
 /* a11y: make clickable non-native elements keyboard-operable */
 function makeFocusable(root) {
   (root || document).querySelectorAll('[data-action]').forEach(el => {
@@ -4401,6 +4408,7 @@ function renderNow() {
   armNavScroll();
   syncOverlayFocus();   /* backstop: never leave #app inert */
   armReveals();
+  if (route === 'reels') armReelFeed(); else document.body.classList.remove('reels-open');
   animateCounters();
 }
 /* covers download only as their cards approach the viewport (~1.4MB saved on Library) */
@@ -4705,26 +4713,7 @@ function initMotion() {
 const playerEl = $('#player'), videoEl = $('#playerVideo');
 const simStage = $('#simStage'), simFill = $('#simFill');
 const vimeoWrap = $('#vimeoWrap'), soonStage = $('#soonStage');
-/* ===== PER-LANGUAGE VIDEO ==================================================
-   A bilingual academy that plays English footage to a Portuguese reader is not
-   bilingual, it is translated chrome over a monolingual product. Where a course
-   has been recorded in both, `moduleMedia_pt` holds that cut and the reader's
-   language decides which one plays.
-
-   FALLBACK IS DISCLOSED, NOT SILENT. When a module exists in one language only
-   (Above the Line's "Science of Gratitude" is English-only today), the other
-   language falls back rather than showing an empty player — but the learner is
-   told the video is in another language. Silently serving English to someone who
-   chose Portuguese is the thing that makes people stop trusting the switch. */
-const modMedia = (c, i) => {
-  const byLang = c && c['moduleMedia_' + _lang()];
-  return (byLang && byLang[i]) || (c && c.moduleMedia && c.moduleMedia[i]) || null;
-};
-/* true when this module is only available in a language other than the reader's */
-const modLangFallback = (c, i) => {
-  const l = _lang(), byLang = c && c['moduleMedia_' + l];
-  return !!(byLang && !byLang[i] && c.moduleMedia && c.moduleMedia[i]);
-};
+const modMedia = (c, i) => (c.moduleMedia && c.moduleMedia[i]) || null;
 /* A course "has real content" when its modules carry actual media — Vimeo or
    YouTube ids the client filmed — rather than falling through to the shared
    sample clips. The hero must lead with one of those: a billboard for a course
@@ -4871,8 +4860,6 @@ function openPlayer(courseId, mod, startAt) {
   $('#playerSub').textContent = `${t('module')} ${mod + 1} ${t('of')} ${c.modules.length} · ${cmods(c)[mod]}`;
   const pg = $('#playerGoal'); if (pg) { const goal = (takeawaysFor(c, mod) || [])[0] || ''; pg.textContent = goal ? ` ${t('lesson_goal')}: ${goal}` : ''; }
   const pe = $('#playerEduStrip'); if (pe) pe.innerHTML = eduStripHTML(c, mod);
-  const pg2 = $('#playerSub');
-  if (pg2 && modLangFallback(c, mod)) pg2.textContent += ' · ' + t('lang_fallback');
   $('#playerPills').innerHTML = c.modules.map((m, i) => {
     const p = prog(courseId);
     const mm = modMedia(c, i);
@@ -5679,6 +5666,321 @@ function adminQuickWinsHTML() {
   </section>`;
 }
 
+/* ===== CHECK COVERAGE =======================================================
+   "Every video ends with a question" is a coverage claim, and a coverage claim
+   you cannot see is a coverage claim you do not have. This enumerates every
+   video in the instance — course modules and reels — and reports which have a
+   real, transcript-grounded question and which are falling back.
+
+   A module with no generated bank does not crash: showModuleCheck degrades to an
+   acknowledgment. That is the right failure, and also exactly the silence this
+   audit exists to break — an acknowledgment looks like a check to everyone
+   except the person who wrote it. */
+function checkCoverage() {
+  const rows = [];
+  for (const c of CATALOG) {
+    const bank = (typeof QUIZ_V2 === 'object' && QUIZ_V2[c.id] && QUIZ_V2[c.id].modules) || {};
+    (c.modules || []).forEach((title, mod) => {
+      const qs = bank[mod] || [];
+      const verified = qs.filter(q => (q.verified || q.corrected) && validQuestion(q)).length;
+      const malformed = qs.filter(q => !validQuestion(q)).length;
+      const soon = (modMedia(c, mod) || {}).type === 'soon';
+      rows.push({ kind: 'module', id: c.id + ':' + mod, label: ctitle(c) + ' · ' + (cmods(c)[mod] || title),
+        questions: qs.length, verified, soon,
+        malformed,
+        state: soon ? 'soon' : verified ? 'ok' : malformed ? 'malformed' : qs.length ? 'unverified' : 'none' });
+    });
+  }
+  for (const r of reelsAll()) {
+    const q = reelCheckOf(r);
+    const soon = (r.media || {}).type === 'soon';
+    rows.push({ kind: 'reel', id: r.id, label: reelField(r.title),
+      questions: q ? 1 : 0, verified: q && (q.verified || q.corrected) ? 1 : 0, soon,
+      malformed: r.check && !q ? 1 : 0,
+      state: r.check && !q ? 'malformed' : !q ? 'none' : (q.verified || q.corrected) ? 'ok' : 'unverified' });
+  }
+  return rows;
+}
+function adminCoverageHTML() {
+  const rows = checkCoverage();
+  if (!rows.length) return '';
+  const n = k => rows.filter(r => r.state === k).length;
+  const order = { malformed: 0, none: 1, unverified: 2, soon: 3, ok: 4 };
+  return `<section class="admin-section">
+    <h2>${t('cov_h')}</h2>
+    <p class="page-sub">${n('ok')}/${rows.length} ${t('cov_sub')}</p>
+    <div class="cap-list">${rows.sort((a, b) => order[a.state] - order[b.state]).map(r => `
+      <div class="cap-row ${r.state === 'ok' ? 'cap-proven' : (r.state === 'none' || r.state === 'malformed') ? 'cap-lapsed' : r.state === 'unverified' ? 'cap-expiring' : ''}">
+        <div class="cap-name">${esc(r.label)}</div>
+        <div class="cap-meta">${r.kind === 'reel' ? t('cov_reel') : t('cov_module')}</div>
+        <div class="cap-state">${
+          r.state === 'ok' ? t('cov_ok')
+          : r.state === 'unverified' ? t('cov_unverified')
+          : r.state === 'malformed' ? t('cov_malformed')
+          : r.state === 'soon' ? t('coming_soon')
+          : t('cov_none')}</div>
+      </div>`).join('')}</div>
+  </section>`;
+}
+
+/* ===== THE REEL CHECK — retrieval, not assessment ===========================
+   Every video ends with one question. Not a quiz — ONE question, drawn from what
+   was actually said, asked the moment the clip finishes.
+
+   WHY ONE. Retrieval practice is the best-evidenced way to make something stick,
+   and its power is in the ACT of recalling, not in the number of items. A
+   20-second lesson has one idea; asking three questions about it manufactures
+   two bad ones. The second exposure comes from spaced repetition instead —
+   the same question, days later — which is where the durability actually is.
+
+   WHY IT IS NOT AN ASSESSMENT. A reel check credits no hours and gates nothing.
+   Getting it wrong schedules the question sooner; it is a scheduling event, not
+   a mark. The hour-crediting check lives on course modules and is a different
+   object with a different burden of proof (LEGAL-40H-LINE.md).
+
+   WHEN. It rises when the clip has played once — the natural end, not an
+   interruption — over the reel, which keeps playing behind it. Swiping on
+   dismisses it: a feed that traps you is a feed people stop opening. */
+const reelCheckOf = r => { const q = r && r.check;
+  return validQuestion(q) ? q : null; };            /* malformed = no check at all */
+let reelCheckTimer = null;
+
+function reelCheckHTML(r) {
+  const q = reelCheckOf(r); if (!q) return '';
+  const v = shuffledView(q, _lang());
+  /* the shuffled view is stashed so the answer handler grades the SAME order the
+     learner saw, and the spaced review re-asks it identically months later */
+  S._reelView = S._reelView || {}; S._reelView[r.id] = v;
+  return `<div class="rc" data-rc="${r.id}">
+    <div class="rc-q">${esc(v.q)}</div>
+    <div class="rc-opts">${v.opts.map((o, i) =>
+      `<button class="rc-opt" data-action="rc-answer" data-id="${r.id}" data-i="${i}">${esc(o)}</button>`).join('')}</div>
+    <button class="rc-skip" data-action="rc-skip" data-id="${r.id}">${t('rc_skip')}</button>
+  </div>`;
+}
+function raiseReelCheck(el, r) {
+  if (!reelCheckOf(r) || el.querySelector('.rc') || el.dataset.rcDone) return;
+  const host = el.querySelector('.reel-copy');
+  if (!host) return;
+  el.insertAdjacentHTML('beforeend', reelCheckHTML(r));
+  requestAnimationFrame(() => { const rc = el.querySelector('.rc'); if (rc) rc.classList.add('up'); });
+  ledgerAppend('reel_check_shown', { id: r.id });
+}
+function answerReelCheck(id, picked) {
+  const r = qwById(id), v = (S._reelView || {})[id]; if (!r || !v) return;
+  const el = document.querySelector(`.reel[data-id="${id}"]`); if (!el) return;
+  const rc = el.querySelector('.rc'); if (!rc || rc.dataset.done) return;
+  rc.dataset.done = '1'; el.dataset.rcDone = '1';
+  const right = picked === v.a;
+  [...rc.querySelectorAll('.rc-opt')].forEach((b, i) => {
+    b.disabled = true;
+    if (i === v.a) b.classList.add('right');
+    else if (i === picked) b.classList.add('wrong');
+  });
+  rc.insertAdjacentHTML('beforeend',
+    `<div class="rc-why"><b>${right ? t('rc_right') : t('rc_not_quite')}</b>${v.why ? ' ' + esc(v.why) : ''}</div>`);
+  const skip = rc.querySelector('.rc-skip'); if (skip) skip.textContent = t('rc_next');
+  /* wrong answers come back sooner — the queue is the second exposure, and it is
+     where a 20-second lesson turns into something retained */
+  scheduleReview('reel:' + id, 0, v);
+  if (!right) { const e = (S.reviewQueue || []).find(x => x.k === reviewKey('reel:' + id, v)); if (e) { e.step = 0; e.due = Date.now() + 864e5; } }
+  if (right) awardXp(2, t('reel_h'));
+  ledgerAppend('reel_check', { id, correct: right, audit: v.audit || null });
+  save();
+}
+
+/* ===== THE REEL FEED ========================================================
+   TikTok/Shorts/Reels mechanics — vertical, full-bleed, snap-swipe, autoplay
+   the one in view, loop it — pointed at learning instead of at time.
+
+   IMPLEMENTATION NOTE: the swipe is CSS scroll-snap, not a custom gesture
+   handler. Native scrolling already has the momentum, rubber-banding and
+   accessibility that a hand-rolled touch handler spends months failing to
+   reproduce, and it gives keyboard and wheel for free. An IntersectionObserver
+   decides which reel is "current"; nothing else tracks position.
+
+   THE ONE DELIBERATE DIFFERENCE — THE FEED ENDS.
+   Infinite scroll is engineered for compulsion. Copying it wholesale into a
+   workplace training tool would mean optimising a company's own staff for time
+   spent, on that company's clock, which is not what anyone is buying. So after
+   FEED_PAUSE_AFTER reels the feed offers a way DOWN into a course instead of
+   more feed. The loop stays — repetition is how a 20-second idea sticks — and
+   the bottomlessness goes. A learner can always continue; they just have to
+   choose to, once.
+
+   Reels never credit hours: they are not courses (see REELS in content.js). */
+const FEED_PAUSE_AFTER = 5;
+let feedIdx = -1, feedSeen = [];
+
+const reelsAll = () => QW_ALL();
+const reelField = v => eduField(v);
+function reelPoster(r, showHook) {
+  const tone = ((r.theme || r.id || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 5) + 1;
+  const img = r.poster ? ` style="background-image:url('${esc(r.poster)}')"` : '';
+  return `<div class="reel-poster t${tone}${r.poster ? ' has-art' : ''}"${img}>${
+    showHook ? `<span class="reel-hook">${esc(reelField(r.hook) || reelField(r.title))}</span>` : ''}</div>`;
+}
+/* Media is mounted lazily and only near the active slide (see mountWindow).
+   Mounting every reel up front is what makes a feed unusable: a Vimeo iframe
+   is ~1MB of player JS EACH, so a 100-reel library would try to load ~100MB of
+   players before the first frame. Short MP4s on a CDN with a poster frame are
+   the right shape here — one <video>, preloadable, instantly seekable. Long
+   courses keep Vimeo, where adaptive streaming actually earns its cost. */
+function reelMediaHTML(r, i) {
+  const m = r.media || {};
+  const poster = r.poster ? ` poster="${esc(r.poster)}"` : '';
+  if (m.type === 'mp4')     return `<video class="reel-vid" data-i="${i}" src="${esc(m.src)}"${poster} loop muted playsinline preload="none"></video>`;
+  if (m.type === 'vimeo')   return `<iframe class="reel-vid" data-i="${i}" src="https://player.vimeo.com/video/${esc(m.id)}?${m.h ? 'h=' + esc(m.h) + '&' : ''}background=1&loop=1&muted=1&title=0&byline=0&portrait=0&dnt=1" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>`;
+  if (m.type === 'youtube') return `<iframe class="reel-vid" data-i="${i}" src="https://www.youtube-nocookie.com/embed/${esc(m.id)}?loop=1&mute=1&controls=0&rel=0&playlist=${esc(m.id)}" allow="autoplay" allowfullscreen loading="lazy"></iframe>`;
+  return '';
+}
+function reelSlideHTML(r, i) {
+  const d = qwDeeper(r), e = r.educator ? Object.assign({ id: r.educator }, EDU_ALL()[r.educator] || {}) : null;
+  const saved = (S.reelSaved || []).indexOf(r.id) > -1;
+  const ph = !!r.placeholder;
+  return `<article class="reel" data-i="${i}" data-id="${r.id}">
+    ${reelPoster(r, ph)}
+    <div class="reel-media" data-media="${esc(JSON.stringify(r.media || {}).slice(0, 0))}"></div>
+    <div class="reel-scrim"></div>
+    <div class="reel-rail">
+      <button class="reel-act ${saved ? 'on' : ''}" data-action="reel-save" data-id="${r.id}" aria-label="${t('reel_save')}">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v16l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></button>
+      <button class="reel-act" data-action="reel-mute" aria-label="${t('reel_sound')}">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="wave" d="M17 8.5a5 5 0 0 1 0 7"/><path class="slash" d="M18 8l4 8"/></svg></button>
+    </div>
+    <div class="reel-copy">
+      ${ph ? `<span class="reel-ph">${t('reel_placeholder')}</span>` : ''}
+      <div class="reel-meta">${r.seconds || 30}s${r.theme ? ` &middot; ${esc(r.theme)}` : ''}</div>
+      <h2>${esc(reelField(r.title))}</h2>
+      ${ph ? '' : `<p>${esc(reelField(r.line))}</p>`}
+      ${e && e.name ? `<button class="edu-byline" data-action="edu-open" data-edu="${e.id}">${eduAvatarHTML(e, 'xs')}<span class="edu-nm">${esc(e.name)}</span></button>` : ''}
+      ${/* A filled button on top of video is a colour block fighting the
+             footage — and it was the demo brand's accent, so it read as a
+             different product. The handoff is the point of a reel, but it is
+             the QUIET point: one line, the course named, an arrow. Type and
+             space, not a slab (law 3, law 8). The stop-slide keeps a real
+             button because there it IS the action, not an aside. */''}
+      ${d ? `<button class="reel-deeper" data-action="reel-goto" data-id="${d.course.id}">
+        <span class="rd-verb">${d.done ? t('qw_deeper_done') : d.started ? t('qw_deeper_resume') : t('qw_deeper')}</span>
+        <span class="rd-name">${esc(ctitle(d.course))}</span>
+        <span class="rd-arrow" aria-hidden="true">&#8250;</span></button>` : ''}
+    </div>
+  </article>`;
+}
+/* the stop: offered as a slide in the feed, so it arrives the same way
+   everything else does rather than as a modal that interrupts */
+function reelPauseHTML(i) {
+  const next = CATALOG.filter(c => !isDone(c.id) && hasRealContent && hasRealContent(c))[0] || CATALOG[0];
+  return `<article class="reel reel-pause" data-i="${i}" data-pause="1">
+    <div class="reel-copy reel-copy-mid">
+      <div class="reel-meta">${t('reel_pause_eyebrow')}</div>
+      <h2>${t('reel_pause_h')}</h2>
+      <p>${t('reel_pause_sub')}</p>
+      ${next ? `<button class="btn btn-primary btn-sm" data-action="reel-goto" data-id="${next.id}">${t('qw_deeper')} &middot; ${esc(ctitle(next))}</button>` : ''}
+      <button class="link-quiet" data-action="reel-more">${t('reel_keep_watching')}</button>
+    </div>
+  </article>`;
+}
+function renderReels() {
+  const list = reelsAll();
+  if (!list.length) return `<div class="page"><div class="page-pad"><h1 class="page-title">${t('reel_h')}</h1>
+    <p class="page-sub">${t('reel_none')}</p></div></div>`;
+  const slides = [];
+  list.forEach((r, i) => {
+    slides.push(reelSlideHTML(r, slides.length));
+    if ((i + 1) % FEED_PAUSE_AFTER === 0 && i < list.length - 1) slides.push(reelPauseHTML(slides.length));
+  });
+  /* The feed takes the whole screen and the app's chrome steps out of the way:
+     the header and tutor button sat ON TOP of the first build, and the FAB
+     landed on the "go deeper" button. An immersive surface has to actually be
+     immersive, and it has to say how to leave. */
+  return `<div class="reel-wrap">
+    <div class="reel-top">
+      <button class="reel-x" data-action="reel-exit" aria-label="${t('close')}">&#8592;</button>
+      <div class="reel-prog">${slides.map((_, i) => `<span data-p="${i}"></span>`).join('')}</div>
+    </div>
+    <div class="reel-feed" id="reelFeed">${slides.join('')}</div>
+    <div class="reel-hint" id="reelHint" aria-hidden="true"><span></span></div>
+  </div>`;
+}
+/* Which reel is playing is ARITHMETIC, not observation. With scroll-snap the
+   active index is scrollTop / slideHeight, exactly — no thresholds, no
+   intersection callbacks, nothing to miss.
+
+   This started as an IntersectionObserver and never fired once. The cause was
+   worth keeping: IntersectionObserver does not fire in every embedded webview
+   (it never fired here, not even on document.body), so a feed whose core
+   behaviour depended on it would have shipped playing nothing, silently, on
+   whichever devices behave that way. Scroll position is always true. rAF keeps
+   it to one read per frame. */
+function armReelFeed() {
+  const feed = $('#reelFeed'); if (!feed) return;
+  let ticking = false;
+  const sync = () => {
+    ticking = false;
+    const h = feed.clientHeight || 1;
+    const idx = Math.round(feed.scrollTop / h);
+    const slides = feed.children;
+    if (idx === feedIdx) return;
+    feedIdx = idx;
+    for (let i = 0; i < slides.length; i++) {
+      const el = slides[i], on = i === idx;
+      el.classList.toggle('current', on);
+      /* MOUNT WINDOW — media exists only for the active slide and its
+         neighbours; everything else stays a poster. This is what keeps a
+         hundred-reel library the same weight as a three-reel one, and it is
+         also why the next one starts instantly: it is already mounted. */
+      const near = Math.abs(i - idx) <= 1;
+      const box = el.querySelector('.reel-media');
+      if (!box) continue;
+      const r = qwById(el.dataset.id);
+      if (near && r && !box.dataset.on) { box.innerHTML = reelMediaHTML(r, i); box.dataset.on = '1'; }
+      else if (!near && box.dataset.on) { box.innerHTML = ''; delete box.dataset.on; }
+      const v = box.querySelector('video');
+      if (v) {
+        if (on) { v.preload = 'auto'; v.play().catch(() => {}); }
+        else { v.preload = 'metadata'; v.pause(); try { v.currentTime = 0; } catch (e) {} }
+      }
+      /* the check rises once the clip has had time to play through */
+      if (on) {
+        const rr = qwById(el.dataset.id);
+        clearTimeout(reelCheckTimer);
+        if (rr && reelCheckOf(rr)) reelCheckTimer = setTimeout(() => raiseReelCheck(el, rr), (rr.seconds || 30) * 1000);
+      }
+    }
+    const prog = $('.reel-prog');
+    if (prog) [...prog.children].forEach((sp, k) => sp.classList.toggle('on', k <= idx));
+    const hint = $('#reelHint'); if (hint && idx > 0) hint.classList.add('gone');
+    const cur = slides[idx];
+    if (cur && cur.dataset.id && feedSeen.indexOf(cur.dataset.id) < 0) {
+      feedSeen.push(cur.dataset.id);
+      ledgerAppend('reel_view', { id: cur.dataset.id, theme: (qwById(cur.dataset.id) || {}).theme || null, pos: idx });
+    }
+  };
+  /* time-throttled, not rAF-scheduled. rAF is paused in a hidden or
+     backgrounded view, which left the feed's state stale and unverifiable;
+     a handful of class toggles at ~60Hz costs nothing and always runs. */
+  let last = 0;
+  feed.onscroll = () => {
+    const now = Date.now();
+    if (now - last < 60) { if (!ticking) { ticking = true; setTimeout(() => { last = Date.now(); sync(); }, 60); } return; }
+    last = now; sync();
+  };
+  /* keyboard parity with the swipe — a feed reachable only by thumb is a feed
+     half the users cannot reach at all */
+  feed.tabIndex = 0;
+  feed.onkeydown = ev => {
+    if (ev.key !== 'ArrowDown' && ev.key !== 'ArrowUp' && ev.key !== ' ') return;
+    ev.preventDefault();
+    const to = feed.children[Math.max(0, Math.min(feed.children.length - 1,
+      feedIdx + (ev.key === 'ArrowUp' ? -1 : 1)))];
+    if (to) to.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  document.body.classList.add('reels-open');
+  feedIdx = -1; sync();                       /* mount + mark slide 0 on open */
+  try { feed.focus({ preventScroll: true }); } catch (e) {}
+}
+
 /* ===== CAPABILITY GRAPH =====================================================
    The shift the category made, and the one this platform was already storing
    the data for without reading it: a CATALOGUE answers "what did they
@@ -5909,7 +6211,8 @@ function attributionHTML(e, extraSources) {
    that's my style"), so those are the two buttons. Default is PENDING, never
    approved: nothing reaches a team's group because a menu item existed and
    nobody said no. */
-const QW_ALL = () => (typeof QUICKWINS !== 'undefined' && Array.isArray(QUICKWINS) ? QUICKWINS : []);
+const QW_ALL = () => (typeof REELS !== 'undefined' && Array.isArray(REELS) ? REELS
+  : (typeof QUICKWINS !== 'undefined' && Array.isArray(QUICKWINS) ? QUICKWINS : []));
 const qwById = id => QW_ALL().find(q => q.id === id) || null;
 const qwField = (v) => eduField(v);
 function qwState() { S.quickwins = S.quickwins || { approved: [], rejected: [], sent: [] }; return S.quickwins; }
@@ -6055,37 +6358,40 @@ function pendingCheckCount() { return Object.keys(S.pendingChecks || {}).length;
    second of video that teaches it. Loaded lazily; every consumer falls back to
    the hand-written banks when a course has no V2 file. */
 const QUIZ_V2 = {};
-/* Banks are per language when the course was recorded per language. The key is
-   courseId+lang so switching language switches the questions too — asking a
-   Portuguese learner an English question about a Portuguese video would grade
-   them on words they never heard. Falls back to the default bank, which is
-   correct for the many courses that have only one recording. */
-function quizKey(courseId) { const l = _lang(); return l && l !== 'en' ? courseId + '.' + l : courseId; }
 function loadQuizV2(courseId) {
-  const key = quizKey(courseId);
-  if (QUIZ_V2[key] !== undefined) return Promise.resolve(QUIZ_V2[key]);
+  if (QUIZ_V2[courseId] !== undefined) return Promise.resolve(QUIZ_V2[courseId]);
   /* cache-bust rides the same edrNNN as every other asset — derived from the
      app script's own src so no separate constant can drift out of step */
   const v = ((document.querySelector('script[src*="core/app.js"]') || {}).src || '').match(/v=(edr\d+)/);
-  const ver = v ? v[1] : '';
-  return fetch('knowledge/quizzes/' + key + '.json?v=' + ver)
+  return fetch('knowledge/quizzes/' + courseId + '.json?v=' + (v ? v[1] : ''))
     .then(r => r.ok ? r.json() : null)
-    .then(b => {
-      if (b && b.modules) return (QUIZ_V2[key] = b);
-      /* no bank in this language — use the default rather than no check at all,
-         but only when the DEFAULT recording is what plays (see modLangFallback) */
-      if (key === courseId) return (QUIZ_V2[key] = null);
-      return fetch('knowledge/quizzes/' + courseId + '.json?v=' + ver)
-        .then(r2 => r2.ok ? r2.json() : null)
-        .then(b2 => (QUIZ_V2[key] = b2 && b2.modules ? b2 : null));
-    })
-    .catch(() => (QUIZ_V2[key] = null));
+    .then(b => (QUIZ_V2[courseId] = b && b.modules ? b : null))
+    .catch(() => (QUIZ_V2[courseId] = null));
 }
 /* Options are shuffled AT RENDER and the key remapped: generated keys cluster
    on low indices (and humans cluster on C), so fixed order leaks the answer. */
+/* A question whose shape is broken is worse than no question: with a key out of
+   range, shuffledView remaps it to -1 and EVERY answer is marked wrong — the
+   learner is told they failed something they answered correctly, and the blind
+   gate cannot catch it because the gate checks which option is right, not
+   whether the options exist. Generated content will produce this eventually, so
+   the shape is checked before anything is shown. */
+function validQuestion(q, lang) {
+  if (!q) return false;
+  const L = q[lang || _lang()] || q.en;
+  if (!L || typeof L.q !== 'string' || !L.q.trim()) return false;
+  if (!Array.isArray(L.opts) || L.opts.length < 2) return false;
+  if (L.opts.some(o => typeof o !== 'string' || !o.trim())) return false;
+  return Number.isInteger(q.a) && q.a >= 0 && q.a < L.opts.length;
+}
+
 function shuffledView(q, lang) {
   const L = q[lang] || q.en;
-  const idx = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+  /* option count comes from the question, not a constant. Hardcoding four broke
+     the moment a reel shipped a 3-option micro-check: opts[3] was undefined and
+     rendered as the word "undefined" next to three real answers. */
+  const n = (L.opts || []).length;
+  const idx = Array.from({ length: n }, (_, i) => i).sort(() => Math.random() - 0.5);
   return { q: L.q, opts: idx.map(i => L.opts[i]), a: idx.indexOf(q.a),
            why: L.why, t0: q.t0, type: q.type, gen: !!q.gen,
            audit: q.verified ? 'verified' : q.corrected ? 'corrected' : q.gen ? 'unaudited' : 'authored' };
@@ -6093,7 +6399,7 @@ function shuffledView(q, lang) {
 /* The pair for the hour-crediting check: one recall + one application/scenario,
    deterministic per module so a retake asks the same thing and records compare. */
 function v2CheckPair(courseId, mod, lang) {
-  const bank = QUIZ_V2[quizKey(courseId)] || QUIZ_V2[courseId];
+  const bank = QUIZ_V2[courseId];
   const qs = bank && bank.modules && bank.modules[mod];
   if (!qs || !qs.length) return null;
   const rec = qs.find(x => x.type === 'recall') || qs[0];
@@ -6218,16 +6524,16 @@ function openQuiz(courseId) {
      the lesson transcripts and its keys are blind-verified, while the runtime
      AI quiz is generated on the spot with no verification pass. Interleaved
      across modules (mixing beats blocking for retention), shuffled options. */
-  const v2 = QUIZ_V2[quizKey(c.id)];
+  const v2 = QUIZ_V2[c.id];
   if (v2 && v2.modules) {
-    const all = Object.values(v2.modules).flat().map(q => shuffledView(q, lang));
+    const all = Object.values(v2.modules).flat().filter(q => validQuestion(q, lang)).map(q => shuffledView(q, lang));
     if (all.length >= 4) {
       const mix = all.sort(() => Math.random() - 0.5).slice(0, 8);
       startQuiz(c, mix, false);
       return;
     }
   }
-  if (QUIZ_V2[quizKey(c.id)] === undefined) {
+  if (QUIZ_V2[c.id] === undefined) {
     /* first open: load the bank, then re-enter — one hop, cached after */
     loadQuizV2(c.id).then(() => openQuiz(courseId));
     return;
@@ -6928,6 +7234,26 @@ document.addEventListener('click', e => {
     }
     case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
     case 'member-detail': openMemberDetail(el.dataset.uid); break;
+    case 'reel-exit': { document.body.classList.remove('reels-open');
+      history.length > 1 ? history.back() : (location.hash = '#/home'); break; }
+    case 'rc-answer': answerReelCheck(el.dataset.id, +el.dataset.i); break;
+    case 'rc-skip': { const rc = el.closest('.rc'); if (rc) rc.classList.remove('up');
+      const sl = el.closest('.reel'); if (sl) sl.dataset.rcDone = '1';
+      setTimeout(() => { if (rc) rc.remove(); }, 320); break; }
+    case 'reel-save': { S.reelSaved = S.reelSaved || [];
+      const id = el.dataset.id, i = S.reelSaved.indexOf(id);
+      if (i > -1) S.reelSaved.splice(i, 1); else S.reelSaved.push(id);
+      save(); ledgerAppend('reel_save', { id, saved: i < 0 }); render(); break; }
+    case 'reel-mute': { const f = $('#reelFeed'); if (!f) break;
+      const on = f.classList.toggle('sound');
+      f.querySelectorAll('video').forEach(v => { v.muted = !on; });
+      const ic = $('#reelMuteIcon'); if (ic) ic.textContent = on ? '\u266b' : '\u266a';
+      break; }
+    case 'reel-goto': { ledgerAppend('reel_to_course', { course: el.dataset.id, from: 'feed' });
+      location.hash = '#/course/' + el.dataset.id; break; }
+    case 'reel-more': { ledgerAppend('reel_continue', { after: FEED_PAUSE_AFTER });
+      const p = el.closest('.reel'); const nx = p && p.nextElementSibling;
+      if (nx) nx.scrollIntoView({ behavior: 'smooth', block: 'start' }); break; }
     case 'cap-who': openCapabilityHolders(el.dataset.cap); break;
     case 'cap-close': { const v = $('#capModal'); if (v) v.remove(); break; }
     case 'qw-approve': { const st = qwState(); const id = el.dataset.qw;
