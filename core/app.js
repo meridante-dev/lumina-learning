@@ -158,6 +158,10 @@ function ledgerAppend(type, data = {}) {
   }
   window.addEventListener('error', e => logErr('err', e.message, (e.filename || '') + ':' + (e.lineno || '')));
   window.addEventListener('unhandledrejection', e => logErr('rej', (e.reason && (e.reason.message || e.reason)) || 'unhandled rejection', ''));
+  /* Exposed so DELIBERATE, non-throwing failures can use the same channel. A
+     refused evidence mirror throws nothing and would otherwise be invisible —
+     which is the whole defect this reporting path exists to close. */
+  window.EdenBeacon = logErr;
 })();
 
 async function ledgerVerify(L = S.ledger || []) {
@@ -1994,6 +1998,7 @@ function verifiedPanelHTML() {
           const conf = ar.applied ? `<div class="vc-how">✅ ${t('vc_confirmed').replace('{c}', ar.confirmed).replace('{a}', ar.applied)}</div>` : '';
           return self + conf; })()}
         <div class="vc-ledger" id="vcLedger">${events} ${t('vc_events')} · <span class="vc-chk">…</span> · <button class="link-quiet" data-action="ev-export">⤓ ${t('ev_export')}</button></div>
+        <div class="vc-how" id="vcSrv"></div>
         <div class="vc-how" id="vcOts">${otsLineHTML()}</div>
       </div>
     </div>
@@ -2013,10 +2018,43 @@ async function paintLedgerCheck() {
     const o = document.getElementById('vcOts');
     if (changed && o) o.innerHTML = otsLineHTML();
   });
+  paintServerTier();
   const el = document.querySelector('#vcLedger .vc-chk'); if (!el) return;
   const r = await ledgerVerify();
   el.textContent = r.ok ? t('vc_intact') : t('vc_broken');
   el.style.color = r.ok ? 'var(--accent-2)' : '#d98a76';
+}
+/* ===== THE SERVER TIER, STATED ==============================================
+   `vc_intact` above is a CLIENT check: it proves the local chain is internally
+   consistent and nothing more. For three weeks it sat next to a server mirror
+   that was rejecting every single write, and the card read exactly the same as
+   it does when everything works — which is how a detected failure became three
+   loop runs of misdiagnosis.
+
+   So the server tier now gets its own line, and it never borrows confidence from
+   the client one. Four distinct states, because collapsing any two of them is
+   the bug: signed out (nothing to mirror), blocked (we know it failed, and
+   since when), complete (the server holds every event), and behind (sync has not
+   caught up — which is normal briefly and a problem if it persists). */
+function paintServerTier() {
+  const el = document.getElementById('vcSrv'); if (!el) return;
+  const S_ = (window.EdenCloud && EdenCloud.ledgerSyncStatus) ? EdenCloud.ledgerSyncStatus() : null;
+  if (!S_ || !S_.signedIn) {
+    el.textContent = t('srv_local');
+    el.style.color = '';
+    return;
+  }
+  if (S_.blocked) {
+    const since = new Date(S_.blocked.firstSeen)
+      .toLocaleDateString(_lang() === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'short' });
+    el.textContent = `⚠ ${t('srv_blocked').replace('{d}', since)}`;
+    el.style.color = '#d98a76';
+    return;
+  }
+  el.style.color = '';
+  el.textContent = (S_.total && S_.mirrored >= S_.total)
+    ? t('srv_ok')
+    : t('srv_behind').replace('{m}', S_.mirrored).replace('{t}', S_.total);
 }
 function compliancePanelHTML() {
   const pf = S.profile || {};

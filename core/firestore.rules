@@ -3,9 +3,28 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // ============ MULTI-TENANT (Phase 5) ============
-    // Platform superadmins (EdenRise) — verified email allowlist.
-    function isSuper() {
+    // R3-1c — WHY THE PROVIDER CHECK COMES FIRST.
+    // `token.email` and `token.email_verified` are NOT reserved claims: whoever
+    // mints a token decides what they say. `firebase.sign_in_provider` IS set by
+    // the Auth backend, and a custom token always exchanges to 'custom'. So an
+    // admin check keyed on email alone is only ever as strong as the weakest
+    // thing that can mint a token for this project.
+    //
+    // That is not hypothetical here. The planned custom-token bridge (R3-1b) for
+    // Land Team members without email addresses would mint tokens from a worker;
+    // the moment it exists, any input it fails to validate becomes a path to
+    // superadmin — and isSuper() also gates the learner-event reads below, so the
+    // blast radius is every learner's evidence.
+    //
+    // Requiring a real identity provider also states the intent plainly: bridged
+    // and anonymous sessions are legitimate LEARNERS and must never be admins.
+    function realIdentity() {
       return request.auth != null
+        && request.auth.token.firebase.sign_in_provider in ['google.com', 'password'];
+    }
+    // Platform superadmins (EdenRise) — verified email allowlist, real provider only.
+    function isSuper() {
+      return realIdentity()
         && request.auth.token.email_verified == true
         && request.auth.token.email in [
           'admin@edenrise.com', 'info@edenrise.com', 'john@edenrise.com'
@@ -22,9 +41,10 @@ service cloud.firestore {
     function sameCompany(d) {
       return request.auth != null && docCompany(d) == myCompany();
     }
-    // Company admin: verified email listed on that company's doc.
+    // Company admin: verified email listed on that company's doc, real provider only
+    // (same reasoning as isSuper — see realIdentity above).
     function isCompanyAdminOf(cid) {
-      return request.auth != null
+      return realIdentity()
         && request.auth.token.email_verified == true
         && request.auth.token.email in get(/databases/$(database)/documents/companies/$(cid)).data.adminEmails;
     }

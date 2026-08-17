@@ -184,12 +184,27 @@ window.EdenCloud = {
   async syncLedger() {
     const u = auth.currentUser; if (!u) return;
     if (window.__ledgerSyncBusy) return; window.__ledgerSyncBusy = true;
+    let blocked = null;                       /* set by any step that could not write */
     try {
       const st = localState();
       const L = st.ledger || [];
       const curKey = 'eden-ledger-synced-' + u.uid;
       let cursor = +(localStorage.getItem(curKey) || 0);
-      if (cursor >= L.length) return;
+      /* ---- events -------------------------------------------------------
+         THE CURSOR GUARDS THIS LOOP ONLY. It used to guard the whole function
+         (`if (cursor >= L.length) return;`), which quietly broke the two steps
+         below for exactly the learner who matters most:
+
+         · a finished learner sits at cursor === L.length permanently, so an
+           anchor write that failed once was never retried again;
+         · an OpenTimestamps proof is upgraded from `pending` to `confirmed`
+           HOURS OR DAYS after the events were mirrored, when Bitcoin confirms
+           the block. By then the early return fired every time, so the confirmed
+           proof — the strongest evidence this product has — was never mirrored
+           server-side at all.
+
+         Both failures are shaped exactly like a completed course, which is why
+         three weeks of silence looked like success. */
       for (let i = cursor; i < L.length; i++) {
         const ev = L[i];
         try {
@@ -205,19 +220,30 @@ window.EdenCloud = {
               const snap = await getDoc(doc(db, 'users', u.uid, 'events', ev.id));
               if (snap.exists()) { cursor = i + 1; localStorage.setItem(curKey, String(cursor)); continue; }
             } catch (e2) { /* read failed too → rules genuinely not live */ }
-            return;   /* rules not deployed yet — nothing lost, retry next flush */
+            blocked = 'events:permission-denied';
+            break;    /* nothing lost, retried next flush — but now RECORDED */
           }
-          return;   /* transient error — stop, retry later */
+          blocked = 'events:' + ((e && e.code) || 'error');
+          break;
         }
       }
-      /* all mirrored → pin the chain head to server time (anchor id = head hash → idempotent) */
+      /* ---- anchor -------------------------------------------------------
+         Only when EVERY event is mirrored. The anchor asserts `count: L.length`
+         — pinning it while events are missing would be a stronger claim than the
+         data supports, and this layer's whole value is that it never does that. */
       const head = L[L.length - 1];
-      if (head && head.hash) {
-        await setDoc(doc(db, 'users', u.uid, 'anchors', head.hash), {
-          headHash: head.hash, count: L.length,
-          brandId: head.brandId || BRAND_ID,
-          recordedAt: serverTimestamp()
-        }).catch(() => {});
+      if (head && head.hash && cursor >= L.length) {
+        try {
+          await setDoc(doc(db, 'users', u.uid, 'anchors', head.hash), {
+            headHash: head.hash, count: L.length,
+            brandId: head.brandId || BRAND_ID,
+            recordedAt: serverTimestamp()
+          });
+        } catch (e) {
+          /* was `.catch(() => {})` — a silent swallow on the one write that makes
+             back-dating detectable */
+          if (!blocked) blocked = 'anchor:' + ((e && e.code) || 'error');
+        }
       }
       /* Bitcoin proofs → create-only mirror. Doc id includes the status, so an
          upgraded proof lands as a NEW doc instead of mutating the pending one
@@ -235,10 +261,66 @@ window.EdenCloud = {
             stampedAt: rec.at, recordedAt: serverTimestamp()
           });
           localStorage.setItem(key, '1');
-        } catch (e) { /* rules not live / already there → harmless, retry later */ }
+        } catch (e) {
+          /* A proof is self-verifying and independent of the events, so it is
+             attempted even when they are blocked — but a CONFIRMED proof that
+             cannot be stored is the single most important failure in this file
+             and is no longer swallowed. */
+          if (!blocked || rec.status === 'confirmed') {
+            blocked = 'proof:' + (rec.status === 'confirmed' ? 'btc:' : '') + ((e && e.code) || 'error');
+          }
+        }
       }
-    } catch (e) { /* never let ledger sync break the app */ }
-    finally { window.__ledgerSyncBusy = false; }
+    } catch (e) {
+      if (!blocked) blocked = 'sync:' + ((e && e.code) || e && e.message || 'error');
+    } finally {
+      window.__ledgerSyncBusy = false;
+      window.EdenCloud.__noteLedgerSync(u, blocked);
+    }
+  },
+  /* ---- R3-1d: the evidence layer must never fail silently -------------------
+     Every branch above preserves data and retries, which is correct — and for
+     three weeks it meant nobody knew the server tier was dark. NIST AU-5 treats
+     the ALERT as the control, and OWASP renamed A09 to "Logging and Alerting
+     Failures" in 2025 for this exact shape of bug.
+
+     Persisted OUTSIDE the state blob, like the cursor, so recording a failure can
+     never clobber the chain it is describing. `firstSeen` is what makes a
+     three-week silence legible after the fact rather than only in the moment. */
+  __noteLedgerSync(u, blocked) {
+    try {
+      const k = 'eden-ledger-blocked-' + u.uid;
+      if (!blocked) { localStorage.removeItem(k); return; }
+      let rec = null;
+      try { rec = JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) {}
+      const now = Date.now();
+      const fresh = !rec || rec.code !== blocked;
+      rec = fresh
+        ? { code: blocked, firstSeen: now, lastSeen: now, count: 1 }
+        : Object.assign(rec, { lastSeen: now, count: (rec.count || 1) + 1 });
+      localStorage.setItem(k, JSON.stringify(rec));
+      /* On the TRANSITION only, put it through the error beacon as well. That
+         buffer rides the ordinary user-state sync — a different rule path from
+         the events subcollection, so it still reaches an admin precisely when
+         the evidence mirror is refused. Without this the learner sees a warning
+         and nobody who could fix it ever does. */
+      if (fresh && window.EdenBeacon) window.EdenBeacon('ledger', 'evidence mirror refused: ' + blocked, 'auth.js/syncLedger');
+    } catch (e) { /* storage full/blocked — the app must still run */ }
+  },
+  /* Read by the admin surface AND by anything that would otherwise claim
+     "server-verified". Health-checks on the ABSENCE of a block, so a missing
+     signal reads as unknown rather than as success. */
+  ledgerSyncStatus() {
+    const u = auth.currentUser;
+    if (!u) return { signedIn: false, blocked: null, mirrored: 0, total: 0 };
+    let rec = null;
+    try { rec = JSON.parse(localStorage.getItem('eden-ledger-blocked-' + u.uid) || 'null'); } catch (e) {}
+    /* mirrored/total are reported so the UI can distinguish "the server has all of
+       it" from "sync has never run" — the absence of an error is not evidence of
+       success, and that conflation is what hid this for three weeks. */
+    const total = ((localState() || {}).ledger || []).length;
+    const mirrored = Math.min(total, +(localStorage.getItem('eden-ledger-synced-' + u.uid) || 0));
+    return { signedIn: true, blocked: rec, mirrored, total };
   },
   /* ---- manager confirmations (R2-18b) ---------------------------------
      A company-scoped, create-only record. The manager's OWN chain is the

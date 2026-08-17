@@ -154,6 +154,60 @@ export function extract(source, name) {
   throw new Error(`extract: no top-level declaration named "${name}"`);
 }
 
+/* Blank out comments, keeping offsets and line count intact.
+
+   Structural tests that grep source MUST run on this, not on the raw text. Two
+   of the first such checks failed against correct code because this codebase
+   documents its own history: syncLedger's comment quotes the exact line that was
+   removed ("if (cursor >= L.length) return;"), so a regex looking for that line
+   found the tombstone and reported the bug as still present. Good comments
+   actively break naive source matching. */
+export function stripComments(s) {
+  let out = '';
+  for (let p = 0; p < s.length; p++) {
+    const c = s[p], n = s[p + 1];
+    if (c === '/' && n === '/') {
+      const e = s.indexOf('\n', p); const stop = e < 0 ? s.length : e;
+      out += ' '.repeat(stop - p); p = stop - 1; continue;
+    }
+    if (c === '/' && n === '*') {
+      const e = s.indexOf('*/', p + 2); const stop = e < 0 ? s.length : e + 2;
+      /* keep newlines so line numbers still line up in any failure message */
+      out += s.slice(p, stop).replace(/[^\n]/g, ' '); p = stop - 1; continue;
+    }
+    if (c === "'" || c === '"') { const e = endOfQuote(s, p); out += s.slice(p, e + 1); p = e; continue; }
+    if (c === '`') { const e = endOfTemplate(s, p); out += s.slice(p, e + 1); p = e; continue; }
+    if (c === '/' && isRegexStart(s, p)) { const e = endOfRegex(s, p); out += s.slice(p, e + 1); p = e; continue; }
+    out += c;
+  }
+  return out;
+}
+
+/* Comment stripper for firestore.rules, which is NOT JavaScript.
+
+   stripComments() must not be used on it: `match /databases/{database}/documents`
+   is a PATH, and a JS-aware scanner reads those slashes as the start of a regex
+   literal and then throws on the unterminated result. The rules language only has
+   // and /* *SLASH* comments and simple quoted strings, so a smaller stripper is
+   both sufficient and correct here. */
+export function stripRulesComments(s) {
+  return s
+    .replace(/\/\*[\s\S]*?\*\//g, m => m.replace(/[^\n]/g, ' '))
+    .split('\n')
+    .map(line => {
+      /* drop // to end-of-line, but never inside a quoted string */
+      let q = null;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (q) { if (c === '\\') i++; else if (c === q) q = null; continue; }
+        if (c === "'" || c === '"') { q = c; continue; }
+        if (c === '/' && line[i + 1] === '/') return line.slice(0, i);
+      }
+      return line;
+    })
+    .join('\n');
+}
+
 /* Build a callable sandbox: extract `names` from `source`, evaluate them with
    `stubs` in scope, and hand back the resulting functions. */
 export function sandbox(source, names, stubs = {}) {

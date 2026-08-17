@@ -20,7 +20,7 @@
 import { execFileSync } from 'child_process';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { ROOT, src } from './harness.mjs';
+import { ROOT, src, stripComments, stripRulesComments } from './harness.mjs';
 
 /* Evaluate a pure-data file and hand back its top-level declarations. content.js
    and data.js are plain tables; if either ever starts touching `document` at load
@@ -230,6 +230,84 @@ export function run(t) {
       `${ungated} of ${total} neither verified nor corrected — an ungated question must not reach a learner`);
     t.ok(`${f}: no module index beyond the course`, !outOfRange, `${outOfRange} orphaned`);
   }
+
+  /* ---------- 6b. security invariants in firestore.rules ----------
+     These are STATIC checks on the rules text. They cannot verify syntax — that
+     needs the Firestore emulator, which needs a Java runtime this machine does
+     not have; `firebase deploy` validates before applying, so a syntax error
+     fails safe. What they DO protect is the two properties most likely to be
+     lost in a careless edit, both of which are silent when broken. */
+  t.group('rules invariants');
+  const rules = existsSync(join(ROOT, 'core/firestore.rules')) ? stripRulesComments(src('core/firestore.rules')) : '';
+  if (!rules) t.ok('core/firestore.rules exists', false, 'missing');
+  else {
+    /* R3-1c. token.email is not a reserved claim; sign_in_provider is. An admin
+       predicate keyed on email alone is only as strong as whatever can mint a
+       token for this project — and isSuper() gates the learner-event reads. */
+    t.ok('realIdentity() keys on firebase.sign_in_provider',
+      /function\s+realIdentity\s*\(\)[\s\S]{0,240}?firebase\.sign_in_provider/.test(rules));
+    t.ok('realIdentity() excludes custom and anonymous tokens',
+      !/sign_in_provider\s+in\s+\[[^\]]*(custom|anonymous)/.test(rules));
+    for (const fn of ['isSuper', 'isCompanyAdminOf']) {
+      const m = new RegExp(`function\\s+${fn}\\s*\\([^)]*\\)\\s*\\{([\\s\\S]*?)\\n    \\}`).exec(rules);
+      t.ok(`${fn}() requires realIdentity()`, !!m && /realIdentity\(\)/.test(m[1]),
+        m ? 'keys on token.email without proving the provider — forgeable by anything that can mint a token'
+          : 'could not locate the function');
+    }
+    /* The append-only guarantee IS the product claim. If an `allow update` ever
+       appears on these three paths, "tamper-evident" stops being true and nothing
+       in the UI would show it. */
+    for (const path of ['events', 'anchors', 'proofs']) {
+      const m = new RegExp(`match /${path}/\\{[^}]+\\}\\s*\\{([\\s\\S]*?)\\n      \\}`).exec(rules);
+      t.ok(`${path} stay create-only (update+delete refused)`,
+        !!m && /allow\s+update,\s*delete:\s*if\s+false/.test(m[1]),
+        m ? 'no explicit `allow update, delete: if false` — the append-only claim is unenforced'
+          : 'could not locate the match block');
+    }
+  }
+
+  /* ---------- 6c. the evidence sync's control flow ----------
+     STRUCTURAL, NOT BEHAVIOURAL, and the difference is worth stating: syncLedger
+     is an async method inside the window.EdenCloud object literal, so the harness
+     (which lifts top-level declarations) cannot reach it. These regex checks
+     therefore assert the SHAPE of the fix rather than running it.
+
+     They exist because a mutation test proved the gap: deleting the anchor write
+     entirely left all 183 other checks green. A weaker test that fails on the
+     real regression beats a stronger one that does not exist — and the honest fix
+     is Phase 2, where app.js and auth.js gain an export surface and this becomes
+     a proper behavioural test. */
+  t.group('evidence sync shape');
+  /* comment-free: this file documents its own history, and syncLedger's comment
+     quotes the very line that was removed */
+  const authSrc = existsSync(join(ROOT, 'core/auth.js')) ? stripComments(src('core/auth.js')) : '';
+  const sync = (authSrc.match(/async syncLedger\(\)[\s\S]*?\n  \},/) || [''])[0];
+  t.ok('syncLedger() was located', !!sync);
+  if (sync) {
+    /* R3-1e: the cursor may guard the EVENTS loop only. Guarding the whole
+       function skipped the anchor and — worse — the Bitcoin proof upgraded to
+       confirmed days later, for exactly the learner who had finished. */
+    t.ok('no whole-function cursor early-return',
+      !/if\s*\(cursor\s*>=\s*L\.length\)\s*return/.test(sync),
+      'the early return is back: a finished learner never gets an anchor or a confirmed proof mirrored');
+    t.ok('the anchor write is gated on every event being mirrored',
+      /cursor\s*>=\s*L\.length[\s\S]{0,200}anchors/.test(sync),
+      'either the gate is gone (an anchor would overstate the record) or the anchor write is');
+    t.ok('the anchor write exists at all', /'anchors'/.test(sync),
+      'nothing pins the chain head to server time, so back-dating stops being detectable');
+    t.ok('the proofs mirror exists at all', /'proofs'/.test(sync));
+    /* R3-1d: no silent swallow on the writes that carry the claim */
+    t.ok('the anchor write no longer swallows its error',
+      !/'anchors'[^;]{0,400}\.catch\(\(\)\s*=>\s*\{\}\)/.test(sync),
+      'a `.catch(() => {})` here is how the server tier went dark for three weeks');
+    t.ok('every exit records status via __noteLedgerSync',
+      /finally\s*\{[\s\S]{0,200}__noteLedgerSync/.test(sync),
+      'a failure that is not recorded is a failure nobody learns about');
+  }
+  t.ok('ledgerSyncStatus() is exposed for the UI to read', /ledgerSyncStatus\(\)\s*\{/.test(authSrc));
+  t.ok('a blocked mirror reaches an admin through the beacon',
+    /EdenBeacon\(/.test(authSrc) && /window\.EdenBeacon\s*=/.test(stripComments(src('core/app.js'))),
+    'the learner-facing copy claims an administrator can see this — it must be true');
 
   /* ---------- 7. transcript provenance ----------
      TWO DIFFERENT CLAIMS, kept apart because conflating them cost me a run of
