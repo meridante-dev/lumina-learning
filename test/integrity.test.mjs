@@ -34,8 +34,38 @@ function dataFile(rel, names) {
   }
 }
 
+/* WHICH BRAND. Never hard-code one — the first version of this file said
+   'brands/edenrise/…', the exact founding-tenant assumption the template exists
+   to be free of, and it broke the moment the suite was copied into
+   academy-template.
+
+   Resolution order, and the reason for it:
+     1 what index.html loads — the app's own truth, correct for a DEPLOYMENT
+     2 whatever single brands/<id>/content.js is on disk — correct for the
+       UN-STAMPED TEMPLATE, whose index.html still names the founding brand as a
+       placeholder that bin/stamp.py rewrites at stamp time (it also moves
+       brands/_template to brands/<id>, so the template repo is deliberately not
+       runnable as-is)
+
+   One code path that is right in both repos, which is what `copy` in the
+   template contract requires: a file that needs hand-editing per deployment
+   cannot be copied. */
+const INDEX = src('index.html');
+const brandDir = (() => {
+  const named = INDEX.match(/["']([^"']*brands\/([^/"']+)\/)content\.js/);
+  if (named && existsSync(join(ROOT, `${named[1]}content.js`))) return { path: named[1], id: named[2] };
+  const dir = join(ROOT, 'brands');
+  const found = existsSync(dir)
+    ? readdirSync(dir).filter(d => existsSync(join(dir, d, 'content.js'))) : [];
+  if (found.length === 1) return { path: `brands/${found[0]}/`, id: found[0] };
+  throw new Error(named
+    ? `integrity: index.html loads ${named[1]}content.js which is absent, and brands/ holds ${found.length} candidates (${found.join(', ') || 'none'})`
+    : 'integrity: no brands/<id>/content.js in index.html and none on disk');
+})();
+
 const SHIPPED_JS = ['core/app.js', 'core/auth.js', 'core/brandkit.js', 'core/ots.js',
-  'core/landflow.js', 'data.js', 'sw.js', 'brands/edenrise/content.js', 'brands/edenrise/brand.js'];
+  'core/landflow.js', 'data.js', 'sw.js',
+  `${brandDir.path}content.js`, `${brandDir.path}brand.js`];
 
 export function run(t) {
   /* ---------- 1. everything parses ---------- */
@@ -51,11 +81,13 @@ export function run(t) {
   /* ---------- 2. cache markers move together ---------- */
   t.group('cache version');
   const idx = src('index.html'), sw = src('sw.js');
-  const marks = [...new Set((idx.match(/\?v=edr\d+/g) || []).map(m => m.slice(3)))];
+  /* the marker PREFIX is per-tenant (edr… for EdenRise); derive it rather than
+     assume, or this check silently passes on every other deployment */
+  const marks = [...new Set((idx.match(/\?v=[a-z]+\d+/g) || []).map(m => m.slice(3)))];
   t.ok('index.html uses exactly one ?v= marker', marks.length === 1,
     marks.length ? `found ${marks.join(', ')} — a partial bump serves a half-updated app` : 'no ?v= marker at all');
-  const swV = (sw.match(/edenrise-v(\d+)/) || [])[1];
-  const idxV = marks.length === 1 ? marks[0].replace('edr', '') : null;
+  const swV = (sw.match(/-v(\d+)['"`]/) || sw.match(/[a-z]+-v(\d+)/) || [])[1];
+  const idxV = marks.length === 1 ? marks[0].replace(/^[a-z]+/, '') : null;
   t.ok('sw.js VERSION matches index.html marker', !!swV && swV === idxV,
     `sw=${swV} index=${idxV} — returning browsers keep the old shell until these agree`);
 
@@ -82,7 +114,7 @@ export function run(t) {
 
   /* ---------- 4. course content lines up with its media ---------- */
   t.group('course content');
-  const C = dataFile('brands/edenrise/content.js',
+  const C = dataFile(`${brandDir.path}content.js`,
     ['CATALOG', 'REELS', 'QUICKWINS', 'COURSE_PT', 'EDUCATORS']);
   const ids = C.CATALOG.map(c => c.id);
   t.ok('CATALOG has courses', C.CATALOG.length > 0);
@@ -163,7 +195,15 @@ export function run(t) {
   t.group('quiz banks');
   const qdir = join(ROOT, 'knowledge', 'quizzes');
   const banks = existsSync(qdir) ? readdirSync(qdir).filter(f => f.endsWith('.json')) : [];
-  t.ok('quiz banks exist', banks.length > 0);
+  /* Banks are the tenant's own content (neverSync), so a fresh template has
+     none and that is correct. Demand them only once real videos are wired —
+     a wired lesson with no banked question is a lesson that ends in nothing. */
+  const wiredVideos = C.CATALOG.reduce((n, c) => n + Object.keys(c)
+    .filter(k => /^moduleMedia(_[a-z]{2})?$/.test(k))
+    .reduce((m, k) => m + c[k].filter(e => e && e.id).length, 0), 0);
+  if (wiredVideos) t.ok(`quiz banks exist for ${wiredVideos} wired video(s)`, banks.length > 0);
+  else t.ok('no videos wired yet, so no banks expected', banks.length === 0,
+    `${banks.length} bank(s) with nothing wired to them`);
   for (const f of banks) {
     let b;
     try { b = JSON.parse(readFileSync(join(qdir, f), 'utf8')); }
