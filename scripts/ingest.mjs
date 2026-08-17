@@ -65,9 +65,13 @@ function courses() {
 function mediaIds(blk, key) {
   const m = blk.match(new RegExp(key + ': \\[([\\s\\S]*?)\\n    \\]'));
   if (!m) return [];
-  /* 'soon' placeholders occupy a slot but have no video — they must not be
-     reported as a missing transcript for the rest of time */
-  return [...m[1].split('\n')].map(l => (l.match(/id: '(\d{9,10})'/) || [])[1] || null);
+  /* ONE ENTRY PER MEDIA OBJECT, not per line. Splitting on newlines counted the
+     comment lines inside the array as slots, which shifted every module index by
+     one: the planner then looked for m1..m7 where m0..m6 existed, reported work
+     that was already done, and printed coverage one short. Match the objects.
+     'soon' placeholders yield null — they hold a slot but have no video, and
+     must not be reported as a missing transcript for the rest of time. */
+  return (m[1].match(/\{[^{}]*\}/g) || []).map(o => (o.match(/id: '(\d{9,10})'/) || [])[1] || null);
 }
 
 function run(cmd, args, label) {

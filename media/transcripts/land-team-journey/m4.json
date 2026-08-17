@@ -1,412 +1,582 @@
 {
- "language": "pt",
+ "module": 4,
+ "title": "Benchmarking Excellence",
+ "vimeoId": "1217934619",
+ "vimeoName": "5. Benchmarking Excellence",
+ "language": "en",
+ "durationSec": 335,
+ "source": "vimeo-api",
+ "generatedAt": 1786970511112,
  "segments": [
   {
-   "t0": 0.0,
-   "t1": 3.8,
-   "text": "Imagine duas pessoas a começar o mesmo trabalho no mesmo dia."
+   "t0": 0,
+   "t1": 5.2,
+   "text": "Have you ever spent an hour doing something, only to discover that someone else could do"
   },
   {
-   "t0": 3.8,
-   "t1": 6.9,
-   "text": "Cinco anos depois, uma tornou-se líder."
+   "t0": 5.2,
+   "t1": 7.48,
+   "text": "it in 10 minutes?"
   },
   {
-   "t0": 6.9,
-   "t1": 10.44,
-   "text": "A outra continua a fazer o mesmo trabalho da mesma forma."
+   "t0": 7.48,
+   "t1": 9.8,
+   "text": "That happens to all of us."
   },
   {
-   "t0": 10.44,
-   "t1": 12.08,
-   "text": "O que fez a diferença?"
+   "t0": 9.8,
+   "t1": 13.96,
+   "text": "Sometimes we work hard, but we are using a slow method."
   },
   {
-   "t0": 12.08,
-   "t1": 15.64,
-   "text": "Geralmente, não foi talento, foi a aprendizagem."
+   "t0": 13.96,
+   "t1": 19.4,
+   "text": "Sometimes we repeat mistakes that another person has already learned how to avoid."
   },
   {
-   "t0": 15.64,
-   "t1": 19.82,
-   "text": "As pessoas que crescem mais depressa são as pessoas que nunca deixam de aprender."
+   "t0": 19.4,
+   "t1": 24.88,
+   "text": "One of the fastest ways to grow is to stop assuming that your way is the best way."
   },
   {
-   "t0": 19.82,
-   "t1": 24.32,
-   "text": "Mantém-se curiosas, fazem perguntas, estudam, escutam,"
+   "t0": 24.88,
+   "t1": 28.08,
+   "text": "Instead, ask one simple question."
   },
   {
-   "t0": 24.32,
-   "t1": 27.0,
-   "text": "procuram formas melhores de fazer as coisas."
+   "t0": 28.08,
+   "t1": 30.76,
+   "text": "Who already does this better than me?"
   },
   {
-   "t0": 27.0,
-   "t1": 28.9,
-   "text": "São aprendizes para a vida."
+   "t0": 30.76,
+   "t1": 32.68,
+   "text": "That question can save time."
   },
   {
-   "t0": 28.9,
-   "t1": 31.78,
-   "text": "Um aprendiz para a vida não diz, eu já sei."
+   "t0": 32.68,
+   "t1": 37.16,
+   "text": "It can prevent mistakes, and it can help you improve much faster."
   },
   {
-   "t0": 31.78,
-   "t1": 33.46,
-   "text": "Em vez disso, pergunta."
+   "t0": 37.16,
+   "t1": 39.92,
+   "text": "This is called benchmarking."
   },
   {
-   "t0": 33.46,
-   "t1": 35.06,
-   "text": "O que posso aprender hoje?"
+   "t0": 39.92,
+   "t1": 43.9,
+   "text": "Benchmarking means finding an excellent example and learning from it."
   },
   {
-   "t0": 35.06,
-   "t1": 38.2,
-   "text": "Todos os dias são uma oportunidade para melhorar."
+   "t0": 43.9,
+   "t1": 49.48,
+   "text": "It means studying what works, understanding why it works, and using those lessons to improve"
   },
   {
-   "t0": 38.2,
-   "t1": 40.38,
-   "text": "Talvez aprenda uma nova competência."
+   "t0": 49.48,
+   "t1": 51.28,
+   "text": "your own performance."
   },
   {
-   "t0": 40.38,
-   "t1": 42.1,
-   "text": "Talvez aprenda com um erro."
+   "t0": 51.28,
+   "t1": 53.8,
+   "text": "It does not mean copying without thinking."
   },
   {
-   "t0": 42.1,
-   "t1": 44.38,
-   "text": "Talvez aprenda com um colega de equipa."
+   "t0": 53.8,
+   "t1": 56.32,
+   "text": "It means learning intelligently."
   },
   {
-   "t0": 44.38,
-   "t1": 46.08,
-   "text": "Talvez aprenda com a IA."
+   "t0": 56.32,
+   "t1": 59.16,
+   "text": "The best people in the world do not know everything."
   },
   {
-   "t0": 46.08,
-   "t1": 49.6,
-   "text": "Talvez aprenda observando alguém com mais experiência do que si."
+   "t0": 59.16,
+   "t1": 61.16,
+   "text": "They know how to learn."
   },
   {
-   "t0": 49.6,
-   "t1": 51.86,
-   "text": "Cada lição torna o mais forte."
+   "t0": 61.16,
+   "t1": 62.68,
+   "text": "Think about professional athletes."
   },
   {
-   "t0": 51.86,
-   "t1": 53.58,
-   "text": "Aqui está algo importante."
+   "t0": 62.68,
+   "t1": 65.32,
+   "text": "And the greatest athletes still have coaches."
   },
   {
-   "t0": 53.58,
-   "t1": 56.14,
-   "text": "Fazer perguntas não é sinal de fraqueza."
+   "t0": 65.32,
+   "t1": 67.92,
+   "text": "The greatest musicians still have teachers."
   },
   {
-   "t0": 56.14,
-   "t1": 57.56,
-   "text": "É sinal de sabedoria."
+   "t0": 67.92,
+   "t1": 71.16,
+   "text": "Successful business leaders still ask for advice."
   },
   {
-   "t0": 57.64,
-   "t1": 60.18,
-   "text": "Se não tem a certeza, pergunte."
+   "t0": 71.16,
+   "t1": 72.16,
+   "text": "Why?"
   },
   {
-   "t0": 60.18,
-   "t1": 62.56,
-   "text": "Se não percebe, pergunte."
+   "t0": 72.16,
+   "t1": 74.22,
+   "text": "Because excellence leaves clues."
   },
   {
-   "t0": 62.56,
-   "t1": 67.04,
-   "text": "Se vir alguém a fazer algo melhor do que si, peça-lhe que o ensine."
-  },
-  {
-   "t0": 67.04,
-   "t1": 70.24,
-   "text": "A maioria das pessoas tem prazer em partilhar o que sabe."
-  },
-  {
-   "t0": 70.24,
-   "t1": 74.28,
-   "text": "Uma boa pergunta hoje pode poupar-lhe muitas horas amanhã."
-  },
-  {
-   "t0": 74.28,
-   "t1": 76.24,
-   "text": "Vamos pensar numa criança."
-  },
-  {
-   "t0": 76.24,
+   "t0": 74.22,
    "t1": 79.56,
-   "text": "As crianças aprendem depressa porque são curiosas."
+   "text": "When someone achieves excellent results, they are usually doing certain things consistently."
   },
   {
    "t0": 79.56,
-   "t1": 80.96,
-   "text": "Fazem perguntas."
+   "t1": 82.8,
+   "text": "If you observe those things, you can learn from them."
   },
   {
-   "t0": 80.96,
-   "t1": 83.08,
-   "text": "Experimentam coisas novas."
+   "t0": 82.8,
+   "t1": 88,
+   "text": "If someone has already solved a problem, their experience can become your shortcut."
   },
   {
-   "t0": 83.08,
-   "t1": 86.04,
-   "text": "Não se envergonham de dizer, não sei."
+   "t0": 88,
+   "t1": 91.04,
+   "text": "Maybe someone on your team writes clearer emails."
   },
   {
-   "t0": 86.04,
-   "t1": 89.6,
-   "text": "Como adultos, nunca devíamos perder essa atitude."
+   "t0": 91.04,
+   "t1": 93.36,
+   "text": "Ask them how they structure the message."
   },
   {
-   "t0": 89.6,
-   "t1": 91.24,
-   "text": "Mantenha-se curioso."
+   "t0": 93.36,
+   "t1": 96.12,
+   "text": "Maybe someone organizes files better."
   },
   {
-   "t0": 91.24,
-   "t1": 93.8,
-   "text": "Mantenha-se disponível para aprender."
+   "t0": 96.12,
+   "t1": 98.36,
+   "text": "Ask them to show you their system."
   },
   {
-   "t0": 93.8,
-   "t1": 96.48,
-   "text": "Mantenha-se com fome de aprender."
+   "t0": 98.36,
+   "t1": 101.24,
+   "text": "Maybe someone is excellent with customers."
   },
   {
-   "t0": 96.48,
-   "t1": 100.16,
-   "text": "Aqui está um hábito simples que pode usar todos os dias."
+   "t0": 101.24,
+   "t1": 103.2,
+   "text": "Listen to the questions they ask."
   },
   {
-   "t0": 100.16,
-   "t1": 104.62,
-   "text": "No final do seu dia de trabalho, faça-se próprio três perguntas."
+   "t0": 103.2,
+   "t1": 104.56,
+   "text": "Notice their tone."
   },
   {
-   "t0": 104.62,
-   "t1": 106.24,
-   "text": "O que aprendi hoje?"
+   "t0": 104.56,
+   "t1": 107.28,
+   "text": "Watch how they respond when something goes wrong."
   },
   {
-   "t0": 106.24,
-   "t1": 108.16,
-   "text": "Que erro me ensinou algo?"
+   "t0": 107.28,
+   "t1": 108.28,
+   "text": "Often."
   },
   {
-   "t0": 108.16,
-   "t1": 110.48,
-   "text": "O que vou fazer melhor amanhã?"
+   "t0": 108.28,
+   "t1": 110.68,
+   "text": "The best example is already close to you."
   },
   {
-   "t0": 110.48,
-   "t1": 115.36,
-   "text": "Se responder a estas perguntas todos os dias, vai continuar a crescer."
+   "t0": 110.68,
+   "t1": 115.56,
+   "text": "It may be a teammate, a manager, a supplier, or someone with more experience."
   },
   {
-   "t0": 115.36,
-   "t1": 119.68,
-   "text": "Lembre-se, a aprendizagem não acontece só numa sala de aula."
+   "t0": 115.56,
+   "t1": 119.6,
+   "text": "The important question is, what can I learn from the way they do this?"
   },
   {
-   "t0": 119.68,
-   "t1": 121.08,
-   "text": "Aprende-se a ler."
+   "t0": 119.6,
+   "t1": 122.72,
+   "text": "AI can also help you benchmark your work."
   },
   {
-   "t0": 121.08,
-   "t1": 122.8,
-   "text": "Aprende-se a escutar."
+   "t0": 122.72,
+   "t1": 125.04,
+   "text": "Before sending an email, ask."
   },
   {
-   "t0": 122.8,
-   "t1": 124.36,
-   "text": "Aprende-se a observar."
+   "t0": 125.04,
+   "t1": 126.6,
+   "text": "Can this be clearer?"
   },
   {
-   "t0": 124.36,
-   "t1": 126.04,
-   "text": "Aprende-se a fazer."
+   "t0": 126.6,
+   "t1": 129.4,
+   "text": "Before creating a document, ask."
   },
   {
-   "t0": 126.04,
-   "t1": 127.68,
-   "text": "Aprende-se a perguntar."
+   "t0": 129.4,
+   "t1": 131.04,
+   "text": "Can this be simpler?"
   },
   {
-   "t0": 127.68,
-   "t1": 131.0,
-   "text": "E hoje também pode aprender com a IA."
+   "t0": 131.04,
+   "t1": 133.32,
+   "text": "Before solving a problem, ask."
   },
   {
-   "t0": 131.0,
-   "t1": 134.16,
-   "text": "Antes de terminar uma tarefa, pergunte a IA."
+   "t0": 133.32,
+   "t1": 135.08,
+   "text": "Is there a better method?"
   },
   {
-   "t0": 134.16,
-   "t1": 136.16,
-   "text": "Como poderia melhorar isto?"
+   "t0": 135.08,
+   "t1": 138.08,
+   "text": "Before finishing a task, ask."
   },
   {
-   "t0": 136.16,
-   "t1": 137.68,
-   "text": "O que é que falhei?"
+   "t0": 138.08,
+   "t1": 139.64,
+   "text": "What might I have missed?"
   },
   {
-   "t0": 137.68,
-   "t1": 139.4,
-   "text": "Há uma forma melhor?"
+   "t0": 139.64,
+   "t1": 143.12,
+   "text": "These small questions create major improvements over time."
   },
   {
-   "t0": 139.4,
-   "t1": 143.4,
-   "text": "Pense na IA como um treinador que está disponível a qualquer altura."
+   "t0": 143.12,
+   "t1": 145,
+   "text": "They help you notice gaps."
   },
   {
-   "t0": 143.4,
-   "t1": 144.44,
-   "text": "Use-a."
+   "t0": 145,
+   "t1": 148.88,
+   "text": "They help you compare your first version with a stronger version."
   },
   {
-   "t0": 144.48,
-   "t1": 145.96,
-   "text": "Mas não fique por aí."
+   "t0": 148.88,
+   "t1": 151.92,
+   "text": "And they help you improve before the work reaches the customer."
   },
   {
-   "t0": 145.96,
-   "t1": 148.32,
-   "text": "Aprende-se com seus colegas de equipa."
+   "t0": 151.92,
+   "t1": 154.76,
+   "text": "But there is something important to remember."
   },
   {
-   "t0": 148.32,
-   "t1": 150.28,
-   "text": "Aprende-se com seus líderes."
+   "t0": 154.76,
+   "t1": 156.52,
+   "text": "Benchmarking requires humility."
   },
   {
-   "t0": 150.28,
-   "t1": 152.88,
-   "text": "Aprende-se com pessoas com mais experiência."
+   "t0": 156.52,
+   "t1": 159.4,
+   "text": "Pride says, I already know."
   },
   {
-   "t0": 152.88,
-   "t1": 155.36,
-   "text": "Aprende-se com seus próprios sucessos."
+   "t0": 159.4,
+   "t1": 161.64,
+   "text": "Humility says, teach me."
   },
   {
-   "t0": 155.36,
-   "t1": 157.76,
-   "text": "Aprende-se com seus próprios erros."
+   "t0": 161.64,
+   "t1": 163.92,
+   "text": "Pride protects the current method."
   },
   {
-   "t0": 157.76,
-   "t1": 161.88,
-   "text": "As pessoas que têm sucesso na vida não são as pessoas que sabem tudo."
+   "t0": 163.92,
+   "t1": 165.84,
+   "text": "Humility looks for a better one."
   },
   {
-   "t0": 161.88,
-   "t1": 164.76,
-   "text": "São as pessoas que nunca deixam de aprender."
+   "t0": 165.84,
+   "t1": 167.44,
+   "text": "Pride stops learning."
   },
   {
-   "t0": 164.76,
-   "t1": 167.0,
-   "text": "Aqui está um último pensamento."
+   "t0": 167.44,
+   "t1": 168.68,
+   "text": "Humility keeps growing."
   },
   {
-   "t0": 167.0,
-   "t1": 170.0,
-   "text": "O seu maior investimento não é uma máquina."
+   "t0": 168.68,
+   "t1": 171.12,
+   "text": "There is no shame in asking for help."
   },
   {
-   "t0": 170.0,
-   "t1": 171.44,
-   "text": "Não é um edifício."
+   "t0": 171.12,
+   "t1": 175.4,
+   "text": "In many situations, asking for help is a sign of good judgment."
   },
   {
-   "t0": 171.44,
-   "t1": 173.2,
-   "text": "Nem sequer é um negócio."
+   "t0": 175.4,
+   "t1": 178.6,
+   "text": "It shows that the result matters more than your ego."
   },
   {
-   "t0": 173.2,
-   "t1": 176.28,
-   "text": "O seu maior investimento é você próprio."
+   "t0": 178.6,
+   "t1": 181.76,
+   "text": "And it shows that you respect the experience of others."
   },
   {
-   "t0": 176.28,
-   "t1": 179.52,
-   "text": "Cada nova competência que aprende fica consigo."
+   "t0": 181.76,
+   "t1": 184.68,
+   "text": "Imagine two people building the same table."
   },
   {
-   "t0": 179.52,
-   "t1": 182.28,
-   "text": "Cada lição torna o mais valioso."
+   "t0": 184.68,
+   "t1": 186.92,
+   "text": "The first person begins immediately."
   },
   {
-   "t0": 182.28,
-   "t1": 186.36,
-   "text": "Cada dia em que escolhe aprender, torna-se melhor do que era ontem."
+   "t0": 186.92,
+   "t1": 188.44,
+   "text": "They do not ask questions."
   },
   {
-   "t0": 186.36,
-   "t1": 188.8,
-   "text": "Por isso, faça disto o seu hábito."
+   "t0": 188.44,
+   "t1": 190.2,
+   "text": "They do not look at an example."
   },
   {
-   "t0": 188.8,
-   "t1": 190.04,
-   "text": "Seja curioso."
+   "t0": 190.2,
+   "t1": 191.72,
+   "text": "They simply start."
   },
   {
-   "t0": 190.04,
-   "t1": 191.36,
-   "text": "Faça perguntas."
+   "t0": 191.72,
+   "t1": 195.72,
+   "text": "The second person spends five minutes speaking with an experienced carpenter."
   },
   {
-   "t0": 191.36,
-   "t1": 192.32,
-   "text": "Estude."
+   "t0": 195.72,
+   "t1": 197.44,
+   "text": "They ask about the measurements."
   },
   {
-   "t0": 192.32,
-   "t1": 193.32,
-   "text": "Pratique."
+   "t0": 197.44,
+   "t1": 199.44,
+   "text": "They ask about the correct tools."
   },
   {
-   "t0": 193.32,
-   "t1": 194.36,
-   "text": "Escute."
+   "t0": 199.44,
+   "t1": 201.36,
+   "text": "They ask which mistakes to avoid."
   },
   {
-   "t0": 194.36,
-   "t1": 195.36,
-   "text": "Aprenda."
+   "t0": 201.36,
+   "t1": 205.24,
+   "text": "The first person works for four hours and makes several mistakes."
   },
   {
-   "t0": 195.36,
-   "t1": 197.12,
-   "text": "E nunca deixe de crescer."
+   "t0": 205.24,
+   "t1": 209.88,
+   "text": "The second person works for three hours and produces a better table."
   },
   {
-   "t0": 197.12,
-   "t1": 201.04,
-   "text": "Porque o dia em que deixar de aprender é o dia em que deixa de melhorar."
+   "t0": 209.88,
+   "t1": 211.8,
+   "text": "Which person was more productive?"
   },
   {
-   "t0": 201.04,
-   "t1": 205.36,
-   "text": "Mas se se tornar um aprendiz para a vida, o seu potencial não tem limite."
+   "t0": 211.8,
+   "t1": 213.04,
+   "text": "The second person."
+  },
+  {
+   "t0": 213.04,
+   "t1": 214.04,
+   "text": "Why?"
+  },
+  {
+   "t0": 214.04,
+   "t1": 216.84,
+   "text": "Because learning first saved time later."
+  },
+  {
+   "t0": 216.84,
+   "t1": 220.12,
+   "text": "Five minutes of learning saved an hour of work."
+  },
+  {
+   "t0": 220.12,
+   "t1": 222.16,
+   "text": "That is the power of benchmarking."
+  },
+  {
+   "t0": 222.16,
+   "t1": 223.6,
+   "text": "Here is another example."
+  },
+  {
+   "t0": 223.6,
+   "t1": 226.32,
+   "text": "You are creating an important presentation."
+  },
+  {
+   "t0": 226.32,
+   "t1": 230.72,
+   "text": "You could guess what good looks like or you could study a strong presentation."
+  },
+  {
+   "t0": 230.72,
+   "t1": 233.88,
+   "text": "You could ask someone skilled to review your work."
+  },
+  {
+   "t0": 233.88,
+   "t1": 238.52,
+   "text": "Five minutes of useful feedback could improve the entire result."
+  },
+  {
+   "t0": 238.52,
+   "t1": 240.24,
+   "text": "That is benchmarking."
+  },
+  {
+   "t0": 240.24,
+   "t1": 244.2,
+   "text": "It is finding the standard before you finish the work."
+  },
+  {
+   "t0": 244.2,
+   "t1": 248.8,
+   "text": "When you know what excellence looks like, you can compare your work with it."
+  },
+  {
+   "t0": 248.8,
+   "t1": 250.84,
+   "text": "You can notice what is missing."
+  },
+  {
+   "t0": 250.84,
+   "t1": 256.24,
+   "text": "You can make corrections and you can improve before the work is complete."
+  },
+  {
+   "t0": 256.24,
+   "t1": 259.52,
+   "text": "For this sentence, good people work hard."
+  },
+  {
+   "t0": 259.52,
+   "t1": 261.64,
+   "text": "Great people learn fast."
+  },
+  {
+   "t0": 261.64,
+   "t1": 263.76,
+   "text": "Hard work is important."
+  },
+  {
+   "t0": 263.76,
+   "t1": 270.6,
+   "text": "But hard work becomes more powerful when it is guided by better knowledge at our company."
+  },
+  {
+   "t0": 270.6,
+   "t1": 273.04,
+   "text": "Asking for help should be normal."
+  },
+  {
+   "t0": 273.04,
+   "t1": 275.24,
+   "text": "Sharing knowledge should be normal."
+  },
+  {
+   "t0": 275.24,
+   "t1": 277.72,
+   "text": "Learning from one another should be normal."
+  },
+  {
+   "t0": 277.72,
+   "t1": 282.2,
+   "text": "Because when one person improves, the whole team benefits."
+  },
+  {
+   "t0": 282.2,
+   "t1": 285.08,
+   "text": "So this week, challenge yourself."
+  },
+  {
+   "t0": 285.08,
+   "t1": 290.32,
+   "text": "Before starting an important task, ask, who does this well?"
+  },
+  {
+   "t0": 290.32,
+   "t1": 292.24,
+   "text": "What can I learn from them?"
+  },
+  {
+   "t0": 292.24,
+   "t1": 295.04,
+   "text": "What does an excellent result look like?"
+  },
+  {
+   "t0": 295.04,
+   "t1": 297.04,
+   "text": "Can AI help me improve this?"
+  },
+  {
+   "t0": 297.04,
+   "t1": 301.2,
+   "text": "Do not wait until the end to discover there was a better way."
+  },
+  {
+   "t0": 301.2,
+   "t1": 308.2,
+   "text": "Learn first, then act, ask first, then build, benchmark first, then improve."
+  },
+  {
+   "t0": 308.2,
+   "t1": 313.96,
+   "text": "Never stop benchmarking, never stop learning, and never assume that you have already found"
+  },
+  {
+   "t0": 313.96,
+   "t1": 315.52,
+   "text": "the best way."
+  },
+  {
+   "t0": 315.52,
+   "t1": 319.8,
+   "text": "Because excellence is not a destination, it is a habit."
+  },
+  {
+   "t0": 319.8,
+   "t1": 322.4,
+   "text": "The habit of staying curious."
+  },
+  {
+   "t0": 322.4,
+   "t1": 325.08,
+   "text": "The habit of studying what works."
+  },
+  {
+   "t0": 325.08,
+   "t1": 327.48,
+   "text": "The habit of accepting feedback."
+  },
+  {
+   "t0": 327.48,
+   "t1": 330.12,
+   "text": "And the habit of looking for a better standard."
+  },
+  {
+   "t0": 330.12,
+   "t1": 334.44,
+   "text": "The more you learn from excellence, the more excellent your own work becomes."
   }
- ],
- "model": "whisper-small",
- "generatedAt": 1785511104083
+ ]
 }

@@ -1,337 +1,332 @@
 {
+ "module": 3,
+ "title": "Don't Assume, Clarify",
+ "vimeoId": "1217933990",
+ "vimeoName": "4. Don't Assume, Clarify",
  "language": "en",
+ "durationSec": 340,
+ "source": "vimeo-api",
+ "generatedAt": 1786970318428,
  "segments": [
   {
-   "t0": 0.0,
-   "t1": 5.76,
-   "text": "So what's happening here Mike?"
+   "t0": 0,
+   "t1": 6.8,
+   "text": "Imagine this your manager says please move the chairs one person moves five"
   },
   {
-   "t0": 5.76,
-   "t1": 8.4,
-   "text": "Here it's a big fire."
+   "t0": 6.8,
+   "t1": 12.84,
+   "text": "chairs another moves every chair in the room another moves nothing because they"
   },
   {
-   "t0": 8.4,
-   "t1": 13.88,
-   "text": "All the wheat is burning."
+   "t0": 12.84,
+   "t1": 18.4,
+   "text": "thought the task was for tomorrow who made the mistake maybe nobody maybe the"
   },
   {
-   "t0": 13.88,
-   "t1": 14.88,
-   "text": "Step one, cabinets."
+   "t0": 18.4,
+   "t1": 24.16,
+   "text": "problem was not effort maybe the problem was communication great teams do not"
   },
   {
-   "t0": 14.88,
-   "t1": 15.88,
-   "text": "Yes, open."
+   "t0": 24.16,
+   "t1": 29.88,
+   "text": "only work hard great teams communicate clearly communication saves time it"
   },
   {
-   "t0": 15.88,
-   "t1": 16.88,
-   "text": "Find the pieces."
+   "t0": 29.88,
+   "t1": 35.34,
+   "text": "prevents mistakes it builds trust and it helps people work well together the"
   },
   {
-   "t0": 16.88,
-   "t1": 18.16,
-   "text": "Small adapter, fire gun."
+   "t0": 35.34,
+   "t1": 41.12,
+   "text": "biggest communication mistake is simple we assume we assume we understood we"
   },
   {
-   "t0": 18.16,
-   "t1": 26.84,
-   "text": "So bring the fire gun to Joao."
+   "t0": 41.12,
+   "t1": 45.48,
+   "text": "assume the other person understood we assume everyone has the same picture in"
   },
   {
-   "t0": 26.84,
-   "t1": 27.84,
-   "text": "Fire gun is a hand to Joao."
+   "t0": 45.48,
+   "t1": 50.32,
+   "text": "their mind but different people can hear the same words and imagine completely"
   },
   {
-   "t0": 27.84,
-   "t1": 29.84,
-   "text": "Do you want to put a fire gun on the hose?"
+   "t0": 50.32,
+   "t1": 55.64,
+   "text": "different results most communication problems begin with an assumption the"
   },
   {
-   "t0": 29.84,
-   "t1": 32.84,
-   "text": "Boom, one person fire gun."
+   "t0": 55.64,
+   "t1": 62.16,
+   "text": "solution is simple clarify ask questions you can say I just want to check"
   },
   {
-   "t0": 32.84,
-   "t1": 35.2,
-   "text": "Mike is setting the adapters."
+   "t0": 62.16,
+   "t1": 66.92,
+   "text": "that I understood can you show me what you mean what does a successful result"
   },
   {
-   "t0": 35.2,
-   "t1": 37.28,
-   "text": "Outlets."
+   "t0": 66.92,
+   "t1": 71.68,
+   "text": "look like when do you need this finished is this the highest priority these"
   },
   {
-   "t0": 37.28,
-   "t1": 38.76,
-   "text": "Make sure it's full of seals."
+   "t0": 71.68,
+   "t1": 76.44,
+   "text": "questions are not signs of weakness they are signs of professionalism they show"
   },
   {
-   "t0": 38.76,
-   "t1": 41.24,
-   "text": "Ready?"
+   "t0": 76.44,
+   "t1": 81,
+   "text": "that you care about getting the work right imagine your manager says please"
   },
   {
-   "t0": 41.24,
-   "t1": 42.0,
-   "text": "That was quick."
+   "t0": 81,
+   "t1": 85.32,
+   "text": "clean the kitchen one person washes the dishes another cleans the floor another"
   },
   {
-   "t0": 53.36,
-   "t1": 55.88,
-   "text": "Throttle is on now."
+   "t0": 85.4,
+   "t1": 90.52,
+   "text": "wipes the work tops another empties the rubbish everyone is working hard but"
   },
   {
-   "t0": 55.88,
-   "t1": 58.88,
-   "text": "You did the clutch and the orange button."
+   "t0": 90.52,
+   "t1": 94.88,
+   "text": "everyone has a different understanding of the task a short conversation at the"
   },
   {
-   "t0": 58.88,
-   "t1": 63.52,
-   "text": "The throttle on."
+   "t0": 94.88,
+   "t1": 100.4,
+   "text": "beginning could prevent confusion later you could ask which areas need to be"
   },
   {
-   "t0": 63.52,
-   "t1": 66.16,
-   "text": "So no more than 15,000."
+   "t0": 100.4,
+   "t1": 106.16,
+   "text": "cleaned who is responsible for each task when does everything need to be finished"
   },
   {
-   "t0": 66.16,
-   "t1": 67.68,
-   "text": "And how do you fix that?"
+   "t0": 106.16,
+   "t1": 111.88,
+   "text": "a two-minute conversation can save 30 minutes of correction good communication"
   },
   {
-   "t0": 67.68,
-   "t1": 70.0,
-   "text": "Yeah, you can see."
+   "t0": 111.88,
+   "t1": 117,
+   "text": "is faster than fixing avoidable mistakes now think about listening many people"
   },
   {
-   "t0": 70.0,
-   "t1": 71.88,
-   "text": "Now it goes low."
+   "t0": 117,
+   "t1": 121.44,
+   "text": "listen so they can answer great communicators listen so they can"
   },
   {
-   "t0": 71.88,
-   "t1": 72.76,
-   "text": "When you push it right."
+   "t0": 121.44,
+   "t1": 127.12,
+   "text": "understand when someone is speaking stop what you are doing when possible look"
   },
   {
-   "t0": 76.36,
-   "t1": 77.16,
-   "text": "And it goes up."
+   "t0": 127.12,
+   "t1": 133.48,
+   "text": "at the person listen carefully do not interrupt and when they finish repeat"
   },
   {
-   "t0": 77.16,
-   "t1": 79.08,
-   "text": "It's the orange one, yeah?"
+   "t0": 133.48,
+   "t1": 140.92,
+   "text": "back what you understood for example so if I understand correctly you would like"
   },
   {
-   "t0": 79.08,
-   "t1": 80.52,
-   "text": "Yeah, this one."
+   "t0": 140.92,
+   "t1": 146.56,
+   "text": "me to finish this before lunch or you would like these five chairs moved to"
   },
   {
-   "t0": 80.52,
-   "t1": 81.64,
-   "text": "This is no function."
+   "t0": 146.56,
+   "t1": 151.6,
+   "text": "the meeting room before 10 o'clock is that correct this is called checking"
   },
   {
-   "t0": 81.64,
-   "t1": 86.0,
-   "text": "This is only for communication to the backside."
+   "t0": 151.6,
+   "t1": 156.16,
+   "text": "your understanding it takes only a few seconds but those few seconds can"
   },
   {
-   "t0": 86.0,
-   "t1": 87.52,
-   "text": "Normally here's a microphone."
+   "t0": 156.16,
+   "t1": 160.64,
+   "text": "prevent hours of wasted work good communicators also notice what has not"
   },
   {
-   "t0": 87.52,
-   "t1": 89.8,
-   "text": "On the backside is a speaker."
+   "t0": 160.64,
+   "t1": 165.28,
+   "text": "been said sometimes the deadline is unclear sometimes the priority has"
   },
   {
-   "t0": 89.8,
-   "t1": 92.72,
-   "text": "And then they have normally a CB phone"
+   "t0": 165.28,
+   "t1": 171.6,
+   "text": "changed sometimes important information is missing so before you begin ask what"
   },
   {
-   "t0": 92.72,
-   "t1": 93.76,
-   "text": "so they can talk together."
+   "t0": 171.6,
+   "t1": 176.48,
+   "text": "do I need to confirm what might be unclear what does the finished result need"
   },
   {
-   "t0": 97.16,
-   "t1": 98.4,
-   "text": "OK, so then."
+   "t0": 176.48,
+   "t1": 182.6,
+   "text": "to look like another important habit is checking in if a task takes several hours"
   },
   {
-   "t0": 111.64,
-   "t1": 114.64,
-   "text": "Yeah, he has a license for that."
+   "t0": 182.6,
+   "t1": 189.2,
+   "text": "or several days do not disappear give an update you can say just checking in is"
   },
   {
-   "t0": 114.64,
-   "t1": 117.96,
-   "text": "He drives a caterpillar inside fires"
+   "t0": 189.24,
+   "t1": 196.52,
+   "text": "this still the priority or this is my progress am I on the right track small"
   },
   {
-   "t0": 117.96,
-   "t1": 120.48,
-   "text": "because he was a soldier in Portugal."
+   "t0": 196.52,
+   "t1": 201.92,
+   "text": "check-ins prevent big problems a task can begin correctly and still move in the"
   },
   {
-   "t0": 120.48,
-   "t1": 124.36,
-   "text": "And all the soldiers have the option to train these."
+   "t0": 201.92,
+   "t1": 207.68,
+   "text": "wrong direction priorities can change new information can arrive a short update"
   },
   {
-   "t0": 124.36,
-   "t1": 125.92,
-   "text": "But they must do it every year."
+   "t0": 207.68,
+   "t1": 214.28,
+   "text": "gives everyone the chance to adjust before time is wasted remember this bad"
   },
   {
-   "t0": 125.92,
-   "t1": 126.92,
-   "text": "Yeah, yeah."
+   "t0": 214.28,
+   "t1": 219.8,
+   "text": "news does not improve with time if something will be late speak up early if"
   },
   {
-   "t0": 133.4,
-   "t1": 135.4,
-   "text": "That is why I ask him."
+   "t0": 219.8,
+   "t1": 226.64,
+   "text": "you made a mistake speak up early if you do not understand speak up early if you"
   },
   {
-   "t0": 135.4,
-   "t1": 136.4,
-   "text": "He's a soldier."
+   "t0": 226.64,
+   "t1": 231.56,
+   "text": "need support speak up early people can help solve a problem they know about"
   },
   {
-   "t0": 136.4,
-   "t1": 137.4,
-   "text": "He's a soldier."
+   "t0": 231.56,
+   "t1": 237.24,
+   "text": "they cannot solve a problem they do not know exists speaking up early is not"
   },
   {
-   "t0": 137.4,
-   "t1": 138.4,
-   "text": "He's a soldier."
+   "t0": 237.24,
+   "t1": 242.76,
+   "text": "creating a problem it is giving the team time to solve it that is responsibility"
   },
   {
-   "t0": 138.4,
-   "t1": 139.4,
-   "text": "He's a soldier."
+   "t0": 242.76,
+   "t1": 247.32,
+   "text": "that is trust and that is good communication communication is also"
   },
   {
-   "t0": 139.96,
-   "t1": 143.16,
-   "text": "That is why I ask him to stay with us."
+   "t0": 247.32,
+   "t1": 251.76,
+   "text": "about respect when you communicate clearly you respect other people's time"
   },
   {
-   "t0": 143.16,
-   "t1": 146.36,
-   "text": "He can also knows a little bit about that."
+   "t0": 251.76,
+   "t1": 256.28,
+   "text": "when you listen carefully you respect the person speaking when you ask"
   },
   {
-   "t0": 146.36,
-   "t1": 146.92,
-   "text": "Be careful."
+   "t0": 256.28,
+   "t1": 261.48,
+   "text": "questions you respect the work when you check your understanding you respect"
   },
   {
-   "t0": 146.92,
-   "t1": 147.8,
-   "text": "Now it's full power."
+   "t0": 261.48,
+   "t1": 266.52,
+   "text": "the result and when you give updates you respect the whole team clear"
   },
   {
-   "t0": 160.84,
-   "t1": 161.72,
-   "text": "In the search."
+   "t0": 266.52,
+   "t1": 271.6,
+   "text": "communication also means choosing the right method some messages should be"
   },
   {
-   "t0": 161.72,
-   "t1": 162.64,
-   "text": "Nice area here."
+   "t0": 271.6,
+   "t1": 276.16,
+   "text": "sent immediately some are better discussed face-to-face some should be"
   },
   {
-   "t0": 162.64,
-   "t1": 164.64,
-   "text": "Sergeant search."
+   "t0": 276.16,
+   "t1": 281.56,
+   "text": "written down a good communicator asks who needs to know when do they need to"
   },
   {
-   "t0": 164.64,
-   "t1": 167.16,
-   "text": "Me neither."
+   "t0": 281.56,
+   "t1": 286.72,
+   "text": "know what is the clearest way to explain this because communication is not only"
   },
   {
-   "t0": 167.16,
-   "t1": 167.92,
-   "text": "Sergeant."
+   "t0": 286.72,
+   "t1": 291.68,
+   "text": "about what you say it is about what the other person understands so remember"
   },
   {
-   "t0": 185.16,
-   "t1": 186.76,
-   "text": "Let's go."
+   "t0": 291.68,
+   "t1": 298.92,
+   "text": "four simple habits first do not assume second ask clarifying questions third"
   },
   {
-   "t0": 186.76,
-   "t1": 189.04,
-   "text": "Oh, that is nice."
+   "t0": 299.08,
+   "t1": 305.2,
+   "text": "repeat back what you understood fourth check in early and often these habits"
   },
   {
-   "t0": 189.04,
-   "t1": 189.52,
-   "text": "Hold it."
+   "t0": 305.2,
+   "t1": 309.08,
+   "text": "will make you a better teammate they will make you easier to trust they will"
   },
   {
-   "t0": 192.32,
-   "t1": 193.44,
-   "text": "Careful with the mic."
+   "t0": 309.08,
+   "t1": 313.48,
+   "text": "prevent avoidable mistakes and they will help the whole team succeed great"
   },
   {
-   "t0": 193.44,
-   "t1": 194.96,
-   "text": "Careful with the mic."
+   "t0": 313.48,
+   "t1": 318.52,
+   "text": "communication is not about using big words it is not about speaking more it is"
   },
   {
-   "t0": 194.96,
-   "t1": 195.88,
-   "text": "Careful with the mic."
+   "t0": 318.52,
+   "t1": 323.36,
+   "text": "about creating understanding the message is not complete when it is spoken the"
   },
   {
-   "t0": 195.88,
-   "t1": 196.8,
-   "text": "He wants us."
+   "t0": 323.36,
+   "t1": 327.8,
+   "text": "message is complete when it is understood so communicate clearly listen"
   },
   {
-   "t0": 196.84,
-   "t1": 197.52,
-   "text": "I don't care."
+   "t0": 327.8,
+   "t1": 332.96,
+   "text": "carefully ask questions give updates and clarify often because great teams do"
   },
   {
-   "t0": 197.52,
-   "t1": 198.52,
-   "text": "Careful with John's mic."
+   "t0": 332.96,
+   "t1": 337.16,
+   "text": "not guess great teams make sure great teams understand one another and great"
   },
   {
-   "t0": 201.28,
-   "t1": 202.0,
-   "text": "Sorry."
-  },
-  {
-   "t0": 202.0,
-   "t1": 203.0,
-   "text": "Only one."
-  },
-  {
-   "t0": 203.0,
-   "t1": 204.0,
-   "text": "Sorry, sorry."
+   "t0": 337.16,
+   "t1": 340.56,
+   "text": "teams communicate"
   }
- ],
- "model": "whisper-small",
- "generatedAt": 1785511057161
+ ]
 }

@@ -1,0 +1,1280 @@
+{
+ "course": "land-team-journey",
+ "lang": "pt",
+ "modules": {
+  "0": [
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Blaming others, making excuses, being defensive",
+      "Asking questions, listening, accepting feedback",
+      "Assuming responsibility, seeking solutions",
+      "Ignoring problems, avoiding conflicts"
+     ],
+     "q": "What are the main characteristics of being 'below the line'?",
+     "why": "Below the line is characterized by blaming others, making excuses, and being defensive."
+    },
+    "pt": {
+     "opts": [
+      "Culpar os outros, arranjar desculpas, ser defensivo",
+      "Fazer perguntas, ouvir, aceitar feedback",
+      "Assumir responsabilidade, procurar soluções",
+      "Ignorar problemas, evitar conflitos"
+     ],
+     "q": "Quais são as principais características de estar 'abaixo da linha'?",
+     "why": "Abaixo da linha é caracterizado por culpar os outros, arranjar desculpas e ser defensivo."
+    },
+    "t0": 51,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786972958635,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Asking questions, listening, accepting feedback, assuming responsibility, seeking solutions",
+      "Blaming others, making excuses, being defensive",
+      "Ignoring problems, avoiding conflicts",
+      "Focusing on individual goals, neglecting teamwork"
+     ],
+     "q": "What are the key habits of people who stay 'above the line'?",
+     "why": "Above the line is characterized by asking questions, listening, accepting feedback, assuming responsibility, and seeking solutions."
+    },
+    "pt": {
+     "opts": [
+      "Fazer perguntas, ouvir, aceitar feedback, assumir responsabilidade, procurar soluções",
+      "Culpar os outros, arranjar desculpas, ser defensivo",
+      "Ignorar problemas, evitar conflitos",
+      "Focar em metas individuais, negligenciar o trabalho em equipe"
+     ],
+     "q": "Quais são os principais hábitos das pessoas que se mantêm 'acima da linha'?",
+     "why": "Acima da linha é caracterizado por fazer perguntas, ouvir, aceitar feedback, assumir responsabilidade e procurar soluções."
+    },
+    "t0": 104,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786972958635,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to justify your actions",
+      "Take a break to calm down",
+      "Recognize the situation and choose to move back 'above the line'",
+      "Ignore the situation and hope it resolves itself"
+     ],
+     "q": "What should you do when you realize you've gone 'below the line'?",
+     "why": "The correct response is to recognize the situation and choose to move back above the line."
+    },
+    "pt": {
+     "opts": [
+      "Tentar justificar as suas ações",
+      "Fazer uma pausa para se acalmar",
+      "Reconhecer a situação e escolher voltar para 'acima da linha'",
+      "Ignorar a situação e esperar que se resolva sozinha"
+     ],
+     "q": "O que deve fazer quando se apercebe que está 'abaixo da linha'?",
+     "why": "A resposta correcta é reconhecer a situação e escolher voltar para acima da linha."
+    },
+    "t0": 182,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786972958635,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "By focusing on individual goals and neglecting teamwork",
+      "By blaming others and making excuses when problems arise",
+      "By asking questions, listening, and seeking solutions",
+      "By avoiding conflicts and difficult conversations"
+     ],
+     "q": "How can you apply the 'above the line' mindset in your daily work?",
+     "why": "The correct response is to ask questions, listen, and seek solutions."
+    },
+    "pt": {
+     "opts": [
+      "Focando em metas individuais e negligenciando o trabalho em equipe",
+      "Culpar os outros e arranjar desculpas quando surgem problemas",
+      "Fazer perguntas, ouvir e procurar soluções",
+      "Evitar conflitos e conversas difíceis"
+     ],
+     "q": "Como pode aplicar a mentalidade 'acima da linha' no seu trabalho diário?",
+     "why": "A resposta correcta é fazer perguntas, ouvir e procurar soluções."
+    },
+    "t0": 129,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786972958635,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask them to explain what happened and how to prevent it in the future",
+      "Tell them it's their fault and they should fix it",
+      "Ignore the situation and focus on your own tasks",
+      "Report the mistake to your supervisor"
+     ],
+     "q": "A colleague makes a mistake that affects your project. What do you do?",
+     "why": "The correct response is to ask them to explain what happened and how to prevent it in the future."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar-lhe para explicar o que aconteceu e como prevenir no futuro",
+      "Dizer-lhe que é culpa dele e que deve consertar",
+      "Ignorar a situação e focar nas suas próprias tarefas",
+      "Relatar o erro ao seu supervisor"
+     ],
+     "q": "Um colega comete um erro que afeta o seu projecto. O que faz?",
+     "why": "A resposta correcta é perguntar-lhe para explicar o que aconteceu e como prevenir no futuro."
+    },
+    "t0": 155,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786972958635,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Encourage them to continue discussing the issue and finding a solution",
+      "Tell them they're being defensive and need to stop",
+      "Avoid the conversation and focus on your own work",
+      "Suggest that they take a break and calm down before discussing the issue"
+     ],
+     "q": "You notice that a team member is being defensive and blaming others for a problem. What do you do?",
+     "why": "The correct response is to encourage them to continue discussing the issue and finding a solution."
+    },
+    "pt": {
+     "opts": [
+      "Encorajá-lo a continuar discutindo a questão e a encontrar uma solução",
+      "Dizer-lhe que está a ser defensivo e que precisa parar",
+      "Evitar a conversa e focar no seu próprio trabalho",
+      "Sugerir que ele faça uma pausa e se acalme antes de discutir a questão"
+     ],
+     "q": "Nota que um membro da equipe está a ser defensivo e a culpar os outros por um problema. O que faz?",
+     "why": "A resposta correcta é encorajá-lo a continuar discutindo a questão e a encontrar uma solução."
+    },
+    "t0": 210,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786972958635,
+    "corrected": true
+   }
+  ],
+  "1": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "There is no failure, only success",
+      "There is no feedback, only failure",
+      "There is no failure, only feedback",
+      "There is no learning, only doing"
+     ],
+     "q": "What is the key phrase to remember according to the trainer?",
+     "why": "The trainer emphasizes that every error teaches us something and that feedback helps us improve."
+    },
+    "pt": {
+     "opts": [
+      "Não há fracasso, só sucesso",
+      "Não há feedback, só fracasso",
+      "Não há fracasso, só feedback",
+      "Não há aprendizagem, só ação"
+     ],
+     "q": "Qual é a frase-chave para lembrar segundo o formador?",
+     "why": "O formador enfatiza que cada erro nos ensina algo e que o feedback nos ajuda a melhorar."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973014586,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "They become defensive and deny responsibility",
+      "They ask for clarification and ways to improve",
+      "They ignore the feedback and continue as before",
+      "They blame others for their mistakes"
+     ],
+     "q": "How does the second person in the example react to feedback?",
+     "why": "The second person is open to learning and asks for help to improve, demonstrating a growth mindset."
+    },
+    "pt": {
+     "opts": [
+      "Eles se tornam defensivos e negam responsabilidade",
+      "Eles pedem esclarecimentos e formas de melhorar",
+      "Eles ignoram o feedback e continuam como antes",
+      "Eles culpam os outros pelos seus erros"
+     ],
+     "q": "Como reage a segunda pessoa no exemplo ao feedback?",
+     "why": "A segunda pessoa está aberta ao aprendizado e pede ajuda para melhorar, demonstrando uma mentalidade de crescimento."
+    },
+    "t0": 130,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973014586,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to hide it and hope no one notices",
+      "Ask for feedback and ways to improve",
+      "Blame someone else for the mistake",
+      "Give up and quit"
+     ],
+     "q": "What should you do when you make a mistake at work?",
+     "why": "Asking for feedback and ways to improve shows that you are committed to learning and growing from your mistakes."
+    },
+    "pt": {
+     "opts": [
+      "Tentar esconder e esperar que ninguém note",
+      "Pedir feedback e formas de melhorar",
+      "Culpar alguém pelo erro",
+      "Desistir e abandonar"
+     ],
+     "q": "O que deve fazer quando comete um erro no trabalho?",
+     "why": "Pedir feedback e formas de melhorar mostra que você está comprometido em aprender e crescer com os seus erros."
+    },
+    "t0": 104,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973014586,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "By only learning from your own experiences",
+      "By asking questions, listening, and improving",
+      "By reading books and watching videos only",
+      "By never seeking feedback or help"
+     ],
+     "q": "How can you improve your skills and knowledge?",
+     "why": "Asking questions, listening, and improving shows that you are proactive and committed to continuous learning and growth."
+    },
+    "pt": {
+     "opts": [
+      "Apenas aprendendo com as suas próprias experiências",
+      "Perguntando, ouvindo e melhorando",
+      "Lendo livros e assistindo vídeos apenas",
+      "Nunca procurando feedback ou ajuda"
+     ],
+     "q": "Como pode melhorar suas habilidades e conhecimentos?",
+     "why": "Perguntar, ouvir e melhorar mostra que você é proativo e comprometido com o aprendizado e crescimento contínuos."
+    },
+    "t0": 159,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973014586,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them to figure it out on their own",
+      "Offer to show them how to do it and provide feedback",
+      "Ignore their request and focus on your own work",
+      "Tell them they are not doing it correctly and walk away"
+     ],
+     "q": "A new colleague is struggling with a task and asks for your help. What should you do?",
+     "why": "Offering to help and provide feedback shows that you are willing to support and guide your colleague, demonstrating a growth mindset and a commitment to teamwork."
+    },
+    "pt": {
+     "opts": [
+      "Dizer para eles figurem isso sozinhos",
+      "Oferecer para mostrar como fazer e fornecer feedback",
+      "Ignorar o pedido e se concentrar no seu próprio trabalho",
+      "Dizer que eles não estão fazendo corretamente e ir embora"
+     ],
+     "q": "Um novo colega está tendo dificuldades com uma tarefa e pede a sua ajuda. O que deve fazer?",
+     "why": "Oferecer ajuda e fornecer feedback mostra que você está disposto a apoiar e orientar o seu colega, demonstrando uma mentalidade de crescimento e um compromisso com o trabalho em equipe."
+    },
+    "t0": 186,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973014586,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Become defensive and argue with your supervisor",
+      "Ask for clarification and examples to understand their perspective",
+      "Ignore the feedback and continue as before",
+      "Ask for a meeting with HR to complain about your supervisor"
+     ],
+     "q": "Your supervisor gives you feedback on your performance, but you disagree with their assessment. What should you do?",
+     "why": "Asking for clarification and examples shows that you are open to learning and willing to consider different perspectives, demonstrating a growth mindset and a commitment to improvement."
+    },
+    "pt": {
+     "opts": [
+      "Tornar-se defensivo e discutir com o seu supervisor",
+      "Pedir esclarecimentos e exemplos para entender a perspectiva deles",
+      "Ignorar o feedback e continuar como antes",
+      "Pedir uma reunião com RH para reclamar sobre o seu supervisor"
+     ],
+     "q": "O seu supervisor dá feedback sobre o seu desempenho, mas você discorda da sua avaliação. O que deve fazer?",
+     "why": "Pedir esclarecimentos e exemplos mostra que você está aberto ao aprendizado e disposto a considerar diferentes perspectivas, demonstrando uma mentalidade de crescimento e um compromisso com a melhoria."
+    },
+    "t0": 130,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973014586,
+    "verified": true
+   }
+  ],
+  "2": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "They blame others for their mistakes",
+      "They focus on what they can control",
+      "They try to justify their actions",
+      "They ignore the problem"
+     ],
+     "q": "What is the key characteristic of the second person in the example?",
+     "why": "The second person takes responsibility for their actions and focuses on what they can control."
+    },
+    "pt": {
+     "opts": [
+      "Eles culpam os outros pelos seus erros",
+      "Eles se concentram no que podem controlar",
+      "Eles tentam justificar as suas ações",
+      "Eles ignoram o problema"
+     ],
+     "q": "Qual é a característica principal da segunda pessoa no exemplo?",
+     "why": "A segunda pessoa assume responsabilidade pelas suas ações e se concentra no que pode controlar."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973062239,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "What can I do to improve this situation?",
+      "Who is to blame for this problem?",
+      "What is the best way to avoid this situation?",
+      "How can I justify my actions?"
+     ],
+     "q": "What question do people who grow and learn regularly ask themselves?",
+     "why": "People who grow and learn regularly ask themselves what they can do to improve the situation."
+    },
+    "pt": {
+     "opts": [
+      "O que posso fazer para melhorar esta situação?",
+      "Quem é o culpado por este problema?",
+      "Qual é a melhor maneira de evitar esta situação?",
+      "Como posso justificar as minhas ações?"
+     ],
+     "q": "Qual pergunta as pessoas que crescem e aprendem regularmente se fazem?",
+     "why": "As pessoas que crescem e aprendem regularmente se perguntam o que podem fazer para melhorar a situação."
+    },
+    "t0": 53,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973062239,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Keep quiet and hope the problem goes away",
+      "Communicate with your supervisor and ask for help",
+      "Blame someone else for the delay",
+      "Try to rush to finish the task"
+     ],
+     "q": "What should you do if you are running behind schedule on a task?",
+     "why": "You should communicate with your supervisor and ask for help if you are running behind schedule on a task."
+    },
+    "pt": {
+     "opts": [
+      "Manter-se em silêncio e esperar que o problema desapareça",
+      "Comunicar-se com o seu supervisor e pedir ajuda",
+      "Culpar alguém mais pelo atraso",
+      "Tentar apressar-se para terminar a tarefa"
+     ],
+     "q": "O que deve fazer se estiver atrasado em uma tarefa?",
+     "why": "Deve comunicar-se com o seu supervisor e pedir ajuda se estiver atrasado em uma tarefa."
+    },
+    "t0": 107,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973062239,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Ignore it and continue working",
+      "Stop and verify the issue",
+      "Blame someone else for the mistake",
+      "Try to fix it later"
+     ],
+     "q": "What should you do if you notice something is not quite right while working on a task?",
+     "why": "You should stop and verify the issue if you notice something is not quite right while working on a task."
+    },
+    "pt": {
+     "opts": [
+      "Ignorar e continuar trabalhando",
+      "Parar e verificar o problema",
+      "Culpar alguém mais pelo erro",
+      "Tentar consertar mais tarde"
+     ],
+     "q": "O que deve fazer se notar que algo não está quite certo enquanto trabalha em uma tarefa?",
+     "why": "Deve parar e verificar o problema se notar que algo não está quite certo enquanto trabalha em uma tarefa."
+    },
+    "t0": 162,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973062239,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask what you can do to mitigate the issue and find a solution",
+      "Complain to the supplier and wait for them to fix the problem",
+      "Blame the supplier and try to find a new one",
+      "Do nothing and hope the problem resolves itself"
+     ],
+     "q": "A supplier has delayed a shipment, causing a problem with your project. What should you do?",
+     "why": "You should ask what you can do to mitigate the issue and find a solution."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar o que pode fazer para mitigar o problema e encontrar uma solução",
+      "Queixar-se ao fornecedor e esperar que eles resolvam o problema",
+      "Culpar o fornecedor e tentar encontrar um novo",
+      "Não fazer nada e esperar que o problema se resolva sozinho"
+     ],
+     "q": "Um fornecedor atrasou uma remessa, causando um problema com o seu projeto. O que deve fazer?",
+     "why": "Deve perguntar o que pode fazer para mitigar o problema e encontrar uma solução."
+    },
+    "t0": 81,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973062239,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Keep quiet and hope no one notices",
+      "Communicate the issue to your supervisor and ask for help to fix it",
+      "Try to fix it secretly without telling anyone",
+      "Blame someone else for the mistake"
+     ],
+     "q": "You have made a mistake on a task and it is not yet noticeable to others. What should you do?",
+     "why": "You should communicate the issue to your supervisor and ask for help to fix it."
+    },
+    "pt": {
+     "opts": [
+      "Manter-se em silêncio e esperar que ninguém note",
+      "Comunicar o problema ao seu supervisor e pedir ajuda para consertar",
+      "Tentar consertar secretamente sem dizer a ninguém",
+      "Culpar alguém mais pelo erro"
+     ],
+     "q": "Cometeu um erro em uma tarefa e ainda não é notável para os outros. O que deve fazer?",
+     "why": "Deve comunicar o problema ao seu supervisor e pedir ajuda para consertar."
+    },
+    "t0": 136,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973062239,
+    "corrected": true
+   }
+  ],
+  "3": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "It increases individual effort",
+      "It saves time and avoids errors",
+      "It reduces team size",
+      "It increases assumptions"
+     ],
+     "q": "What is the main benefit of clear communication in a team?",
+     "why": "Clear communication saves time, avoids errors, builds trust, and helps team members work well together."
+    },
+    "pt": {
+     "opts": [
+      "Aumenta o esforço individual",
+      "Poupa tempo e evita erros",
+      "Reduz o tamanho da equipa",
+      "Aumenta as suposições"
+     ],
+     "q": "Qual é o principal benefício da comunicação clara numa equipa?",
+     "why": "A comunicação clara poupa tempo, evita erros, constrói confiança e ajuda as pessoas a trabalharem bem em conjunto."
+    },
+    "t0": 28,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974142104,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Assuming everyone understands",
+      "Asking questions and clarifying",
+      "Working harder",
+      "Ignoring the problem"
+     ],
+     "q": "What is a simple solution to avoid communication errors?",
+     "why": "Asking questions and clarifying is a simple solution to avoid communication errors."
+    },
+    "pt": {
+     "opts": [
+      "Assumir que todos compreendem",
+      "Fazer perguntas e esclarecer",
+      "Trabalhar mais",
+      "Ignorar o problema"
+     ],
+     "q": "Qual é uma solução simples para evitar erros de comunicação?",
+     "why": "Fazer perguntas e esclarecer é uma solução simples para evitar erros de comunicação."
+    },
+    "t0": 57,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974142104,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Start working immediately",
+      "Ask questions to clarify the task",
+      "Assume you understand the task",
+      "Ignore the task"
+     ],
+     "q": "What should you do when receiving a task from your supervisor?",
+     "why": "Asking questions to clarify the task ensures you understand what needs to be done and avoids potential errors."
+    },
+    "pt": {
+     "opts": [
+      "Começar a trabalhar imediatamente",
+      "Fazer perguntas para esclarecer a tarefa",
+      "Assumir que compreende a tarefa",
+      "Ignorar a tarefa"
+     ],
+     "q": "O que deve fazer quando recebe uma tarefa do seu supervisor?",
+     "why": "Fazer perguntas para esclarecer a tarefa garante que compreende o que precisa ser feito e evita erros potenciais."
+    },
+    "t0": 85,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974142104,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "To respond quickly",
+      "To understand and comprehend",
+      "To interrupt and correct",
+      "To ignore and dismiss"
+     ],
+     "q": "How should you listen to someone in a conversation?",
+     "why": "Listening to understand and comprehend shows that you value and respect the other person's perspective."
+    },
+    "pt": {
+     "opts": [
+      "Para responder rapidamente",
+      "Para compreender e entender",
+      "Para interromper e corrigir",
+      "Para ignorar e desconsiderar"
+     ],
+     "q": "Como deve escutar alguém numa conversa?",
+     "why": "Escutar para compreender e entender mostra que valoriza e respeita a perspectiva da outra pessoa."
+    },
+    "t0": 115,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974142104,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Start moving the chairs immediately",
+      "Ask your supervisor to clarify the task",
+      "Tell your supervisor you don't have time",
+      "Repeat back what you understood the task to be"
+     ],
+     "q": "Your supervisor asks you to move five chairs to the meeting room. What should you do next?",
+     "why": "Repeating back what you understood the task to be ensures that you and your supervisor are on the same page and avoids potential errors."
+    },
+    "pt": {
+     "opts": [
+      "Começar a mover as cadeiras imediatamente",
+      "Perguntar ao seu supervisor para esclarecer a tarefa",
+      "Dizer ao seu supervisor que não tem tempo",
+      "Repetir o que compreendeu a tarefa a ser"
+     ],
+     "q": "O seu supervisor pede-lhe para mover cinco cadeiras para a sala de reuniões. O que deve fazer em seguida?",
+     "why": "Repetir o que compreendeu a tarefa a ser garante que você e o seu supervisor estão na mesma página e evita erros potenciais."
+    },
+    "t0": 144,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974142104,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask questions to clarify the task and deadline",
+      "Start working on the task immediately",
+      "Assume you understand the task and deadline",
+      "Ignore the deadline and work at your own pace"
+     ],
+     "q": "You are given a task with a tight deadline. What should you do before starting the task?",
+     "why": "Asking questions to clarify the task and deadline ensures that you understand what needs to be done and when, and avoids potential errors or missed deadlines."
+    },
+    "pt": {
+     "opts": [
+      "Fazer perguntas para esclarecer a tarefa e o prazo",
+      "Começar a trabalhar na tarefa imediatamente",
+      "Assumir que compreende a tarefa e o prazo",
+      "Ignorar o prazo e trabalhar ao seu próprio ritmo"
+     ],
+     "q": "Você é dado uma tarefa com um prazo apertado. O que deve fazer antes de começar a tarefa?",
+     "why": "Fazer perguntas para esclarecer a tarefa e o prazo garante que compreende o que precisa ser feito e quando, e evita erros potenciais ou prazos perdidos."
+    },
+    "t0": 173,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974142104,
+    "verified": true
+   }
+  ],
+  "4": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "What am I doing wrong?",
+      "Who does this better than me?",
+      "How can I do this faster?",
+      "What is the best way to do this?"
+     ],
+     "q": "What is the simple question that can help you improve and avoid errors?",
+     "why": "Asking who does this better than you can help you learn from others and improve your performance."
+    },
+    "pt": {
+     "opts": [
+      "O que estou a fazer de errado?",
+      "Quem faz isto melhor do que eu?",
+      "Como posso fazer isto mais depressa?",
+      "Qual é a melhor maneira de fazer isto?"
+     ],
+     "q": "Qual é a pergunta simples que pode ajudá-lo a melhorar e evitar erros?",
+     "why": "Perguntar quem faz isto melhor do que você pode ajudá-lo a aprender com os outros e melhorar o seu desempenho."
+    },
+    "t0": 26,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973137282,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Copying someone else's method without thinking",
+      "Learning from an excellent example and applying its lessons",
+      "Comparing yourself to others to feel superior",
+      "Focusing on your own strengths and weaknesses"
+     ],
+     "q": "What does benchmarking mean in the context of personal improvement?",
+     "why": "Benchmarking means finding an excellent example and learning from it to improve your own performance."
+    },
+    "pt": {
+     "opts": [
+      "Copiar o método de alguém sem pensar",
+      "Aprender de um exemplo excelente e aplicar as suas lições",
+      "Comparar-se com os outros para se sentir superior",
+      "Focar-se nas suas próprias forças e fraquezas"
+     ],
+     "q": "O que significa benchmarking no contexto de melhoria pessoal?",
+     "why": "Benchmarking significa encontrar um exemplo excelente e aprender com ele para melhorar o seu próprio desempenho."
+    },
+    "t0": 51,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973137282,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to copy their exact method",
+      "Ask them to share their approach and learn from it",
+      "Focus on your own strengths and weaknesses",
+      "Ignore them and continue with your own approach"
+     ],
+     "q": "What should you do when you notice someone achieving excellent results?",
+     "why": "Asking someone to share their approach can help you learn from their experience and improve your own performance."
+    },
+    "pt": {
+     "opts": [
+      "Tentar copiar o método exato",
+      "Perguntar-lhes para partilhar a sua abordagem e aprender com ela",
+      "Focar-se nas suas próprias forças e fraquezas",
+      "Ignorá-los e continuar com a sua própria abordagem"
+     ],
+     "q": "O que deve fazer quando nota alguém a alcançar resultados excelentes?",
+     "why": "Perguntar a alguém para partilhar a sua abordagem pode ajudá-lo a aprender com a experiência deles e melhorar o seu próprio desempenho."
+    },
+    "t0": 76,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973137282,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "By only asking for help when you're stuck",
+      "By regularly asking questions and seeking feedback from others",
+      "By focusing on your own strengths and weaknesses",
+      "By ignoring others' approaches and doing things your own way"
+     ],
+     "q": "How can you apply benchmarking in your daily work?",
+     "why": "Regularly asking questions and seeking feedback from others can help you identify areas for improvement and learn from their experiences."
+    },
+    "pt": {
+     "opts": [
+      "Apenas pedindo ajuda quando está preso",
+      "Perguntando regularmente questões e procurando feedback dos outros",
+      "Focar-se nas suas próprias forças e fraquezas",
+      "Ignorar as abordagens dos outros e fazer as coisas à sua maneira"
+     ],
+     "q": "Como pode aplicar benchmarking no seu trabalho diário?",
+     "why": "Perguntar regularmente questões e procurar feedback dos outros pode ajudá-lo a identificar áreas para melhoria e aprender com as experiências deles."
+    },
+    "t0": 133,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973137282,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask them to share their approach and learn from it",
+      "Try to copy their exact writing style",
+      "Focus on your own strengths and weaknesses",
+      "Ignore them and continue with your own approach"
+     ],
+     "q": "A colleague is able to write very clear and concise emails. What should you do?",
+     "why": "Asking your colleague to share their approach can help you learn from their experience and improve your own email writing skills."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar-lhes para partilhar a sua abordagem e aprender com ela",
+      "Tentar copiar o estilo de escrita exato",
+      "Focar-se nas suas próprias forças e fraquezas",
+      "Ignorá-los e continuar com a sua própria abordagem"
+     ],
+     "q": "Um colega é capaz de escrever e-mails muito claros e concisos. O que deve fazer?",
+     "why": "Perguntar ao seu colega para partilhar a sua abordagem pode ajudá-lo a aprender com a experiência deles e melhorar as suas próprias habilidades de escrita de e-mails."
+    },
+    "t0": 104,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973137282,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Submit it as is and hope for the best",
+      "Ask for feedback from others to identify areas for improvement",
+      "Focus on your own strengths and weaknesses",
+      "Start over from scratch"
+     ],
+     "q": "You're about to finish a task, but you're not sure if it's the best it can be. What should you do?",
+     "why": "Asking for feedback from others can help you identify areas for improvement and ensure that your work is the best it can be."
+    },
+    "pt": {
+     "opts": [
+      "Enviar como está e esperar pelo melhor",
+      "Perguntar feedback dos outros para identificar áreas para melhoria",
+      "Focar-se nas suas próprias forças e fraquezas",
+      "Começar de novo do zero"
+     ],
+     "q": "Está prestes a terminar uma tarefa, mas não tem certeza se é a melhor que pode ser. O que deve fazer?",
+     "why": "Perguntar feedback dos outros pode ajudá-lo a identificar áreas para melhoria e garantir que o seu trabalho é o melhor que pode ser."
+    },
+    "t0": 160,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973137282,
+    "corrected": true
+   }
+  ],
+  "5": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Because it looks more modern",
+      "Because attention to detail builds confidence",
+      "Because it has more equipment",
+      "Because it is louder"
+     ],
+     "q": "Why do people tend to trust a well-organized workplace more?",
+     "why": "Attention to detail builds confidence because it shows that people care about the small things."
+    },
+    "pt": {
+     "opts": [
+      "Porque parece mais moderno",
+      "Porque a atenção ao detalhe constrói confiança",
+      "Porque tem mais equipamento",
+      "Porque é mais barulhento"
+     ],
+     "q": "Por que as pessoas tendem a confiar mais num local de trabalho bem organizado?",
+     "why": "A atenção ao detalhe constrói confiança porque mostra que as pessoas se importam com as pequenas coisas."
+    },
+    "t0": 25,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973167405,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "It means using the most expensive tools",
+      "It means respecting the work",
+      "It means only using tools when necessary",
+      "It means throwing tools away when finished"
+     ],
+     "q": "What does respecting tools mean in a professional context?",
+     "why": "Respecting tools means respecting the work because it shows that you value the equipment and the task at hand."
+    },
+    "pt": {
+     "opts": [
+      "Significa usar as ferramentas mais caras",
+      "Significa respeitar o trabalho",
+      "Significa usar as ferramentas apenas quando necessário",
+      "Significa atirar as ferramentas para o chão quando terminar"
+     ],
+     "q": "O que significa respeitar as ferramentas num contexto profissional?",
+     "why": "Respeitar as ferramentas significa respeitar o trabalho porque mostra que você valoriza o equipamento e a tarefa em questão."
+    },
+    "t0": 78,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973167405,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Leave the area as is",
+      "Only clean up the main workspace",
+      "Check your work one last time and clean up the area",
+      "Call a colleague to finish the task"
+     ],
+     "q": "What should you do when finishing a task to demonstrate attention to detail?",
+     "why": "Checking your work one last time and cleaning up the area shows that you care about the details and want to ensure that the task is completed to a high standard."
+    },
+    "pt": {
+     "opts": [
+      "Deixar a área como está",
+      "Apenas limpar o local de trabalho principal",
+      "Verificar o seu trabalho uma última vez e limpar a área",
+      "Chamar um colega para terminar a tarefa"
+     ],
+     "q": "O que deve fazer ao terminar uma tarefa para demonstrar atenção ao detalhe?",
+     "why": "Verificar o seu trabalho uma última vez e limpar a área mostra que você se importa com os detalhes e quer garantir que a tarefa esteja concluída com um padrão alto."
+    },
+    "t0": 104,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973167405,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Use a lot of jargon to sound impressive",
+      "Check for spelling and grammar errors and ensure the message is clear",
+      "Use a lot of capital letters to emphasize points",
+      "Not proofread the email at all"
+     ],
+     "q": "What should you do when writing an email to demonstrate professionalism?",
+     "why": "Checking for spelling and grammar errors and ensuring the message is clear shows that you are detail-oriented and care about communicating effectively."
+    },
+    "pt": {
+     "opts": [
+      "Usar muitos termos técnicos para soar impressionante",
+      "Verificar erros de ortografia e gramática e garantir que a mensagem esteja clara",
+      "Usar muitas letras maiúsculas para enfatizar pontos",
+      "Não revisar o e-mail de forma alguma"
+     ],
+     "q": "O que deve fazer ao escrever um e-mail para demonstrar profissionalismo?",
+     "why": "Verificar erros de ortografia e gramática e garantir que a mensagem esteja clara mostra que você é detalhista e se importa com a comunicação eficaz."
+    },
+    "t0": 156,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973167405,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Leave the area as is and go home",
+      "Clean up the area, remove tape, and wash your brushes",
+      "Only remove the tape and leave the rest for someone else",
+      "Call your supervisor to inspect the work"
+     ],
+     "q": "You are a painter and have just finished painting a wall. What should you do next to demonstrate attention to detail?",
+     "why": "Cleaning up the area, removing tape, and washing your brushes shows that you care about the details and want to ensure that the job is completed to a high standard."
+    },
+    "pt": {
+     "opts": [
+      "Deixar a área como está e ir para casa",
+      "Limpar a área, remover a fita e lavar os pincéis",
+      "Apenas remover a fita e deixar o resto para alguém mais",
+      "Chamar o seu supervisor para inspecionar o trabalho"
+     ],
+     "q": "Você é um pintor e acabou de pintar uma parede. O que deve fazer em seguida para demonstrar atenção ao detalhe?",
+     "why": "Limpar a área, remover a fita e lavar os pincéis mostra que você se importa com os detalhes e quer garantir que o trabalho esteja concluído com um padrão alto."
+    },
+    "t0": 129,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973167405,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Ignore it and continue with your work",
+      "Lock the door and report the incident to your supervisor",
+      "Tell a colleague to lock the door",
+      "Leave a note for someone else to lock the door"
+     ],
+     "q": "You notice that a door is unlocked in a restricted area. What should you do to demonstrate attention to detail and ensure safety?",
+     "why": "Locking the door and reporting the incident to your supervisor shows that you are detail-oriented and care about safety, and want to ensure that the issue is addressed promptly."
+    },
+    "pt": {
+     "opts": [
+      "Ignorar e continuar com o seu trabalho",
+      "Trancar a porta e relatar o incidente ao seu supervisor",
+      "Dizer a um colega para trancar a porta",
+      "Deixar uma nota para alguém mais trancar a porta"
+     ],
+     "q": "Você nota que uma porta está destrancada em uma área restrita. O que deve fazer para demonstrar atenção ao detalhe e garantir a segurança?",
+     "why": "Trancar a porta e relatar o incidente ao seu supervisor mostra que você é detalhista e se importa com a segurança, e quer garantir que a questão seja abordada prontamente."
+    },
+    "t0": 183,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786973167405,
+    "corrected": true
+   }
+  ],
+  "6": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Their talent",
+      "Their curiosity and willingness to learn",
+      "Their experience",
+      "Their age"
+     ],
+     "q": "What characterizes individuals who grow faster in their careers?",
+     "why": "These individuals are characterized by their curiosity and willingness to learn, making them lifelong learners."
+    },
+    "pt": {
+     "opts": [
+      "O seu talento",
+      "A sua curiosidade e vontade de aprender",
+      "A sua experiência",
+      "A sua idade"
+     ],
+     "q": "O que caracteriza os indivíduos que crescem mais rapidamente nas suas carreiras?",
+     "why": "Estes indivíduos são caracterizados pela sua curiosidade e vontade de aprender, tornando-os aprendizes ao longo da vida."
+    },
+    "t0": 28,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974188677,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Only formal training",
+      "Only experience",
+      "Various sources, including AI, colleagues, and observation",
+      "Only books"
+     ],
+     "q": "What can be a source of learning for an individual?",
+     "why": "An individual can learn from various sources, including AI, colleagues, and observation, in addition to formal training and experience."
+    },
+    "pt": {
+     "opts": [
+      "Apenas a formação formal",
+      "Apenas a experiência",
+      "Várias fontes, incluindo a inteligência artificial, colegas e observação",
+      "Apenas livros"
+     ],
+     "q": "O que pode ser uma fonte de aprendizagem para um indivíduo?",
+     "why": "Um indivíduo pode aprender de várias fontes, incluindo a inteligência artificial, colegas e observação, além da formação formal e experiência."
+    },
+    "t0": 53,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974188677,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Pretend to understand",
+      "Ask a question",
+      "Look it up online",
+      "Avoid the situation"
+     ],
+     "q": "What should an individual do when they are unsure about something?",
+     "why": "When an individual is unsure about something, they should ask a question to clarify their understanding."
+    },
+    "pt": {
+     "opts": [
+      "Fingir que entende",
+      "Fazer uma pergunta",
+      "Procurar online",
+      "Evitar a situação"
+     ],
+     "q": "O que deve fazer um indivíduo quando não tem certeza sobre algo?",
+     "why": "Quando um indivíduo não tem certeza sobre algo, deve fazer uma pergunta para esclarecer a sua compreensão."
+    },
+    "t0": 78,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974188677,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Reading a book every day",
+      "Asking a question every day",
+      "Reflecting on the day's experiences",
+      "Setting daily goals"
+     ],
+     "q": "What habit can an individual develop to facilitate daily learning?",
+     "why": "An individual can develop the habit of reflecting on the day's experiences, such as by asking themselves what they learned, what errors they made, and what they can improve on."
+    },
+    "pt": {
+     "opts": [
+      "Ler um livro todos os dias",
+      "Fazer uma pergunta todos os dias",
+      "Refletir sobre as experiências do dia",
+      "Definir metas diárias"
+     ],
+     "q": "Que hábito pode um indivíduo desenvolver para facilitar a aprendizagem diária?",
+     "why": "Um indivíduo pode desenvolver o hábito de refletir sobre as experiências do dia, como por exemplo, perguntando a si mesmo o que aprendeu, quais erros cometeu e o que pode melhorar."
+    },
+    "t0": 134,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974188677,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "Pretend to understand and hope for the best",
+      "Ask a colleague for help",
+      "Look it up online and try to figure it out",
+      "Admit their lack of understanding and ask for guidance"
+     ],
+     "q": "An individual is working on a project and realizes they don't understand a crucial aspect. What should they do?",
+     "why": "The individual should admit their lack of understanding and ask for guidance, as this demonstrates a willingness to learn and ensures the quality of the work."
+    },
+    "pt": {
+     "opts": [
+      "Fingir que entende e esperar pelo melhor",
+      "Perguntar a um colega para ajudar",
+      "Procurar online e tentar descobrir",
+      "Admitir a falta de compreensão e pedir orientação"
+     ],
+     "q": "Um indivíduo está a trabalhar num projeto e percebe que não entende um aspeto crucial. O que deve fazer?",
+     "why": "O indivíduo deve admitir a falta de compreensão e pedir orientação, pois isso demonstra uma vontade de aprender e garante a qualidade do trabalho."
+    },
+    "t0": 107,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974188677,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Take a break and move on to the next task",
+      "Reflect on the experience and identify what they learned",
+      "Discuss the experience with a colleague",
+      "Write a report on the experience"
+     ],
+     "q": "An individual has just completed a task and wants to ensure they learn from the experience. What can they do?",
+     "why": "The individual can reflect on the experience and identify what they learned, such as by asking themselves what they learned, what errors they made, and what they can improve on."
+    },
+    "pt": {
+     "opts": [
+      "Fazer uma pausa e passar para a próxima tarefa",
+      "Refletir sobre a experiência e identificar o que aprendeu",
+      "Discutir a experiência com um colega",
+      "Escrever um relatório sobre a experiência"
+     ],
+     "q": "Um indivíduo acaba de completar uma tarefa e quer garantir que aprenda com a experiência. O que pode fazer?",
+     "why": "O indivíduo pode refletir sobre a experiência e identificar o que aprendeu, como por exemplo, perguntando a si mesmo o que aprendeu, quais erros cometeu e o que pode melhorar."
+    },
+    "t0": 162,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786974188677,
+    "verified": true
+   }
+  ]
+ }
+}

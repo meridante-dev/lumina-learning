@@ -1,532 +1,202 @@
 {
- "language": "pt",
+ "module": 1,
+ "title": "No Failure, Only Feedback",
+ "vimeoId": "1217936795",
+ "vimeoName": "2. No-failure-only-feedback-en",
+ "language": "en",
+ "durationSec": 244,
+ "source": "vimeo-api",
+ "generatedAt": 1786969961542,
  "segments": [
   {
-   "t0": 0.0,
-   "t1": 2.3,
-   "text": "Pense num bebê a aprender a andar."
+   "t0": 0,
+   "t1": 7.72,
+   "text": "Think about a baby learning to walk. Does the baby fall? Yes, many times. Does the baby"
   },
   {
-   "t0": 2.62,
-   "t1": 5.62,
-   "text": "O bebê cai? Sim, muitas vezes."
+   "t0": 7.72,
+   "t1": 16.5,
+   "text": "say I'm a failure? No, the baby simply tries again. Falls, learns, gets up, and one day,"
   },
   {
-   "t0": 6.04,
-   "t1": 8.34,
-   "text": "O bebê diz, só um fracasso."
+   "t0": 16.5,
+   "t1": 23.76,
+   "text": "the baby walks. This is how all learning works. We learn, we make mistakes, we receive feedback,"
   },
   {
-   "t0": 8.64,
-   "t1": 11.76,
-   "text": "Não. O bebê simplesmente tenta outra vez."
+   "t0": 23.76,
+   "t1": 30.12,
+   "text": "we improve. Today, I want you to remember one simple sentence. There is no failure,"
   },
   {
-   "t0": 12.1,
-   "t1": 14.86,
-   "text": "Cai, aprende, levanta-se."
+   "t0": 30.12,
+   "t1": 36.52,
+   "text": "only feedback. Let's say it again. There is no failure, only feedback. Every mistake"
   },
   {
-   "t0": 15.0,
-   "t1": 17.0,
-   "text": "E um dia, o bebê anda."
+   "t0": 36.52,
+   "t1": 41.88,
+   "text": "teaches us something. Every challenge teaches us something. Every piece of feedback helps"
   },
   {
-   "t0": 17.26,
-   "t1": 19.6,
-   "text": "É assim que toda aprendizagem funciona."
+   "t0": 41.88,
+   "t1": 46.96,
+   "text": "us become better, but only if we are willing to learn."
   },
   {
-   "t0": 19.8,
-   "t1": 24.42,
-   "text": "Aprendemos, cometemos erros, recebemos feedback, melhoramos."
+   "t0": 46.96,
+   "t1": 51.88,
+   "text": "One of the greatest basketball players of all time, Michael Jordan, once said, I've"
   },
   {
-   "t0": 24.64,
-   "t1": 27.14,
-   "text": "Hoje quero que se lembre de uma frase simples."
+   "t0": 51.88,
+   "t1": 58.16,
+   "text": "missed more than 9,000 shots in my career. I've lost almost 300 games. I've failed over"
   },
   {
-   "t0": 27.3,
-   "t1": 29.7,
-   "text": "Não há fracasso, só feedback."
+   "t0": 58.16,
+   "t1": 64.76,
+   "text": "and over and over again in my life, and that is why I succeed. Think about that. One of"
   },
   {
-   "t0": 30.0,
-   "t1": 31.0,
-   "text": "Vamos repeti-la."
+   "t0": 64.76,
+   "t1": 70.76,
+   "text": "the greatest athletes in history didn't become great because he never failed. He became great"
   },
   {
-   "t0": 31.28,
-   "t1": 33.58,
-   "text": "Não há fracasso, só feedback."
+   "t0": 70.76,
+   "t1": 77.2,
+   "text": "because he learned from failure. Every missed shot became feedback. Every lost game became"
   },
   {
-   "t0": 33.84,
-   "t1": 35.84,
-   "text": "Cada erro ensina-nos alguma coisa."
+   "t0": 77.2,
+   "t1": 83.96,
+   "text": "feedback. Every mistake made him better. The same is true for us. Maybe today you make"
   },
   {
-   "t0": 36.04,
-   "t1": 38.38,
-   "text": "Cada desafio ensina-nos alguma coisa."
+   "t0": 83.96,
+   "t1": 89.04,
+   "text": "a mistake at work. Maybe someone corrects you. Maybe your manager shows you a better"
   },
   {
-   "t0": 38.58,
-   "t1": 41.54,
-   "text": "Cada feedback ajuda-nos a torná-lo nos melhores."
+   "t0": 89.04,
+   "t1": 94.88,
+   "text": "way. That does not mean you failed. It means you are learning. The question is not, did"
   },
   {
-   "t0": 41.74,
-   "t1": 45.0,
-   "text": "Mas só, se estivermos dispostos a aprender."
+   "t0": 94.88,
+   "t1": 101.84,
+   "text": "I make a mistake? Because everyone makes mistakes. The real question is, what did I learn? Imagine"
   },
   {
-   "t0": 45.2,
-   "t1": 49.5,
-   "text": "Um dos maiores jogadores de basketball de todos os tempos, Michael Jordan,"
+   "t0": 101.84,
+   "t1": 108.48,
+   "text": "two people. The first person hears feedback and says, I already know. That's not my fault."
   },
   {
-   "t0": 49.6,
-   "t1": 52.5,
-   "text": "partilhou uma vez uma reflexão sobre a sua carreira."
+   "t0": 108.48,
+   "t1": 114.32,
+   "text": "I've always done it this way. This person stops growing. Now look at the second person."
   },
   {
-   "t0": 52.7,
-   "t1": 57.8,
-   "text": "Contou que falhou milhares de lançamentos e perdeu centenas de jogos ao longo da sua trajetória."
-  },
-  {
-   "t0": 58.0,
-   "t1": 61.8,
-   "text": "E que essa acumulação de fracasso ao longo de toda a sua vida"
-  },
-  {
-   "t0": 62.0,
-   "t1": 66.6,
-   "text": "foi precisamente a razão pela qual chegou a ser bem sucedido."
-  },
-  {
-   "t0": 67.3,
-   "t1": 68.3,
-   "text": "Pense nisso."
-  },
-  {
-   "t0": 69.0,
-   "t1": 74.1,
-   "text": "Um dos maiores atletas da história, não se tornou grande porque nunca falhou."
-  },
-  {
-   "t0": 74.5,
-   "t1": 77.6,
-   "text": "Tornou-se grande porque aprendeu com fracasso."
-  },
-  {
-   "t0": 78.1,
-   "t1": 81.3,
-   "text": "Cada lançamento falhado tornou-se feedback."
-  },
-  {
-   "t0": 81.7,
-   "t1": 84.5,
-   "text": "Cada jogo perdido tornou-se feedback."
-  },
-  {
-   "t0": 85.0,
-   "t1": 87.2,
-   "text": "Cada erro tornou-o melhor."
-  },
-  {
-   "t0": 87.7,
-   "t1": 89.5,
-   "text": "O mesmo se aplica a nós."
-  },
-  {
-   "t0": 90.0,
-   "t1": 92.4,
-   "text": "Talvez hoje cometa um erro no trabalho."
-  },
-  {
-   "t0": 92.7,
-   "t1": 94.3,
-   "text": "Talvez alguém o corrija."
-  },
-  {
-   "t0": 94.7,
-   "t1": 98.4,
-   "text": "Talvez o seu chefe lhe mostre uma forma melhor de fazer algo."
-  },
-  {
-   "t0": 99.0,
-   "t1": 100.8,
-   "text": "Isso não significa que falhou."
-  },
-  {
-   "t0": 101.3,
-   "t1": 103.3,
-   "text": "Significa que está a aprender."
-  },
-  {
-   "t0": 104.0,
-   "t1": 106.4,
-   "text": "A pergunta não é, cometi um erro?"
-  },
-  {
-   "t0": 107.0,
-   "t1": 109.0,
-   "text": "Porque toda a gente comete erros."
-  },
-  {
-   "t0": 109.4,
-   "t1": 112.6,
-   "text": "A verdadeira pergunta é, o que é que aprendi?"
-  },
-  {
-   "t0": 113.3,
-   "t1": 114.9,
-   "text": "Imagine duas pessoas."
-  },
-  {
-   "t0": 115.4,
-   "t1": 118.3,
-   "text": "A primeira pessoa ouve o feedback e diz,"
-  },
-  {
-   "t0": 118.5,
-   "t1": 121.0,
-   "text": "eu já sei, a culpa não é minha."
+   "t0": 114.32,
+   "t1": 121.4,
+   "text": "They say, thank you. Can you show me? How can I improve? This person grows every day."
   },
   {
    "t0": 121.4,
-   "t1": 122.6,
-   "text": "Sempre fiz assim."
+   "t1": 126.88,
+   "text": "The difference is not talent. The difference is attitude. Your relationship with feedback"
   },
   {
-   "t0": 123.1,
-   "t1": 125.0,
-   "text": "Esta pessoa deixa de crescer."
+   "t0": 126.96,
+   "t1": 131.64,
+   "text": "will determine your growth. The people who grow the fastest usually receive the most"
   },
   {
-   "t0": 125.6,
-   "t1": 127.7,
-   "text": "Agora olhe para a segunda pessoa."
+   "t0": 131.64,
+   "t1": 138.8,
+   "text": "feedback. Not because they are worse, but because they are always learning. They ask questions."
   },
   {
-   "t0": 128.2,
-   "t1": 130.1,
-   "text": "Ela diz, obrigado."
+   "t0": 138.8,
+   "t1": 145.88,
+   "text": "They listen. They improve. Again, they ask questions. They listen. They improve."
   },
   {
-   "t0": 130.5,
-   "t1": 131.6,
-   "text": "Pode mostrar-me?"
+   "t0": 145.88,
+   "t1": 151.24,
+   "text": "There is another important lesson. If you want to improve, learn from people who are ahead"
   },
   {
-   "t0": 132.0,
-   "t1": 133.3,
-   "text": "Como posso melhorar?"
+   "t0": 151.24,
+   "t1": 157.2,
+   "text": "of you. Someone with more experience. Someone who has already solved the problem. Someone"
   },
   {
-   "t0": 133.9,
-   "t1": 136.3,
-   "text": "Esta pessoa cresce todos os dias."
+   "t0": 157.2,
+   "t1": 163.64,
+   "text": "who has already made the mistakes. Why? Because their experience becomes your shortcut. Instead"
   },
   {
-   "t0": 136.7,
-   "t1": 138.7,
-   "text": "A diferença não é talento."
+   "t0": 163.64,
+   "t1": 169.12,
+   "text": "of learning everything the hard way, you can learn from their wisdom. But this requires"
   },
   {
-   "t0": 139.1,
-   "t1": 141.2,
-   "text": "A diferença é atitude."
+   "t0": 169.12,
+   "t1": 176.96,
+   "text": "something important. Humility. Humility says, I don't know everything. I can still learn."
   },
   {
-   "t0": 141.6,
-   "t1": 143.7,
-   "text": "A sua relação com feedback"
+   "t0": 177.96,
+   "t1": 183.04,
+   "text": "That attitude will take you much further than pretending you already know. People enjoy"
   },
   {
-   "t0": 144.0,
-   "t1": 146.0,
-   "text": "vai determinar o seu crescimento."
+   "t0": 183.04,
+   "t1": 189.48,
+   "text": "working with someone who learns. Someone who accepts feedback. Someone who improves. Someone"
   },
   {
-   "t0": 146.3,
-   "t1": 148.4,
-   "text": "As pessoas que crescem mais depressa"
+   "t0": 189.48,
+   "t1": 195.6,
+   "text": "who says, thank you. I'll do better next time. That kind of person becomes trusted. That kind"
   },
   {
-   "t0": 148.6,
-   "t1": 150.9,
-   "text": "geralmente recebem mais feedback."
+   "t0": 195.6,
+   "t1": 202.76,
+   "text": "of person ends respect. That kind of person grows. So remember this. Mistakes are normal."
   },
   {
-   "t0": 151.2,
-   "t1": 152.6,
-   "text": "Não porque são piores,"
+   "t0": 203.36,
+   "t1": 211.04,
+   "text": "Learning is a choice. Feedback is a gift. Growth is a decision. Let's repeat that. Mistakes"
   },
   {
-   "t0": 152.8,
-   "t1": 154.9,
-   "text": "mas porque estão sempre a aprender."
+   "t0": 211.04,
+   "t1": 220.04,
+   "text": "are normal. Feedback is a gift. Growth is a decision. Mistake. Feedback. Learn. Improve. Repeat."
   },
   {
-   "t0": 155.2,
-   "t1": 158.4,
-   "text": "Fazem perguntas, escutam, melhoram."
+   "t0": 220.04,
+   "t1": 227.12,
+   "text": "The next time you make a mistake, don't ask am I a failure. Instead ask, what is this teaching me?"
   },
   {
-   "t0": 158.7,
-   "t1": 162.7,
-   "text": "Outra vez, fazem perguntas, escutam, melhoram."
+   "t0": 227.72,
+   "t1": 233.04,
+   "text": "What can I do better next time? What feedback can I learn from? Because there is no failure."
   },
   {
-   "t0": 163.0,
-   "t1": 164.7,
-   "text": "Há outra lição importante."
+   "t0": 233.04,
+   "t1": 239.2,
+   "text": "Only feedback. And every piece of feedback is another opportunity to become a better worker,"
   },
   {
-   "t0": 164.9,
-   "t1": 166.0,
-   "text": "Se quer melhorar,"
-  },
-  {
-   "t0": 166.2,
-   "t1": 169.4,
-   "text": "aprenda com pessoas que estão mais avançadas do que si."
-  },
-  {
-   "t0": 169.7,
-   "t1": 171.4,
-   "text": "Alguém com mais experiência,"
-  },
-  {
-   "t0": 171.6,
-   "t1": 173.5,
-   "text": "alguém que já resolveu o problema,"
-  },
-  {
-   "t0": 173.7,
-   "t1": 175.5,
-   "text": "alguém que já cometeu os erros."
-  },
-  {
-   "t0": 175.9,
-   "t1": 176.6,
-   "text": "Por quê?"
-  },
-  {
-   "t0": 176.9,
-   "t1": 178.7,
-   "text": "Porque a experiência dessa pessoa"
-  },
-  {
-   "t0": 178.9,
-   "t1": 180.4,
-   "text": "se torna o seu atalho."
-  },
-  {
-   "t0": 180.7,
-   "t1": 183.4,
-   "text": "Em vez de aprender tudo da forma mais difícil,"
-  },
-  {
-   "t0": 183.6,
-   "t1": 185.9,
-   "text": "pode aprender com a sabedoria dessa pessoa."
-  },
-  {
-   "t0": 186.2,
-   "t1": 188.3,
-   "text": "Mas isto exige algo importante."
-  },
-  {
-   "t0": 188.6,
-   "t1": 189.5,
-   "text": "Humildade."
-  },
-  {
-   "t0": 189.8,
-   "t1": 191.0,
-   "text": "A humildade diz,"
-  },
-  {
-   "t0": 191.2,
-   "t1": 192.2,
-   "text": "não sei tudo."
-  },
-  {
-   "t0": 192.5,
-   "t1": 193.8,
-   "text": "Ainda posso aprender."
-  },
-  {
-   "t0": 194.1,
-   "t1": 196.1,
-   "text": "Por favor, ensinem-me."
-  },
-  {
-   "t0": 196.4,
-   "t1": 198.9,
-   "text": "Essa atitude vai levá-lo muito mais longe"
-  },
-  {
-   "t0": 199.0,
-   "t1": 200.7,
-   "text": "do que fingir que já sabe tudo."
-  },
-  {
-   "t0": 200.9,
-   "t1": 203.7,
-   "text": "As pessoas gostam de trabalhar com alguém que aprende,"
-  },
-  {
-   "t0": 203.9,
-   "t1": 205.6,
-   "text": "alguém que aceita feedback,"
-  },
-  {
-   "t0": 205.8,
-   "t1": 207.0,
-   "text": "alguém que melhora,"
-  },
-  {
-   "t0": 207.2,
-   "t1": 208.2,
-   "text": "alguém que diz,"
-  },
-  {
-   "t0": 208.4,
-   "t1": 209.1,
-   "text": "obrigado,"
-  },
-  {
-   "t0": 209.3,
-   "t1": 211.7,
-   "text": "da próxima vez, vou fazer melhor."
-  },
-  {
-   "t0": 212.0,
-   "t1": 215.0,
-   "text": "Esse tipo de pessoa torna-se digna de confiança."
-  },
-  {
-   "t0": 215.2,
-   "t1": 217.3,
-   "text": "Esse tipo de pessoa ganha respeito."
-  },
-  {
-   "t0": 217.5,
-   "t1": 219.3,
-   "text": "Esse tipo de pessoa cresce."
-  },
-  {
-   "t0": 219.6,
-   "t1": 221.5,
-   "text": "Por isso, lembre-se disto."
-  },
-  {
-   "t0": 221.8,
-   "t1": 223.3,
-   "text": "Os erros são normais."
-  },
-  {
-   "t0": 223.5,
-   "t1": 225.1,
-   "text": "Aprender é uma escolha."
-  },
-  {
-   "t0": 225.3,
-   "t1": 227.2,
-   "text": "O feedback é um presente."
-  },
-  {
-   "t0": 227.4,
-   "t1": 229.3,
-   "text": "O crescimento é uma decisão."
-  },
-  {
-   "t0": 229.3,
-   "t1": 233.7,
-   "text": "Erro, feedback, aprender, melhorar, repetir."
-  },
-  {
-   "t0": 233.9,
-   "t1": 235.9,
-   "text": "Da próxima vez que cometer um erro,"
-  },
-  {
-   "t0": 236.1,
-   "t1": 238.7,
-   "text": "não pergunte, sou um fracasso?"
-  },
-  {
-   "t0": 238.9,
-   "t1": 240.4,
-   "text": "Em vez disso, pergunte."
-  },
-  {
-   "t0": 240.6,
-   "t1": 242.6,
-   "text": "O que é que isto me está a ensinar?"
-  },
-  {
-   "t0": 242.8,
-   "t1": 245.1,
-   "text": "O que posso fazer melhor da próxima vez?"
-  },
-  {
-   "t0": 245.3,
-   "t1": 247.5,
-   "text": "Que feedback posso retirar disto?"
-  },
-  {
-   "t0": 247.7,
-   "t1": 250.4,
-   "text": "Porque não há fracasso, só feedback."
-  },
-  {
-   "t0": 250.6,
-   "t1": 252.4,
-   "text": "E cada feedback que eu tenho,"
-  },
-  {
-   "t0": 252.6,
-   "t1": 254.0,
-   "text": "eu tenho um erro."
-  },
-  {
-   "t0": 254.2,
-   "t1": 256.2,
-   "text": "O que é que isso me está a ensinar?"
-  },
-  {
-   "t0": 256.4,
-   "t1": 259.2,
-   "text": "O que posso fazer melhor da próxima vez?"
-  },
-  {
-   "t0": 259.4,
-   "t1": 261.6,
-   "text": "O feedback é mais uma oportunidade"
-  },
-  {
-   "t0": 261.8,
-   "t1": 263.8,
-   "text": "para se tornar um trabalhador melhor."
-  },
-  {
-   "t0": 264.0,
-   "t1": 265.6,
-   "text": "Um melhor colega de equipa"
-  },
-  {
-   "t0": 265.8,
-   "t1": 267.6,
-   "text": "e uma pessoa melhor."
+   "t0": 239.2,
+   "t1": 242.04,
+   "text": "a better teammate, and a better person."
   }
- ],
- "model": "whisper-small",
- "generatedAt": 1785510988922
+ ]
 }

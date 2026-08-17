@@ -1,452 +1,292 @@
 {
- "language": "pt",
+ "module": 2,
+ "title": "Total Responsibility",
+ "vimeoId": "1217934684",
+ "vimeoName": "3. Total Responsibility",
+ "language": "en",
+ "durationSec": 340,
+ "source": "vimeo-api",
+ "generatedAt": 1786970144978,
  "segments": [
   {
-   "t0": 0.0,
-   "t1": 2.76,
-   "text": "Imagine que entre em dois locais de trabalho."
+   "t0": 0,
+   "t1": 5.94,
+   "text": "Imagine two people who make the same mistake. The first person sees it wasn't"
   },
   {
-   "t0": 2.76,
-   "t1": 4.54,
-   "text": "O primeiro está desarrumado."
+   "t0": 5.94,
+   "t1": 12.02,
+   "text": "my fault. The tools were bad. No one told me. The instructions weren't clear. The"
   },
   {
-   "t0": 4.54,
-   "t1": 6.94,
-   "text": "As ferramentas estão largadas no chão."
+   "t0": 12.02,
+   "t1": 16.82,
+   "text": "second person says, I could have asked more questions. I should have checked my"
   },
   {
-   "t0": 6.94,
-   "t1": 9.34,
-   "text": "O lixo está espalhado por todo lado."
+   "t0": 16.82,
+   "t1": 22.62,
+   "text": "work. I'll correct it and do better next time. Which person do you think will grow"
   },
   {
-   "t0": 9.34,
-   "t1": 11.04,
-   "text": "O equipamento está sujo."
+   "t0": 22.62,
+   "t1": 29.1,
+   "text": "faster? The second person. Why? Because they focus on what they can control. This"
   },
   {
-   "t0": 11.04,
-   "t1": 12.24,
-   "text": "As pessoas dizem,"
+   "t0": 29.1,
+   "t1": 34.64,
+   "text": "is called extreme ownership. Extreme ownership means taking responsibility"
   },
   {
-   "t0": 12.24,
-   "t1": 13.4,
-   "text": "está bom assim."
+   "t0": 34.64,
+   "t1": 40.02,
+   "text": "for your actions, your attitude and your response. It does not mean everything is"
   },
   {
-   "t0": 13.4,
-   "t1": 15.9,
-   "text": "Agora imagine o segundo local de trabalho."
+   "t0": 40.02,
+   "t1": 44.22,
+   "text": "your fault and it does not mean blaming yourself for things outside your"
   },
   {
-   "t0": 15.9,
-   "t1": 17.76,
-   "text": "As ferramentas estão limpas."
+   "t0": 44.22,
+   "t1": 50.9,
+   "text": "control. It means asking, what can I do to make this better? What can I learn? What"
   },
   {
-   "t0": 17.76,
-   "t1": 19.2,
-   "text": "Tudo está no seu lugar."
+   "t0": 50.9,
+   "t1": 57.46,
+   "text": "is the best next step? People who grow ask these questions regularly. Sometimes"
   },
   {
-   "t0": 19.2,
-   "t1": 20.64,
-   "text": "O chão está varrido."
+   "t0": 57.46,
+   "t1": 62.66,
+   "text": "things genuinely are not your fault. A supplier is late. The weather changes. A"
   },
   {
-   "t0": 20.64,
-   "t1": 22.3,
-   "text": "O trabalho está bem feito."
+   "t0": 62.66,
+   "t1": 67.82,
+   "text": "machine breaks. Someone forgets to give you important information. Those things"
   },
   {
-   "t0": 22.3,
-   "t1": 24.56,
-   "text": "As pessoas têm orgulho no que fazem."
+   "t0": 67.82,
+   "t1": 73.86,
+   "text": "happen. But even when you cannot control what happened, you can control what you"
   },
   {
-   "t0": 24.56,
-   "t1": 27.1,
-   "text": "Em qual dos dois locais confiaria mais?"
+   "t0": 73.86,
+   "t1": 79.9,
+   "text": "do next. You can complain. You can blame. You can wait for someone else to solve"
   },
   {
-   "t0": 27.1,
-   "t1": 29.54,
-   "text": "A maioria das pessoas escolhe o segundo."
+   "t0": 79.9,
+   "t1": 87.1,
+   "text": "the problem. Or you can ask, what is the best next step? People who take ownership"
   },
   {
-   "t0": 29.54,
-   "t1": 30.28,
-   "text": "Por quê?"
+   "t0": 87.14,
+   "t1": 91.5,
+   "text": "look for solutions. They do not waste their energy searching for someone to"
   },
   {
-   "t0": 30.28,
-   "t1": 33.28,
-   "text": "Porque a atenção ao detalhe constrói confiança."
+   "t0": 91.5,
+   "t1": 98.74,
+   "text": "blame. They use that energy to communicate, to solve and to move forward. Here is a"
   },
   {
-   "t0": 33.28,
-   "t1": 37.28,
-   "text": "Atenção ao detalhe significa importar-se com as pequenas coisas."
+   "t0": 98.74,
+   "t1": 104.74,
+   "text": "simple example. Your manager asks for a report by Friday. On Wednesday, you"
   },
   {
-   "t0": 37.28,
-   "t1": 38.78,
-   "text": "E aqui está o segredo."
+   "t0": 104.74,
+   "t1": 110.14,
+   "text": "realize you are falling behind. One person stays quiet. They hope the problem will"
   },
   {
-   "t0": 38.78,
-   "t1": 41.68,
-   "text": "As pequenas coisas tornam-se as grandes coisas."
+   "t0": 110.14,
+   "t1": 116.26,
+   "text": "disappear. Friday arrives and the report is still not finished. Another person"
   },
   {
-   "t0": 41.68,
-   "t1": 45.98,
-   "text": "A forma como estaciona o seu carro diz algo sobre si às outras pessoas."
+   "t0": 116.26,
+   "t1": 121.5,
+   "text": "speaks up on Wednesday and says, I'm running behind. Can you help me prioritize?"
   },
   {
-   "t0": 45.98,
-   "t1": 47.34,
-   "text": "Estaciona o direito?"
+   "t0": 121.5,
+   "t1": 127.38,
+   "text": "Here is what I have completed and here is what is still missing. Which person is"
   },
   {
-   "t0": 47.34,
-   "t1": 50.28,
-   "text": "Deixa o espaço suficiente para a pessoa seguinte?"
+   "t0": 127.38,
+   "t1": 133.38,
+   "text": "easier to trust? The second person. Taking ownership means communicating early. It"
   },
   {
-   "t0": 50.28,
-   "t1": 51.64,
-   "text": "Pensou nos outros?"
+   "t0": 133.38,
+   "t1": 139.66,
+   "text": "means not hiding problems. Bad news does not improve because you keep it quiet. A"
   },
   {
-   "t0": 51.64,
-   "t1": 54.64,
-   "text": "A forma como deixa uma sala diz algo sobre si."
+   "t0": 139.66,
+   "t1": 146.02,
+   "text": "small problem shared early can often be solved. A hidden problem usually becomes"
   },
   {
-   "t0": 54.64,
-   "t1": 55.94,
-   "text": "Apagou as luzes?"
+   "t0": 146.02,
+   "t1": 151.54,
+   "text": "a bigger problem. Imagine you are building a fence. You take a measurement but"
   },
   {
-   "t0": 55.94,
-   "t1": 57.04,
-   "text": "Arrumou tudo?"
+   "t0": 151.54,
+   "t1": 156.98,
+   "text": "something does not look right. You could ignore it. You could continue and hope it"
   },
   {
-   "t0": 57.04,
-   "t1": 58.34,
-   "text": "Empurrou a cadeira."
+   "t0": 156.98,
+   "t1": 162.7,
+   "text": "works out. Or you could stop, ask a question and check the measurement again."
   },
   {
-   "t0": 58.44,
-   "t1": 59.74,
-   "text": "Para o lugar?"
+   "t0": 162.7,
+   "t1": 168.22,
+   "text": "That takes ownership. A small conversation today can prevent a large"
   },
   {
-   "t0": 59.74,
-   "t1": 64.24,
-   "text": "A forma como trata as suas ferramentas diz algo sobre si."
+   "t0": 168.22,
+   "t1": 174.1,
+   "text": "mistake tomorrow. Ownership is often visible in small moments. When you ask"
   },
   {
-   "t0": 64.24,
-   "t1": 65.54,
-   "text": "Estão limpas?"
+   "t0": 174.46,
+   "t1": 180.74,
+   "text": "instead of guessing. When you check instead of hoping. When you speak up instead of"
   },
   {
-   "t0": 65.54,
-   "t1": 67.94,
-   "text": "Estão guardadas no lugar certo?"
+   "t0": 180.74,
+   "t1": 187.3,
+   "text": "staying silent. When you fix instead of hiding. At our company, we do not expect"
   },
   {
-   "t0": 67.94,
-   "t1": 70.64,
-   "text": "Cuida delas como se fossem suas?"
+   "t0": 187.3,
+   "t1": 192.66,
+   "text": "perfection. Everyone makes mistakes. Everyone misses something occasionally."
   },
   {
-   "t0": 70.64,
-   "t1": 74.04,
-   "text": "Um profissional não atira ferramentas para o chão."
+   "t0": 192.66,
+   "t1": 200.02,
+   "text": "What matters is what happens next. Do you hide the mistake? Do you make excuses? Do"
   },
   {
-   "t0": 74.04,
-   "t1": 76.64,
-   "text": "Um profissional respeita-as."
+   "t0": 200.1,
+   "t1": 205.06,
+   "text": "you wait for someone else to discover it? Or do you admit it? Learn from it and help"
   },
   {
-   "t0": 76.64,
-   "t1": 80.34,
-   "text": "A forma como termina um trabalho diz algo sobre si."
+   "t0": 205.06,
+   "t1": 211.62,
+   "text": "fix it. People respect honesty. They respect people who take responsibility and they trust"
   },
   {
-   "t0": 80.34,
-   "t1": 82.38,
-   "text": "Limpou a área antes de sair?"
+   "t0": 211.62,
+   "t1": 218.18,
+   "text": "people who tell the truth early. Here is another important point. Ownership is contagious. When"
   },
   {
-   "t0": 82.38,
-   "t1": 83.78,
-   "text": "Removeu o lixo?"
+   "t0": 218.18,
+   "t1": 223.7,
+   "text": "one person takes responsibility, other people often begin to do the same. The conversation"
   },
   {
-   "t0": 83.78,
-   "t1": 86.44,
-   "text": "Verificou seu trabalho uma última vez?"
+   "t0": 223.7,
+   "t1": 229.94,
+   "text": "changes. Instead of asking, who caused this? The team begins asking, how do we solve this?"
   },
   {
-   "t0": 86.44,
-   "t1": 89.04,
-   "text": "Ou apressou-se para a tarefa seguinte?"
+   "t0": 230.74,
+   "t1": 235.22,
+   "text": "Instead of protecting themselves, people begin supporting one another. And as that"
   },
   {
-   "t0": 89.04,
-   "t1": 92.24,
-   "text": "Atenção ao detalhe não é sobre ser perfeito."
+   "t0": 235.22,
+   "t1": 241.3,
+   "text": "happens, the whole team becomes stronger. Remember this sentence. Excuses stop growth."
   },
   {
-   "t0": 92.24,
-   "t1": 94.24,
-   "text": "É sobre importar-se."
+   "t0": 242.1,
+   "t1": 247.86,
+   "text": "Ownership creates growth. Excuses keep your attention on the past. Ownership moves your"
   },
   {
-   "t0": 94.24,
-   "t1": 95.94,
-   "text": "Imagine dois pintores."
+   "t0": 247.86,
+   "t1": 254.02,
+   "text": "attention toward the future. Excuses ask, whose fault is this? Ownership asks,"
   },
   {
-   "t0": 95.94,
-   "t1": 98.24,
-   "text": "Ambos terminam de pintar a parede."
+   "t0": 254.58,
+   "t1": 261.22,
+   "text": "what can I do now? The second question will always move you forward. The next time something goes"
   },
   {
-   "t0": 98.24,
-   "t1": 103.34,
-   "text": "Um deixa a tinta no chão, pincéis sujos e fita ainda coladas de anelas."
+   "t0": 261.22,
+   "t1": 267.22,
+   "text": "wrong, pause for a moment. Notice your first reaction. You may feel frustrated. You may want"
   },
   {
-   "t0": 103.34,
-   "t1": 110.24,
-   "text": "O outro limpa os pincéis, remove a fita com cuidado, limpa o chão e deixa a sala impecável."
+   "t0": 267.22,
+   "t1": 272.82,
+   "text": "to defend yourself. You may want to explain why the problem was not your fault. That reaction is"
   },
   {
-   "t0": 110.24,
-   "t1": 114.38,
-   "text": "Ambos pintaram a parede, mas só um trabalhou com excelência."
+   "t0": 272.82,
+   "t1": 280.26,
+   "text": "normal. But you do not have to stay there. You can take a breath and ask, what part of this can I"
   },
   {
-   "t0": 114.38,
-   "t1": 115.98,
-   "text": "Aqui está outro exemplo."
+   "t0": 280.26,
+   "t1": 288.66,
+   "text": "influence? What action can I take? Who needs to know? What can I learn for next time? These"
   },
   {
-   "t0": 115.98,
-   "t1": 117.38,
-   "text": "Recebe um e-mail."
+   "t0": 288.66,
+   "t1": 294.66,
+   "text": "questions create progress and the more often you ask them, the more natural ownership becomes."
   },
   {
-   "t0": 117.38,
-   "t1": 122.34,
-   "text": "Um tem erros ortográficos, informação em falta e nenhuma saudação."
+   "t0": 295.38,
+   "t1": 302.1,
+   "text": "So this week, practice extreme ownership. If something goes wrong, do not look for excuses"
   },
   {
-   "t0": 122.34,
-   "t1": 126.08,
-   "text": "O outro é claro, educado e fácil de entender."
+   "t0": 302.1,
+   "t1": 310.1,
+   "text": "first. Look for your next action. Ask questions. Check your work. Communicate early. Fix problems."
   },
   {
-   "t0": 126.08,
-   "t1": 129.58,
-   "text": "Qual das duas pessoas parece mais profissional?"
+   "t0": 310.66,
+   "t1": 316.42,
+   "text": "Learn from mistakes. Support your teammates. And keep moving forward. Because people who"
   },
   {
-   "t0": 129.58,
-   "t1": 131.38,
-   "text": "A segunda pessoa."
+   "t0": 316.42,
+   "t1": 322.82,
+   "text": "take ownership become people who are trusted. Trusted people are given greater responsibility."
   },
   {
-   "t0": 131.38,
-   "t1": 133.54,
-   "text": "Os detalhes importam."
+   "t0": 322.82,
+   "t1": 329.22,
+   "text": "And people who handle responsibility well become leaders. Extreme ownership does not begin with"
   },
   {
-   "t0": 133.54,
-   "t1": 135.28,
-   "text": "Aqui está outro exemplo."
+   "t0": 329.22,
+   "t1": 335.54,
+   "text": "the title. It begins with a choice. The choice to stop blaming. The choice to start acting."
   },
   {
-   "t0": 135.28,
-   "t1": 137.78,
-   "text": "Repara numa pequena fuga de água."
-  },
-  {
-   "t0": 137.78,
-   "t1": 140.28,
-   "text": "Pensa, são só umas gotas."
-  },
-  {
-   "t0": 140.28,
-   "t1": 143.54,
-   "text": "Uma semana depois é uma reparação grande."
-  },
-  {
-   "t0": 143.54,
-   "t1": 150.34,
-   "text": "Atenção ao detalhe significa notar pequenos problemas antes de se tornarem grandes problemas."
-  },
-  {
-   "t0": 150.34,
-   "t1": 152.7,
-   "text": "É assim que os profissionais pensam."
-  },
-  {
-   "t0": 152.7,
-   "t1": 155.9,
-   "text": "Aqui está um hábito que o vai tornar excelente."
-  },
-  {
-   "t0": 155.9,
-   "t1": 161.54,
-   "text": "Antes de terminar qualquer tarefa, pare durante um minuto e pergunte a si próprio."
-  },
-  {
-   "t0": 161.54,
-   "t1": 163.3,
-   "text": "O que é que me escapou?"
-  },
-  {
-   "t0": 163.3,
-   "t1": 164.64,
-   "text": "Isto está limpo?"
-  },
-  {
-   "t0": 164.64,
-   "t1": 166.1,
-   "text": "Isto é seguro?"
-  },
-  {
-   "t0": 166.1,
-   "t1": 173.04,
-   "text": "Sentiria orgulho se o meu chefe, o meu cliente ou a minha família visse isto agora mesmo?"
-  },
-  {
-   "t0": 173.04,
-   "t1": 176.4,
-   "text": "Esse minuto pode fazer toda a diferença."
-  },
-  {
-   "t0": 176.4,
-   "t1": 177.94,
-   "text": "Lembre-se disso."
-  },
-  {
-   "t0": 177.94,
-   "t1": 183.84,
-   "text": "As pessoas podem não reparar em todos os detalhes que acerta, mas quase sempre reparam"
-  },
-  {
-   "t0": 183.84,
-   "t1": 185.7,
-   "text": "nos detalhes que erra."
-  },
-  {
-   "t0": 185.7,
-   "t1": 189.74,
-   "text": "A sua reputação constrói-se uma pequena ação de cada vez."
-  },
-  {
-   "t0": 189.74,
-   "t1": 191.48,
-   "text": "Uma ferramenta limpa."
-  },
-  {
-   "t0": 191.48,
-   "t1": 193.1,
-   "text": "Uma linha direita."
-  },
-  {
-   "t0": 193.1,
-   "t1": 195.64,
-   "text": "Um espaço de trabalho organizado."
-  },
-  {
-   "t0": 195.64,
-   "t1": 197.48,
-   "text": "Um e-mail escrito com cuidado."
-  },
-  {
-   "t0": 197.48,
-   "t1": 200.04,
-   "text": "Um carro bem estacionado."
-  },
-  {
-   "t0": 200.04,
-   "t1": 203.6,
-   "text": "Uma verificação extra, antes de dizer, terminei."
-  },
-  {
-   "t0": 203.6,
-   "t1": 207.5,
-   "text": "A excelência não é uma grande decisão."
-  },
-  {
-   "t0": 207.5,
-   "t1": 211.88,
-   "text": "São milhares de pequenas decisões tomadas todos os dias."
-  },
-  {
-   "t0": 211.88,
-   "t1": 215.88,
-   "text": "Por isso, hoje, preste atenção aos detalhes."
-  },
-  {
-   "t0": 215.88,
-   "t1": 217.86,
-   "text": "Tenha orgulho no seu trabalho."
-  },
-  {
-   "t0": 217.86,
-   "t1": 221.12,
-   "text": "Deixe cada lugar melhor do que o encontrou."
-  },
-  {
-   "t0": 221.12,
-   "t1": 223.8,
-   "text": "Trate cada ferramenta com respeito."
-  },
-  {
-   "t0": 223.8,
-   "t1": 226.36,
-   "text": "Termine cada tarefa com cuidado."
-  },
-  {
-   "t0": 226.36,
-   "t1": 231.6,
-   "text": "Porque as pessoas que se tornam excecionais não são as pessoas que, ocasionalmente,"
-  },
-  {
-   "t0": 231.6,
-   "t1": 233.2,
-   "text": "fazem grandes coisas."
-  },
-  {
-   "t0": 233.2,
-   "t1": 237.92,
-   "text": "São as pessoas que fazem consistentemente bem as pequenas coisas."
-  },
-  {
-   "t0": 237.92,
-   "t1": 240.6,
-   "text": "É isso que é a atenção ao detalhe."
-  },
-  {
-   "t0": 240.6,
-   "t1": 242.72,
-   "text": "E é isso que é a excelência."
+   "t0": 336.1,
+   "t1": 339.38,
+   "text": "And the choice to ask, what can I do now?"
   }
- ],
- "model": "whisper-small",
- "generatedAt": 1785511037852
+ ]
 }

@@ -1,0 +1,624 @@
+{
+ "module": 7,
+ "title": "The Science of Gratitude",
+ "vimeoId": "1218881643",
+ "vimeoName": "8. The Science of Gratitude",
+ "language": "en",
+ "durationSec": 328,
+ "machineTranslated": false,
+ "native": true,
+ "source": "vimeo-api",
+ "generatedAt": 1786971662161,
+ "segments": [
+  {
+   "t0": 0,
+   "t1": 2.72,
+   "text": "Imagine two people arriving at work."
+  },
+  {
+   "t0": 2.72,
+   "t1": 6.04,
+   "text": "The first walks in noticing everything that is wrong."
+  },
+  {
+   "t0": 6.04,
+   "t1": 7.52,
+   "text": "Something has broken."
+  },
+  {
+   "t0": 7.52,
+   "t1": 10.88,
+   "text": "Where behind schedule, there is too much to do."
+  },
+  {
+   "t0": 10.88,
+   "t1": 12.92,
+   "text": "Someone made a mistake."
+  },
+  {
+   "t0": 12.92,
+   "t1": 16.92,
+   "text": "The second person walks into exactly the same workplace,"
+  },
+  {
+   "t0": 16.92,
+   "t1": 19,
+   "text": "but notices something different."
+  },
+  {
+   "t0": 19,
+   "t1": 21.2,
+   "text": "Someone came in early to help."
+  },
+  {
+   "t0": 21.2,
+   "t1": 22.72,
+   "text": "A colleague solved a problem."
+  },
+  {
+   "t0": 22.72,
+   "t1": 25.48,
+   "text": "Someone took extra care with their work."
+  },
+  {
+   "t0": 25.48,
+   "t1": 29.16,
+   "text": "Something difficult yesterday is working better today."
+  },
+  {
+   "t0": 29.16,
+   "t1": 32.12,
+   "text": "Same workplace, different attention,"
+  },
+  {
+   "t0": 32.12,
+   "t1": 35.48,
+   "text": "and eventually a very different atmosphere."
+  },
+  {
+   "t0": 35.48,
+   "t1": 37.88,
+   "text": "This is the power of gratitude."
+  },
+  {
+   "t0": 37.88,
+   "t1": 40.76,
+   "text": "Gratitude isn't simply saying thank you."
+  },
+  {
+   "t0": 40.76,
+   "t1": 43.68,
+   "text": "It is the ability to recognize and appreciate"
+  },
+  {
+   "t0": 43.68,
+   "t1": 46.44,
+   "text": "the value that is already present."
+  },
+  {
+   "t0": 46.44,
+   "t1": 49.24,
+   "text": "And that matters because human beings adapt"
+  },
+  {
+   "t0": 49.24,
+   "t1": 51.52,
+   "text": "very quickly to good things."
+  },
+  {
+   "t0": 51.52,
+   "t1": 54.2,
+   "text": "The opportunity we once desperately wanted"
+  },
+  {
+   "t0": 54.2,
+   "t1": 57.16,
+   "text": "becomes just another day at work."
+  },
+  {
+   "t0": 57.16,
+   "t1": 59,
+   "text": "The team we once appreciated"
+  },
+  {
+   "t0": 59,
+   "t1": 61.64,
+   "text": "can become something we take for granted."
+  },
+  {
+   "t0": 61.64,
+   "t1": 63.52,
+   "text": "The equipment that works."
+  },
+  {
+   "t0": 63.52,
+   "t1": 65.72,
+   "text": "The people who show up every day."
+  },
+  {
+   "t0": 65.72,
+   "t1": 69.04,
+   "text": "The problems that get solved before they become bigger."
+  },
+  {
+   "t0": 69.04,
+   "t1": 72.32,
+   "text": "All of these things can slowly become invisible"
+  },
+  {
+   "t0": 72.32,
+   "t1": 74.64,
+   "text": "and we begin noticing what is missing"
+  },
+  {
+   "t0": 74.64,
+   "t1": 77,
+   "text": "more than what is already here."
+  },
+  {
+   "t0": 77,
+   "t1": 79.88,
+   "text": "Gratitude interrupts that pattern."
+  },
+  {
+   "t0": 79.88,
+   "t1": 82.92,
+   "text": "Dr. John D. Martini explores this idea"
+  },
+  {
+   "t0": 82.92,
+   "t1": 84.64,
+   "text": "in the gratitude effect."
+  },
+  {
+   "t0": 84.64,
+   "t1": 87.6,
+   "text": "One of the central themes of his work is simple."
+  },
+  {
+   "t0": 87.6,
+   "t1": 89.92,
+   "text": "Instead of asking what am I missing,"
+  },
+  {
+   "t0": 89.92,
+   "t1": 92.28,
+   "text": "we begin asking what is already here"
+  },
+  {
+   "t0": 92.28,
+   "t1": 95.04,
+   "text": "that I haven't fully appreciated."
+  },
+  {
+   "t0": 95.04,
+   "t1": 98.2,
+   "text": "Modern research offers another perspective."
+  },
+  {
+   "t0": 98.2,
+   "t1": 101.16,
+   "text": "Studies suggest that regular gratitude practices"
+  },
+  {
+   "t0": 101.16,
+   "t1": 104.24,
+   "text": "can improve well-being, increase positive emotion,"
+  },
+  {
+   "t0": 104.24,
+   "t1": 107.32,
+   "text": "and strengthen our relationships with others."
+  },
+  {
+   "t0": 107.32,
+   "t1": 109.32,
+   "text": "And that matters at work"
+  },
+  {
+   "t0": 109.32,
+   "t1": 113.12,
+   "text": "because no organization is built by one person."
+  },
+  {
+   "t0": 113.2,
+   "t1": 116.08,
+   "text": "Everything we achieve depends on contributions"
+  },
+  {
+   "t0": 116.08,
+   "t1": 117.8,
+   "text": "that are easy to overlook."
+  },
+  {
+   "t0": 117.8,
+   "t1": 119.72,
+   "text": "Someone repairs equipment."
+  },
+  {
+   "t0": 119.72,
+   "t1": 121.28,
+   "text": "Someone prepares food."
+  },
+  {
+   "t0": 121.28,
+   "t1": 122.84,
+   "text": "Someone checks the numbers."
+  },
+  {
+   "t0": 122.84,
+   "t1": 124.76,
+   "text": "Someone cleans a workspace."
+  },
+  {
+   "t0": 124.76,
+   "t1": 128.48,
+   "text": "Someone notices a problem before it becomes a bigger one."
+  },
+  {
+   "t0": 128.48,
+   "t1": 131.84,
+   "text": "Someone helps a colleague through a difficult day."
+  },
+  {
+   "t0": 131.84,
+   "t1": 136.2,
+   "text": "Small actions, that together build the entire organization."
+  },
+  {
+   "t0": 136.2,
+   "t1": 138.32,
+   "text": "When we notice those contributions"
+  },
+  {
+   "t0": 138.32,
+   "t1": 140.56,
+   "text": "and express genuine appreciation,"
+  },
+  {
+   "t0": 140.56,
+   "t1": 143.1,
+   "text": "we communicate something powerful."
+  },
+  {
+   "t0": 143.1,
+   "t1": 144.9,
+   "text": "I saw what you did."
+  },
+  {
+   "t0": 144.9,
+   "t1": 147.18,
+   "text": "What you did made a difference."
+  },
+  {
+   "t0": 147.18,
+   "t1": 149.3,
+   "text": "And when that happens consistently,"
+  },
+  {
+   "t0": 149.3,
+   "t1": 151.74,
+   "text": "gratitude becomes more than a feeling."
+  },
+  {
+   "t0": 151.74,
+   "t1": 154.18,
+   "text": "It becomes part of the culture."
+  },
+  {
+   "t0": 154.18,
+   "t1": 157.18,
+   "text": "But there is an important misunderstanding."
+  },
+  {
+   "t0": 157.18,
+   "t1": 159.26,
+   "text": "If I'm grateful for what I have,"
+  },
+  {
+   "t0": 159.26,
+   "t1": 161.7,
+   "text": "won't I stop wanting to improve?"
+  },
+  {
+   "t0": 161.7,
+   "t1": 163.1,
+   "text": "Of course not."
+  },
+  {
+   "t0": 163.1,
+   "t1": 165.86,
+   "text": "Gratitude and ambition are not opposites."
+  },
+  {
+   "t0": 165.86,
+   "t1": 167.82,
+   "text": "You can appreciate today's work"
+  },
+  {
+   "t0": 167.82,
+   "t1": 171.14,
+   "text": "and still want tomorrow's work to be even better."
+  },
+  {
+   "t0": 171.18,
+   "t1": 172.86,
+   "text": "You can value your team"
+  },
+  {
+   "t0": 172.86,
+   "t1": 175.18,
+   "text": "and continue raising the standard."
+  },
+  {
+   "t0": 175.18,
+   "t1": 178.86,
+   "text": "Gratitude doesn't mean saying everything is perfect."
+  },
+  {
+   "t0": 178.86,
+   "t1": 182.94,
+   "text": "It means recognizing there is already great value here"
+  },
+  {
+   "t0": 182.94,
+   "t1": 185.46,
+   "text": "and we can build even more."
+  },
+  {
+   "t0": 185.46,
+   "t1": 187.46,
+   "text": "There is a difference between growing"
+  },
+  {
+   "t0": 187.46,
+   "t1": 190.14,
+   "text": "because nothing ever feels enough"
+  },
+  {
+   "t0": 190.14,
+   "t1": 192.1,
+   "text": "and growing because you appreciate"
+  },
+  {
+   "t0": 192.1,
+   "t1": 194.46,
+   "text": "what has already been achieved."
+  },
+  {
+   "t0": 194.46,
+   "t1": 199.22,
+   "text": "This idea is much older than modern psychology."
+  },
+  {
+   "t0": 199.22,
+   "t1": 202.26,
+   "text": "In the biblical account of the feeding of the thousands,"
+  },
+  {
+   "t0": 202.26,
+   "t1": 203.78,
+   "text": "before there was abundance,"
+  },
+  {
+   "t0": 203.78,
+   "t1": 207.14,
+   "text": "Jesus gave thanks for what they already had."
+  },
+  {
+   "t0": 207.14,
+   "t1": 208.78,
+   "text": "Whatever your personal beliefs,"
+  },
+  {
+   "t0": 208.78,
+   "t1": 211.46,
+   "text": "there is a powerful principle in that story."
+  },
+  {
+   "t0": 211.46,
+   "t1": 215.42,
+   "text": "Begin by appreciating what is already in your hands."
+  },
+  {
+   "t0": 215.42,
+   "t1": 218.42,
+   "text": "Gratitude doesn't magically create more,"
+  },
+  {
+   "t0": 218.42,
+   "t1": 220.54,
+   "text": "but it changes what we notice."
+  },
+  {
+   "t0": 220.54,
+   "t1": 222.1,
+   "text": "When we appreciate something,"
+  },
+  {
+   "t0": 222.1,
+   "t1": 223.78,
+   "text": "we care for it differently."
+  },
+  {
+   "t0": 223.78,
+   "t1": 225.1,
+   "text": "We use it differently"
+  },
+  {
+   "t0": 225.1,
+   "t1": 229.1,
+   "text": "and we begin to see possibilities we had overlooked before."
+  },
+  {
+   "t0": 229.1,
+   "t1": 231.26,
+   "text": "So how do we practice gratitude?"
+  },
+  {
+   "t0": 231.26,
+   "t1": 233.26,
+   "text": "Three simple habits."
+  },
+  {
+   "t0": 233.26,
+   "t1": 235.54,
+   "text": "First, notice every day,"
+  },
+  {
+   "t0": 235.54,
+   "t1": 239.06,
+   "text": "identify three things you genuinely appreciate."
+  },
+  {
+   "t0": 239.06,
+   "t1": 240.58,
+   "text": "Be specific."
+  },
+  {
+   "t0": 240.58,
+   "t1": 242.18,
+   "text": "Second, express it."
+  },
+  {
+   "t0": 242.18,
+   "t1": 245.78,
+   "text": "Don't just feel appreciation, say it."
+  },
+  {
+   "t0": 245.78,
+   "t1": 248.78,
+   "text": "Specific appreciation has far more impact"
+  },
+  {
+   "t0": 248.78,
+   "t1": 250.94,
+   "text": "than a simple thank you."
+  },
+  {
+   "t0": 250.94,
+   "t1": 255.62,
+   "text": "Third, practice gratitude even when life isn't perfect."
+  },
+  {
+   "t0": 255.62,
+   "t1": 258.34,
+   "text": "Ask yourself, what is still good here?"
+  },
+  {
+   "t0": 258.34,
+   "t1": 260.06,
+   "text": "What can I learn from this?"
+  },
+  {
+   "t0": 260.06,
+   "t1": 263.22,
+   "text": "What people or resources do I already have"
+  },
+  {
+   "t0": 263.22,
+   "t1": 265.62,
+   "text": "that can help me move forward?"
+  },
+  {
+   "t0": 265.62,
+   "t1": 267.7,
+   "text": "Gratitude isn't denial."
+  },
+  {
+   "t0": 267.7,
+   "t1": 271.86,
+   "text": "It is perspective and it doesn't remove accountability."
+  },
+  {
+   "t0": 271.86,
+   "t1": 274.9,
+   "text": "We can be grateful and still correct mistakes."
+  },
+  {
+   "t0": 274.9,
+   "t1": 278.66,
+   "text": "We can appreciate people and still maintain high standards."
+  },
+  {
+   "t0": 278.66,
+   "t1": 280.54,
+   "text": "And finally, remember this,"
+  },
+  {
+   "t0": 280.54,
+   "t1": 283.38,
+   "text": "gratitude changes what we pay attention to."
+  },
+  {
+   "t0": 283.38,
+   "t1": 285.5,
+   "text": "When people regularly recognize"
+  },
+  {
+   "t0": 285.5,
+   "t1": 288.62,
+   "text": "one another's contributions, people feel seen."
+  },
+  {
+   "t0": 288.62,
+   "t1": 291.42,
+   "text": "People understand that their work matters"
+  },
+  {
+   "t0": 291.42,
+   "t1": 295.22,
+   "text": "and that changes the atmosphere in which they work."
+  },
+  {
+   "t0": 295.22,
+   "t1": 298.02,
+   "text": "Whether you're building something, repairing something,"
+  },
+  {
+   "t0": 298.02,
+   "t1": 302.38,
+   "text": "cleaning, managing, leading, serving or supporting others,"
+  },
+  {
+   "t0": 302.38,
+   "t1": 305.34,
+   "text": "your work always affects someone else's work."
+  },
+  {
+   "t0": 305.34,
+   "t1": 308.54,
+   "text": "So don't wait until everything is perfect to be grateful."
+  },
+  {
+   "t0": 308.54,
+   "t1": 310.94,
+   "text": "Notice, appreciate, express it"
+  },
+  {
+   "t0": 310.94,
+   "t1": 312.82,
+   "text": "and continue building from there"
+  },
+  {
+   "t0": 312.82,
+   "t1": 316.3,
+   "text": "because gratitude doesn't stop us from wanting more."
+  },
+  {
+   "t0": 316.3,
+   "t1": 319.58,
+   "text": "It teaches us to appreciate what is already present"
+  },
+  {
+   "t0": 319.58,
+   "t1": 322.74,
+   "text": "while we continue creating what comes next."
+  },
+  {
+   "t0": 322.74,
+   "t1": 326.54,
+   "text": "And very often, what we appreciate is what we multiply."
+  }
+ ]
+}

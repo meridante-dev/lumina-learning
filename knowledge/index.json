@@ -1,5 +1,5 @@
 {
- "generatedAt": 1785758199897,
+ "generatedAt": 1786974212377,
  "courses": {
   "alignment-journey": {
    "title": "The EdenRise Alignment Journey",
@@ -8,7 +8,7 @@
      "mod": 0,
      "title": "Warm Welcome",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 59,
      "durationSec": 325,
      "capability": "leadership",
@@ -65,7 +65,7 @@
      "mod": 1,
      "title": "Above the Line · Intro",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 35,
      "durationSec": 169,
      "capability": "leadership",
@@ -122,7 +122,7 @@
      "mod": 2,
      "title": "Above the Line · Simple & Powerful Thinking",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 40,
      "durationSec": 177,
      "capability": "leadership",
@@ -236,7 +236,7 @@
      "mod": 4,
      "title": "Above the Line · Summary",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 14,
      "durationSec": 51,
      "capability": "leadership",
@@ -288,7 +288,7 @@
      "mod": 5,
      "title": "No Failure, Only Feedback · Intro",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 8,
      "durationSec": 68,
      "capability": "leadership",
@@ -509,7 +509,7 @@
      "mod": 9,
      "title": "Goal Setting · Intro",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 12,
      "durationSec": 62,
      "capability": "leadership",
@@ -619,7 +619,7 @@
      "mod": 11,
      "title": "Goal Setting · 90-Day Goals",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 168,
      "durationSec": 575,
      "capability": "leadership",
@@ -676,7 +676,7 @@
      "mod": 12,
      "title": "Goal Setting · Top 5 Goals",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 157,
      "durationSec": 570,
      "capability": "leadership",
@@ -787,7 +787,7 @@
      "mod": 14,
      "title": "Beyond Fear · Intro",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 17,
      "durationSec": 95,
      "capability": "leadership",
@@ -1070,7 +1070,7 @@
      "mod": 0,
      "title": "Starting & Driving the Truck",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 129,
      "durationSec": 355,
      "capability": "safety",
@@ -1126,7 +1126,7 @@
      "mod": 1,
      "title": "Filling the Water Tank",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 146,
      "durationSec": 611,
      "capability": "safety",
@@ -1238,7 +1238,7 @@
      "mod": 3,
      "title": "Power, Safety & the Drill",
      "language": "en",
-     "translated": null,
+     "translated": "pt",
      "segments": 183,
      "durationSec": 568,
      "capability": "safety",
@@ -1298,55 +1298,55 @@
     {
      "mod": 0,
      "title": "Above the Line, Below the Line",
-     "language": "pt",
-     "translated": null,
-     "segments": 114,
-     "durationSec": 304,
+     "language": "en",
+     "translated": "pt",
+     "segments": 39,
+     "durationSec": 249,
      "capability": "leadership",
      "tags": [
       "leadership",
       "community",
-      "linha",
-      "acima",
-      "abaixo",
-      "feedback",
-      "dias",
-      "desculpas",
-      "culpa",
-      "perguntas"
+      "line",
+      "above",
+      "below",
+      "every",
+      "people",
+      "person",
+      "everyone",
+      "feedback"
      ],
      "regime": null,
-     "summary": "Hoje vamos aprender uma das ideias mais importantes desta formação. Chama-se acima da linha e abaixo da linha. É muito simples, mas pode mudar a forma como trabalha, como comunica e como cresce.",
+     "summary": "Hello everyone. Today we're going to learn one of the most important ideas in this training. It is called above the line and below the line. It is very simple but it can change the way you work, the way you communicate and the way you grow. Over the next few m",
      "url": "https://academy.edenrise.com/#/play/land-team-journey/0",
      "moments": [
       {
-       "t0": 51,
-       "teaches": "What characterizes being 'below the line'?",
-       "audit": "corrected"
-      },
-      {
-       "t0": 104,
-       "teaches": "What is the primary focus of being 'above the line'?",
+       "t0": 26,
+       "teaches": "What is the key question to remember in the Above the Line training?",
        "audit": "verified"
       },
       {
-       "t0": 104,
-       "teaches": "When faced with a problem, what should you do to stay 'above the line'?",
+       "t0": 55,
+       "teaches": "What are the characteristics of being below the line?",
        "audit": "verified"
       },
       {
-       "t0": 182,
-       "teaches": "What is the first step to take when you realize you are 'below the line'?",
+       "t0": 82,
+       "teaches": "What should you do when you notice you are below the line?",
        "audit": "verified"
       },
       {
-       "t0": 157,
-       "teaches": "A colleague makes a mistake that affects your work. How should you respond to stay 'above the line'?",
+       "t0": 112,
+       "teaches": "What is the best way to respond to a mistake or problem?",
        "audit": "verified"
       },
       {
-       "t0": 130,
-       "teaches": "You notice a team member is not pulling their weight. What 'above the line' behavior should you exhibit?",
+       "t0": 140,
+       "teaches": "A team member makes a mistake that affects the entire project. What should you say to them?",
+       "audit": "verified"
+      },
+      {
+       "t0": 168,
+       "teaches": "You notice that you are feeling frustrated and defensive after a conversation with a colleague. What should you do?",
        "audit": "verified"
       }
      ],
@@ -1355,112 +1355,112 @@
     {
      "mod": 1,
      "title": "No Failure, Only Feedback",
-     "language": "pt",
-     "translated": null,
-     "segments": 105,
-     "durationSec": 268,
+     "language": "en",
+     "translated": "pt",
+     "segments": 38,
+     "durationSec": 242,
      "capability": "leadership",
      "tags": [
       "leadership",
       "community",
       "feedback",
-      "aprender",
-      "melhor",
-      "alguem",
-      "fracasso",
-      "erro",
-      "bebe",
-      "tornou"
+      "learn",
+      "every",
+      "better",
+      "someone",
+      "person",
+      "learning",
+      "failure"
      ],
      "regime": null,
-     "summary": "Pense num bebê a aprender a andar. O bebê cai? Sim, muitas vezes. O bebê diz, só um fracasso.",
+     "summary": "Think about a baby learning to walk. Does the baby fall? Yes, many times. Does the baby say I'm a failure? No, the baby simply tries again. Falls, learns, gets up, and one day, the baby walks. This is how all learning works. We learn, we make mistakes, we rece",
      "url": "https://academy.edenrise.com/#/play/land-team-journey/1",
      "moments": [
       {
-       "t0": 27,
+       "t0": 30,
        "teaches": "What is the key phrase to remember according to the trainer?",
+       "audit": "verified"
+      },
+      {
+       "t0": 146,
+       "teaches": "What is the benefit of learning from people who are ahead of you?",
        "audit": "corrected"
       },
       {
-       "t0": 131,
-       "teaches": "How does the second person in the example react to feedback?",
-       "audit": "verified"
-      },
-      {
-       "t0": 104,
-       "teaches": "What should you do when you make a mistake at work?",
-       "audit": "verified"
-      },
-      {
-       "t0": 186,
-       "teaches": "What attitude is required to learn from people who are more advanced than you?",
-       "audit": "verified"
-      },
-      {
-       "t0": 53,
-       "teaches": "A colleague is struggling with a task and has made several mistakes. What can you learn from their experience?",
+       "t0": 84,
+       "teaches": "What should you do when someone corrects you at work?",
        "audit": "corrected"
       },
       {
-       "t0": 159,
-       "teaches": "You are given feedback on your performance and you don't agree with it. What should you do?",
+       "t0": 114,
+       "teaches": "How can you demonstrate a growth mindset at work?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 58,
+       "teaches": "Imagine you are a new employee and you make a mistake on your first day. Your manager points out the error and shows you",
        "audit": "verified"
+      },
+      {
+       "t0": 178,
+       "teaches": "You are working on a project and a colleague with more experience offers to guide you. However, you are confident in you",
+       "audit": "corrected"
       }
      ],
      "questions": 6
     },
     {
      "mod": 2,
-     "title": "Attention to Detail",
-     "language": "pt",
-     "translated": null,
-     "segments": 89,
-     "durationSec": 243,
+     "title": "Total Responsibility",
+     "language": "en",
+     "translated": "pt",
+     "segments": 56,
+     "durationSec": 339,
      "capability": "leadership",
      "tags": [
       "leadership",
       "community",
-      "trabalho",
-      "atencao",
-      "chao",
-      "detalhe",
-      "ferramentas",
-      "estao",
-      "lugar",
-      "pequenas"
+      "ownership",
+      "people",
+      "person",
+      "next",
+      "problem",
+      "instead",
+      "fault",
+      "responsibility"
      ],
      "regime": null,
-     "summary": "Imagine que entre em dois locais de trabalho. O primeiro está desarrumado. As ferramentas estão largadas no chão.",
+     "summary": "Imagine two people who make the same mistake. The first person sees it wasn't my fault. The tools were bad. No one told me. The instructions weren't clear. The second person says, I could have asked more questions. I should have checked my",
      "url": "https://academy.edenrise.com/#/play/land-team-journey/2",
      "moments": [
       {
-       "t0": 27,
-       "teaches": "Why do most people choose a well-organized workspace over a disorganized one?",
+       "t0": 29,
+       "teaches": "What is extreme ownership?",
        "audit": "verified"
       },
       {
-       "t0": 80,
-       "teaches": "What is the main goal of attention to detail?",
+       "t0": 87,
+       "teaches": "What do people who take ownership typically do?",
        "audit": "corrected"
       },
       {
-       "t0": 135,
-       "teaches": "What should you do when you notice a small problem in your work?",
-       "audit": "corrected"
-      },
-      {
-       "t0": 162,
-       "teaches": "What should you do before finishing a task to ensure attention to detail?",
-       "audit": "corrected"
-      },
-      {
-       "t0": 110,
-       "teaches": "Two employees, John and Mike, complete a painting task. John leaves the area messy, while Mike cleans up and organizes t",
+       "t0": 116,
+       "teaches": "If you are falling behind on a task, what should you do?",
        "audit": "verified"
       },
       {
-       "t0": 190,
-       "teaches": "You receive an email from a colleague with several spelling errors and missing information. How does this reflect on the",
+       "t0": 174,
+       "teaches": "If you notice a potential mistake, what should you do?",
+       "audit": "verified"
+      },
+      {
+       "t0": 57,
+       "teaches": "A supplier is late with a delivery, what should you do?",
+       "audit": "verified"
+      },
+      {
+       "t0": 146,
+       "teaches": "You are building a fence and notice a measurement is incorrect, what should you do?",
        "audit": "corrected"
       }
      ],
@@ -1468,52 +1468,56 @@
     },
     {
      "mod": 3,
-     "title": "Total Responsibility",
+     "title": "t Assume, Clarify\", ",
      "language": "en",
-     "translated": null,
-     "segments": 66,
-     "durationSec": 204,
+     "translated": "pt",
+     "segments": 64,
+     "durationSec": 341,
      "capability": "leadership",
      "tags": [
       "leadership",
       "community",
-      "fire",
-      "soldier",
-      "careful",
-      "sorry"
+      "communication",
+      "about",
+      "great",
+      "another",
+      "person",
+      "teams",
+      "work",
+      "understood"
      ],
      "regime": null,
-     "summary": "So what's happening here Mike? Here it's a big fire. All the wheat is burning.",
+     "summary": "Imagine this your manager says please move the chairs one person moves five chairs another moves every chair in the room another moves nothing because they thought the task was for tomorrow who made the mistake maybe nobody maybe the",
      "url": "https://academy.edenrise.com/#/play/land-team-journey/3",
      "moments": [
       {
-       "t0": 27,
-       "teaches": "What is the first step when using the fire gun?",
+       "t0": 30,
+       "teaches": "What is the biggest communication mistake that great teams should avoid?",
        "audit": "corrected"
       },
       {
-       "t0": 53,
-       "teaches": "What is the purpose of the orange button?",
+       "t0": 106,
+       "teaches": "What can a short conversation at the beginning of a task prevent?",
        "audit": "corrected"
       },
       {
-       "t0": 27,
-       "teaches": "What should you do after setting the adapters and outlets?",
+       "t0": 56,
+       "teaches": "What should you do when you're unsure about a task or instruction?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 133,
+       "teaches": "What should you do after someone gives you instructions or information?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 81,
+       "teaches": "You're assigned to clean the kitchen with your team. What's the best first step to ensure everyone is on the same page?",
        "audit": "verified"
       },
       {
-       "t0": 112,
-       "teaches": "What should you consider when asking someone to operate a vehicle in a fire?",
-       "audit": "verified"
-      },
-      {
-       "t0": 137,
-       "teaches": "You are working with a team to put out a fire and one of the team members is a soldier with experience in operating heav",
-       "audit": "corrected"
-      },
-      {
-       "t0": 189,
-       "teaches": "You are working with a team to put out a fire and one of the team members is using a microphone to communicate with the ",
+       "t0": 161,
+       "teaches": "You're working on a task that takes several hours to complete. What's a good habit to practice to ensure you're on track",
        "audit": "corrected"
       }
      ],
@@ -1521,113 +1525,113 @@
     },
     {
      "mod": 4,
-     "title": "A Learner for Life",
-     "language": "pt",
-     "translated": null,
-     "segments": 81,
-     "durationSec": 205,
+     "title": ", ",
+     "language": "en",
+     "translated": "pt",
+     "segments": 114,
+     "durationSec": 334,
      "capability": "leadership",
      "tags": [
       "leadership",
       "community",
-      "aprende",
-      "aprender",
-      "perguntas",
-      "aprenda",
-      "talvez",
-      "vida",
-      "hoje",
-      "melhor"
+      "work",
+      "help",
+      "someone",
+      "person",
+      "better",
+      "before",
+      "improve",
+      "learning"
      ],
      "regime": null,
-     "summary": "Imagine duas pessoas a começar o mesmo trabalho no mesmo dia. Cinco anos depois, uma tornou-se líder. A outra continua a fazer o mesmo trabalho da mesma forma.",
+     "summary": "Have you ever spent an hour doing something, only to discover that someone else could do it in 10 minutes? That happens to all of us.",
      "url": "https://academy.edenrise.com/#/play/land-team-journey/4",
      "moments": [
       {
-       "t0": 27,
-       "teaches": "What is a key characteristic of someone who is an 'aprendiz para a vida', or a lifelong learner?",
+       "t0": 28,
+       "teaches": "What is the simple question that can help you improve faster by learning from others?",
        "audit": "verified"
       },
       {
        "t0": 54,
-       "teaches": "What does it mean when someone asks questions, according to the lesson?",
-       "audit": "verified"
+       "teaches": "What does benchmarking mean in the context of learning and improvement?",
+       "audit": "corrected"
       },
       {
        "t0": 80,
-       "teaches": "What should you do at the end of each workday to continue growing and learning?",
+       "teaches": "If someone on your team is excellent with customers, what should you do to learn from them?",
+       "audit": "verified"
+      },
+      {
+       "t0": 107,
+       "teaches": "Before sending an email, what question can you ask to benchmark your work?",
        "audit": "corrected"
       },
       {
-       "t0": 131,
-       "teaches": "How can you use AI to improve your work and learning?",
+       "t0": 133,
+       "teaches": "You are working on a project and have just finished the first draft. What should you do next to apply the principle of b",
        "audit": "corrected"
       },
       {
-       "t0": 105,
-       "teaches": "You're working on a project and encounter an obstacle. What should you do?",
-       "audit": "corrected"
-      },
-      {
-       "t0": 158,
-       "teaches": "You've made a mistake on a task and are not sure how to improve. What should you do?",
-       "audit": "corrected"
+       "t0": 159,
+       "teaches": "A colleague is struggling to complete a task and is too proud to ask for help. What should they do to apply the principl",
+       "audit": "verified"
       }
      ],
      "questions": 6
     },
     {
      "mod": 5,
-     "title": "t Assume, Clarify\", ",
-     "language": "pt",
-     "translated": null,
-     "segments": 84,
-     "durationSec": 254,
+     "title": ", ",
+     "language": "en",
+     "translated": "pt",
+     "segments": 54,
+     "durationSec": 328,
      "capability": "leadership",
      "tags": [
       "leadership",
       "community",
-      "grandes",
-      "outra",
-      "comunicacao",
-      "equipas",
-      "problema",
-      "presumimos",
-      "respeita",
-      "cadeiras"
+      "small",
+      "people",
+      "about",
+      "clean",
+      "tools",
+      "attention",
+      "detail",
+      "means"
      ],
      "regime": null,
-     "summary": "Imagine isto. O seu chefe diz, por favor, mudem as cadeiras de lugar. Uma pessoa move cinco cadeiras, outra pessoa move todas as cadeiras da sala, outra pessoa não move nenhuma porque pensou que era para amanhã.",
+     "summary": "Imagine walking into two workplaces. The first is untidy. Tools are left on the ground, rubbish is everywhere, equipment is dirty and people say it's good enough. Now imagine a second workplace. The tools are clean, everything is organized,",
      "url": "https://academy.edenrise.com/#/play/land-team-journey/5",
      "moments": [
       {
-       "t0": 28,
-       "teaches": "What is one of the most valuable skills that a team can learn?",
+       "t0": 30,
+       "teaches": "What builds trust in a workplace?",
        "audit": "verified"
       },
       {
-       "t0": 56,
-       "teaches": "What is a common mistake that can lead to problems in team communication?",
+       "t0": 57,
+       "teaches": "How does a professional treat their tools?",
        "audit": "corrected"
       },
       {
-       "t0": 82,
-       "teaches": "What should you do when you're unsure about the meaning of a task or instruction?",
+       "t0": 88,
+       "teaches": "What should you do when finishing a job?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 117,
+       "teaches": "What should you do with your tools after completing a task?",
        "audit": "verified"
       },
       {
-       "t0": 107,
-       "teaches": "How should you listen to someone who is speaking to you?",
-       "audit": "corrected"
+       "t0": 144,
+       "teaches": "You receive two emails from colleagues. One contains spelling mistakes and missing information, while the other is clear",
+       "audit": "verified"
       },
       {
-       "t0": 137,
-       "teaches": "You're working on a task that's taking longer than expected. What should you do to keep your team informed?",
-       "audit": "corrected"
-      },
-      {
-       "t0": 163,
-       "teaches": "You've encountered an issue while working on a task. What should you do to address the problem?",
+       "t0": 173,
+       "teaches": "You notice a small water leak in the workplace. What should you do?",
        "audit": "corrected"
       }
      ],
@@ -1635,56 +1639,113 @@
     },
     {
      "mod": 6,
-     "title": "Module 7",
-     "language": "pt",
-     "translated": null,
-     "segments": 70,
-     "durationSec": 218,
+     "title": ", ",
+     "language": "en",
+     "translated": "pt",
+     "segments": 58,
+     "durationSec": 322,
      "capability": "leadership",
      "tags": [
       "leadership",
       "community",
-      "melhor",
-      "aprender",
-      "pedir",
-      "alguem",
-      "benchmark",
-      "pergunte",
-      "ajuda",
-      "talvez"
+      "learn",
+      "every",
+      "people",
+      "same",
+      "learning",
+      "lesson",
+      "become",
+      "questions"
      ],
      "regime": null,
-     "summary": "Alguma vez passou uma hora a fazer algo, só para descobrir que outra pessoa fazia em 10 minutos? Isso acontece a todos nós. Uma das formas mais rápidas de crescer é deixar de presumir que a sua forma é a melhor forma.",
+     "summary": "Imagine two people starting the same job on the same day. They receive the same training, they have the same opportunities and they begin at the same level. Five years later, one has become a leader. The other is still doing the same",
      "url": "https://academy.edenrise.com/#/play/land-team-journey/6",
      "moments": [
       {
-       "t0": 27,
-       "teaches": "What is a key characteristic of the best people in the world?",
+       "t0": 45,
+       "teaches": "What is the main factor that usually makes the difference in the growth of two people who started the same job on the sa",
        "audit": "verified"
       },
       {
-       "t0": 53,
-       "teaches": "What does making a benchmark mean?",
+       "t0": 81,
+       "teaches": "What is asking questions a sign of?",
        "audit": "verified"
       },
       {
-       "t0": 78,
-       "teaches": "What should you do before sending an email or creating a document?",
-       "audit": "verified"
-      },
-      {
-       "t0": 105,
-       "teaches": "What is a sign of wisdom in the workplace?",
-       "audit": "verified"
-      },
-      {
-       "t0": 131,
-       "teaches": "Two employees are building the same table. One starts immediately and works for 4 hours, while the other spends 5 minute",
+       "t0": 136,
+       "teaches": "What should you do if you are unsure about something at work?",
        "audit": "corrected"
       },
       {
-       "t0": 158,
-       "teaches": "You are preparing a presentation and want to improve it. What should you do?",
+       "t0": 163,
+       "teaches": "What habit can you use every day to keep growing and learning?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 110,
+       "teaches": "A colleague is doing a task more efficiently than you. What should you do?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 189,
+       "teaches": "You receive feedback that is uncomfortable to hear. What should you do?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 7,
+     "title": "Module 8",
+     "language": "en",
+     "translated": null,
+     "segments": 122,
+     "durationSec": 327,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "community",
+      "gratitude",
+      "work",
+      "someone",
+      "appreciate",
+      "already",
+      "something",
+      "people",
+      "everything"
+     ],
+     "regime": null,
+     "summary": "Imagine two people arriving at work. The first walks in noticing everything that is wrong. Something has broken.",
+     "url": "https://academy.edenrise.com/#/play/land-team-journey/7",
+     "moments": [
+      {
+       "t0": 25,
+       "teaches": "What is the power of gratitude in the workplace?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 52,
+       "teaches": "What happens to human beings when they adapt to good things?",
+       "audit": "verified"
+      },
+      {
+       "t0": 104,
+       "teaches": "What should a worker do to improve well-being and relationships with others?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 132,
+       "teaches": "How can a worker communicate appreciation for the contributions of others?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 157,
+       "teaches": "An employee is concerned that practicing gratitude will make them complacent and less motivated to improve. What can be ",
+       "audit": "verified"
+      },
+      {
+       "t0": 183,
+       "teaches": "A team is struggling to improve their performance and is focused on what is missing. What can be done to shift their foc",
        "audit": "corrected"
       }
      ],
