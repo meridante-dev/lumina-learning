@@ -45,11 +45,49 @@ ${JSON.stringify(texts)}`;
     }),
   });
   const d = await r.json();
+  /* A spent daily allocation is not a misalignment. Unlabelled, it surfaced as
+     "Unexpected end of JSON input" and the splitter fanned 46 doomed retries
+     against a wall. Budget errors are fatal to the RUN, not to the batch. */
+  if (d && d.error) {
+    const e = new Error(`${d.error}: ${String(d.detail || '').slice(0, 120)}`);
+    e.fatal = /4006|allocation|quota|rate/i.test(JSON.stringify(d));
+    throw e;
+  }
   const text = String(d.reply || '');
   const a = text.indexOf('['), b = text.lastIndexOf(']');
+  if (a < 0 || b < a) throw new Error('no JSON array in reply: ' + text.slice(0, 80));
   const arr = JSON.parse(text.slice(a, b + 1).replace(/,\s*([\]}])/g, '$1'));
-  if (!Array.isArray(arr) || arr.length !== texts.length) throw new Error(`misaligned: ${texts.length} in, ${arr.length} out`);
+  if (!Array.isArray(arr) || arr.length !== texts.length) {
+    const err = new Error(`misaligned: ${texts.length} in, ${Array.isArray(arr) ? arr.length : '?'} out`);
+    err.parts = arr; throw err;
+  }
   return arr.map(String);
+}
+
+/* A 28-line batch makes the 70B drop lines (28 in, 8 out) or split them
+   (28 in, 56 out). Retrying the SAME size just fails twice — which is what the
+   first run did on 12 of 30 modules. Halve on misalignment instead and recurse:
+   smaller batches are the one thing that reliably fixes it, and the split is
+   exact because each half is aligned independently. At a single segment the
+   model can still return several strings; those are one line's worth of
+   translation, so they are rejoined rather than dropped. */
+async function translateAligned(texts, from, to) {
+  try {
+    return await translateBatch(texts, from, to);
+  } catch (e) {
+    if (e.fatal) throw e;                      // no point splitting against a wall
+    if (texts.length === 1) {
+      const arr = e.parts;                     // preserved by translateBatch
+      if (Array.isArray(arr) && arr.length) return [arr.join(' ')];
+      throw e;
+    }
+    const mid = Math.ceil(texts.length / 2);
+    process.stdout.write(`[split ${texts.length}→${mid}] `);
+    const a = await translateAligned(texts.slice(0, mid), from, to);
+    await new Promise(r => setTimeout(r, 500));
+    const b = await translateAligned(texts.slice(mid), from, to);
+    return a.concat(b);
+  }
 }
 
 async function main() {
@@ -66,11 +104,9 @@ async function main() {
       process.stdout.write(`${course}/${mod} ${from}→${to} (${tr.segments.length} segs) … `);
       try {
         const out = [];
-        for (let i = 0; i < tr.segments.length; i += 28) {          // batches keep JSON inside the token budget
-          const batch = tr.segments.slice(i, i + 28);
-          let texts;
-          try { texts = await translateBatch(batch.map(s => s.text), from, to); }
-          catch (e) { texts = await translateBatch(batch.map(s => s.text), from, to); }   // one retry, then fail loud
+        for (let i = 0; i < tr.segments.length; i += 16) {          // batches keep JSON inside the token budget
+          const batch = tr.segments.slice(i, i + 16);
+          const texts = await translateAligned(batch.map(s => s.text), from, to);
           batch.forEach((s, j) => out.push({ t0: s.t0, t1: s.t1, text: texts[j] }));
           await new Promise(r => setTimeout(r, 800));
         }
@@ -79,7 +115,10 @@ async function main() {
           model: 'llama-3.3-70b@workers-ai', generatedAt: Date.now(), segments: out,
         }, null, 1));
         console.log('done');
-      } catch (e) { console.log('FAILED: ' + e.message.slice(0, 120)); }
+      } catch (e) {
+        console.log('FAILED: ' + e.message.slice(0, 120));
+        if (e.fatal) { console.log('\n⛔ stopping: the run is out of budget. Re-run after the daily reset — finished modules are skipped.'); return; }
+      }
     }
   }
 }

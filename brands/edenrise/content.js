@@ -14,16 +14,17 @@ const CATALOG = [
        it is the one lie that discredits everything behind it. Zero until real. */
     level: 'All levels', learners: 0, ai: true, featured: true, poster: 'media/above-below-line-cover.webp', heroArt: 'media/covers/land-team-journey-hero.webp', updated: '2026-07',
     desc: 'The Land Team\'s journey of growth — the mindset and habits that shape how we work the land, and each other. It begins with one question that changes how you show up.',
-    modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Attention to Detail', 'Total Responsibility', 'A Learner for Life', "Don't Assume, Clarify", 'The Benchmark of Excellence'],
-    moduleDurations: [5, 5, 4, 3, 3, 4, 4],   /* real Vimeo lengths: 5:06 4:29 4:05 3:27 3:27 4:15 3:38 */
+    modules: ['Above the Line, Below the Line', 'No Failure, Only Feedback', 'Total Responsibility', "Don't Assume, Clarify", 'Benchmarking Excellence', 'Attention to Detail', 'Lifelong Learner', 'The Science of Gratitude'],
+    moduleDurations: [4, 4, 6, 6, 6, 5, 5, 5],   /* real Vimeo lengths: 4:09 4:04 5:40 5:40 5:35 5:29 5:21 5:28 */
     moduleMedia: [
-      { type: 'vimeo', id: '1206810959' },   /* 1. Acima da Linha, Abaixo da Linha */
-      { type: 'vimeo', id: '1206811136' },   /* 2. Não Há Fracasso, Só Feedback */
-      { type: 'vimeo', id: '1206817926' },   /* 3. Atenção ao Detalhe */
-      { type: 'vimeo', id: '1207365126' },   /* 4. Responsabilidade Total */
-      { type: 'vimeo', id: '1207365326' },   /* 5. Seja um Aprendiz para a Vida */
-      { type: 'vimeo', id: '1207317081' },   /* 6. Não Presuma, Esclareça */
-      { type: 'vimeo', id: '1207317283' }    /* 7. Benchmark de Excelência */
+      { type: 'vimeo', id: '1217932399' },   /* 1. Above the Line, Below the Line */
+      { type: 'vimeo', id: '1217936795' },   /* 2. No Failure, Only Feedback */
+      { type: 'vimeo', id: '1217934684' },   /* 3. Total Responsibility */
+      { type: 'vimeo', id: '1217933990' },   /* 4. Don't Assume, Clarify */
+      { type: 'vimeo', id: '1217934619' },   /* 5. Benchmarking Excellence */
+      { type: 'vimeo', id: '1217933175' },   /* 6. Attention to Detail */
+      { type: 'vimeo', id: '1217933425' },   /* 7. Lifelong Learner */
+      { type: 'vimeo', id: '1218881643', h: '8954e93502' }    /* 8. The Science of Gratitude */
     ]
   },
   {
