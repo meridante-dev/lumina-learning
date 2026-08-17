@@ -14,7 +14,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # THE GATE. Nothing reaches a learner until this is green.
+  #
+  # Until now this workflow was the only CI, and it only knew how to deploy —
+  # a broken push went straight to academy.edenrise.com. `node --check` was the
+  # whole safety net, and it happily passes a clobbered event handler, a raw
+  # i18n key rendered at the user, a ?v= marker out of step with sw.js, or a
+  # Vimeo id that has been deleted upstream. All four have happened.
+  #
+  # Runs on its own fresh checkout, BEFORE the minify step rewrites files in
+  # place, so it tests the source that is actually committed.
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Suite (integrity + units + harness self-test)
+        run: node test/run.mjs
+
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     environment:
       name: github-pages
