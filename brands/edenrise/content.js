@@ -40,7 +40,14 @@ const CATALOG = [
       { type: 'vimeo', id: '1217934619' },   /* 5. Benchmarking Excellence */
       { type: 'vimeo', id: '1217933175' },   /* 6. Attention to Detail */
       { type: 'vimeo', id: '1217933425' },   /* 7. Lifelong Learner */
-      { type: 'vimeo', id: '1218881643', h: '8954e93502' }    /* 8. The Science of Gratitude */
+      /* 8. The Science of Gratitude. WAS 1218881643, which Vimeo now reports as
+         "in purgatory and unavailable" — the cut was replaced and the old id
+         deleted, so English module 8 was serving a dead player. This id is the
+         one actually sitting in the "Approved ENG" folder, verified against the
+         API rather than carried over. A dead embed does not throw: it renders a
+         grey box, records no watch time, and credits no hour — which is exactly
+         the failure that looks like a learner who did not bother. */
+      { type: 'vimeo', id: '1218950536', h: '57ea194bc1' }    /* 8. The Science of Gratitude */
     ]
   },
   {

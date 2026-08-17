@@ -1281,180 +1281,180 @@
     "a": 1,
     "en": {
      "opts": [
-      "It is the ability to recognize and criticize the mistakes that are present",
-      "It is the ability to recognize and appreciate the value that is already present",
-      "It is the ability to ignore the problems and focus on the future",
-      "It is the ability to only notice what is missing"
+      "Their tasks and responsibilities",
+      "Their attention and focus",
+      "Their work experience and skills",
+      "Their workplace and environment"
      ],
-     "q": "What is the power of gratitude in the workplace?",
-     "why": "Gratitude is the ability to recognize and appreciate the value that is already present, which can lead to a very different atmosphere in the workplace."
+     "q": "What is the primary difference between the two people arriving at work in the scenario?",
+     "why": "The primary difference lies in their attention and focus, with one noticing problems and the other noticing positive aspects."
     },
     "pt": {
      "opts": [
-      "É a capacidade de reconhecer e criticar os erros que estão presentes",
-      "É a capacidade de reconhecer e apreciar o valor que já está presente",
-      "É a capacidade de ignorar os problemas e focar no futuro",
-      "É a capacidade de apenas notar o que está faltando"
+      "As suas tarefas e responsabilidades",
+      "A sua atenção e foco",
+      "A sua experiência e habilidades de trabalho",
+      "O seu local de trabalho e ambiente"
      ],
-     "q": "Qual é o poder da gratidão no local de trabalho?",
-     "why": "A gratidão é a capacidade de reconhecer e apreciar o valor que já está presente, o que pode levar a uma atmosfera muito diferente no local de trabalho."
+     "q": "Qual é a principal diferença entre as duas pessoas que chegam ao trabalho no cenário?",
+     "why": "A principal diferença reside na sua atenção e foco, com um a notar problemas e o outro a notar aspectos positivos."
     },
     "t0": 25,
     "type": "recall",
     "gen": true,
     "model": "llama-3.3-70b@workers-ai",
     "src": "whisper-small",
-    "generatedAt": 1786972916514,
-    "corrected": true
+    "generatedAt": 1786983576671,
+    "verified": true
    },
    {
-    "a": 1,
+    "a": 2,
     "en": {
      "opts": [
-      "They become more grateful and appreciative",
-      "They become less grateful and start taking things for granted",
-      "They become more critical and negative",
-      "They become more ambitious and driven"
+      "They become more grateful",
+      "They become more ambitious",
+      "They take them for granted",
+      "They become more complacent"
      ],
-     "q": "What happens to human beings when they adapt to good things?",
-     "why": "Human beings adapt very quickly to good things and can start taking them for granted."
+     "q": "What happens to humans when they adapt to good things?",
+     "why": "Humans tend to take good things for granted as they adapt to them."
     },
     "pt": {
      "opts": [
-      "Eles se tornam mais gratos e apreciativos",
-      "Eles se tornam menos gratos e começam a dar as coisas por certas",
-      "Eles se tornam mais críticos e negativos",
-      "Eles se tornam mais ambiciosos e motivados"
+      "Eles se tornam mais gratos",
+      "Eles se tornam mais ambiciosos",
+      "Eles os levam como certos",
+      "Eles se tornam mais complacentes"
      ],
-     "q": "O que acontece com os seres humanos quando se adaptam às coisas boas?",
-     "why": "Os seres humanos se adaptam muito rapidamente às coisas boas e podem começar a dar as coisas por certas."
+     "q": "O que acontece com os humanos quando se adaptam às coisas boas?",
+     "why": "Os humanos tendem a levar as coisas boas como certas à medida que se adaptam a elas."
     },
     "t0": 52,
     "type": "recall",
     "gen": true,
     "model": "llama-3.3-70b@workers-ai",
     "src": "whisper-small",
-    "generatedAt": 1786972916514,
-    "verified": true
+    "generatedAt": 1786983576671,
+    "corrected": true
    },
    {
     "a": 1,
     "en": {
      "opts": [
-      "Focus on criticizing mistakes and problems",
-      "Practice regular gratitude and express genuine appreciation",
-      "Ignore the contributions of others and focus on individual goals",
-      "Only notice what is missing and try to improve it"
+      "Focus on problems and mistakes",
+      "Practice regular gratitude",
+      "Set high standards and expectations",
+      "Take credit for others' work"
      ],
-     "q": "What should a worker do to improve well-being and relationships with others?",
-     "why": "Practicing regular gratitude and expressing genuine appreciation can improve well-being and strengthen relationships with others."
+     "q": "What should a worker do to improve well-being and relationships at work?",
+     "why": "Practicing regular gratitude can improve well-being, increase positive emotion, and strengthen relationships with others."
     },
     "pt": {
      "opts": [
-      "Focar em criticar erros e problemas",
-      "Praticar gratidão regular e expressar apreciação genuína",
-      "Ignorar as contribuições dos outros e focar em metas individuais",
-      "Apenas notar o que está faltando e tentar melhorá-lo"
+      "Focar-se em problemas e erros",
+      "Praticar gratidão regular",
+      "Estabelecer padrões e expectativas altas",
+      "Atribuir crédito ao trabalho dos outros"
      ],
-     "q": "O que um trabalhador deve fazer para melhorar o bem-estar e as relações com os outros?",
-     "why": "Praticar gratidão regular e expressar apreciação genuína pode melhorar o bem-estar e fortalecer as relações com os outros."
+     "q": "O que um trabalhador deve fazer para melhorar o bem-estar e as relações no trabalho?",
+     "why": "Praticar gratidão regular pode melhorar o bem-estar, aumentar a emoção positiva e fortalecer as relações com os outros."
     },
     "t0": 104,
     "type": "application",
     "gen": true,
     "model": "llama-3.3-70b@workers-ai",
     "src": "whisper-small",
-    "generatedAt": 1786972916514,
+    "generatedAt": 1786983576671,
     "corrected": true
    },
    {
-    "a": 0,
+    "a": 1,
     "en": {
      "opts": [
-      "By noticing and expressing genuine appreciation for their work",
-      "By ignoring their contributions and focusing on individual goals",
-      "By only criticizing their mistakes",
-      "By taking their contributions for granted"
+      "By being content with the status quo",
+      "By appreciating current value and striving for improvement",
+      "By focusing solely on problems and areas for improvement",
+      "By ignoring the contributions of others"
      ],
-     "q": "How can a worker communicate appreciation for the contributions of others?",
-     "why": "Noticing and expressing genuine appreciation for the contributions of others can communicate that their work is valued and makes a difference."
+     "q": "How should a worker balance gratitude with ambition?",
+     "why": "A worker can appreciate current value and still strive for improvement, recognizing that gratitude and ambition are not opposites."
     },
     "pt": {
      "opts": [
-      "Notando e expressando apreciação genuína pelo seu trabalho",
-      "Ignorando as suas contribuições e focando em metas individuais",
-      "Apenas criticando os seus erros",
-      "Dando as suas contribuições por certas"
+      "Sendo contente com o status quo",
+      "Apreciando o valor atual e esforçando-se para melhorar",
+      "Focando-se apenas em problemas e áreas para melhoria",
+      "Ignorando as contribuições dos outros"
      ],
-     "q": "Como um trabalhador pode comunicar apreciação pelas contribuições dos outros?",
-     "why": "Notar e expressar apreciação genuína pelas contribuições dos outros pode comunicar que o seu trabalho é valorizado e faz uma diferença."
+     "q": "Como um trabalhador deve equilibrar gratidão e ambição?",
+     "why": "Um trabalhador pode apreciar o valor atual e ainda esforçar-se para melhorar, reconhecendo que gratidão e ambição não são opostas."
     },
-    "t0": 132,
+    "t0": 157,
     "type": "application",
     "gen": true,
     "model": "llama-3.3-70b@workers-ai",
     "src": "whisper-small",
-    "generatedAt": 1786972916514,
+    "generatedAt": 1786983576671,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Ignore their help and focus on your own work",
+      "Thank them briefly and move on",
+      "Express genuine appreciation and acknowledge their contribution",
+      "Report their help to a supervisor"
+     ],
+     "q": "A colleague helps you with a difficult task. What should you do to communicate appreciation and build a positive culture?",
+     "why": "Expressing genuine appreciation and acknowledging their contribution communicates that their help is valued and builds a positive culture."
+    },
+    "pt": {
+     "opts": [
+      "Ignorar a sua ajuda e focar no seu próprio trabalho",
+      "Agradecer-lhe brevemente e seguir em frente",
+      "Expressar apreço genuíno e reconhecer a sua contribuição",
+      "Relatar a sua ajuda a um supervisor"
+     ],
+     "q": "Um colega o ajuda com uma tarefa difícil. O que você deve fazer para comunicar apreço e construir uma cultura positiva?",
+     "why": "Expressar apreço genuíno e reconhecer a sua contribuição comunica que a sua ajuda é valorizada e constrói uma cultura positiva."
+    },
+    "t0": 132,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1786983576671,
     "corrected": true
    },
    {
     "a": 2,
     "en": {
      "opts": [
-      "Gratitude and ambition are opposites, and you can't have both",
-      "Gratitude means being satisfied with the status quo and not wanting to improve",
-      "Gratitude and ambition are not mutually exclusive, and you can appreciate today's work while still wanting to improve tomorrow",
-      "Gratitude is only for personal relationships, not for work"
+      "Publicly criticize their work to motivate them to improve",
+      "Privately thank them for their contributions",
+      "Openly acknowledge and appreciate their efforts",
+      "Ignore their contributions and focus on your own work"
      ],
-     "q": "An employee is concerned that practicing gratitude will make them complacent and less motivated to improve. What can be said to address this concern?",
-     "why": "Gratitude and ambition are not opposites, and it is possible to appreciate today's work while still wanting to improve tomorrow."
+     "q": "You notice that a team member is consistently making valuable contributions to the team. What should you do to recognize their efforts and promote a culture of gratitude?",
+     "why": "Openly acknowledging and appreciating their efforts recognizes their value and promotes a culture of gratitude."
     },
     "pt": {
      "opts": [
-      "Gratidão e ambição são opostos, e você não pode ter ambos",
-      "Gratidão significa estar satisfeito com o status quo e não querer melhorar",
-      "Gratidão e ambição não são mutuamente exclusivas, e você pode apreciar o trabalho de hoje enquanto ainda quer melhorar amanhã",
-      "Gratidão é apenas para relacionamentos pessoais, não para o trabalho"
+      "Publicamente criticar o seu trabalho para motivá-los a melhorar",
+      "Privadamente agradecer-lhes pelas suas contribuições",
+      "Abertamente reconhecer e apreciar os seus esforços",
+      "Ignorar as suas contribuições e focar no seu próprio trabalho"
      ],
-     "q": "Um funcionário está preocupado que a prática da gratidão o tornará complacente e menos motivado para melhorar. O que pode ser dito para abordar essa preocupação?",
-     "why": "Gratidão e ambição não são opostos, e é possível apreciar o trabalho de hoje enquanto ainda quer melhorar amanhã."
-    },
-    "t0": 157,
-    "type": "scenario",
-    "gen": true,
-    "model": "llama-3.3-70b@workers-ai",
-    "src": "whisper-small",
-    "generatedAt": 1786972916514,
-    "verified": true
-   },
-   {
-    "a": 1,
-    "en": {
-     "opts": [
-      "Encourage them to only focus on the problems and criticize each other's mistakes",
-      "Help them to recognize and appreciate the value that is already present in their work",
-      "Tell them to just be more ambitious and motivated",
-      "Suggest that they take a break and come back to the problem later"
-     ],
-     "q": "A team is struggling to improve their performance and is focused on what is missing. What can be done to shift their focus to what is already working well?",
-     "why": "Helping the team to recognize and appreciate the value that is already present in their work can shift their focus to what is already working well and build on that."
-    },
-    "pt": {
-     "opts": [
-      "Encorajá-los a se concentrar apenas nos problemas e criticar os erros uns dos outros",
-      "Ajudá-los a reconhecer e apreciar o valor que já está presente no seu trabalho",
-      "Dizer-lhes para serem mais ambiciosos e motivados",
-      "Sugerir que eles façam uma pausa e voltem ao problema mais tarde"
-     ],
-     "q": "Uma equipe está lutando para melhorar seu desempenho e está focada no que está faltando. O que pode ser feito para mudar o foco para o que já está funcionando bem?",
-     "why": "Ajudar a equipe a reconhecer e apreciar o valor que já está presente no seu trabalho pode mudar o foco para o que já está funcionando bem e construir sobre isso."
+     "q": "Você nota que um membro da equipe está consistentemente fazendo contribuições valiosas para a equipe. O que você deve fazer para reconhecer os seus esforços e promover uma cultura de gratidão?",
+     "why": "Abertamente reconhecer e apreciar os seus esforços reconhece o seu valor e promove uma cultura de gratidão."
     },
     "t0": 183,
     "type": "scenario",
     "gen": true,
     "model": "llama-3.3-70b@workers-ai",
     "src": "whisper-small",
-    "generatedAt": 1786972916514,
+    "generatedAt": 1786983576671,
     "corrected": true
    }
   ]

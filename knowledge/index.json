@@ -1,5 +1,5 @@
 {
- "generatedAt": 1786974212377,
+ "generatedAt": 1786983588990,
  "courses": {
   "alignment-journey": {
    "title": "The EdenRise Alignment Journey",
@@ -1720,32 +1720,32 @@
      "moments": [
       {
        "t0": 25,
-       "teaches": "What is the power of gratitude in the workplace?",
-       "audit": "corrected"
-      },
-      {
-       "t0": 52,
-       "teaches": "What happens to human beings when they adapt to good things?",
+       "teaches": "What is the primary difference between the two people arriving at work in the scenario?",
        "audit": "verified"
       },
       {
-       "t0": 104,
-       "teaches": "What should a worker do to improve well-being and relationships with others?",
+       "t0": 52,
+       "teaches": "What happens to humans when they adapt to good things?",
        "audit": "corrected"
       },
       {
-       "t0": 132,
-       "teaches": "How can a worker communicate appreciation for the contributions of others?",
+       "t0": 104,
+       "teaches": "What should a worker do to improve well-being and relationships at work?",
        "audit": "corrected"
       },
       {
        "t0": 157,
-       "teaches": "An employee is concerned that practicing gratitude will make them complacent and less motivated to improve. What can be ",
+       "teaches": "How should a worker balance gratitude with ambition?",
        "audit": "verified"
       },
       {
+       "t0": 132,
+       "teaches": "A colleague helps you with a difficult task. What should you do to communicate appreciation and build a positive culture",
+       "audit": "corrected"
+      },
+      {
        "t0": 183,
-       "teaches": "A team is struggling to improve their performance and is focused on what is missing. What can be done to shift their foc",
+       "teaches": "You notice that a team member is consistently making valuable contributions to the team. What should you do to recognize",
        "audit": "corrected"
       }
      ],
