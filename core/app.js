@@ -6055,15 +6055,31 @@ function pendingCheckCount() { return Object.keys(S.pendingChecks || {}).length;
    second of video that teaches it. Loaded lazily; every consumer falls back to
    the hand-written banks when a course has no V2 file. */
 const QUIZ_V2 = {};
+/* Banks are per language when the course was recorded per language. The key is
+   courseId+lang so switching language switches the questions too — asking a
+   Portuguese learner an English question about a Portuguese video would grade
+   them on words they never heard. Falls back to the default bank, which is
+   correct for the many courses that have only one recording. */
+function quizKey(courseId) { const l = _lang(); return l && l !== 'en' ? courseId + '.' + l : courseId; }
 function loadQuizV2(courseId) {
-  if (QUIZ_V2[courseId] !== undefined) return Promise.resolve(QUIZ_V2[courseId]);
+  const key = quizKey(courseId);
+  if (QUIZ_V2[key] !== undefined) return Promise.resolve(QUIZ_V2[key]);
   /* cache-bust rides the same edrNNN as every other asset — derived from the
      app script's own src so no separate constant can drift out of step */
   const v = ((document.querySelector('script[src*="core/app.js"]') || {}).src || '').match(/v=(edr\d+)/);
-  return fetch('knowledge/quizzes/' + courseId + '.json?v=' + (v ? v[1] : ''))
+  const ver = v ? v[1] : '';
+  return fetch('knowledge/quizzes/' + key + '.json?v=' + ver)
     .then(r => r.ok ? r.json() : null)
-    .then(b => (QUIZ_V2[courseId] = b && b.modules ? b : null))
-    .catch(() => (QUIZ_V2[courseId] = null));
+    .then(b => {
+      if (b && b.modules) return (QUIZ_V2[key] = b);
+      /* no bank in this language — use the default rather than no check at all,
+         but only when the DEFAULT recording is what plays (see modLangFallback) */
+      if (key === courseId) return (QUIZ_V2[key] = null);
+      return fetch('knowledge/quizzes/' + courseId + '.json?v=' + ver)
+        .then(r2 => r2.ok ? r2.json() : null)
+        .then(b2 => (QUIZ_V2[key] = b2 && b2.modules ? b2 : null));
+    })
+    .catch(() => (QUIZ_V2[key] = null));
 }
 /* Options are shuffled AT RENDER and the key remapped: generated keys cluster
    on low indices (and humans cluster on C), so fixed order leaks the answer. */
@@ -6077,7 +6093,7 @@ function shuffledView(q, lang) {
 /* The pair for the hour-crediting check: one recall + one application/scenario,
    deterministic per module so a retake asks the same thing and records compare. */
 function v2CheckPair(courseId, mod, lang) {
-  const bank = QUIZ_V2[courseId];
+  const bank = QUIZ_V2[quizKey(courseId)] || QUIZ_V2[courseId];
   const qs = bank && bank.modules && bank.modules[mod];
   if (!qs || !qs.length) return null;
   const rec = qs.find(x => x.type === 'recall') || qs[0];
@@ -6202,7 +6218,7 @@ function openQuiz(courseId) {
      the lesson transcripts and its keys are blind-verified, while the runtime
      AI quiz is generated on the spot with no verification pass. Interleaved
      across modules (mixing beats blocking for retention), shuffled options. */
-  const v2 = QUIZ_V2[c.id];
+  const v2 = QUIZ_V2[quizKey(c.id)];
   if (v2 && v2.modules) {
     const all = Object.values(v2.modules).flat().map(q => shuffledView(q, lang));
     if (all.length >= 4) {
@@ -6211,7 +6227,7 @@ function openQuiz(courseId) {
       return;
     }
   }
-  if (QUIZ_V2[c.id] === undefined) {
+  if (QUIZ_V2[quizKey(c.id)] === undefined) {
     /* first open: load the bank, then re-enter — one hop, cached after */
     loadQuizV2(c.id).then(() => openQuiz(courseId));
     return;

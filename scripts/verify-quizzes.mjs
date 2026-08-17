@@ -34,6 +34,11 @@ const QDIR = join(ROOT, 'knowledge', 'quizzes');
 const TR = join(ROOT, 'media', 'transcripts');
 const API = 'https://academy-ai.edenrise.workers.dev';
 const onlyCourse = process.argv.includes('--course') ? process.argv[process.argv.indexOf('--course') + 1] : null;
+/* the gate must read the SAME transcript the question was written from: a PT
+   question blind-verified against the English words would be graded on a video
+   the learner never watched. */
+const LANG = process.argv.includes('--lang') ? process.argv[process.argv.indexOf('--lang') + 1] : '';
+const SFX = LANG ? '.' + LANG : '';
 
 async function blindAnswer(excerpt, q) {
   const prompt =
@@ -42,11 +47,8 @@ async function blindAnswer(excerpt, q) {
 TRANSCRIPT EXCERPT:
 ${excerpt}
 
-QUESTION: ${q.en.q}
-0: ${q.en.opts[0]}
-1: ${q.en.opts[1]}
-2: ${q.en.opts[2]}
-3: ${q.en.opts[3]}`;
+QUESTION: ${(LANG && q[LANG] ? q[LANG] : q.en).q}
+${(LANG && q[LANG] ? q[LANG] : q.en).opts.map((o, i) => i + ': ' + o).join('\n')}`;
   const r = await fetch(API, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Origin': 'https://academy.edenrise.com',
@@ -69,15 +71,16 @@ function excerptAround(segs, t0, win = 75) {
 }
 
 async function main() {
-  const courses = readdirSync(QDIR).filter(f => f.endsWith('.json'))
-    .map(f => f.replace('.json', '')).filter(c => !onlyCourse || c === onlyCourse);
+  const rxBank = LANG ? new RegExp('^(.+)\\.' + LANG + '\\.json$') : /^([^.]+)\.json$/;
+  const courses = readdirSync(QDIR).map(f => (f.match(rxBank) || [])[1])
+    .filter(Boolean).filter(c => !onlyCourse || c === onlyCourse);
   for (const course of courses) {
-    const path = join(QDIR, `${course}.json`);
+    const path = join(QDIR, `${course}${SFX}.json`);
     const bank = JSON.parse(readFileSync(path, 'utf8'));
     let kept = 0, fixed = 0, dropped = 0;
     for (const [mod, qs] of Object.entries(bank.modules)) {
       let tr;
-      try { tr = JSON.parse(readFileSync(join(TR, course, `m${mod}.json`), 'utf8')); }
+      try { tr = JSON.parse(readFileSync(join(TR, course, `m${mod}${SFX}.json`), 'utf8')); }
       catch { continue; }
       const survivors = [];
       for (const q of qs) {

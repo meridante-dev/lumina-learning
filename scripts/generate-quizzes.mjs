@@ -37,6 +37,12 @@ const OUT = join(ROOT, 'knowledge', 'quizzes');
 const API = 'https://academy-ai.edenrise.workers.dev';
 const args = process.argv.slice(2);
 const onlyCourse = args.includes('--course') ? args[args.indexOf('--course') + 1] : null;
+/* --lang pt grounds the questions in the PORTUGUESE recording's own transcript
+   and writes a separate bank. A bilingual course recorded twice does not say the
+   same sentences in the same seconds, so a question generated from the English
+   words can be wrong about the Portuguese video — including its t0 anchor. */
+const LANG = args.includes('--lang') ? args[args.indexOf('--lang') + 1] : '';
+const SFX = LANG ? '.' + LANG : '';
 const force = args.includes('--force');
 
 const COURSE_TITLES = {
@@ -130,11 +136,15 @@ async function main() {
   mkdirSync(OUT, { recursive: true });
   const courses = readdirSync(TR).filter(d => !d.includes('.') && (!onlyCourse || d === onlyCourse));
   for (const course of courses) {
-    const outPath = join(OUT, `${course}.json`);
-    const bank = existsSync(outPath) ? JSON.parse(readFileSync(outPath, 'utf8')) : { course, modules: {} };
-    const mods = readdirSync(join(TR, course)).filter(f => f.endsWith('.json'));
+    const outPath = join(OUT, `${course}${SFX}.json`);
+    const bank = existsSync(outPath) ? JSON.parse(readFileSync(outPath, 'utf8')) : { course, lang: LANG || 'default', modules: {} };
+    /* match ONLY this language's transcripts: m3.json for the default cut,
+       m3.pt.json for the PT cut. Without the anchor, a default run would also
+       pick up every translated file and generate duplicate banks. */
+    const rx = LANG ? new RegExp('^m(\\d+)\\.' + LANG + '\\.json$') : /^m(\d+)\.json$/;
+    const mods = readdirSync(join(TR, course)).filter(f => rx.test(f));
     for (const f of mods) {
-      const mod = +f.match(/m(\d+)\.json/)[1];
+      const mod = +f.match(rx)[1];
       if (bank.modules[mod] && !force) { console.log(`${course}/m${mod} — exists, skip`); continue; }
       const tr = JSON.parse(readFileSync(join(TR, course, f), 'utf8'));
       if (!tr.segments || tr.segments.length < 5) { console.log(`${course}/m${mod} — transcript too thin, skip`); continue; }
