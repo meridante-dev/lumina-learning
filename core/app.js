@@ -706,7 +706,7 @@ function renderHome() {
       <button class="reel-chip" data-action="goto" data-route="#/reels">
         <div class="reel-chip-art t${toneOf(r.theme || r.id)}">
           <span>${esc(reelField(r.title))}</span></div>
-        <div class="reel-chip-meta">${r.seconds || 30}s</div>
+        <div class="reel-chip-meta">${reelPending(r) ? `<span class="pend">${t('reel_pending')}</span> &middot; ` : ''}${r.seconds || 30}s</div>
       </button>`).join('')}</div></div>
   </section>` : ''}
   ${quickWinsShelfHTML()}
@@ -5665,7 +5665,7 @@ function checkCoverage() {
         state: soon ? 'soon' : verified ? 'ok' : malformed ? 'malformed' : qs.length ? 'unverified' : 'none' });
     });
   }
-  for (const r of reelsAll()) {
+  for (const r of QW_ALL()) {          /* the whole library: an audit that skipped unapproved reels would hide the ones still needing work */
     const q = reelCheckOf(r);
     const soon = (r.media || {}).type === 'soon';
     rows.push({ kind: 'reel', id: r.id, label: reelField(r.title),
@@ -5839,7 +5839,25 @@ function answerReelCheck(id, picked) {
 const FEED_PAUSE_AFTER = 5;
 let feedIdx = -1, feedSeen = [];
 
-const reelsAll = () => QW_ALL();
+/* ===== WHO SEES AN UNAPPROVED REEL =========================================
+   Curation defaults to PENDING — nothing reaches a team because a menu item
+   existed and nobody said no. The DRIP already honoured that (qwApproved()),
+   but the two surfaces a learner actually opens, the home rail and the swipe
+   feed, read the whole library — so a placeholder or an unreviewed clip was in
+   front of the team the moment it landed in content.js. That is the gap this
+   closes.
+
+   reelsAll() is now the LEARNER's view: approved only. Admins — super, or the
+   tenant's own — keep seeing everything, because approving a reel means watching
+   it first, and they see it marked as pending while they do.
+
+   QW_ALL() remains the whole library, and is what curation and the coverage
+   audit read. An ops audit that silently skipped unapproved reels would
+   under-report exactly the ones that still need work. */
+const canCurateReels = () => isAdmin();
+const reelsAll = () => canCurateReels() ? QW_ALL() : qwApproved();
+/* pending is only ever SHOWN to someone who can act on it */
+const reelPending = r => canCurateReels() && qwState().approved.indexOf(r.id) < 0;
 const reelField = v => eduField(v);
 function reelPoster(r, showHook) {
   const tone = toneOf(r.theme || r.id);   /* same picker as the rail chip, so a reel keeps one colour in both places */
@@ -5877,7 +5895,7 @@ function reelSlideHTML(r, i) {
     </div>
     <div class="reel-copy">
       ${ph ? `<span class="reel-ph">${t('reel_placeholder')}</span>` : ''}
-      <div class="reel-meta">${r.seconds || 30}s${r.theme ? ` &middot; ${esc(r.theme)}` : ''}</div>
+      <div class="reel-meta">${reelPending(r) ? `<span class="pend">${t('reel_pending')}</span> &middot; ` : ''}${r.seconds || 30}s${r.theme ? ` &middot; ${esc(r.theme)}` : ''}</div>
       <h2>${esc(reelField(r.title))}</h2>
       ${ph ? '' : `<p>${esc(reelField(r.line))}</p>`}
       ${e && e.name ? `<button class="edu-byline" data-action="edu-open" data-edu="${e.id}">${eduAvatarHTML(e, 'xs')}<span class="edu-nm">${esc(e.name)}</span></button>` : ''}

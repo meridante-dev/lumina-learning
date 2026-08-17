@@ -4464,3 +4464,10 @@ body.reels-open { overflow: hidden; }
   font-size: 13px; color: var(--text-faint); }
 .rc-skip:hover { color: var(--text-dim); }
 @media (prefers-reduced-motion: reduce) { .rc { transition: none; } }
+
+/* ---- PREMIUM LAYER 21 · reel curation state -------------------------------
+   Colour only, inside the meta line that already exists — no second pill on a
+   card that already carries one (DESIGN law 7: colour-only state chip; law 20:
+   a component is not premium because it is decorated). Only a curator ever sees
+   this, because only a curator can act on it. */
+.reel-meta .pend, .reel-chip-meta .pend { color: #d9c08c; }
