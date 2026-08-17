@@ -704,7 +704,7 @@ function renderHome() {
       <button class="see-all" data-action="goto" data-route="#/reels">${t('reel_open')}</button></div>
     <div class="rail-wrap"><div class="rail">${reelsAll().slice(0, 8).map((r, i) => `
       <button class="reel-chip" data-action="goto" data-route="#/reels">
-        <div class="reel-chip-art t${((r.theme || r.id).split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 5) + 1}">
+        <div class="reel-chip-art t${toneOf(r.theme || r.id)}">
           <span>${esc(reelField(r.title))}</span></div>
         <div class="reel-chip-meta">${r.seconds || 30}s</div>
       </button>`).join('')}</div></div>
@@ -4408,7 +4408,8 @@ function renderNow() {
   armNavScroll();
   syncOverlayFocus();   /* backstop: never leave #app inert */
   armReveals();
-  if (route === 'reels') armReelFeed(); else document.body.classList.remove('reels-open');
+  if (route === 'reels') armReelFeed();
+  else { document.body.classList.remove('reels-open'); stopReelCheck(); }
   animateCounters();
 }
 /* covers download only as their cards approach the viewport (~1.4MB saved on Library) */
@@ -4968,46 +4969,39 @@ function clearCheckpoint() {
   if (vimeoPlayer) { try { vimeoPlayer.destroy(); } catch (e) {} vimeoPlayer = null; }
 }
 /* Course-SPECIFIC questions only (the course's own quiz — never QUIZ_BANK).
-   Interrupting a lesson is only earned when the question is about THAT course:
-   pausing a leadership video to ask about soil regeneration teaches people to
-   resent the player. Category/default banks remain fine for the *post-course*
-   quiz, where the learner chose to be quizzed — but they never gate playback. */
+   Used by the post-course quiz and the module-end check. Never gates playback. */
 function courseOwnQuiz(c) {
   const cq = (typeof COURSE_QUIZ !== 'undefined' && COURSE_QUIZ[c.id]) || c.quiz;
   if (!cq) return null;
   const qs = cq[_lang() === 'pt' ? 'pt' : 'en'] || cq.en || cq;
   return (Array.isArray(qs) && qs.length) ? qs : null;
 }
-function checkpointQuestion(c, mod) {
-  const qs = courseOwnQuiz(c);
-  return qs ? qs[mod % qs.length] : null;
-}
 /* Attach to the Vimeo iframe ONCE per module. The <video> element has had an
    'ended' handler since day one; the Vimeo branch never did, so watching a real
    lesson to the end recorded nothing — no progress, no XP, no streak day, and
    no trainingLog entry. trainingLog IS the art. 131.º hour record, so a learner
    could complete a course and the compliance report would show zero hours. */
+/* NOTHING INTERRUPTS PLAYBACK. There used to be a second, older mechanism here:
+   at 50% of any lesson the player paused itself and put a question on top. It
+   predated the end-of-lesson check, and once showModuleCheck() existed the two
+   ran together — so a learner was stopped mid-sentence AND asked again at the
+   end. Watching is not the moment to test; the question belongs after the
+   takeaways, where it is a retrieval cue instead of an ambush. The only thing
+   this handler may now do while a video plays is RECORD (watch-time, progress).
+   If a checkpoint is ever wanted again it goes at the end, not at a percentage. */
 function armVimeo(c, mod) {
-  const key = c.id + ':' + mod;
-  const q = checkpointQuestion(c, mod);
-  const needsCheck = q && !(S.checkpoints || {})[key];
   loadVimeoSDK().then(() => {
     const ifr = vimeoWrap.querySelector('iframe');
     if (!ifr || !window.Vimeo || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
     try { vimeoPlayer = new Vimeo.Player(ifr); } catch (e) { return; }
     if (_seekTo) { const t = _seekTo; _seekTo = null; vimeoPlayer.setCurrentTime(t).catch(() => {}); }
-    let checkFired = false, done = false;
+    let done = false;
     if (watchEv && watchEv.key === c.id + ':' + mod) watchEv.method = 'vimeo-timeupdate';
     vimeoPlayer.on('timeupdate', d => {
       if (!d || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
       if (document.visibilityState === 'visible') watchMark(d.seconds, d.duration);
       /* live progress, so a half-watched lesson is not lost on close */
       const p = prog(c.id); if (p && d.percent) p.pct = Math.max(p.pct || 0, Math.round(d.percent * 100));
-      if (!needsCheck || checkFired || !d.percent || d.percent < 0.5) return;
-      checkFired = true;
-      (S.checkpoints = S.checkpoints || {})[key] = 1; save();
-      vimeoPlayer.pause().catch(() => {});
-      showCheckpoint(q, c);
     });
     vimeoPlayer.on('ended', () => {
       if (done || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
@@ -5020,38 +5014,6 @@ function armVimeo(c, mod) {
     });
   }).catch(() => {});
 }
-function armCheckpoint(c, mod) { armVimeo(c, mod); }
-function showCheckpoint(q, c) {
-  const ov = $('#ckOv'); if (!ov) return;
-  let answered = false;
-  ov.innerHTML = `<div class="ck-card">
-    <div class="ob-eyebrow"> ${t('ck_h')} · ${esc(ctitle(c))}</div>
-    <div class="ck-q">${esc(q.q)}</div>
-    ${q.opts.map((o, i) => `<div class="q-opt" data-ck="${i}" role="button" tabindex="0"><span class="radio"></span><span>${esc(o)}</span></div>`).join('')}
-    <div class="ck-foot"><span class="ck-note" id="ckNote"></span><button class="btn btn-primary btn-sm" id="ckGo" style="display:none;">▶ ${t('ck_continue')}</button></div>
-  </div>`;
-  ov.classList.add('on');
-  ov.querySelectorAll('.q-opt').forEach(el => el.addEventListener('click', () => {
-    if (answered) return; answered = true;
-    const sel = +el.dataset.ck;
-    ov.querySelectorAll('.q-opt').forEach((x, i) => {
-      if (i === q.a) x.classList.add('correct');
-      else if (i === sel) x.classList.add('wrong');
-    });
-    if (sel === q.a) { $('#ckNote').textContent = t('ck_right'); awardXp(5, t('ck_h')); }
-    else {
-      $('#ckNote').textContent = t('ck_wrong');
-      S.missedQ = ((S.missedQ || []).filter(m => m.q !== q.q)).concat({ q: q.q, back: q.opts[q.a], courseId: c.id, at: Date.now() }).slice(-30);
-      save();
-    }
-    $('#ckGo').style.display = '';
-  }));
-  $('#ckGo').addEventListener('click', () => {
-    ov.classList.remove('on'); ov.innerHTML = '';
-    if (vimeoPlayer) vimeoPlayer.play().catch(() => {});
-  });
-}
-
 /* ---------- notes & transcript ---------- */
 /* ===== REAL TRANSCRIPTS IN THE PLAYER ======================================
    makeTranscript() used to FABRICATE plausible transcript lines — invented
@@ -5487,6 +5449,20 @@ function educatorFor(c, mod) {
 }
 const eduField = (v) => !v ? '' : (typeof v === 'string' ? v : (v[_lang()] || v.en || ''));
 const eduInitials = (n) => (n || '').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || '·';
+/* ===== DETERMINISTIC TONE ==================================================
+   One tone-picker for every tinted tile in the product (educator monograms,
+   reel chips). FNV-1a with the HIGH bits taken, because a plain char-sum
+   clusters badly on real data: it put 4 of 8 Portuguese colleague names on the
+   same tone, and on the reel rail it put two neighbouring chips on the same
+   tone — anagrams and same-letter sets collide by construction. Deterministic
+   is the other half of the requirement: a tile must be the same colour every
+   time the same person sees it, so this is a hash and never a shuffle. */
+const TONES = 5;
+function toneOf(str) {
+  let h = 2166136261;
+  for (const ch of String(str || '')) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return ((h >>> 16) % TONES) + 1;
+}
 /* a tenant is never blocked on a photoshoot: absent a portrait we render an
    elegant monogram rather than a grey silhouette */
 function eduAvatarHTML(e, cls) {
@@ -5496,9 +5472,7 @@ function eduAvatarHTML(e, cls) {
      person's tile must stay the same colour every time they see it. FNV-1a with
      the high bits taken — a plain char-sum put 4 of 8 Portuguese names on the
      same tone, which is the collision this is meant to avoid. */
-  let _h = 2166136261;
-  for (const ch of (e.name || '')) _h = Math.imul(_h ^ ch.charCodeAt(0), 16777619);
-  const tone = ((_h >>> 16) % 5) + 1;
+  const tone = toneOf(e.name);
   return e.portrait
     ? `<span class="edu-av ${cls || ''}" style="background-image:url('${e.portrait}')"></span>`
     : `<span class="edu-av mono t${tone} ${cls || ''}">${esc(eduInitials(e.name))}</span>`;
@@ -5743,7 +5717,60 @@ function adminCoverageHTML() {
    dismisses it: a feed that traps you is a feed people stop opening. */
 const reelCheckOf = r => { const q = r && r.check;
   return validQuestion(q) ? q : null; };            /* malformed = no check at all */
-let reelCheckTimer = null;
+let reelCheckWatch = null;
+
+/* ===== WHEN A REEL'S CHECK MAY RISE ========================================
+   Only after the clip has played one FULL pass. This used to be
+   setTimeout(..., r.seconds * 1000) armed the moment the reel scrolled into
+   view, which is wall-clock time and therefore wrong in three ways: it ran
+   while the clip was still buffering, it ran while the clip was paused or the
+   phone was face-down, and `seconds` is authored metadata — if the real clip
+   is longer, the question slid up over someone mid-sentence.
+
+   Reels LOOP (`loop` / `loop=1`), so 'ended' never fires. The honest signal is
+   the real playhead: raise when currentTime reaches the real duration. Paused
+   simply means it arrives later, which is the whole point.
+
+   Iframe reels (Vimeo/YouTube background embeds) expose no playhead without
+   loading their SDKs into a feed that must stay light, and 'soon' placeholders
+   have no media at all. Those keep a timer — but it only accrues while the reel
+   is genuinely the active slide and the page is visible, so a backgrounded feed
+   no longer counts as watching. */
+function stopReelCheck() { if (reelCheckWatch) { reelCheckWatch.stop(); reelCheckWatch = null; } }
+function armReelCheck(el, r, vid) {
+  stopReelCheck();
+  if (!reelCheckOf(r) || el.dataset.rcDone || el.querySelector('.rc')) return;
+  const fire = () => { stopReelCheck(); raiseReelCheck(el, r); };
+
+  if (vid) {
+    const onTime = () => {
+      const dur = vid.duration;
+      if (!dur || !isFinite(dur)) return;                  /* metadata not in yet */
+      if (vid.currentTime >= dur - 0.35) fire();
+    };
+    vid.addEventListener('timeupdate', onTime);
+    reelCheckWatch = { stop: () => vid.removeEventListener('timeupdate', onTime) };
+    return;
+  }
+
+  /* No playhead available — accrue only while actually on screen and visible.
+     This deliberately UNDERCOUNTS: the first tick after arming (and after every
+     resume) credits nothing, so the check rises a fraction late rather than a
+     fraction early. Late is invisible; early is the interruption we just spent
+     this function removing. */
+  const need = Math.max(4, (r.seconds || 30)) * 1000;
+  let watched = 0, last = null;
+  const iv = setInterval(() => {
+    const live = document.visibilityState === 'visible'
+      && el.classList.contains('current') && document.body.contains(el);
+    if (!live) { last = null; return; }
+    const now = performance.now();
+    if (last != null) watched += Math.min(now - last, 400);  /* clamp: a resumed tab is not watched time */
+    last = now;
+    if (watched >= need) fire();
+  }, 250);
+  reelCheckWatch = { stop: () => clearInterval(iv) };
+}
 
 function reelCheckHTML(r) {
   const q = reelCheckOf(r); if (!q) return '';
@@ -5815,7 +5842,7 @@ let feedIdx = -1, feedSeen = [];
 const reelsAll = () => QW_ALL();
 const reelField = v => eduField(v);
 function reelPoster(r, showHook) {
-  const tone = ((r.theme || r.id || '').split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 5) + 1;
+  const tone = toneOf(r.theme || r.id);   /* same picker as the rail chip, so a reel keeps one colour in both places */
   const img = r.poster ? ` style="background-image:url('${esc(r.poster)}')"` : '';
   return `<div class="reel-poster t${tone}${r.poster ? ' has-art' : ''}"${img}>${
     showHook ? `<span class="reel-hook">${esc(reelField(r.hook) || reelField(r.title))}</span>` : ''}</div>`;
@@ -5941,12 +5968,8 @@ function armReelFeed() {
         if (on) { v.preload = 'auto'; v.play().catch(() => {}); }
         else { v.preload = 'metadata'; v.pause(); try { v.currentTime = 0; } catch (e) {} }
       }
-      /* the check rises once the clip has had time to play through */
-      if (on) {
-        const rr = qwById(el.dataset.id);
-        clearTimeout(reelCheckTimer);
-        if (rr && reelCheckOf(rr)) reelCheckTimer = setTimeout(() => raiseReelCheck(el, rr), (rr.seconds || 30) * 1000);
-      }
+      /* the check rises when the clip has actually FINISHED a pass — see armReelCheck */
+      if (on) { const rr = qwById(el.dataset.id); if (rr) armReelCheck(el, rr, v); }
     }
     const prog = $('.reel-prog');
     if (prog) [...prog.children].forEach((sp, k) => sp.classList.toggle('on', k <= idx));
@@ -7234,7 +7257,7 @@ document.addEventListener('click', e => {
     }
     case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
     case 'member-detail': openMemberDetail(el.dataset.uid); break;
-    case 'reel-exit': { document.body.classList.remove('reels-open');
+    case 'reel-exit': { document.body.classList.remove('reels-open'); stopReelCheck();
       history.length > 1 ? history.back() : (location.hash = '#/home'); break; }
     case 'rc-answer': answerReelCheck(el.dataset.id, +el.dataset.i); break;
     case 'rc-skip': { const rc = el.closest('.rc'); if (rc) rc.classList.remove('up');

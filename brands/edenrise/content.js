@@ -458,3 +458,146 @@ const EDUCATORS = {
 const COURSE_REGIME = {
   'fire-truck-training': 'SST'
 };
+
+/* ===== REELS — short-form vertical lessons ==================================
+   20–60 seconds, 9:16, swipe feed. The mechanics people already have in their
+   thumbs, pointed at learning instead of at time.
+
+   ONE LIBRARY, THREE DOORS. A reel is the content object: seen in the FEED
+   (#/reels), pushed by the DRIP as an approved "quick win", and listed on the
+   home RAIL. One library, one curation state, one production queue.
+
+   THREE RULES, ALL STRUCTURAL:
+
+   1 · A REEL CAN NEVER CREDIT TRAINING HOURS. Reels are not in CATALOG, so they
+       cannot reach creditTraining() at all — 30 seconds fails both gates in
+       LEGAL-40H-LINE.md. A flag could be flipped; a different kind of object
+       cannot be.
+
+   2 · EVERY REEL POINTS AT ITS DEPTH via `deeper`. The reel is the hook; the
+       course is where the hours and the capability live. All eight below are
+       principles OF Above the Line, so `deeper` is the real course, not a guess.
+
+   3 · THE FEED ENDS (FEED_PAUSE_AFTER). Infinite scroll is engineered for
+       compulsion; on company time that is not a mechanic to copy. The loop
+       stays — repetition is how a 30-second idea sticks — the bottomlessness
+       goes.
+
+   WHY THESE SIX AND NOT INVENTED ONES. Above the Line is already recorded,
+   transcribed and gated in this repo, so each reel below is a REAL principle
+   the team will meet again at depth, and swiping one lands somewhere that
+   exists. What is still a placeholder is the FOOTAGE (`media: {type:'soon'}`
+   renders a designed card, never a broken player) and therefore the CHECK:
+   every `check` here carries `placeholder: true`, because a verified check is
+   one generated from a transcript by scripts/reel-check.mjs and blind-gated —
+   and there is no clip to transcribe yet. `placeholder: true` on the reel keeps
+   all six out of every tenant-facing count.
+
+   BOTH LANGUAGES INCLUDING THE CHECK. The template's placeholders carried `en:`
+   only, and validQuestion() falls back to English — so a Portuguese learner
+   would have been asked an English question underneath a Portuguese title. Same
+   class of leak as the PT transcripts. Every field below is en + pt.        */
+const REELS = [
+  { id: 'atl-above-below', placeholder: true, seconds: 30, theme: 'mindset',
+    title: { en: 'Above the line, below the line', pt: 'Acima da linha, abaixo da linha' },
+    hook:  { en: 'Every reaction you have today sits on one side of a line.', pt: 'Cada reação que tens hoje fica de um lado de uma linha.' },
+    line:  { en: 'The one distinction the whole journey is built on.', pt: 'A distinção sobre a qual toda a jornada é construída.' },
+    check: { type: 'application', a: 1, placeholder: true,
+      en: { q: 'A job you finished has to be redone. What is the above-the-line move?', opts: [
+        'Work out who gave you the wrong instruction',
+        'Ask what you can do now, then do it',
+        'Redo it, but make sure everyone knows it was not your fault'],
+        why: 'Below the line is blame, excuse and denial — including the quiet kind that redoes the work while making sure the record is clear. Above the line starts at what you can do now.' },
+      pt: { q: 'Um trabalho que terminaste tem de ser refeito. Qual é a atitude acima da linha?', opts: [
+        'Descobrir quem te deu a instrução errada',
+        'Perguntar o que podes fazer agora — e fazê-lo',
+        'Refazer, mas garantir que todos sabem que a culpa não foi tua'],
+        why: 'Abaixo da linha é culpa, desculpa e negação — incluindo a versão silenciosa que refaz o trabalho mas trata de deixar o registo limpo. Acima da linha começa no que podes fazer agora.' } },
+    media: { type: 'soon' }, deeper: 'land-team-journey' },
+
+  { id: 'atl-feedback', placeholder: true, seconds: 35, theme: 'feedback',
+    title: { en: 'No failure, only feedback', pt: 'Não há fracasso, só feedback' },
+    hook:  { en: 'The word "failure" ends the conversation. That is the problem with it.', pt: 'A palavra "fracasso" termina a conversa. É esse o problema.' },
+    line:  { en: 'What to do with a result you did not want.', pt: 'O que fazer com um resultado que não querias.' },
+    check: { type: 'application', a: 2, placeholder: true,
+      en: { q: 'A guest complains about something you set up yourself. What is the feedback in it?', opts: [
+        'That some guests are impossible to please',
+        'That you should not have been given that task',
+        'Information about the gap between what you set up and what they needed'],
+        why: 'Feedback is data about a gap, not a verdict on a person. That is what makes it usable — you can close a gap; you cannot close a verdict.' },
+      pt: { q: 'Um hóspede reclama de algo que preparaste. Qual é o feedback nisso?', opts: [
+        'Que há hóspedes impossíveis de agradar',
+        'Que a tarefa não devia ter sido tua',
+        'Informação sobre a distância entre o que preparaste e o que ele precisava'],
+        why: 'Feedback é informação sobre uma distância, não um veredicto sobre uma pessoa. É isso que o torna utilizável — uma distância fecha-se; um veredicto não.' } },
+    media: { type: 'soon' }, deeper: 'land-team-journey' },
+
+  { id: 'atl-responsibility', placeholder: true, seconds: 40, theme: 'ownership',
+    title: { en: 'Total responsibility', pt: 'Responsabilidade total' },
+    hook:  { en: 'Not "it was my fault". Something much more useful than that.', pt: 'Não "foi culpa minha". Algo muito mais útil do que isso.' },
+    line:  { en: 'Why responsibility and blame are opposites.', pt: 'Porque responsabilidade e culpa são opostos.' },
+    check: { type: 'application', a: 0, placeholder: true,
+      en: { q: 'Something went wrong that genuinely was not your doing. What does total responsibility ask of you?', opts: [
+        'What am I going to do about it from here',
+        'Whose job was it, so it does not happen again',
+        'Nothing — responsibility applies to your own work only'],
+        why: 'Total responsibility is about response, not fault. It is the opposite of blame: blame looks backwards for a person, responsibility looks forwards for a move.' },
+      pt: { q: 'Algo correu mal e genuinamente não foi obra tua. O que é que a responsabilidade total te pede?', opts: [
+        'O que vou eu fazer a partir daqui',
+        'De quem era a tarefa, para não voltar a acontecer',
+        'Nada — a responsabilidade aplica-se só ao teu próprio trabalho'],
+        why: 'Responsabilidade total é sobre a resposta, não sobre a culpa. É o oposto de culpar: culpar olha para trás à procura de uma pessoa, a responsabilidade olha para a frente à procura de uma ação.' } },
+    media: { type: 'soon' }, deeper: 'land-team-journey' },
+
+  { id: 'atl-clarify', placeholder: true, seconds: 30, theme: 'communication',
+    title: { en: "Don't assume, clarify", pt: 'Não assumas, esclarece' },
+    hook:  { en: 'Most rework on this land started as a guess nobody checked.', pt: 'Quase todo o retrabalho aqui começou num palpite que ninguém confirmou.' },
+    line:  { en: 'One question that saves an afternoon.', pt: 'Uma pergunta que poupa uma tarde.' },
+    check: { type: 'application', a: 1, placeholder: true,
+      en: { q: 'An instruction could mean two different things and the person who gave it has left. What do you do?', opts: [
+        'Pick the more likely meaning and get started',
+        'Ask before you start, even if it means waiting',
+        'Do both versions so one of them is right'],
+        why: 'A guess costs the whole job when it is wrong. Asking costs a message. The rule is not "ask about everything" — it is do not start on an assumption you could have checked.' },
+      pt: { q: 'Uma instrução pode significar duas coisas e quem a deu já saiu. O que fazes?', opts: [
+        'Escolher o significado mais provável e começar',
+        'Perguntar antes de começar, mesmo que tenhas de esperar',
+        'Fazer as duas versões para uma delas estar certa'],
+        why: 'Um palpite errado custa o trabalho todo. Perguntar custa uma mensagem. A regra não é "perguntar tudo" — é não começar sobre um pressuposto que podias ter confirmado.' } },
+    media: { type: 'soon' }, deeper: 'land-team-journey' },
+
+  { id: 'atl-detail', placeholder: true, seconds: 25, theme: 'standards',
+    title: { en: 'Attention to detail', pt: 'Atenção ao detalhe' },
+    hook:  { en: 'A guest never sees your effort. They see the one thing you missed.', pt: 'Um hóspede nunca vê o teu esforço. Vê a única coisa que te escapou.' },
+    line:  { en: 'The last five percent is the whole impression.', pt: 'Os últimos cinco por cento são a impressão toda.' },
+    check: { type: 'application', a: 2, placeholder: true,
+      en: { q: 'You have finished a room and you are behind. What does attention to detail mean right now?', opts: [
+        'Detail is a luxury when you are behind — move on',
+        'Redo the whole room slowly to be safe',
+        'Walk it once as a guest would, and fix what that walk shows'],
+        why: 'Detail is not slowness, and it is not redoing everything. It is one deliberate look from the other side — which is where the missed thing becomes visible.' },
+      pt: { q: 'Acabaste um quarto e estás atrasado. O que significa atenção ao detalhe agora?', opts: [
+        'O detalhe é um luxo quando se está atrasado — segue',
+        'Refazer o quarto todo devagar, por segurança',
+        'Percorrê-lo uma vez como o hóspede faria, e corrigir o que essa passagem mostrar'],
+        why: 'Detalhe não é lentidão, nem refazer tudo. É um olhar deliberado do outro lado — é aí que a coisa que escapou se torna visível.' } },
+    media: { type: 'soon' }, deeper: 'land-team-journey' },
+
+  { id: 'atl-gratitude', placeholder: true, seconds: 30, theme: 'gratitude',
+    title: { en: 'The science of gratitude', pt: 'A ciência da gratidão' },
+    hook:  { en: 'Most people end a hard shift replaying what went wrong.', pt: 'A maioria acaba um turno difícil a repetir o que correu mal.' },
+    line:  { en: 'One question that changes how a shift ends.', pt: 'Uma pergunta que muda a forma como o turno acaba.' },
+    check: { type: 'application', a: 1, placeholder: true,
+      en: { q: 'Your shift is ending and it was a hard one. What do you do?', opts: [
+        'Write down the three worst moments so you can fix them tomorrow',
+        'Name one thing that went right and who made it happen',
+        'Say nothing and start fresh in the morning'],
+        why: 'Ending on something that went right, attached to a person, is what makes it stick — and it gives someone else credit out loud.' },
+      pt: { q: 'O teu turno está a acabar e foi difícil. O que fazes?', opts: [
+        'Apontar os três piores momentos para os corrigir amanhã',
+        'Nomear uma coisa que correu bem e quem a fez acontecer',
+        'Não dizer nada e começar de novo de manhã'],
+        why: 'Acabar numa coisa que correu bem, ligada a uma pessoa, é o que a fixa — e dá crédito a outra pessoa em voz alta.' } },
+    media: { type: 'soon' }, deeper: 'land-team-journey' }
+];
+const QUICKWINS = REELS;
