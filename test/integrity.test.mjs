@@ -18,7 +18,7 @@
    None of them are catchable by `node --check`, which is all CI ran before.
    ========================================================================= */
 import { execFileSync } from 'child_process';
-import { existsSync, readdirSync, readFileSync } from 'fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
 import { ROOT, src, stripComments, stripRulesComments } from './harness.mjs';
 
@@ -308,6 +308,53 @@ export function run(t) {
   t.ok('a blocked mirror reaches an admin through the beacon',
     /EdenBeacon\(/.test(authSrc) && /window\.EdenBeacon\s*=/.test(stripComments(src('core/app.js'))),
     'the learner-facing copy claims an administrator can see this — it must be true');
+
+  /* ---------- 6d. the knowledge manifest agrees with the catalogue ----------
+     knowledge/index.json is what gets pushed to LandFlow, so anything wrong here
+     is wrong in the agent that talks to the crew on WhatsApp.
+
+     This exists because it shipped wrong: build-knowledge.mjs used to regex the
+     module titles out of content.js accepting only single-quoted strings, so
+     "Don't Assume, Clarify" — double-quoted BECAUSE of its apostrophe — broke the
+     sequence. Module 3 became `t Assume, Clarify", `, modules 4-6 became `, `,
+     and module 7 fell through to the "Module N" fallback. Those names sat in D1
+     for months and are what a worker would have been read back. */
+  t.group('knowledge manifest');
+  const kPath = join(ROOT, 'knowledge', 'index.json');
+  if (!existsSync(kPath)) t.ok('knowledge/index.json exists', false, 'run scripts/build-knowledge.mjs');
+  else {
+    const K = JSON.parse(readFileSync(kPath, 'utf8'));
+    let checked = 0, wrong = [], fallback = [];
+    for (const [cid, c] of Object.entries(K.courses || {})) {
+      const course = C.CATALOG.find(x => x.id === cid);
+      if (!course) { t.ok(`${cid}: is a real course`, false, 'in the manifest but not in CATALOG'); continue; }
+      t.ok(`${cid}: course title matches the catalogue`, c.title === course.title,
+        `manifest "${c.title}" vs catalogue "${course.title}"`);
+      for (const m of c.modules || []) {
+        const want = (course.modules || [])[m.mod];
+        if (want == null) continue;
+        checked++;
+        if (m.title !== want) wrong.push(`${cid}/m${m.mod}: "${m.title}" ≠ "${want}"`);
+        if (/^Module \d+$/.test(m.title)) fallback.push(`${cid}/m${m.mod}`);
+      }
+    }
+    t.ok(`all ${checked} module titles match content.js exactly`, !wrong.length, wrong.slice(0, 4).join(' | '));
+    t.ok('no module fell back to "Module N"', !fallback.length,
+      `${fallback.join(', ')} — a real title exists for these, so the extractor lost sync`);
+    /* the manifest must not be older than the transcripts it describes */
+    const tdirK = join(ROOT, 'media', 'transcripts');
+    if (existsSync(tdirK)) {
+      let newest = 0;
+      for (const entry of readdirSync(tdirK)) {
+        const p = join(tdirK, entry);
+        const st = statSync(p);
+        if (!st.isDirectory()) { newest = Math.max(newest, st.mtimeMs); continue; }
+        for (const f of readdirSync(p)) newest = Math.max(newest, statSync(join(p, f)).mtimeMs);
+      }
+      t.ok('the manifest is not older than the transcripts', (K.generatedAt || 0) >= newest - 1000,
+        `manifest ${new Date(K.generatedAt || 0).toISOString()} predates a transcript — re-run build-knowledge.mjs (LandFlow would be serving the older cut)`);
+    }
+  }
 
   /* ---------- 7. transcript provenance ----------
      TWO DIFFERENT CLAIMS, kept apart because conflating them cost me a run of

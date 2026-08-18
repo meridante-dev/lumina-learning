@@ -25,23 +25,42 @@ import { fileURLToPath } from 'url';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TR = join(ROOT, 'media', 'transcripts');
 const QZ = join(ROOT, 'knowledge', 'quizzes');
-const contentJs = readFileSync(join(ROOT, 'brands', 'edenrise', 'content.js'), 'utf8');
+/* ---- the catalogue, EVALUATED not parsed --------------------------------
+   This block used to pull titles, skills and regimes out of content.js with
+   regexes. That produced a live data-corruption bug: the module-title matcher
+   accepted only single-quoted strings, but "Don't Assume, Clarify" is DOUBLE
+   quoted precisely because it contains an apostrophe. The matcher latched onto
+   the ' inside "Don't" and every title after it shifted — module 3 became
+   `t Assume, Clarify", `, modules 4-6 became `, `, and module 7 fell off the
+   end into the "Module N" fallback. Those names were pushed to LandFlow and are
+   what the agent reads back to a worker on WhatsApp.
 
-const COURSE_TITLES = {
-  'land-team-journey': 'Above the Line',
-  'fire-truck-training': 'Fire Truck Training',
-  'alignment-journey': 'The EdenRise Alignment Journey',
-  'ai-literacy': 'Level Up with AI',
-};
-const SKILLS = Object.fromEntries([...contentJs.matchAll(/'([a-z0-9-]+)': \[([^\]]*)\]/g)]
-  .map(m => [m[1], [...m[2].matchAll(/'([a-z]+)'/g)].map(x => x[1])]));
-const REGIME = Object.fromEntries([...(contentJs.match(/const COURSE_REGIME = \{([\s\S]*?)\};/)?.[1] || '')
-  .matchAll(/'([a-z0-9-]+)': '([A-Z]+)'/g)].map(m => [m[1], m[2]]));
-const MOD_NAMES = {};
-for (const m of contentJs.matchAll(/id: '([a-z0-9-]+)',([\s\S]*?)(?=\n  \{|\n\];)/g)) {
-  const names = m[2].match(/modules: \[([\s\S]*?)\]/);
-  if (names) MOD_NAMES[m[1]] = [...names[1].matchAll(/'((?:[^'\\]|\\.)*)'/g)].map(x => x[1].replace(/\\'/g, "'"));
-}
+   content.js is pure data, so evaluating it removes that entire class of bug
+   rather than patching one regex. The brand folder is resolved from index.html
+   (the app's own truth) instead of hard-coded, so this script is not welded to
+   the founding tenant either. */
+const INDEX_HTML = readFileSync(join(ROOT, 'index.html'), 'utf8');
+const BRAND_DIR = (() => {
+  const m = INDEX_HTML.match(/["']([^"']*brands\/[^/"']+\/)content\.js/);
+  if (m && existsSync(join(ROOT, m[1] + 'content.js'))) return m[1];
+  const dir = join(ROOT, 'brands');
+  const found = existsSync(dir) ? readdirSync(dir).filter(d => existsSync(join(dir, d, 'content.js'))) : [];
+  if (found.length === 1) return `brands/${found[0]}/`;
+  throw new Error('build-knowledge: cannot resolve the brand content.js');
+})();
+const CONTENT = (() => {
+  const code = readFileSync(join(ROOT, BRAND_DIR + 'content.js'), 'utf8');
+  try {
+    return new Function(`${code}\n;return {CATALOG, COURSE_SKILLS: typeof COURSE_SKILLS !== 'undefined' ? COURSE_SKILLS : {}, COURSE_REGIME: typeof COURSE_REGIME !== 'undefined' ? COURSE_REGIME : {}};`)();
+  } catch (e) {
+    throw new Error(`build-knowledge: ${BRAND_DIR}content.js no longer evaluates as data (${e.message})`);
+  }
+})();
+
+const COURSE_TITLES = Object.fromEntries(CONTENT.CATALOG.map(c => [c.id, c.title]));
+const MOD_NAMES = Object.fromEntries(CONTENT.CATALOG.map(c => [c.id, c.modules || []]));
+const SKILLS = CONTENT.COURSE_SKILLS || {};
+const REGIME = CONTENT.COURSE_REGIME || {};
 
 const STOP = new Set(`the and for you your that this with have from are was were what when how why not can will
 just like our their they them there then than into onto out very much more most been being them we is it in of to on at as by an or if do does did

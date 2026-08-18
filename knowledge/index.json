@@ -1,5 +1,5 @@
 {
- "generatedAt": 1786983588990,
+ "generatedAt": 1787060704914,
  "courses": {
   "alignment-journey": {
    "title": "The EdenRise Alignment Journey",
@@ -1468,7 +1468,7 @@
     },
     {
      "mod": 3,
-     "title": "t Assume, Clarify\", ",
+     "title": "Don't Assume, Clarify",
      "language": "en",
      "translated": "pt",
      "segments": 64,
@@ -1525,7 +1525,7 @@
     },
     {
      "mod": 4,
-     "title": ", ",
+     "title": "Benchmarking Excellence",
      "language": "en",
      "translated": "pt",
      "segments": 114,
@@ -1582,7 +1582,7 @@
     },
     {
      "mod": 5,
-     "title": ", ",
+     "title": "Attention to Detail",
      "language": "en",
      "translated": "pt",
      "segments": 54,
@@ -1639,7 +1639,7 @@
     },
     {
      "mod": 6,
-     "title": ", ",
+     "title": "Lifelong Learner",
      "language": "en",
      "translated": "pt",
      "segments": 58,
@@ -1696,7 +1696,7 @@
     },
     {
      "mod": 7,
-     "title": "Module 8",
+     "title": "The Science of Gratitude",
      "language": "en",
      "translated": null,
      "segments": 122,
