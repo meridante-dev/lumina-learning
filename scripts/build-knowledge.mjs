@@ -99,6 +99,18 @@ for (const course of readdirSync(TR).filter(d => !d.includes('.'))) {
       language: tr.language,
       translated: other || null,
       segments: tr.segments.length,
+      /* CONTENT SIGNATURE — total characters across every language file for this
+         module. Lets a checker prove the manifest still describes the transcripts
+         on disk WITHOUT relying on file mtimes, which git does not preserve (a
+         fresh CI checkout stamps everything "now", so an mtime freshness check is
+         green locally and permanently red in CI). It also survives the case that
+         actually bit us: a re-recorded cut with an identical segment count. */
+      chars: ['', '.en', '.pt'].reduce((n, sfx) => {
+        const fp = join(TR, course, `m${mod}${sfx}.json`);
+        return existsSync(fp)
+          ? n + JSON.parse(readFileSync(fp, 'utf8')).segments.reduce((a, s2) => a + (s2.text || '').length, 0)
+          : n;
+      }, 0),
       durationSec: Math.round(tr.segments.at(-1)?.t1 || 0),
       capability: SKILLS[course]?.[0] || null,
       tags: [...new Set([...(SKILLS[course] || []), ...tagsFrom(tr.segments)])],

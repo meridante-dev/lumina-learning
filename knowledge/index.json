@@ -1,5 +1,5 @@
 {
- "generatedAt": 1787060704914,
+ "generatedAt": 1787062828293,
  "courses": {
   "alignment-journey": {
    "title": "The EdenRise Alignment Journey",
@@ -10,6 +10,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 59,
+     "chars": 10462,
      "durationSec": 325,
      "capability": "leadership",
      "tags": [
@@ -67,6 +68,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 35,
+     "chars": 5560,
      "durationSec": 169,
      "capability": "leadership",
      "tags": [
@@ -124,6 +126,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 40,
+     "chars": 5307,
      "durationSec": 177,
      "capability": "leadership",
      "tags": [
@@ -181,6 +184,7 @@
      "language": "en",
      "translated": null,
      "segments": 181,
+     "chars": 8996,
      "durationSec": 609,
      "capability": "leadership",
      "tags": [
@@ -238,6 +242,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 14,
+     "chars": 1649,
      "durationSec": 51,
      "capability": "leadership",
      "tags": [
@@ -290,6 +295,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 8,
+     "chars": 1835,
      "durationSec": 68,
      "capability": "leadership",
      "tags": [
@@ -340,6 +346,7 @@
      "language": "en",
      "translated": null,
      "segments": 50,
+     "chars": 3376,
      "durationSec": 246,
      "capability": "leadership",
      "tags": [
@@ -397,6 +404,7 @@
      "language": "en",
      "translated": null,
      "segments": 93,
+     "chars": 8788,
      "durationSec": 579,
      "capability": "leadership",
      "tags": [
@@ -454,6 +462,7 @@
      "language": "en",
      "translated": null,
      "segments": 235,
+     "chars": 14931,
      "durationSec": 948,
      "capability": "leadership",
      "tags": [
@@ -511,6 +520,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 12,
+     "chars": 2054,
      "durationSec": 62,
      "capability": "leadership",
      "tags": [
@@ -564,6 +574,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 43,
+     "chars": 5660,
      "durationSec": 200,
      "capability": "leadership",
      "tags": [
@@ -621,6 +632,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 168,
+     "chars": 18362,
      "durationSec": 575,
      "capability": "leadership",
      "tags": [
@@ -678,6 +690,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 157,
+     "chars": 19093,
      "durationSec": 570,
      "capability": "leadership",
      "tags": [
@@ -735,6 +748,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 17,
+     "chars": 3250,
      "durationSec": 94,
      "capability": "leadership",
      "tags": [
@@ -789,6 +803,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 17,
+     "chars": 3054,
      "durationSec": 95,
      "capability": "leadership",
      "tags": [
@@ -842,6 +857,7 @@
      "language": "en",
      "translated": null,
      "segments": 49,
+     "chars": 4616,
      "durationSec": 353,
      "capability": "leadership",
      "tags": [
@@ -899,6 +915,7 @@
      "language": "en",
      "translated": null,
      "segments": 150,
+     "chars": 11389,
      "durationSec": 730,
      "capability": "leadership",
      "tags": [
@@ -956,6 +973,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 15,
+     "chars": 2298,
      "durationSec": 86,
      "capability": "leadership",
      "tags": [
@@ -1010,6 +1028,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 111,
+     "chars": 22344,
      "durationSec": 757,
      "capability": "leadership",
      "tags": [
@@ -1072,6 +1091,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 129,
+     "chars": 8521,
      "durationSec": 355,
      "capability": "safety",
      "tags": [
@@ -1128,6 +1148,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 146,
+     "chars": 14195,
      "durationSec": 611,
      "capability": "safety",
      "tags": [
@@ -1184,6 +1205,7 @@
      "language": "en",
      "translated": null,
      "segments": 81,
+     "chars": 5780,
      "durationSec": 582,
      "capability": "safety",
      "tags": [
@@ -1240,6 +1262,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 183,
+     "chars": 11920,
      "durationSec": 568,
      "capability": "safety",
      "tags": [
@@ -1301,6 +1324,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 39,
+     "chars": 7015,
      "durationSec": 249,
      "capability": "leadership",
      "tags": [
@@ -1358,6 +1382,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 38,
+     "chars": 6746,
      "durationSec": 242,
      "capability": "leadership",
      "tags": [
@@ -1415,6 +1440,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 56,
+     "chars": 9575,
      "durationSec": 339,
      "capability": "leadership",
      "tags": [
@@ -1472,6 +1498,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 64,
+     "chars": 9989,
      "durationSec": 341,
      "capability": "leadership",
      "tags": [
@@ -1529,6 +1556,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 114,
+     "chars": 9940,
      "durationSec": 334,
      "capability": "leadership",
      "tags": [
@@ -1586,6 +1614,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 54,
+     "chars": 9545,
      "durationSec": 328,
      "capability": "leadership",
      "tags": [
@@ -1643,6 +1672,7 @@
      "language": "en",
      "translated": "pt",
      "segments": 58,
+     "chars": 9320,
      "durationSec": 322,
      "capability": "leadership",
      "tags": [
@@ -1700,6 +1730,7 @@
      "language": "en",
      "translated": null,
      "segments": 122,
+     "chars": 4616,
      "durationSec": 327,
      "capability": "leadership",
      "tags": [

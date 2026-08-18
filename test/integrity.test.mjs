@@ -341,19 +341,35 @@ export function run(t) {
     t.ok(`all ${checked} module titles match content.js exactly`, !wrong.length, wrong.slice(0, 4).join(' | '));
     t.ok('no module fell back to "Module N"', !fallback.length,
       `${fallback.join(', ')} — a real title exists for these, so the extractor lost sync`);
-    /* the manifest must not be older than the transcripts it describes */
-    const tdirK = join(ROOT, 'media', 'transcripts');
-    if (existsSync(tdirK)) {
-      let newest = 0;
-      for (const entry of readdirSync(tdirK)) {
-        const p = join(tdirK, entry);
-        const st = statSync(p);
-        if (!st.isDirectory()) { newest = Math.max(newest, st.mtimeMs); continue; }
-        for (const f of readdirSync(p)) newest = Math.max(newest, statSync(join(p, f)).mtimeMs);
+    /* THE MANIFEST STILL DESCRIBES THE TRANSCRIPTS ON DISK.
+       The first version of this compared file mtimes — green locally, and
+       permanently RED in CI, because git does not preserve mtimes: a fresh
+       checkout stamps every file "now", so the committed generatedAt always
+       looks stale. A gate that is always red is worse than no gate; people learn
+       to ignore it.
+
+       Comparing CONTENT instead is both CI-safe and stronger. Segment count
+       alone would not be enough — the deleted Science of Gratitude cut and its
+       replacement both had exactly 122 — so the manifest carries a character
+       signature and this recomputes it from the files. */
+    let stale = [];
+    for (const [cid, c] of Object.entries(K.courses || {})) {
+      for (const m of c.modules || []) {
+        let segs = 0, chars = 0;
+        for (const sfx of ['', '.en', '.pt']) {
+          const fp = join(ROOT, 'media', 'transcripts', cid, `m${m.mod}${sfx}.json`);
+          if (!existsSync(fp)) continue;
+          const tr = JSON.parse(readFileSync(fp, 'utf8'));
+          if (sfx === '') segs = tr.segments.length;
+          for (const sg of tr.segments) chars += (sg.text || '').length;
+        }
+        if (m.segments !== segs || (m.chars != null && m.chars !== chars)) {
+          stale.push(`${cid}/m${m.mod} (manifest ${m.segments}seg/${m.chars}ch vs disk ${segs}seg/${chars}ch)`);
+        }
       }
-      t.ok('the manifest is not older than the transcripts', (K.generatedAt || 0) >= newest - 1000,
-        `manifest ${new Date(K.generatedAt || 0).toISOString()} predates a transcript — re-run build-knowledge.mjs (LandFlow would be serving the older cut)`);
     }
+    t.ok('the manifest matches the transcripts on disk', !stale.length,
+      `${stale.slice(0, 3).join(' | ')} — re-run build-knowledge.mjs, or LandFlow keeps serving the older cut`);
   }
 
   /* ---------- 7. transcript provenance ----------
