@@ -4471,3 +4471,26 @@ body.reels-open { overflow: hidden; }
    a component is not premium because it is decorated). Only a curator ever sees
    this, because only a curator can act on it. */
 .reel-meta .pend, .reel-chip-meta .pend { color: #d9c08c; }
+
+/* ---- PREMIUM LAYER 22 · the gate, made visible ---------------------------
+   The evidence behind one question: what was asked, the second of video it
+   anchors to, the words spoken there, and what the audit did. Space and one
+   quiet rule do the separating — no cards inside cards (DESIGN law 1: two
+   layers), no second accent (law 8), state carried by colour alone (law 7). */
+.cov-caret { opacity: .45; margin-left: 8px; font-size: 11px; }
+.cov-ev { padding: 2px 0 10px 0; border-left: 1px solid rgba(231,237,227,.10); margin: -2px 0 10px 14px; }
+.cov-q { padding: 12px 0 12px 16px; }
+.cov-q + .cov-q { border-top: 1px solid rgba(231,237,227,.07); }
+.cov-q-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.cov-audit { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+.cov-audit.verified  { color: var(--accent-2); }
+.cov-audit.corrected { color: #d9c08c; }
+.cov-audit.unaudited,
+.cov-audit.malformed { color: #d98a76; }
+.cov-at { font-size: 11px; color: var(--text-faint); letter-spacing: .06em; }
+.cov-stem { font-size: 15px; line-height: 1.5; }
+.cov-key { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+.cov-said { font-size: 13px; color: var(--text-dim); margin-top: 8px; }
+.cov-said q { font-style: italic; opacity: .9; }
+.cov-wait { opacity: .5; }
+.cov-prov { font-size: 11px; color: var(--text-faint); margin-top: 8px; }

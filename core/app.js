@@ -1058,6 +1058,14 @@ function initAdmin(retries) {
     if (window.EdenForum && EdenForum.listOfficial) EdenForum.listOfficial().then(paintBroadcasts).catch(() => paintBroadcasts([]));
     return;
   }
+  /* COVERAGE READS BANKS THAT ARE LOADED LAZILY.
+     This tab renders synchronously off QUIZ_V2, which is only populated when a
+     learner opens a player or a quiz. So an admin arriving here cold saw
+     "0/42 verified" — for content that was fully verified — and the only honest
+     reading of that number is "regenerate everything". A zero that means NOT
+     LOADED YET must never be displayed as a zero that means NONE EXISTS.
+     Load every bank in both languages first, then paint. */
+  if (adminTab === 'coverage') { loadAllBanks().then(() => { if (adminTab === 'coverage') render(); }); return; }
   if (adminTab === 'content') {
     if (!adminMembers) EdenCloud.listMembers().then(m => { adminMembers = m; if (adminTab === 'content' && !editingCourse) render(); }).catch(() => {});
     return;
@@ -5713,7 +5721,32 @@ function checkCoverage() {
   }
   return rows;
 }
+/* ===== THE GATE, MADE VISIBLE ===============================================
+   Every question a learner is asked was generated from that module's own
+   transcript, then answered BLIND by a second model against the same transcript.
+   Agreement ships it; disagreement corrects it or throws it away. The correction
+   rate runs 57-70%, which is the whole point — the gate is load-bearing, not
+   decoration.
+
+   Until now that was a claim in a commit message. A buyer evaluating this
+   product is, correctly, sceptical of AI-written assessment: the market is full
+   of content that is technically correct and educationally weak. The answer to
+   that scepticism is not a badge saying "AI verified", it is showing the work —
+   the question, the second of video it came from, the words actually spoken
+   there, and what the audit did.
+
+   It is also honest about its own limits. Older questions were audited before
+   the verifier recorded WHAT it answered, so they can say "checked" but not
+   show the working. Those are labelled as exactly that rather than dressed up
+   to match the newer ones. */
+let covOpen = null;
+
 function adminCoverageHTML() {
+  if (!banksLoaded) {
+    return `<section class="admin-section">
+      <h2>${t('cov_h')}</h2>
+      <p class="page-sub">${t('cov_loading')}</p></section>`;
+  }
   const rows = checkCoverage();
   if (!rows.length) return '';
   const n = k => rows.filter(r => r.state === k).length;
@@ -5721,18 +5754,92 @@ function adminCoverageHTML() {
   return `<section class="admin-section">
     <h2>${t('cov_h')}</h2>
     <p class="page-sub">${n('ok')}/${rows.length} ${t('cov_sub')}</p>
-    <div class="cap-list">${rows.sort((a, b) => order[a.state] - order[b.state]).map(r => `
-      <div class="cap-row ${r.state === 'ok' ? 'cap-proven' : (r.state === 'none' || r.state === 'malformed') ? 'cap-lapsed' : r.state === 'unverified' ? 'cap-expiring' : ''}">
-        <div class="cap-name">${esc(r.label)}</div>
-        <div class="cap-meta">${r.kind === 'reel' ? t('cov_reel') : t('cov_module')}</div>
+    <p class="sect-sub sub-auto">${t('cov_how')}</p>
+    <div class="cap-list">${rows.sort((a, b) => order[a.state] - order[b.state]).map(r => {
+      const open = covOpen === r.id;
+      const can = r.questions > 0;
+      return `
+      <div class="cap-row ${r.state === 'ok' ? 'cap-proven' : (r.state === 'none' || r.state === 'malformed') ? 'cap-lapsed' : r.state === 'unverified' ? 'cap-expiring' : ''}"
+           ${can ? `data-action="cov-open" data-id="${esc(r.id)}" role="button" tabindex="0"` : ''} style="${can ? 'cursor:pointer' : ''}">
+        <div class="cap-name">${esc(r.label)}${can ? `<span class="cov-caret">${open ? '▾' : '▸'}</span>` : ''}</div>
+        <div class="cap-meta">${r.kind === 'reel' ? t('cov_reel') : t('cov_module')}${r.questions ? ` · ${r.questions}` : ''}</div>
         <div class="cap-state">${
           r.state === 'ok' ? t('cov_ok')
           : r.state === 'unverified' ? t('cov_unverified')
           : r.state === 'malformed' ? t('cov_malformed')
           : r.state === 'soon' ? t('coming_soon')
           : t('cov_none')}</div>
-      </div>`).join('')}</div>
+      </div>${open ? covEvidenceHTML(r) : ''}`;
+    }).join('')}</div>
   </section>`;
+}
+
+/* the questions behind one row, with the line of video each came from */
+function covEvidenceHTML(r) {
+  const qs = covQuestions(r);
+  if (!qs.length) return `<div class="cov-ev"><p class="empty-note">${t('cov_none')}</p></div>`;
+  const lang = _lang() === 'pt' ? 'pt' : 'en';
+  const [cid, modS] = String(r.id).split(':');
+  /* the segments of the transcript this question was actually grounded in —
+     a PT question came from the PT recording, so quoting the English one here
+     would show a line the question was never written against */
+  const tr = r.kind === 'module' ? (_covTr[covTrKey(cid, +modS)] || null) : null;
+  return `<div class="cov-ev">${qs.map(q => {
+    const L = q[lang] || q.en || {};
+    const bad = !validQuestion(q);
+    const audit = bad ? 'malformed' : q.corrected ? 'corrected' : q.verified ? 'verified' : 'unaudited';
+    /* the words actually spoken at the timestamp this question anchors to */
+    const said = (tr && q.t0 != null)
+      ? (tr.find(s => q.t0 >= s.t0 && q.t0 < s.t1) || tr.find(s => s.t0 >= q.t0) || null) : null;
+    return `<div class="cov-q">
+      <div class="cov-q-head">
+        <span class="cov-audit ${audit}">${
+          audit === 'verified' ? t('cov_a_verified')
+          : audit === 'corrected' ? t('cov_a_corrected')
+          : audit === 'malformed' ? t('cov_malformed') : t('cov_a_unaudited')}</span>
+        ${q.t0 != null ? `<span class="cov-at">${Math.floor(q.t0 / 60)}:${String(Math.floor(q.t0 % 60)).padStart(2, '0')}</span>` : ''}
+        ${q.type ? `<span class="cov-at">${esc(q.type)}</span>` : ''}
+      </div>
+      <div class="cov-stem">${esc(L.q || '—')}</div>
+      ${Array.isArray(L.opts) && Number.isInteger(q.a) && L.opts[q.a] != null
+        ? `<div class="cov-key">${t('cov_key')} <b>${esc(L.opts[q.a])}</b></div>` : ''}
+      ${said ? `<div class="cov-said">${t('cov_said')} <q>${esc(said.text.trim())}</q></div>`
+             : (r.kind === 'module' && q.t0 != null ? `<div class="cov-said cov-wait">${t('cov_loading')}</div>` : '')}
+      ${q.gen ? `<div class="cov-prov">${t('cov_prov')
+          .replace('{m}', esc(q.model || '?')).replace('{s}', esc(q.src || '?'))}${
+          (q.verified || q.corrected) && !q.audit ? ` · ${t('cov_no_trail')}` : ''}</div>`
+        : `<div class="cov-prov">${t('cov_authored')}</div>`}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+/* Language-aware transcript fetch for the evidence view. Separate from
+   _trCache, which holds whole JSON objects for the player and only ever loads
+   the base file — this needs the SEGMENTS of the language the question was
+   generated from, or the quoted line is from a recording the question was never
+   written against. */
+const _covTr = {};
+const covTrKey = (cid, mod) => `${cid}:${mod}:${_lang() === 'pt' ? 'pt' : 'en'}`;
+function covLoadTranscript(cid, mod) {
+  const key = covTrKey(cid, mod);
+  if (_covTr[key] !== undefined) return Promise.resolve(_covTr[key]);
+  const pt = _lang() === 'pt';
+  const tryFiles = pt ? [`m${mod}.pt.json`, `m${mod}.json`] : [`m${mod}.json`];
+  const next = i => i >= tryFiles.length
+    ? (_covTr[key] = null)
+    : fetch(`media/transcripts/${cid}/${tryFiles[i]}`)
+        .then(r => (r.ok ? r.json() : null))
+        .then(j => (j && j.segments ? (_covTr[key] = j.segments) : next(i + 1)))
+        .catch(() => next(i + 1));
+  return Promise.resolve(next(0));
+}
+
+/* the question objects behind a coverage row, whichever kind it is */
+function covQuestions(r) {
+  if (r.kind === 'reel') { const q = reelCheckOf(r.id ? qwById(r.id) : null); return q ? [q] : []; }
+  const [cid, modS] = String(r.id).split(':');
+  const bank = ((QUIZ_V2[cid] || {}).modules) || {};
+  return bank[+modS] || [];
 }
 
 /* ===== THE REEL CHECK — retrieval, not assessment ===========================
@@ -6437,6 +6544,21 @@ function pendingCheckCount() { return Object.keys(S.pendingChecks || {}).length;
    second of video that teaches it. Loaded lazily; every consumer falls back to
    the hand-written banks when a course has no V2 file. */
 const QUIZ_V2 = {};
+/* Every bank the catalogue implies, in every language, so a surface that AUDITS
+   coverage is never reading a half-loaded cache. `banksLoaded` is what lets the
+   view distinguish "nothing verified" from "nothing fetched yet" — the two
+   readings differ by everything and looked identical. */
+let banksLoaded = false;
+function loadAllBanks() {
+  /* one bank per course, keyed exactly as the rest of the app keys it
+     (QUIZ_V2[c.id]) — each question carries both languages inside it. There ARE
+     separate <course>.pt.json banks on disk from the native-Portuguese pass, and
+     nothing in this app reads them yet; loading them here would only look
+     thorough. That gap is real and belongs in its own change, not hidden in a
+     preloader. */
+  return Promise.all(CATALOG.map(c => loadQuizV2(c.id)))
+    .then(r => { banksLoaded = true; return r; });
+}
 function loadQuizV2(courseId) {
   if (QUIZ_V2[courseId] !== undefined) return Promise.resolve(QUIZ_V2[courseId]);
   /* cache-bust rides the same edrNNN as every other asset — derived from the
@@ -7229,6 +7351,18 @@ document.addEventListener('click', e => {
       break;
     }
     case 'admin-tab': adminTab = el.dataset.tab; editingCourse = null; liveDraft = null; render(); initAdmin(); break;
+    case 'cov-open': {
+      /* toggle the evidence drawer; fetch the transcript for the line quote and
+         repaint once it lands, so the quote appears rather than the placeholder */
+      const id = el.dataset.id;
+      covOpen = covOpen === id ? null : id;
+      render();
+      if (covOpen && covOpen.includes(':')) {
+        const [cid, mod] = covOpen.split(':');
+        covLoadTranscript(cid, +mod).then(() => { if (covOpen === id) render(); });
+      }
+      break;
+    }
     case 'ce-open': openCourseEditor(id); break;
     case 'ce-cancel': editingCourse = null; render(); break;
     case 'ce-save': ceSave(); break;
