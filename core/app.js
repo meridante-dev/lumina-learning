@@ -1621,9 +1621,17 @@ function trainingPace(target) {
 /* ===== Compliance Phase 2: legal documents (DRAFT wording — pending lawyer sign-off, SPEC §6/§9) ===== */
 /* company identity comes from window.EdenCompany (Phase 5); helpers above */
 function ptCourseTitle(id) { const c = courseById(id); return (typeof COURSE_PT !== 'undefined' && COURSE_PT[id] && COURSE_PT[id].title) || (c && c.title) || id; }
-function trainingActions(log, year) {
+/* `lang` defaults to Portuguese because the legal exports (register, Relatório
+   Único annex) are read by a Portuguese inspector whatever language the app is
+   set to. The worker's own printed record passes its document language instead —
+   an English document listing Portuguese action titles is a document that looks
+   assembled rather than issued. */
+function trainingActions(log, year, lang) {
+  const title = id => (lang === 'en'
+    ? ((courseById(id) || {}).title || id)
+    : ptCourseTitle(id));
   const b = {};
-  (log || []).filter(e => new Date(e.at).getFullYear() === year).forEach(e => { const k = ptCourseTitle(e.courseId); b[k] = (b[k] || 0) + (e.hours || 0); });
+  (log || []).filter(e => new Date(e.at).getFullYear() === year).forEach(e => { const k = title(e.courseId); b[k] = (b[k] || 0) + (e.hours || 0); });
   return Object.entries(b).map(([title, h]) => ({ title, hours: Math.round(h * 10) / 10 })).sort((a, b) => b.hours - a.hours);
 }
 async function complianceVerifyCode(pf, year, log) {
@@ -1635,45 +1643,6 @@ function wrapCanvasText(x, text, cx, cy, maxW, lh) {
   const words = text.split(' '); let line = '', y = cy;
   words.forEach(w => { const test = line + w + ' '; if (x.measureText(test).width > maxW && line) { x.fillText(line.trim(), cx, y); line = w + ' '; y += lh; } else line = test; });
   x.fillText(line.trim(), cx, y); return y;
-}
-function trainingCertCanvas(pf, year, code) {
-  const W = 1600, H = 1131, cv = document.createElement('canvas'); cv.width = W; cv.height = H; const x = cv.getContext('2d');
-  x.fillStyle = '#0e140f'; x.fillRect(0, 0, W, H);
-  const g = x.createRadialGradient(W / 2, H * 0.3, 80, W / 2, H / 2, W * 0.8); g.addColorStop(0, 'rgba(200,164,93,.09)'); g.addColorStop(1, 'rgba(200,164,93,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
-  x.strokeStyle = 'rgba(200,164,93,.85)'; x.lineWidth = 3; x.strokeRect(46, 46, W - 92, H - 92);
-  x.strokeStyle = 'rgba(200,164,93,.35)'; x.lineWidth = 1; x.strokeRect(60, 60, W - 120, H - 120);
-  x.textAlign = 'center';
-  x.fillStyle = '#c8a45d'; x.font = '600 24px Inter, sans-serif'; try { x.letterSpacing = '10px'; } catch (e) {} x.fillText(companyName().toUpperCase().split('').join(' '), W / 2, 138); try { x.letterSpacing = '0px'; } catch (e) {}
-  x.fillStyle = '#f7f6f1'; x.font = '600 52px "Cormorant Garamond", serif'; x.fillText('Documento Comprovativo', W / 2, 244);
-  x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 26px "Cormorant Garamond", serif'; x.fillText('Formação Profissional Contínua', W / 2, 286);
-  const done = trainingHours(S.trainingLog), target = complianceTarget(pf) || 40;
-  x.fillStyle = 'rgba(247,246,241,.55)'; x.font = '400 22px Inter'; x.fillText('Certifica-se que', W / 2, 372);
-  x.fillStyle = '#c8a45d'; x.font = 'italic 600 60px "Cormorant Garamond", serif'; x.fillText(pf.name || '—', W / 2, 442);
-  x.fillStyle = 'rgba(247,246,241,.7)'; x.font = '400 20px Inter'; x.fillText(`NIF ${pf.nif || '—'}${pf.employeeNo ? ' · N.º ' + pf.employeeNo : ''}`, W / 2, 480);
-  x.fillStyle = 'rgba(247,246,241,.85)'; x.font = '400 21px Inter';
-  wrapCanvasText(x, `frequentou ${done} horas de formação profissional contínua no ano de ${year}, ministrada por ${companyName()}${companyNif() ? ' (NIF ' + companyNif() + ')' : ''} ao abrigo do dever de formação previsto nos artigos 130.º a 134.º do Código do Trabalho.`, W / 2, 534, 1080, 30);
-  const acts = trainingActions(S.trainingLog, year).slice(0, 6);
-  x.textAlign = 'left'; let ay = 672;
-  x.fillStyle = 'rgba(200,164,93,.9)'; x.font = '700 13px Inter'; x.fillText('AÇÕES DE FORMAÇÃO · modalidade: formação à distância (e-learning)', 270, ay); ay += 32;
-  x.font = '400 18px Inter';
-  acts.forEach(a => { x.fillStyle = 'rgba(247,246,241,.8)'; x.fillText(a.title.slice(0, 60), 270, ay); x.textAlign = 'right'; x.fillStyle = '#c8a45d'; x.fillText(a.hours + ' h', W - 270, ay); x.textAlign = 'left'; ay += 30; });
-  x.textAlign = 'center';
-  x.strokeStyle = 'rgba(200,164,93,.5)'; x.beginPath(); x.moveTo(W / 2 - 150, 902); x.lineTo(W / 2 + 150, 902); x.stroke();
-  x.fillStyle = '#f7f6f1'; x.font = '600 30px "Cormorant Garamond", serif'; x.fillText(`Total: ${done} h de ${target} h`, W / 2, 948);
-  x.fillStyle = 'rgba(247,246,241,.5)'; x.font = '400 18px Inter'; x.fillText(new Date().toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' }), W / 2, 986);
-  x.fillStyle = 'rgba(247,246,241,.4)'; x.font = '400 15px Inter'; x.fillText(`Código de verificação: ${code}`, W / 2, 1040);
-  x.fillStyle = 'rgba(217,179,140,.6)'; x.font = 'italic 400 13px Inter'; x.fillText('Documento comprovativo interno · modelo em validação jurídica', W / 2, 1066);
-  return cv;
-}
-async function downloadTrainingCert() {
-  const pf = S.profile || {};
-  if (!pf.nif) { toast(t('comp_nif_prompt'), '🪪'); location.hash = '#/profile'; return; }
-  const code = await complianceVerifyCode(pf, complianceYear(), S.trainingLog);
-  ledgerAppend('cert_issued', { year: complianceYear(), code });
-  trainingCertCanvas(pf, complianceYear(), code).toBlob(b => {
-    const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `certificado-formacao-${pf.nif || 'x'}-${complianceYear()}.png`;
-    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(u); toast(t('comp_cert_dl'), '');
-  }, 'image/png');
 }
 function csvBlob(rows, name) {
   const csv = rows.map(r => r.map(v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
@@ -2272,6 +2241,119 @@ function certFooterNote() {
     ? 'Documento comprovativo de formação interna, emitido pelo empregador no âmbito da formação profissional contínua (art. 131.º/3 do Código do Trabalho). Conta para as 40 horas anuais quando integrado no plano de formação do empregador e relacionado com a atividade do trabalhador. NÃO constitui certificação profissional, não é emitido no SIGO e não é averbado no Passaporte Qualifica. Confirme o enquadramento com o seu consultor jurídico.'
     : 'Internal training record, issued by the employer within continuous workplace training (PT Labour Code art. 131.º/3). It counts toward the annual 40 hours when integrated into the employer\'s training plan and related to the worker\'s activity. It is NOT a professional certification, is not issued via SIGO, and is not recorded in the worker\'s national qualifications record. Confirm the position with your legal adviser.';
 }
+/* ===== THE COMPLIANCE RECORD — an official document, not a wall certificate ==
+   buildCertHTML() produces a landscape certificate: a frame, a big name, a
+   moment worth pinning up. Right for finishing a course. Wrong for the document
+   an ACT inspector reads, which is why this one is separate rather than another
+   flag on that function.
+
+   An inspector does not want a centred name in 40px. They want the itemised
+   actions behind the hours — which action, what mode, how long — because
+   "37 hours of recorded training" is a claim and the table under it is the
+   evidence. The register CSV has always carried that detail; the printed record
+   did not, and the printed record is the one that gets handed over.
+
+   So: A4 PORTRAIT, the brand's real typefaces rather than Georgia, every action
+   listed with the header repeating across pages, and a verification block that
+   gives the code AND the address to check it at — a code with nowhere to go is
+   decoration.
+
+   PRINT GEOMETRY. The landscape certificate uses `@page { margin: 0 }` with a
+   full-bleed 297×210mm sheet, which most printers cannot reproduce: they scale
+   it down or clip the frame. A document that may be filed and re-printed for
+   years should not depend on borderless printing, so this uses real page
+   margins and lets the content flow. */
+function buildRecordHTML(o) {
+  const pt = _lang() === 'pt';
+  const accent = brandVar('--accent', '#c8a45d');
+  const rows = (o.rows || []).map(r => `<tr><td>${esc(r.title)}</td><td class="mode">${esc(r.mode || '')}</td><td class="h">${esc(String(r.hours))} h</td></tr>`).join('');
+  return `<!doctype html><html lang="${pt ? 'pt' : 'en'}"><head><meta charset="utf-8">
+<title>${esc(o.docTitle)}</title>
+<meta name="author" content="${esc(companyName())}">
+<meta name="subject" content="${esc(o.subject || o.docTitle)}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4 portrait; margin: 16mm 15mm 14mm; }
+  * { margin:0; padding:0; box-sizing:border-box; print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  body { font-family:Inter,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:10pt;
+         line-height:1.5; color:#161d18; background:#fff; }
+  .doc { max-width:180mm; margin:0 auto; }
+  .top { display:flex; justify-content:space-between; align-items:flex-start; gap:12mm; padding-bottom:4mm;
+         border-bottom:1.2pt solid ${accent}; }
+  .mark { display:flex; align-items:center; gap:3mm; }
+  .mark svg { height:11mm; width:auto; }
+  .org { font-family:'Cormorant Garamond',Georgia,serif; font-size:14pt; letter-spacing:.2em; text-transform:uppercase; }
+  .org small { display:block; font-family:Inter,sans-serif; font-size:7pt; letter-spacing:.05em;
+               text-transform:none; color:#5d6154; margin-top:1.5mm; }
+  .ref { text-align:right; font-size:7.5pt; color:#5d6154; line-height:1.7; white-space:nowrap; }
+  .ref b { color:#161d18; }
+  h1 { font-family:'Cormorant Garamond',Georgia,serif; font-size:23pt; font-weight:600; margin:8mm 0 1mm; }
+  .sub { font-size:9pt; color:#5d6154; margin-bottom:7mm; }
+  .lede { font-size:7.5pt; letter-spacing:.16em; text-transform:uppercase; color:#5d6154; }
+  .who { font-family:'Cormorant Garamond',Georgia,serif; font-size:21pt; font-weight:600; margin:1mm 0 0; }
+  .whoid { font-size:8.5pt; color:#5d6154; margin:1mm 0 6mm; }
+  .attest { font-size:10pt; }
+  .attest b { font-weight:600; }
+  table { width:100%; border-collapse:collapse; margin-top:6mm; font-size:9.5pt; }
+  thead { display:table-header-group; }
+  thead th { text-align:left; font-size:7pt; letter-spacing:.14em; text-transform:uppercase; color:#5d6154;
+             font-weight:600; padding-bottom:1.8mm; border-bottom:.6pt solid #c9c6ba; }
+  tbody td { padding:2.2mm 0; border-bottom:.4pt solid #e8e6de; vertical-align:top; }
+  tbody tr { break-inside:avoid; }
+  .h { text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .mode { color:#5d6154; font-size:8.5pt; }
+  .tot { display:flex; justify-content:space-between; align-items:baseline; margin-top:5mm; padding-top:2.5mm;
+         border-top:1pt solid ${accent}; }
+  .tot .n { font-family:'Cormorant Garamond',Georgia,serif; font-size:17pt; font-weight:600; }
+  .sign { display:flex; gap:16mm; margin-top:14mm; break-inside:avoid; }
+  .sign > div { flex:1; }
+  .line { border-top:.7pt solid #161d18; margin-top:14mm; padding-top:1.8mm; font-size:8pt; color:#5d6154; }
+  .line b { display:block; color:#161d18; font-size:9pt; font-weight:600; }
+  .verify { margin-top:9mm; padding:4mm 5mm; background:#f7f6f1; border-left:2.5pt solid ${accent}; break-inside:avoid; }
+  .verify .code { font-family:ui-monospace,SFMono-Regular,Menlo,'Courier New',monospace; font-size:12.5pt;
+                  letter-spacing:.14em; font-weight:600; margin:1.5mm 0 2mm; word-break:break-all; }
+  .verify p { font-size:8pt; color:#41443a; line-height:1.6; }
+  .prov { font-size:8pt; color:#5d6154; margin-top:5mm; }
+  .prov b { color:#161d18; }
+  .note { margin-top:6mm; padding-top:2.5mm; border-top:.4pt solid #e8e6de; font-size:7pt; color:#7b8079; line-height:1.5; }
+  .print { position:fixed; top:12px; right:12px; font-family:Inter,Helvetica,sans-serif; background:#161d18;
+           color:#fff; border:0; border-radius:8px; padding:9px 16px; cursor:pointer; font-size:13px; }
+  @media screen { body { background:#5c5f57; padding:26px 12px; }
+    .doc { background:#fff; padding:16mm 15mm; box-shadow:0 10px 44px rgba(0,0,0,.34); } }
+  @media print { .print { display:none; } }
+</style></head><body>
+<button class="print" onclick="print()">⤓ ${pt ? 'Imprimir / Guardar PDF' : 'Print / Save as PDF'}</button>
+<div class="doc">
+  <div class="top">
+    <div class="mark">${(window.BRAND && BRAND.logoSvg) || ((document.querySelector('.logo-mark svg') || {}).outerHTML || '')}
+      <div class="org">${esc(companyName())}<small>${o.orgLine || ''}</small></div></div>
+    <div class="ref">${pt ? 'Documento' : 'Document'} <b>${esc((o.code || '').slice(0, 8) || '—')}</b><br>
+      ${pt ? 'Emitido' : 'Issued'} <b>${esc(o.issued)}</b><br>${pt ? 'Exercício' : 'Period'} <b>${esc(String(o.year))}</b></div>
+  </div>
+  <h1>${esc(o.h1)}</h1>
+  <p class="sub">${o.sub}</p>
+  <p class="lede">${pt ? 'Certifica-se que' : 'This certifies that'}</p>
+  <p class="who">${esc(o.who)}</p>
+  <p class="whoid">${o.whoid}</p>
+  <p class="attest">${o.attest}</p>
+  ${rows ? `<table><thead><tr><th>${pt ? 'Ação de formação' : 'Training action'}</th><th>${pt ? 'Modalidade' : 'Mode'}</th><th class="h">${pt ? 'Horas' : 'Hours'}</th></tr></thead><tbody>${rows}</tbody></table>` : ''}
+  <div class="tot"><span>${pt ? 'Total de horas registadas' : 'Total recorded hours'}</span>
+    <span class="n">${esc(String(o.hours))} h ${o.target ? `<span style="font-size:11pt;color:#5d6154">/ ${esc(String(o.target))} h</span>` : ''}</span></div>
+  <div class="sign">
+    <div><div class="line"><b>${esc(companyName())}</b>${pt ? 'Entidade empregadora · formação organizada por' : 'Employer · training organised by'}</div></div>
+    <div><div class="line"><b>${esc(o.issued)}</b>${pt ? 'Data de emissão' : 'Date of issue'}</div></div>
+  </div>
+  ${o.code ? `<div class="verify"><span class="lede">${pt ? 'Código de verificação' : 'Verification code'}</span>
+    <div class="code">${esc(o.code)}</div>
+    <p>${pt
+      ? `Impressão digital SHA-256 do registo de formação que sustenta este documento. Verifique em <b>${esc(o.verifyUrl)}</b> — se um único registo for alterado, o código deixa de coincidir.`
+      : `SHA-256 fingerprint of the training record behind this document. Verify at <b>${esc(o.verifyUrl)}</b> — if any single record is altered, the code no longer matches.`}</p></div>` : ''}
+  ${contentProvider() ? `<div class="prov">${pt ? 'Conteúdo fornecido por' : 'Content supplied by'} <b>${esc(contentProvider())}</b></div>` : ''}
+  <div class="note">${certFooterNote()}</div>
+</div></body></html>`;
+}
+
 function buildCertHTML(o) {
   const accent = brandVar('--accent', '#c8a45d');
   const pt = _lang() === 'pt';
@@ -2375,19 +2457,31 @@ function premiumJourneyCert(id) {
 }
 async function premiumComplianceCert() {
   const pf = S.profile || {};
-  if (!pf.nif) { toast(t('comp_nif_prompt'), '🪪'); location.hash = '#/profile'; return; }
+  if (!pf.nif) { toast(t('comp_nif_prompt'), '\ud83e\udeaa'); location.hash = '#/profile'; return; }
   const pt = _lang() === 'pt', y = complianceYear();
   const code = await complianceVerifyCode(pf, y, S.trainingLog);
-  ledgerAppend('cert_issued', { year: y, code, kind: 'compliance' });
-  const h = trainingHours(S.trainingLog || []);
-  openPrintDoc(buildCertHTML({
+  const h = trainingHours(S.trainingLog || []), target = complianceTarget(pf) || 40;
+  /* EVERY action. The register CSV always carried the itemised detail and the
+     printed record did not — and the printed one is what gets handed over. */
+  const acts = trainingActions(S.trainingLog, y, pt ? 'pt' : 'en');
+  ledgerAppend('cert_issued', { year: y, code, kind: 'compliance', actions: acts.length, hours: h });
+  const issued = new Date().toLocaleDateString(pt ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  openPrintDoc(buildRecordHTML({
     docTitle: (pt ? 'Documento Comprovativo de Formação Contínua ' : 'Continuous Training Record ') + y,
-    eyebrow: pt ? 'Formação Contínua · ' + y : 'Continuous Training · ' + y,
+    subject: (pt ? 'Formação profissional contínua ' : 'Continuous professional training ') + y,
+    h1: pt ? 'Documento Comprovativo de Formação' : 'Record of Training Completed',
+    sub: pt
+      ? 'Formação profissional cont\u00ednua \u00b7 artigos 130.\u00ba a 134.\u00ba do C\u00f3digo do Trabalho'
+      : 'Continuous professional training \u00b7 Articles 130\u2013134, Portuguese Labour Code',
+    orgLine: pt ? 'Entidade empregadora' : 'Employer',
     who: certIdentity(),
-    did: (pt ? 'NIF ' : 'Tax ID ') + pf.nif + (pt ? ' · realizou no ano de ' + y : ' · completed in ' + y),
-    what: (pt ? `${h} horas de formação registada` : `${h} hours of recorded training`),
-    meta: (pt ? 'Meta legal: <b>40h/ano</b> (art. 131.º CT)' : 'Legal target: <b>40h/yr</b> (PT Labour Code 131)'),
-    code: (pt ? 'Código de verificação: ' : 'Verification code: ') + code,
+    whoid: (pt ? 'NIF ' : 'Tax ID ') + esc(pf.nif) + (pf.employeeNo ? (pt ? ' \u00b7 N.\u00ba de colaborador ' : ' \u00b7 Employee no. ') + esc(pf.employeeNo) : ''),
+    attest: pt
+      ? `frequentou <b>${h} horas</b> de forma\u00e7\u00e3o profissional cont\u00ednua no ano de <b>${y}</b>, ministrada por <b>${esc(companyName())}</b> na modalidade de forma\u00e7\u00e3o \u00e0 dist\u00e2ncia (e-learning).`
+      : `completed <b>${h} hours</b> of continuous professional training during <b>${y}</b>, delivered by <b>${esc(companyName())}</b> by distance learning (e-learning).`,
+    rows: acts.map(a => ({ title: a.title, mode: pt ? 'Forma\u00e7\u00e3o \u00e0 dist\u00e2ncia' : 'e-learning', hours: a.hours })),
+    hours: h, target, year: y, issued, code,
+    verifyUrl: new URL('verify.html', location.href).href,
   }));
 }
 /* THE top tier — only exists when the ledger proves it. */
