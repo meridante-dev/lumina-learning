@@ -1,0 +1,104 @@
+{
+ "course": "land-team-journey",
+ "lang": "en",
+ "generatedAt": 1788252622813,
+ "reels": [
+  {
+   "id": "land-team-journey-m0-45_3",
+   "seconds": 20,
+   "theme": "behavior",
+   "title": {
+    "en": "Below the Line"
+   },
+   "hook": {
+    "en": "When we are below the line, we blame other people and make excuses."
+   },
+   "line": {
+    "en": "You will learn how people respond when they are below the line."
+   },
+   "lesson": {
+    "en": "When we are below the line, we blame others, make excuses, become defensive, stop listening, and complain. We say it wasn't our fault and someone else should fix it. This behavior is about protecting ourselves, not about learning or improving."
+   },
+   "check": {
+    "type": "recall",
+    "a": 1,
+    "en": {
+     "q": "What do people do when they are below the line?",
+     "opts": [
+      "Take responsibility",
+      "Make excuses",
+      "Ask questions"
+     ],
+     "why": "According to the passage, when we are below the line, we make excuses."
+    },
+    "audit": "verified",
+    "giveaway": true,
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "vimeo",
+    "id": "1217932399",
+    "start": 45.3,
+    "end": 65.3
+   },
+   "deeper": "land-team-journey",
+   "source": {
+    "course": "land-team-journey",
+    "mod": 0,
+    "t0": 45.3,
+    "t1": 65.3,
+    "lang": "en",
+    "passage": "The situation is the same. The difference is how they respond. Let's start with below the line. When we are below the line, we blame other people. We make excuses. We become defensive. We stop listening. We complain. We say, it wasn't my fault. They caused the problem. Someone else should fix it."
+   }
+  },
+  {
+   "id": "land-team-journey-m0-92_9",
+   "seconds": 18,
+   "theme": "growth",
+   "title": {
+    "en": "Above the Line"
+   },
+   "hook": {
+    "en": "Above the line asks, what can I learn and how can I help?"
+   },
+   "line": {
+    "en": "You will learn how people grow when they are above the line."
+   },
+   "lesson": {
+    "en": "Above the line asks what can be learned, what can be done, and how to help. It listens, asks questions, accepts feedback, takes responsibility, and looks for solutions. This behavior helps people keep growing."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "en": {
+     "q": "What does above the line involve?",
+     "opts": [
+      "Blaming others",
+      "Taking responsibility",
+      "Ignoring feedback"
+     ],
+     "why": "According to the passage, above the line involves taking responsibility."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "vimeo",
+    "id": "1217932399",
+    "start": 92.9,
+    "end": 111.3
+   },
+   "deeper": "land-team-journey",
+   "source": {
+    "course": "land-team-journey",
+    "mod": 0,
+    "t0": 92.9,
+    "t1": 111.3,
+    "lang": "en",
+    "passage": "Above the line is different. Above the line asks, what can I learn? What can I do? How can I help? Above the line listens. Above the line asks questions. Above the line accepts feedback. Above the line looks for solutions. Above the line takes responsibility."
+   }
+  }
+ ]
+}
