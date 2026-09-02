@@ -29,3 +29,7 @@ collateral/site-backups/
 collateral/site-v2/
 .stale/
 exports/
+
+# reel media lives on the CDN (edenrise-reels.pages.dev), never in git —
+# see scripts/reels-to-r2.mjs and the note in BENCHMARK/AUDIT
+media/reels/
