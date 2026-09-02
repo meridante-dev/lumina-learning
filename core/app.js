@@ -6097,7 +6097,7 @@ let feedIdx = -1, feedSeen = [];
 const canCurateReels = () => isAdmin();
 const reelsAll = () => canCurateReels() ? QW_ALL() : qwApproved();
 /* pending is only ever SHOWN to someone who can act on it */
-const reelPending = r => canCurateReels() && qwState().approved.indexOf(r.id) < 0;
+const reelPending = r => canCurateReels() && !qwPublished(r) && qwState().approved.indexOf(r.id) < 0;
 const reelField = v => eduField(v);
 function reelPoster(r, showHook) {
   const tone = toneOf(r.theme || r.id);   /* same picker as the rail chip, so a reel keeps one colour in both places */
@@ -6509,8 +6509,21 @@ const QW_ALL = () => (typeof REELS !== 'undefined' && Array.isArray(REELS) ? REE
 const qwById = id => QW_ALL().find(q => q.id === id) || null;
 const qwField = (v) => eduField(v);
 function qwState() { S.quickwins = S.quickwins || { approved: [], rejected: [], sent: [] }; return S.quickwins; }
-const qwApproved = () => QW_ALL().filter(q => qwState().approved.indexOf(q.id) > -1);
-const qwPending  = () => QW_ALL().filter(q => qwState().approved.indexOf(q.id) < 0 && qwState().rejected.indexOf(q.id) < 0);
+/* TWO PLACES A REEL CAN BE APPROVED, and only one of them publishes.
+   qwState() lives in S — the individual learner's own local state, which nothing
+   syncs. So a curator clicking approve was only ever approving FOR THEMSELVES:
+   the reel appeared on their device and stayed invisible to the team. That made
+   the curation surface look like it published when it did not.
+
+   `approved: true` in content.js is the tenant's own declaration, it deploys to
+   everyone, and it survives a cleared browser. That is the correct level for
+   "we publish this". Local approve/reject stays, but only decides reels the
+   content file has not already ruled on — a curator's working shortlist, not the
+   publication switch. */
+const qwPublished = q => q.approved === true;
+const qwApproved = () => QW_ALL().filter(q => qwPublished(q) || qwState().approved.indexOf(q.id) > -1);
+const qwPending  = () => QW_ALL().filter(q => !qwPublished(q)
+  && qwState().approved.indexOf(q.id) < 0 && qwState().rejected.indexOf(q.id) < 0);
 
 /* the drip: the next approved clip this audience has not had, wrapping when the
    menu is exhausted so a schedule never silently stops */

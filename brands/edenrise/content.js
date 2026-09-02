@@ -519,6 +519,7 @@ const REELS = [
       en: { q: "What can you do to create energy in others?", opts: ["Just complete tasks", "Listen fully and notice effort", "Ignore others' feelings"], why: "The passage states that great teammates create energy by listening fully, noticing effort, bringing solutions, and sharing belief." },
       pt: { q: "O que é que os grandes colegas de trabalho criam nos outros?", opts: ["Tensão", "Energia", "Desânimo"], why: "Porque os grandes colegas de trabalho criam energia nos outros, como é referido no texto." } },
     media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/bring-the-energy.mp4' }, poster: 'https://edenrise-reels.pages.dev/bring-the-energy.jpg',
+    approved: true,   /* published by the tenant — see qwPublished in core/app.js */
     deeper: 'land-team-journey' },
   { id: "culture", seconds: 20, theme: "culture",
     title: { en: "Defining Excellence", pt: "O que é cultura" },
@@ -534,6 +535,7 @@ const REELS = [
       en: { q: "What happens when we accept 'good enough'?", opts: ["We achieve perfection", "We maintain our current standards", "We redefine what good means"], why: "According to the passage, every time we accept good enough, we quietly redefine what good means." },
       pt: { q: "O que acontece quando aceitamos o 'bom o suficiente'?", opts: ["O padrão de qualidade aumenta", "O padrão de qualidade diminui", "Não há mudança no padrão de qualidade"], why: "Porque aceitar o 'bom o suficiente' redefine o que é bom e pode levar a uma diminuição do padrão de qualidade." } },
     media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/culture.mp4' }, poster: 'https://edenrise-reels.pages.dev/culture.jpg',
+    approved: true,   /* published by the tenant — see qwPublished in core/app.js */
     deeper: 'land-team-journey' },
   { id: "own-the-outcome", seconds: 20, theme: "ownership",
     title: { en: "Own The Outcome", pt: "Mudar o resultado" },
@@ -549,6 +551,7 @@ const REELS = [
       en: { q: "What do high performing teams do when something goes wrong?", opts: ["They blame someone", "They own their part and move forward", "They do nothing"], why: "Because they see the problem, own their part, and move it forward, as stated in the passage." },
       pt: { q: "O que fazem as equipas de alto desempenho quando algo correr mal?", opts: ["Procuram culpados", "Assumem a responsabilidade e avançam", "Ignoram o problema"], why: "Porque assumir a responsabilidade e avançar permite mudar o resultado, como referido na passagem." } },
     media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/own-the-outcome.mp4' }, poster: 'https://edenrise-reels.pages.dev/own-the-outcome.jpg',
+    approved: true,   /* published by the tenant — see qwPublished in core/app.js */
     deeper: 'land-team-journey' },
   { id: "raise-the-energy", seconds: 20, theme: "energy",
     title: { en: "Raise The Space", pt: "Energia Positiva" },
@@ -564,6 +567,7 @@ const REELS = [
       en: { q: "What can you bring into a space to raise its energy?", opts: ["Fear", "Curiosity", "Apathy"], why: "The passage suggests bringing curiosity, courage, and generosity to raise the space." },
       pt: { q: "O que pode acontecer quando você traz energia positiva para um espaço?", opts: ["As pessoas se tornam mais fracas", "As pessoas se tornam mais fortes", "Nada muda"], why: "Porque a energia positiva pode inspirar e motivar os outros." } },
     media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/raise-the-energy.mp4' }, poster: 'https://edenrise-reels.pages.dev/raise-the-energy.jpg',
+    approved: true,   /* published by the tenant — see qwPublished in core/app.js */
     deeper: 'land-team-journey' },
   { id: "safe-to-speak", seconds: 20, theme: "teamwork",
     title: { en: "Safe to Speak", pt: "Falar Sem Medo" },
@@ -579,6 +583,7 @@ const REELS = [
       en: { q: "What makes a team strong according to this idea?", opts: ["Everyone agreeing on everything", "Members feeling safe to speak up", "Having a clear hierarchy"], why: "The passage states that the strongest team is where someone can say 'I think we are wrong' or 'I need help' without fear of judgment, indicating that open and safe communication is key." },
       pt: { q: "O que é mais importante para uma equipe forte?", opts: ["Que todos concordem", "Que as pessoas sejam honestas", "Que o chefe esteja sempre certo"], why: "Porque a honestidade permite que as melhores ideias sejam compartilhadas e que os erros sejam corrigidos." } },
     media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/safe-to-speak.mp4' }, poster: 'https://edenrise-reels.pages.dev/safe-to-speak.jpg',
+    approved: true,   /* published by the tenant — see qwPublished in core/app.js */
     deeper: 'land-team-journey' }
 ];
 

@@ -66,11 +66,13 @@ export function run(t) {
   t.group('reel curation gate');
   let admin = false, approved = [];
   const REELS = [{ id: 'r1' }, { id: 'r2' }, { id: 'r3' }];
-  const gate = () => sandbox(app, ['canCurateReels', 'reelsAll', 'reelPending'], {
+  /* qwApproved is EXTRACTED, not stubbed. It was stubbed, and the stub could not
+     know about content-level publication — so the first version of that test
+     passed against a fake and told us nothing. */
+  const gate = () => sandbox(app, ['qwPublished', 'qwApproved', 'canCurateReels', 'reelsAll', 'reelPending'], {
     isAdmin: () => admin,
     QW_ALL: () => REELS,
     qwState: () => ({ approved }),
-    qwApproved: () => REELS.filter(r => approved.includes(r.id)),
   });
   admin = false; approved = [];
   let g = gate();
@@ -84,8 +86,22 @@ export function run(t) {
   admin = false; approved = ['r2'];
   g = gate();
   t.eq('learner sees exactly what was approved', g.reelsAll().map(r => r.id), ['r2']);
+
+  /* TENANT-LEVEL PUBLICATION. qwState() is one learner's local state and nothing
+     syncs it, so approving in the curation surface only ever published to that
+     device — the team still saw nothing. `approved: true` in content.js is the
+     tenant's own declaration and reaches everyone. */
+  approved = [];
+  REELS[0].approved = true;
+  g = gate();
+  t.eq('a content-approved reel publishes with no local state', g.reelsAll().map(r => r.id), ['r1']);
   admin = true; g = gate();
-  t.ok('an approved reel is not marked pending', !g.reelPending(REELS[1]));
+  t.ok('a published reel is not marked pending to a curator', !g.reelPending(REELS[0]));
+  t.ok('an unpublished one still is', g.reelPending(REELS[1]));
+  delete REELS[0].approved;
+  approved = ['r2'];            /* back to local-approval only for the checks below */
+  admin = true; g = gate();
+  t.ok('a locally-approved reel is not marked pending', !g.reelPending(REELS[1]));
   t.ok('an unapproved reel is marked pending', g.reelPending(REELS[0]));
 
   /* ---------- armReelCheck ----------
