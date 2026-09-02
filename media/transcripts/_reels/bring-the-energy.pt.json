@@ -1,0 +1,50 @@
+{
+ "reel": "bring-the-energy",
+ "language": "en",
+ "machineTranslated": false,
+ "native": true,
+ "source": "file",
+ "generatedAt": 1788341095557,
+ "segments": [
+  {
+   "t0": 0,
+   "t1": 2.08,
+   "text": "Think about the people you love working with."
+  },
+  {
+   "t0": 2.08,
+   "t1": 6.16,
+   "text": "After five minutes with them, you feel clearer, lighter, more capable."
+  },
+  {
+   "t0": 6.16,
+   "t1": 7.28,
+   "text": "That's not an accident."
+  },
+  {
+   "t0": 7.28,
+   "t1": 10.48,
+   "text": "Great TaintMates don't just complete tasks, they create energy in other people."
+  },
+  {
+   "t0": 10.48,
+   "t1": 13.52,
+   "text": "Listen fully, notice effort, bring solutions, share belief."
+  },
+  {
+   "t0": 13.52,
+   "t1": 15.44,
+   "text": "Every interaction leaves something behind."
+  },
+  {
+   "t0": 15.44,
+   "t1": 18.64,
+   "text": "So ask yourself, when I leave are people stronger than when I arrived?"
+  },
+  {
+   "t0": 18.64,
+   "t1": 19.92,
+   "text": "Be the person who gives energy."
+  }
+ ]
+}

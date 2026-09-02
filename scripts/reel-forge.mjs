@@ -92,6 +92,19 @@ const grabJSON = (txt, open = '[', close = ']') => {
   if (a < 0 || b < 0) throw new Error('no JSON in reply');
   return JSON.parse(txt.slice(a, b + 1).replace(/,\s*([\]}])/g, '$1'));
 };
+/* Ask once, and if the reply is not valid JSON ask again with the failure quoted
+   back. Writing Portuguese made the model drop quotes around values — `"hook": A
+   cultura …` — which killed four of five reels on the first PT run. One retry
+   that shows it the parse error recovers nearly all of them, and costs a call
+   only when something actually broke. */
+async function askJSON(prompt, maxTokens) {
+  try { return grabJSON(await ask(prompt, maxTokens)); }
+  catch (e) {
+    const strict = prompt + `\n\nYour previous reply could not be parsed: ${String(e.message).slice(0, 120)}.
+Return ONLY a valid JSON array. EVERY string value must be wrapped in double quotes, including accented text. No prose before or after.`;
+    return grabJSON(await ask(strict, maxTokens));
+  }
+}
 
 /* ---------- candidate windows ------------------------------------------------
    A reel has to start and finish like a thought, or it reads as an offcut. So a
@@ -230,15 +243,28 @@ async function ingestRealReels() {
   const made = [];
   for (const reel of todo) {
     process.stdout.write(`  ${reel.id} … `);
-    let tr;
-    try { tr = await transcribeReel(reel, LANG); process.stdout.write(`${tr.segments.length} segments · `); }
-    catch (e) { console.log(`✗ transcribe: ${String(e.message).slice(0, 90)}`); continue; }
+    /* LOCALISING TEXT IS NOT TRANSLATING A TRANSCRIPT.
+       A transcript labelled pt must only ever hold words a Portuguese speaker
+       actually said — that is a provenance claim. A title, hook, lesson and
+       check are OUR words about the clip, so writing them in Portuguese from an
+       English recording is ordinary localisation. The video stays English and
+       the reel records videoLang so the UI can say so, the same way a module
+       with no PT cut does. */
+    let tr, srcLang = LANG;
+    try { tr = await transcribeReel(reel, LANG); }
+    catch (e) {
+      const enPath = join(TR, '_reels', `${reel.id}.json`);
+      if (PT && existsSync(enPath)) { tr = JSON.parse(readFileSync(enPath, 'utf8')); srcLang = 'en'; }
+      else { console.log(`✗ transcribe: ${String(e.message).slice(0, 90)}`); continue; }
+    }
+    if (PT && srcLang === 'en') process.stdout.write('from EN recording · ');
+    process.stdout.write(`${tr.segments.length} segments · `);
     const text = tr.segments.map(s => s.text).join(' ').trim();
     if (text.split(/\s+/).length < 25) { console.log('✗ too little speech to teach from'); continue; }
     const dur = Math.round(tr.segments.at(-1)?.t1 || reel.seconds || 30);
 
     let p;
-    try { p = grabJSON(await ask(forgePrompt(reel.id, [{ t0: 0, t1: dur, dur, text }])), '[', ']')[0]; }
+    try { p = (await askJSON(forgePrompt(reel.id, [{ t0: 0, t1: dur, dur, text }])))[0]; }
     catch (e) { console.log(`✗ forge: ${e.message}`); continue; }
     const q = p && p.check;
     if (!q || !Array.isArray(q.opts) || q.opts.length !== 3 || !Number.isInteger(q.a)) { console.log('✗ malformed check'); continue; }
@@ -257,7 +283,8 @@ async function ingestRealReels() {
       check: { type: 'application', a: q.a, [LANG]: { q: q.q, opts: q.opts, why: q.why },
                audit, model: 'gateway', src: 'transcript' },
       media: reel.media, deeper: reel.deeper || null,
-      source: { reel: reel.id, lang: LANG, seconds: dur },
+      ...(srcLang !== LANG ? { videoLang: srcLang } : {}),
+      source: { reel: reel.id, lang: LANG, videoLang: srcLang, seconds: dur },
     });
     console.log(`✓ ${audit}  "${p.title}"`);
   }
@@ -300,7 +327,7 @@ for (const mod of mods) {
   if (DRY) { cands.slice(0, 3).forEach(c => console.log(`    ${c.t0}-${c.t1}s (${c.dur}s) ${c.text.slice(0, 78)}…`)); continue; }
 
   let picks;
-  try { picks = grabJSON(await ask(forgePrompt(title, cands.slice(0, 14)))); }
+  try { picks = await askJSON(forgePrompt(title, cands.slice(0, 14))); }
   catch (e) { console.log(`    ✗ forge failed: ${e.message}`); continue; }
 
   for (const p of picks) {

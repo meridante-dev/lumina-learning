@@ -1,0 +1,226 @@
+{
+ "lang": "pt",
+ "generatedAt": 1788341263770,
+ "reels": [
+  {
+   "id": "bring-the-energy",
+   "seconds": 20,
+   "theme": "energia",
+   "title": {
+    "pt": "Dá Energia"
+   },
+   "hook": {
+    "pt": "Podes ser a pessoa que dá energia aos outros."
+   },
+   "line": {
+    "pt": "Vais aprender a criar energia nos outros."
+   },
+   "lesson": {
+    "pt": "Os grandes colegas de trabalho não só completam tarefas, mas também criam energia nos outros. Para isso, é preciso ouvir atentamente, notar o esforço, trazer soluções e partilhar crenças. Cada interação deixa algo para trás."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "pt": {
+     "q": "O que é que os grandes colegas de trabalho criam nos outros?",
+     "opts": [
+      "Tensão",
+      "Energia",
+      "Desânimo"
+     ],
+     "why": "Porque os grandes colegas de trabalho criam energia nos outros, como é referido no texto."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "media/reels/bring-the-energy.mp4"
+   },
+   "deeper": "land-team-journey",
+   "source": {
+    "reel": "bring-the-energy",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "culture",
+   "seconds": 20,
+   "theme": "cultura",
+   "title": {
+    "pt": "O que é cultura"
+   },
+   "hook": {
+    "pt": "A cultura não é o que escrevemos na parede, mas o que acontece quando ninguém está a olhar."
+   },
+   "line": {
+    "pt": "Vai aprender como a cultura se forma no local de trabalho."
+   },
+   "lesson": {
+    "pt": "A cultura não é apenas o que dizemos, mas sim o que fazemos quando ninguém está a olhar. Quando aceitamos o 'bom o suficiente', estamos a redefinir o que é bom. A excelência não é perfeição, mas sim cuidar o suficiente para notar e ter coragem para agir."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "pt": {
+     "q": "O que acontece quando aceitamos o 'bom o suficiente'?",
+     "opts": [
+      "O padrão de qualidade aumenta",
+      "O padrão de qualidade diminui",
+      "Não há mudança no padrão de qualidade"
+     ],
+     "why": "Porque aceitar o 'bom o suficiente' redefine o que é bom e pode levar a uma diminuição do padrão de qualidade."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "media/reels/culture.mp4"
+   },
+   "deeper": "land-team-journey",
+   "source": {
+    "reel": "culture",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "own-the-outcome",
+   "seconds": 20,
+   "theme": "responsabilidade",
+   "title": {
+    "pt": "Mudar o resultado"
+   },
+   "hook": {
+    "pt": "As equipas de alto desempenho não procuram culpados, mas sim soluções."
+   },
+   "line": {
+    "pt": "Vai aprender a mudar a forma como lida com problemas no trabalho."
+   },
+   "lesson": {
+    "pt": "Quando algo correr mal, em vez de perguntar quem é o culpado, pergunta o que podes fazer agora. A responsabilidade não é sobre culpa, é sobre poder. Ao assumires a tua parte, podes mudar o resultado. As equipas de alto desempenho veem o problema, assumem a sua parte e avançam."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "pt": {
+     "q": "O que fazem as equipas de alto desempenho quando algo correr mal?",
+     "opts": [
+      "Procuram culpados",
+      "Assumem a responsabilidade e avançam",
+      "Ignoram o problema"
+     ],
+     "why": "Porque assumir a responsabilidade e avançar permite mudar o resultado, como referido na passagem."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "media/reels/own-the-outcome.mp4"
+   },
+   "deeper": "land-team-journey",
+   "source": {
+    "reel": "own-the-outcome",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "raise-the-energy",
+   "seconds": 20,
+   "theme": "energia",
+   "title": {
+    "pt": "Energia Positiva"
+   },
+   "hook": {
+    "pt": "A sua energia nunca é só sua."
+   },
+   "line": {
+    "pt": "Vai aprender a influenciar o espaço com a sua energia."
+   },
+   "lesson": {
+    "pt": "Quando entra num espaço, traz consigo energia, possibilidade ou momentum. Pode optar por trazer curiosidade, coragem e generosidade. Isso pode deixar as pessoas mais fortes."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "pt": {
+     "q": "O que pode acontecer quando você traz energia positiva para um espaço?",
+     "opts": [
+      "As pessoas se tornam mais fracas",
+      "As pessoas se tornam mais fortes",
+      "Nada muda"
+     ],
+     "why": "Porque a energia positiva pode inspirar e motivar os outros."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "media/reels/raise-the-energy.mp4"
+   },
+   "deeper": "land-team-journey",
+   "source": {
+    "reel": "raise-the-energy",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "safe-to-speak",
+   "seconds": 20,
+   "theme": "comunicação",
+   "title": {
+    "pt": "Falar Sem Medo"
+   },
+   "hook": {
+    "pt": "A equipe mais forte é aquela onde alguém pode dizer que está errada."
+   },
+   "line": {
+    "pt": "Vai aprender a importância de criar um ambiente seguro para expressar opiniões."
+   },
+   "lesson": {
+    "pt": "A equipe mais forte não é aquela onde todos concordam, mas sim onde alguém pode dizer que está errada ou precisa de ajuda. Isso permite que as melhores ideias sejam compartilhadas. O importante é criar um ambiente seguro para falar."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "pt": {
+     "q": "O que é mais importante para uma equipe forte?",
+     "opts": [
+      "Que todos concordem",
+      "Que as pessoas sejam honestas",
+      "Que o chefe esteja sempre certo"
+     ],
+     "why": "Porque a honestidade permite que as melhores ideias sejam compartilhadas e que os erros sejam corrigidos."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "media/reels/safe-to-speak.mp4"
+   },
+   "deeper": "land-team-journey",
+   "source": {
+    "reel": "safe-to-speak",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 20
+   }
+  }
+ ]
+}

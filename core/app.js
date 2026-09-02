@@ -5834,6 +5834,7 @@ function checkCoverage() {
    show the working. Those are labelled as exactly that rather than dressed up
    to match the newer ones. */
 let covOpen = null;
+let reelOpen = null;   /* which reel has its text lesson expanded */
 
 function adminCoverageHTML() {
   if (!banksLoaded) {
@@ -6137,6 +6138,18 @@ function reelSlideHTML(r, i) {
       <div class="reel-meta">${reelPending(r) ? `<span class="pend">${t('reel_pending')}</span> &middot; ` : ''}${r.seconds || 30}s${r.theme ? ` &middot; ${esc(r.theme)}` : ''}</div>
       <h2>${esc(reelField(r.title))}</h2>
       ${ph ? '' : `<p>${esc(reelField(r.line))}</p>`}
+      ${/* THE LESSON IN TEXT.
+            A reel is twenty seconds of someone talking. That is a bad format for
+            a noisy tractor cab, a shared phone, a hearing aid, or anyone who
+            simply reads faster than people speak — and on a platform whose whole
+            claim is a provable record, "you had to watch it" is a weak place to
+            keep the content. So every reel carries the same idea as text,
+            written from its own transcript, and a learner can take it either way.
+            Collapsed by default: the feed is the feed, and a wall of text on top
+            of video is neither. */''}
+      ${reelField(r.lesson) ? `<button class="reel-read" data-action="reel-read" data-id="${esc(r.id)}">${reelOpen === r.id ? t('reel_hide') : t('reel_read')}</button>` : ''}
+      ${reelOpen === r.id && reelField(r.lesson) ? `<div class="reel-lesson">${esc(reelField(r.lesson))}${
+          r.videoLang && r.videoLang !== _lang() ? `<span class="reel-vlang">${t('reel_vlang').replace('{l}', r.videoLang.toUpperCase())}</span>` : ''}</div>` : ''}
       ${e && e.name ? `<button class="edu-byline" data-action="edu-open" data-edu="${e.id}">${eduAvatarHTML(e, 'xs')}<span class="edu-nm">${esc(e.name)}</span></button>` : ''}
       ${/* A filled button on top of video is a colour block fighting the
              footage — and it was the demo brand's accent, so it read as a
@@ -7541,6 +7554,13 @@ document.addEventListener('click', e => {
     }
     case 'gdpr-doc': downloadGdprDoc(el.dataset.kind); break;
     case 'member-detail': openMemberDetail(el.dataset.uid); break;
+    case 'reel-read': {
+      const id = el.dataset.id;
+      reelOpen = reelOpen === id ? null : id;
+      if (reelOpen) ledgerAppend('reel_read', { id });
+      render(); armReelFeed();
+      break;
+    }
     case 'reel-exit': { document.body.classList.remove('reels-open'); stopReelCheck();
       history.length > 1 ? history.back() : (location.hash = '#/home'); break; }
     case 'rc-answer': answerReelCheck(el.dataset.id, +el.dataset.i); break;

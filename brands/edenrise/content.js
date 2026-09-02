@@ -505,106 +505,81 @@ const COURSE_REGIME = {
    would have been asked an English question underneath a Portuguese title. Same
    class of leak as the PT transcripts. Every field below is en + pt.        */
 const REELS = [
-  { id: 'atl-above-below', placeholder: true, seconds: 30, theme: 'mindset',
-    title: { en: 'Above the line, below the line', pt: 'Acima da linha, abaixo da linha' },
-    hook:  { en: 'Every reaction you have today sits on one side of a line.', pt: 'Cada reação que tens hoje fica de um lado de uma linha.' },
-    line:  { en: 'The one distinction the whole journey is built on.', pt: 'A distinção sobre a qual toda a jornada é construída.' },
-    check: { type: 'application', a: 1, placeholder: true,
-      en: { q: 'A job you finished has to be redone. What is the above-the-line move?', opts: [
-        'Work out who gave you the wrong instruction',
-        'Ask what you can do now, then do it',
-        'Redo it, but make sure everyone knows it was not your fault'],
-        why: 'Below the line is blame, excuse and denial — including the quiet kind that redoes the work while making sure the record is clear. Above the line starts at what you can do now.' },
-      pt: { q: 'Um trabalho que terminaste tem de ser refeito. Qual é a atitude acima da linha?', opts: [
-        'Descobrir quem te deu a instrução errada',
-        'Perguntar o que podes fazer agora — e fazê-lo',
-        'Refazer, mas garantir que todos sabem que a culpa não foi tua'],
-        why: 'Abaixo da linha é culpa, desculpa e negação — incluindo a versão silenciosa que refaz o trabalho mas trata de deixar o registo limpo. Acima da linha começa no que podes fazer agora.' } },
-    media: { type: 'soon' }, deeper: 'land-team-journey' },
-
-  { id: 'atl-feedback', placeholder: true, seconds: 35, theme: 'feedback',
-    title: { en: 'No failure, only feedback', pt: 'Não há fracasso, só feedback' },
-    hook:  { en: 'The word "failure" ends the conversation. That is the problem with it.', pt: 'A palavra "fracasso" termina a conversa. É esse o problema.' },
-    line:  { en: 'What to do with a result you did not want.', pt: 'O que fazer com um resultado que não querias.' },
-    check: { type: 'application', a: 2, placeholder: true,
-      en: { q: 'A guest complains about something you set up yourself. What is the feedback in it?', opts: [
-        'That some guests are impossible to please',
-        'That you should not have been given that task',
-        'Information about the gap between what you set up and what they needed'],
-        why: 'Feedback is data about a gap, not a verdict on a person. That is what makes it usable — you can close a gap; you cannot close a verdict.' },
-      pt: { q: 'Um hóspede reclama de algo que preparaste. Qual é o feedback nisso?', opts: [
-        'Que há hóspedes impossíveis de agradar',
-        'Que a tarefa não devia ter sido tua',
-        'Informação sobre a distância entre o que preparaste e o que ele precisava'],
-        why: 'Feedback é informação sobre uma distância, não um veredicto sobre uma pessoa. É isso que o torna utilizável — uma distância fecha-se; um veredicto não.' } },
-    media: { type: 'soon' }, deeper: 'land-team-journey' },
-
-  { id: 'atl-responsibility', placeholder: true, seconds: 40, theme: 'ownership',
-    title: { en: 'Total responsibility', pt: 'Responsabilidade total' },
-    hook:  { en: 'Not "it was my fault". Something much more useful than that.', pt: 'Não "foi culpa minha". Algo muito mais útil do que isso.' },
-    line:  { en: 'Why responsibility and blame are opposites.', pt: 'Porque responsabilidade e culpa são opostos.' },
-    check: { type: 'application', a: 0, placeholder: true,
-      en: { q: 'Something went wrong that genuinely was not your doing. What does total responsibility ask of you?', opts: [
-        'What am I going to do about it from here',
-        'Whose job was it, so it does not happen again',
-        'Nothing — responsibility applies to your own work only'],
-        why: 'Total responsibility is about response, not fault. It is the opposite of blame: blame looks backwards for a person, responsibility looks forwards for a move.' },
-      pt: { q: 'Algo correu mal e genuinamente não foi obra tua. O que é que a responsabilidade total te pede?', opts: [
-        'O que vou eu fazer a partir daqui',
-        'De quem era a tarefa, para não voltar a acontecer',
-        'Nada — a responsabilidade aplica-se só ao teu próprio trabalho'],
-        why: 'Responsabilidade total é sobre a resposta, não sobre a culpa. É o oposto de culpar: culpar olha para trás à procura de uma pessoa, a responsabilidade olha para a frente à procura de uma ação.' } },
-    media: { type: 'soon' }, deeper: 'land-team-journey' },
-
-  { id: 'atl-clarify', placeholder: true, seconds: 30, theme: 'communication',
-    title: { en: "Don't assume, clarify", pt: 'Não assumas, esclarece' },
-    hook:  { en: 'Most rework on this land started as a guess nobody checked.', pt: 'Quase todo o retrabalho aqui começou num palpite que ninguém confirmou.' },
-    line:  { en: 'One question that saves an afternoon.', pt: 'Uma pergunta que poupa uma tarde.' },
-    check: { type: 'application', a: 1, placeholder: true,
-      en: { q: 'An instruction could mean two different things and the person who gave it has left. What do you do?', opts: [
-        'Pick the more likely meaning and get started',
-        'Ask before you start, even if it means waiting',
-        'Do both versions so one of them is right'],
-        why: 'A guess costs the whole job when it is wrong. Asking costs a message. The rule is not "ask about everything" — it is do not start on an assumption you could have checked.' },
-      pt: { q: 'Uma instrução pode significar duas coisas e quem a deu já saiu. O que fazes?', opts: [
-        'Escolher o significado mais provável e começar',
-        'Perguntar antes de começar, mesmo que tenhas de esperar',
-        'Fazer as duas versões para uma delas estar certa'],
-        why: 'Um palpite errado custa o trabalho todo. Perguntar custa uma mensagem. A regra não é "perguntar tudo" — é não começar sobre um pressuposto que podias ter confirmado.' } },
-    media: { type: 'soon' }, deeper: 'land-team-journey' },
-
-  { id: 'atl-detail', placeholder: true, seconds: 25, theme: 'standards',
-    title: { en: 'Attention to detail', pt: 'Atenção ao detalhe' },
-    hook:  { en: 'A guest never sees your effort. They see the one thing you missed.', pt: 'Um hóspede nunca vê o teu esforço. Vê a única coisa que te escapou.' },
-    line:  { en: 'The last five percent is the whole impression.', pt: 'Os últimos cinco por cento são a impressão toda.' },
-    check: { type: 'application', a: 2, placeholder: true,
-      en: { q: 'You have finished a room and you are behind. What does attention to detail mean right now?', opts: [
-        'Detail is a luxury when you are behind — move on',
-        'Redo the whole room slowly to be safe',
-        'Walk it once as a guest would, and fix what that walk shows'],
-        why: 'Detail is not slowness, and it is not redoing everything. It is one deliberate look from the other side — which is where the missed thing becomes visible.' },
-      pt: { q: 'Acabaste um quarto e estás atrasado. O que significa atenção ao detalhe agora?', opts: [
-        'O detalhe é um luxo quando se está atrasado — segue',
-        'Refazer o quarto todo devagar, por segurança',
-        'Percorrê-lo uma vez como o hóspede faria, e corrigir o que essa passagem mostrar'],
-        why: 'Detalhe não é lentidão, nem refazer tudo. É um olhar deliberado do outro lado — é aí que a coisa que escapou se torna visível.' } },
-    media: { type: 'soon' }, deeper: 'land-team-journey' },
-
-  { id: 'atl-gratitude', placeholder: true, seconds: 30, theme: 'gratitude',
-    title: { en: 'The science of gratitude', pt: 'A ciência da gratidão' },
-    hook:  { en: 'Most people end a hard shift replaying what went wrong.', pt: 'A maioria acaba um turno difícil a repetir o que correu mal.' },
-    line:  { en: 'One question that changes how a shift ends.', pt: 'Uma pergunta que muda a forma como o turno acaba.' },
-    check: { type: 'application', a: 1, placeholder: true,
-      en: { q: 'Your shift is ending and it was a hard one. What do you do?', opts: [
-        'Write down the three worst moments so you can fix them tomorrow',
-        'Name one thing that went right and who made it happen',
-        'Say nothing and start fresh in the morning'],
-        why: 'Ending on something that went right, attached to a person, is what makes it stick — and it gives someone else credit out loud.' },
-      pt: { q: 'O teu turno está a acabar e foi difícil. O que fazes?', opts: [
-        'Apontar os três piores momentos para os corrigir amanhã',
-        'Nomear uma coisa que correu bem e quem a fez acontecer',
-        'Não dizer nada e começar de novo de manhã'],
-        why: 'Acabar numa coisa que correu bem, ligada a uma pessoa, é o que a fixa — e dá crédito a outra pessoa em voz alta.' } },
-    media: { type: 'soon' }, deeper: 'land-team-journey' }
+  { id: "bring-the-energy", seconds: 20, theme: "energy",
+    title: { en: "Give Energy", pt: "Dá Energia" },
+    hook:  { en: "You can be the person who gives energy to others just by interacting with them.", pt: "Podes ser a pessoa que dá energia aos outros." },
+    line:  { en: "Leave people stronger than you found them.", pt: "Deixe as pessoas mais fortes do que as encontrou." },
+    /* Written from this clip's own Whisper transcript and blind-verified against
+       it by a second model (en: verified · pt: verified). The
+       recording is English; the Portuguese here is localised TEXT, not a claim
+       that anyone spoke it — videoLang says so and the player shows the notice. */
+    lesson: { en: "Great teammates create energy in other people by listening fully, noticing effort, bringing solutions, and sharing belief. Every interaction leaves something behind, so it's essential to consider the impact you have on others. Ask yourself if people are stronger after interacting with you.", pt: "Os grandes colegas de trabalho não só completam tarefas, mas também criam energia nos outros. Para isso, é preciso ouvir atentamente, notar o esforço, trazer soluções e partilhar crenças. Cada interação deixa algo para trás." },
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: { q: "What can you do to create energy in others?", opts: ["Just complete tasks", "Listen fully and notice effort", "Ignore others' feelings"], why: "The passage states that great teammates create energy by listening fully, noticing effort, bringing solutions, and sharing belief." },
+      pt: { q: "O que é que os grandes colegas de trabalho criam nos outros?", opts: ["Tensão", "Energia", "Desânimo"], why: "Porque os grandes colegas de trabalho criam energia nos outros, como é referido no texto." } },
+    media: { type: 'mp4', src: "media/reels/bring-the-energy.mp4" }, poster: "media/reels/bring-the-energy.jpg",
+    deeper: 'land-team-journey' },
+  { id: "culture", seconds: 20, theme: "culture",
+    title: { en: "Defining Excellence", pt: "O que é cultura" },
+    hook:  { en: "Accepting 'good enough' can actually lower our standards over time.", pt: "A cultura não é o que escrevemos na parede, mas o que acontece quando ninguém está a olhar." },
+    line:  { en: "What you walk past is what you accept.", pt: "Aquilo por que passamos ao lado é aquilo que aceitamos." },
+    /* Written from this clip's own Whisper transcript and blind-verified against
+       it by a second model (en: verified · pt: verified). The
+       recording is English; the Portuguese here is localised TEXT, not a claim
+       that anyone spoke it — videoLang says so and the player shows the notice. */
+    lesson: { en: "Culture is not just what we say, but what we do when no one is watching. Accepting 'good enough' can quietly redefine what we consider good. Excellence is about caring enough to notice and act, not about being perfect.", pt: "A cultura não é apenas o que dizemos, mas sim o que fazemos quando ninguém está a olhar. Quando aceitamos o 'bom o suficiente', estamos a redefinir o que é bom. A excelência não é perfeição, mas sim cuidar o suficiente para notar e ter coragem para agir." },
+    videoLang: 'en',
+    check: { type: "application", a: 2, audit: "verified",
+      en: { q: "What happens when we accept 'good enough'?", opts: ["We achieve perfection", "We maintain our current standards", "We redefine what good means"], why: "According to the passage, every time we accept good enough, we quietly redefine what good means." },
+      pt: { q: "O que acontece quando aceitamos o 'bom o suficiente'?", opts: ["O padrão de qualidade aumenta", "O padrão de qualidade diminui", "Não há mudança no padrão de qualidade"], why: "Porque aceitar o 'bom o suficiente' redefine o que é bom e pode levar a uma diminuição do padrão de qualidade." } },
+    media: { type: 'mp4', src: "media/reels/culture.mp4" }, poster: "media/reels/culture.jpg",
+    deeper: 'land-team-journey' },
+  { id: "own-the-outcome", seconds: 20, theme: "ownership",
+    title: { en: "Own The Outcome", pt: "Mudar o resultado" },
+    hook:  { en: "High performing teams can change the outcome of a problem by owning their part.", pt: "As equipas de alto desempenho não procuram culpados, mas sim soluções." },
+    line:  { en: "One question that turns blame into progress.", pt: "Uma pergunta que troca a culpa por progresso." },
+    /* Written from this clip's own Whisper transcript and blind-verified against
+       it by a second model (en: verified · pt: verified). The
+       recording is English; the Portuguese here is localised TEXT, not a claim
+       that anyone spoke it — videoLang says so and the player shows the notice. */
+    lesson: { en: "When something goes wrong, you can either ask who's at fault or what you can do now. High performing teams choose the second option, seeing the problem, owning their part, and moving it forward. Ownership is about power, not blame.", pt: "Quando algo correr mal, em vez de perguntar quem é o culpado, pergunta o que podes fazer agora. A responsabilidade não é sobre culpa, é sobre poder. Ao assumires a tua parte, podes mudar o resultado. As equipas de alto desempenho veem o problema, assumem a sua parte e avançam." },
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: { q: "What do high performing teams do when something goes wrong?", opts: ["They blame someone", "They own their part and move forward", "They do nothing"], why: "Because they see the problem, own their part, and move it forward, as stated in the passage." },
+      pt: { q: "O que fazem as equipas de alto desempenho quando algo correr mal?", opts: ["Procuram culpados", "Assumem a responsabilidade e avançam", "Ignoram o problema"], why: "Porque assumir a responsabilidade e avançar permite mudar o resultado, como referido na passagem." } },
+    media: { type: 'mp4', src: "media/reels/own-the-outcome.mp4" }, poster: "media/reels/own-the-outcome.jpg",
+    deeper: 'land-team-journey' },
+  { id: "raise-the-energy", seconds: 20, theme: "energy",
+    title: { en: "Raise The Space", pt: "Energia Positiva" },
+    hook:  { en: "Your energy is never just yours and can impact those around you.", pt: "A sua energia nunca é só sua." },
+    line:  { en: "You change a room before you say anything.", pt: "Muda uma sala antes de dizer alguma coisa." },
+    /* Written from this clip's own Whisper transcript and blind-verified against
+       it by a second model (en: verified · pt: verified). The
+       recording is English; the Portuguese here is localised TEXT, not a claim
+       that anyone spoke it — videoLang says so and the player shows the notice. */
+    lesson: { en: "When you enter a space, you bring energy with you. This energy can be positive or negative. Bring curiosity, courage, and generosity to raise the space and leave people stronger.", pt: "Quando entra num espaço, traz consigo energia, possibilidade ou momentum. Pode optar por trazer curiosidade, coragem e generosidade. Isso pode deixar as pessoas mais fortes." },
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: { q: "What can you bring into a space to raise its energy?", opts: ["Fear", "Curiosity", "Apathy"], why: "The passage suggests bringing curiosity, courage, and generosity to raise the space." },
+      pt: { q: "O que pode acontecer quando você traz energia positiva para um espaço?", opts: ["As pessoas se tornam mais fracas", "As pessoas se tornam mais fortes", "Nada muda"], why: "Porque a energia positiva pode inspirar e motivar os outros." } },
+    media: { type: 'mp4', src: "media/reels/raise-the-energy.mp4" }, poster: "media/reels/raise-the-energy.jpg",
+    deeper: 'land-team-journey' },
+  { id: "safe-to-speak", seconds: 20, theme: "teamwork",
+    title: { en: "Safe to Speak", pt: "Falar Sem Medo" },
+    hook:  { en: "The strongest team is not the one where everyone agrees, but where someone can speak up without fear of judgment.", pt: "A equipe mais forte é aquela onde alguém pode dizer que está errada." },
+    line:  { en: "The team that can disagree is the team that improves.", pt: "A equipa que consegue discordar é a que melhora." },
+    /* Written from this clip's own Whisper transcript and blind-verified against
+       it by a second model (en: verified · pt: verified). The
+       recording is English; the Portuguese here is localised TEXT, not a claim
+       that anyone spoke it — videoLang says so and the player shows the notice. */
+    lesson: { en: "A strong team is one where members can express themselves freely, saying 'I think we are wrong' or 'I need help' without fear of being judged. The best idea should matter more than who came up with it. This allows for open communication and collaboration.", pt: "A equipe mais forte não é aquela onde todos concordam, mas sim onde alguém pode dizer que está errada ou precisa de ajuda. Isso permite que as melhores ideias sejam compartilhadas. O importante é criar um ambiente seguro para falar." },
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: { q: "What makes a team strong according to this idea?", opts: ["Everyone agreeing on everything", "Members feeling safe to speak up", "Having a clear hierarchy"], why: "The passage states that the strongest team is where someone can say 'I think we are wrong' or 'I need help' without fear of judgment, indicating that open and safe communication is key." },
+      pt: { q: "O que é mais importante para uma equipe forte?", opts: ["Que todos concordem", "Que as pessoas sejam honestas", "Que o chefe esteja sempre certo"], why: "Porque a honestidade permite que as melhores ideias sejam compartilhadas e que os erros sejam corrigidos." } },
+    media: { type: 'mp4', src: "media/reels/safe-to-speak.mp4" }, poster: "media/reels/safe-to-speak.jpg",
+    deeper: 'land-team-journey' }
 ];
+
 const QUICKWINS = REELS;

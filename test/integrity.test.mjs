@@ -183,10 +183,15 @@ export function run(t) {
            && b.opts.every(o => o && o.trim()) && b.why && b.why.trim()),
         b ? 'a field is blank' : `no ${L} block — a learner in ${L} would be asked another language's question`);
     }
+    /* guard every access: a reel with only one language must FAIL these checks,
+       not crash the run. The first English-only reels made this throw, which
+       hid every check after it. */
+    const optsOf = L => ((q[L] || {}).opts || []);
     t.ok(`${r.id}: answer index is in range`,
-      Number.isInteger(q.a) && q.a >= 0 && q.a < (q.en.opts || []).length, `a=${q.a}`);
+      Number.isInteger(q.a) && q.a >= 0 && q.a < optsOf('en').length, `a=${q.a}`);
     t.ok(`${r.id}: en and pt offer the same number of options`,
-      (q.en.opts || []).length === (q.pt.opts || []).length);
+      optsOf('en').length === optsOf('pt').length,
+      `en ${optsOf('en').length} vs pt ${optsOf('pt').length}`);
     /* a reel must never be able to credit a training hour */
     t.ok(`${r.id}: is not in CATALOG`, !ids.includes(r.id));
   }

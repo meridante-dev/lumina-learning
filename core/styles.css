@@ -4494,3 +4494,16 @@ body.reels-open { overflow: hidden; }
 .cov-said q { font-style: italic; opacity: .9; }
 .cov-wait { opacity: .5; }
 .cov-prov { font-size: 11px; color: var(--text-faint); margin-top: 8px; }
+
+/* ---- PREMIUM LAYER 23 · the reel's text lesson ----------------------------
+   Collapsed by default. Open, it is a quiet card over the video — not a modal,
+   because the clip keeps playing behind it and swiping still works. */
+.reel-read { margin-top: 10px; padding: 0; background: none; border: 0; cursor: pointer;
+  color: rgba(247,246,241,.72); font: inherit; font-size: 13px; letter-spacing: .04em;
+  border-bottom: 1px solid rgba(247,246,241,.28); padding-bottom: 2px; }
+.reel-read:hover { color: #fff; border-bottom-color: rgba(247,246,241,.6); }
+.reel-lesson { margin-top: 12px; padding: 14px 16px; border-radius: 14px;
+  background: rgba(10,14,11,.72); backdrop-filter: blur(14px);
+  font-size: 14.5px; line-height: 1.62; color: rgba(247,246,241,.94); max-width: 34em; }
+.reel-vlang { display: block; margin-top: 10px; font-size: 11px; letter-spacing: .06em;
+  color: rgba(247,246,241,.5); }

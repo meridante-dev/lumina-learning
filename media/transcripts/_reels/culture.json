@@ -1,0 +1,37 @@
+{
+ "reel": "culture",
+ "clip": "culture-3",
+ "language": "en",
+ "machineTranslated": false,
+ "native": true,
+ "source": "file",
+ "corrections": 0,
+ "generatedAt": 1788340936072,
+ "segments": [
+  {
+   "t0": 0.0,
+   "t1": 4.5,
+   "text": "Culture isn't what we write on the wall, it's what happens when nobody is watching."
+  },
+  {
+   "t0": 5.5,
+   "t1": 9.5,
+   "text": "Every time we accept good enough, we quietly redefine what good means."
+  },
+  {
+   "t0": 10.5,
+   "t1": 12.5,
+   "text": "Excellence isn't perfection."
+  },
+  {
+   "t0": 12.5,
+   "t1": 16.5,
+   "text": "It's caring enough to notice and courageous enough to act."
+  },
+  {
+   "t0": 16.5,
+   "t1": 19.5,
+   "text": "Because what we walk past becomes our standard."
+  }
+ ]
+}

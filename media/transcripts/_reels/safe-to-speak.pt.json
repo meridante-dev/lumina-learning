@@ -1,0 +1,55 @@
+{
+ "reel": "safe-to-speak",
+ "language": "en",
+ "machineTranslated": false,
+ "native": true,
+ "source": "file",
+ "generatedAt": 1788341169912,
+ "segments": [
+  {
+   "t0": 0,
+   "t1": 3.5,
+   "text": "The strongest team is not the one where everyone agrees."
+  },
+  {
+   "t0": 3.5,
+   "t1": 5.5,
+   "text": "It is the one where someone can say,"
+  },
+  {
+   "t0": 5.5,
+   "t1": 7.5,
+   "text": "I think we are wrong."
+  },
+  {
+   "t0": 8.5,
+   "t1": 10.5,
+   "text": "I made a mistake."
+  },
+  {
+   "t0": 10.5,
+   "t1": 12,
+   "text": "I need help."
+  },
+  {
+   "t0": 12,
+   "t1": 13.5,
+   "text": "I have another idea."
+  },
+  {
+   "t0": 13.5,
+   "t1": 15.5,
+   "text": "And nobody gets smaller for saying it."
+  },
+  {
+   "t0": 15.5,
+   "t1": 17.5,
+   "text": "Make it safe to speak."
+  },
+  {
+   "t0": 17.5,
+   "t1": 20,
+   "text": "The best idea matters more than who had it."
+  }
+ ]
+}
