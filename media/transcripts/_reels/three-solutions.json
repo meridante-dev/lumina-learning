@@ -1,0 +1,45 @@
+{
+ "reel": "three-solutions",
+ "language": "en",
+ "machineTranslated": false,
+ "native": true,
+ "source": "file",
+ "generatedAt": 1788526977073,
+ "segments": [
+  {
+   "t0": 0.0,
+   "t1": 2.7,
+   "text": "One rule changes every meeting you have."
+  },
+  {
+   "t0": 2.7,
+   "t1": 6.3,
+   "text": "Never bring a problem without three possible solutions."
+  },
+  {
+   "t0": 6.3,
+   "t1": 7.8,
+   "text": "Can't find three?"
+  },
+  {
+   "t0": 7.8,
+   "t1": 11.1,
+   "text": "Take it to a colleague first, not to your leader."
+  },
+  {
+   "t0": 11.1,
+   "t1": 14.3,
+   "text": "That one rule turns complaining into thinking."
+  },
+  {
+   "t0": 14.3,
+   "t1": 17.8,
+   "text": "A problem with no strategy is just a weight you handed someone."
+  },
+  {
+   "t0": 17.8,
+   "t1": 19.8,
+   "text": "Try it once this week."
+  }
+ ]
+}

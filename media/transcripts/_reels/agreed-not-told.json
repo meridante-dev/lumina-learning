@@ -1,0 +1,30 @@
+{
+ "reel": "agreed-not-told",
+ "language": "en",
+ "machineTranslated": false,
+ "native": true,
+ "source": "file",
+ "generatedAt": 1788526977840,
+ "segments": [
+  {
+   "t0": 0.0,
+   "t1": 5.52,
+   "text": "your team misses the same date every month before you decide they don't care"
+  },
+  {
+   "t0": 5.52,
+   "t1": 12.04,
+   "text": "ask one thing was that date agreed with them or was it only told to them people"
+  },
+  {
+   "t0": 12.04,
+   "t1": 16.92,
+   "text": "miss dates they were told people protect dates they agreed your next"
+  },
+  {
+   "t0": 16.92,
+   "t1": 21.48,
+   "text": "deadline told or agreed"
+  }
+ ]
+}

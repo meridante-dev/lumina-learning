@@ -1,5 +1,5 @@
 {
- "generatedAt": 1788515834250,
+ "generatedAt": 1788528249940,
  "courses": {
   "alignment-journey": {
    "title": "The EdenRise Alignment Journey",
@@ -1308,6 +1308,265 @@
       {
        "t0": 194,
        "teaches": "You notice that the water in the tank has started to get green. What should you do?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    }
+   ]
+  },
+  "growth-journey": {
+   "title": "Ultimate Purpose",
+   "modules": [
+    {
+     "mod": 0,
+     "title": "Ultimate Purpose",
+     "language": "en",
+     "translated": "pt",
+     "segments": 127,
+     "chars": 10279,
+     "durationSec": 341,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "bring",
+      "someone",
+      "purpose",
+      "people",
+      "energy",
+      "feel",
+      "become",
+      "brings"
+     ],
+     "regime": null,
+     "summary": "Here's a question. Where does the purpose in your work come from? Does the job give it to you?",
+     "url": "https://academy.edenrise.com/#/play/growth-journey/0",
+     "moments": [
+      {
+       "t0": 45,
+       "teaches": "Where does the purpose in your work come from?",
+       "audit": "verified"
+      },
+      {
+       "t0": 104,
+       "teaches": "What is the 'governing intention'?",
+       "audit": "verified"
+      },
+      {
+       "t0": 78,
+       "teaches": "What should you do to make your work hours count?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 160,
+       "teaches": "How can you contribute to a positive atmosphere at work?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 131,
+       "teaches": "A new employee is struggling to find meaning in their work. What advice would you give them?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 187,
+       "teaches": "You notice that a colleague is having a bad day and is bringing a negative atmosphere to the team. What can you do to he",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 1,
+     "title": "Goal Setting",
+     "language": "en",
+     "translated": "pt",
+     "segments": 130,
+     "chars": 9730,
+     "durationSec": 376,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "goal",
+      "better",
+      "become",
+      "maybe",
+      "people",
+      "might",
+      "next",
+      "mean"
+     ],
+     "regime": null,
+     "summary": "Imagine two people starting in similar roles. They have similar abilities, similar opportunities, and similar support.",
+     "url": "https://academy.edenrise.com/#/play/growth-journey/1",
+     "moments": [
+      {
+       "t0": 28,
+       "teaches": "What is the main difference between the two people in the example?",
+       "audit": "verified"
+      },
+      {
+       "t0": 53,
+       "teaches": "Who is responsible for taking ownership of one's growth?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 107,
+       "teaches": "What should you do to turn a good intention into a clear goal?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 135,
+       "teaches": "What should you do once you have a clear goal?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 161,
+       "teaches": "If your goal is to become more confident in your role, what might be a good action to take today?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 187,
+       "teaches": "If you want to become more efficient in your work, what might be a good question to ask yourself today?",
+       "audit": "corrected"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 2,
+     "title": "Kaizen",
+     "language": "en",
+     "translated": "pt",
+     "segments": 131,
+     "chars": 9751,
+     "durationSec": 393,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "could",
+      "better",
+      "work",
+      "process",
+      "improvement",
+      "every",
+      "improve",
+      "same"
+     ],
+     "regime": null,
+     "summary": "Imagine someone on your team performing the same task every day. It takes 20 minutes. They have done it that way for a year.",
+     "url": "https://academy.edenrise.com/#/play/growth-journey/2",
+     "moments": [
+      {
+       "t0": 26,
+       "teaches": "What is the term often used to describe the approach of always looking for a better way?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 80,
+       "teaches": "What does efficiency mean in the context of continuous improvement?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 106,
+       "teaches": "What should you do when you notice that a task requires walking back and forth to different locations to retrieve necess",
+       "audit": "verified"
+      },
+      {
+       "t0": 184,
+       "teaches": "What should you do when you notice something that could be improved in a process?",
+       "audit": "verified"
+      },
+      {
+       "t0": 131,
+       "teaches": "A team is struggling with a task that requires entering the same information twice. What could be an opportunity for imp",
+       "audit": "corrected"
+      },
+      {
+       "t0": 158,
+       "teaches": "A worker is regularly having to ask the same question to complete a task. What could be an opportunity for improvement?",
+       "audit": "verified"
+      }
+     ],
+     "questions": 6
+    },
+    {
+     "mod": 3,
+     "title": "Winning Beliefs",
+     "language": "en",
+     "translated": "pt",
+     "segments": 122,
+     "chars": 8987,
+     "durationSec": 333,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "belief",
+      "action",
+      "self",
+      "talk",
+      "evidence",
+      "useful",
+      "choose",
+      "beliefs"
+     ],
+     "regime": null,
+     "summary": "Two people receive the same feedback. This needs to improve. One hears, I'm not good enough.",
+     "url": "https://academy.edenrise.com/#/play/growth-journey/3",
+     "moments": [],
+     "questions": 0
+    },
+    {
+     "mod": 4,
+     "title": "Six Core Human Needs",
+     "language": "en",
+     "translated": "pt",
+     "segments": 110,
+     "chars": 8483,
+     "durationSec": 302,
+     "capability": "leadership",
+     "tags": [
+      "leadership",
+      "feel",
+      "yourself",
+      "change",
+      "pressure",
+      "think",
+      "about",
+      "work",
+      "sometimes"
+     ],
+     "regime": null,
+     "summary": "Most of us are fairly easy to understand when things are going well. The more interesting question is,",
+     "url": "https://academy.edenrise.com/#/play/growth-journey/4",
+     "moments": [
+      {
+       "t0": 25,
+       "teaches": "What are the six core human needs that every person has?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 52,
+       "teaches": "How can certainty be achieved in a changing environment?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 79,
+       "teaches": "What should you do when you feel the need for variety in your work?",
+       "audit": "verified"
+      },
+      {
+       "t0": 104,
+       "teaches": "How can you build real significance in your work?",
+       "audit": "verified"
+      },
+      {
+       "t0": 130,
+       "teaches": "A colleague is disagreeing with your idea in a meeting. What should you do?",
+       "audit": "corrected"
+      },
+      {
+       "t0": 156,
+       "teaches": "You're working on a team project and a team member is not pulling their weight. What should you do?",
        "audit": "corrected"
       }
      ],

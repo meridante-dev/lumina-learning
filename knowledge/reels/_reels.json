@@ -1,34 +1,34 @@
 {
  "lang": "en",
- "generatedAt": 1788340992637,
+ "generatedAt": 1788527115517,
  "reels": [
   {
-   "id": "bring-the-energy",
+   "id": "agreed-values",
    "seconds": 20,
-   "theme": "energy",
+   "theme": "values",
    "title": {
-    "en": "Give Energy"
+    "en": "Agreed Team Values"
    },
    "hook": {
-    "en": "You can be the person who gives energy to others just by interacting with them."
+    "en": "Without agreed values, team decisions are based on who is loudest or most tired."
    },
    "line": {
-    "en": "You will learn how to create energy in others through your interactions."
+    "en": "You will learn why agreed values are crucial for making consistent team decisions."
    },
    "lesson": {
-    "en": "Great teammates create energy in other people by listening fully, noticing effort, bringing solutions, and sharing belief. Every interaction leaves something behind, so it's essential to consider the impact you have on others. Ask yourself if people are stronger after interacting with you."
+    "en": "When a team lacks agreed values, decisions are made based on factors like who is loudest or how tired everyone is. This can lead to inconsistent decisions. Agreed values provide a clear basis for decision-making."
    },
    "check": {
     "type": "application",
     "a": 1,
     "en": {
-     "q": "What can you do to create energy in others?",
+     "q": "What happens when a team has no agreed values?",
      "opts": [
-      "Just complete tasks",
-      "Listen fully and notice effort",
-      "Ignore others' feelings"
+      "Decisions are based on facts",
+      "Decisions are based on values or moods",
+      "Decisions are always consistent"
      ],
-     "why": "The passage states that great teammates create energy by listening fully, noticing effort, bringing solutions, and sharing belief."
+     "why": "The passage states that without agreed values, decisions run on 'whoever is loudest, whatever happened last, how tired everyone is', which corresponds to 'values or moods'."
     },
     "audit": "verified",
     "model": "gateway",
@@ -36,85 +36,43 @@
    },
    "media": {
     "type": "mp4",
-    "src": "media/reels/bring-the-energy.mp4"
+    "src": "https://edenrise-reels.pages.dev/agreed-values.mp4"
    },
    "deeper": "land-team-journey",
    "source": {
-    "reel": "bring-the-energy",
+    "reel": "agreed-values",
     "lang": "en",
+    "videoLang": "en",
     "seconds": 20
    }
   },
   {
-   "id": "culture",
+   "id": "three-solutions",
    "seconds": 20,
-   "theme": "culture",
+   "theme": "solutions",
    "title": {
-    "en": "Defining Excellence"
+    "en": "Bring Solutions"
    },
    "hook": {
-    "en": "Accepting 'good enough' can actually lower our standards over time."
+    "en": "One simple rule can turn complaining into thinking in your meetings."
    },
    "line": {
-    "en": "You will learn how to recognize and promote excellence in your daily work."
+    "en": "You will learn how to approach problems with solutions in mind."
    },
    "lesson": {
-    "en": "Culture is not just what we say, but what we do when no one is watching. Accepting 'good enough' can quietly redefine what we consider good. Excellence is about caring enough to notice and act, not about being perfect."
-   },
-   "check": {
-    "type": "application",
-    "a": 2,
-    "en": {
-     "q": "What happens when we accept 'good enough'?",
-     "opts": [
-      "We achieve perfection",
-      "We maintain our current standards",
-      "We redefine what good means"
-     ],
-     "why": "According to the passage, every time we accept good enough, we quietly redefine what good means."
-    },
-    "audit": "verified",
-    "model": "gateway",
-    "src": "transcript"
-   },
-   "media": {
-    "type": "mp4",
-    "src": "media/reels/culture.mp4"
-   },
-   "deeper": "land-team-journey",
-   "source": {
-    "reel": "culture",
-    "lang": "en",
-    "seconds": 20
-   }
-  },
-  {
-   "id": "own-the-outcome",
-   "seconds": 20,
-   "theme": "ownership",
-   "title": {
-    "en": "Own The Outcome"
-   },
-   "hook": {
-    "en": "High performing teams can change the outcome of a problem by owning their part."
-   },
-   "line": {
-    "en": "You will learn how to take control of a situation when something goes wrong."
-   },
-   "lesson": {
-    "en": "When something goes wrong, you can either ask who's at fault or what you can do now. High performing teams choose the second option, seeing the problem, owning their part, and moving it forward. Ownership is about power, not blame."
+    "en": "When bringing a problem to a meeting, always come with three possible solutions. If you can't find three, discuss with a colleague first before taking it to your leader. This helps turn problems into thoughtful discussions."
    },
    "check": {
     "type": "application",
     "a": 1,
     "en": {
-     "q": "What do high performing teams do when something goes wrong?",
+     "q": "What should you do if you can't find three solutions to a problem?",
      "opts": [
-      "They blame someone",
-      "They own their part and move forward",
-      "They do nothing"
+      "Take it to your leader",
+      "Discuss with a colleague first",
+      "Drop the problem"
      ],
-     "why": "Because they see the problem, own their part, and move it forward, as stated in the passage."
+     "why": "Because discussing with a colleague first can help you find more solutions before taking it to your leader."
     },
     "audit": "verified",
     "model": "gateway",
@@ -122,42 +80,43 @@
    },
    "media": {
     "type": "mp4",
-    "src": "media/reels/own-the-outcome.mp4"
+    "src": "https://edenrise-reels.pages.dev/three-solutions.mp4"
    },
-   "deeper": "land-team-journey",
+   "deeper": "alignment-journey",
    "source": {
-    "reel": "own-the-outcome",
+    "reel": "three-solutions",
     "lang": "en",
+    "videoLang": "en",
     "seconds": 20
    }
   },
   {
-   "id": "raise-the-energy",
+   "id": "three-words",
    "seconds": 20,
-   "theme": "energy",
+   "theme": "problems",
    "title": {
-    "en": "Raise The Space"
+    "en": "Fixing Issues"
    },
    "hook": {
-    "en": "Your energy is never just yours and can impact those around you."
+    "en": "Saying three words has never fixed anything, according to this approach."
    },
    "line": {
-    "en": "You will learn how to bring positive energy into a space and leave people stronger."
+    "en": "You will learn a new way to think about solving problems."
    },
    "lesson": {
-    "en": "When you enter a space, you bring energy with you. This energy can be positive or negative. Bring curiosity, courage, and generosity to raise the space and leave people stronger."
+    "en": "When something goes wrong, saying three words can sound like an answer, but it doesn't fix the problem. The problem stays even if the person is removed and a new person arrives. This suggests that the person is not the main issue."
    },
    "check": {
     "type": "application",
     "a": 1,
     "en": {
-     "q": "What can you bring into a space to raise its energy?",
+     "q": "What happens to the problem when a new person arrives?",
      "opts": [
-      "Fear",
-      "Curiosity",
-      "Apathy"
+      "It gets worse",
+      "It stays the same",
+      "It gets fixed"
      ],
-     "why": "The passage suggests bringing curiosity, courage, and generosity to raise the space."
+     "why": "The passage states that the problem stays even if the person is removed and a new person arrives."
     },
     "audit": "verified",
     "model": "gateway",
@@ -165,42 +124,219 @@
    },
    "media": {
     "type": "mp4",
-    "src": "media/reels/raise-the-energy.mp4"
+    "src": "https://edenrise-reels.pages.dev/three-words.mp4"
    },
-   "deeper": "land-team-journey",
+   "deeper": "alignment-journey",
    "source": {
-    "reel": "raise-the-energy",
+    "reel": "three-words",
     "lang": "en",
+    "videoLang": "en",
     "seconds": 20
    }
   },
   {
-   "id": "safe-to-speak",
+   "id": "agreed-not-told",
+   "seconds": 21,
+   "theme": "communication",
+   "title": {
+    "en": "Agreed vs Told"
+   },
+   "hook": {
+    "en": "People are more likely to miss deadlines they were simply told about rather than agreed to."
+   },
+   "line": {
+    "en": "You will learn how to improve team commitment to deadlines by distinguishing between agreed and told dates."
+   },
+   "lesson": {
+    "en": "Before assuming your team doesn't care about a missed deadline, ask if the date was agreed upon or just told to them. People tend to miss dates they were told, but protect dates they agreed to. This distinction can help you improve team commitment."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "en": {
+     "q": "What should you do before deciding your team doesn't care about a missed deadline?",
+     "opts": [
+      "Assume they are irresponsible",
+      "Ask if the date was agreed or told",
+      "Scold them for missing the deadline"
+     ],
+     "why": "Asking if the date was agreed or told helps you understand if the team was truly committed to the deadline."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "https://edenrise-reels.pages.dev/agreed-not-told.mp4"
+   },
+   "deeper": "alignment-journey",
+   "source": {
+    "reel": "agreed-not-told",
+    "lang": "en",
+    "videoLang": "en",
+    "seconds": 21
+   }
+  },
+  {
+   "id": "standards-vs-expectations",
+   "seconds": 20,
+   "theme": "standards",
+   "title": {
+    "en": "Standards vs Expectations"
+   },
+   "hook": {
+    "en": "Nearly all friction at work is caused by high expectations sitting on a low standard."
+   },
+   "line": {
+    "en": "You will learn how to identify and adjust your standards and expectations to reduce friction at work."
+   },
+   "lesson": {
+    "en": "Standards are what you demand of yourself, while expectations are what you demand of others. To reduce friction, you should raise your standard before raising your expectation. This means focusing on your own performance and behavior before expecting others to meet certain standards."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "en": {
+     "q": "What should you do before raising your expectations of others?",
+     "opts": [
+      "Raise your expectations of others first",
+      "Raise your standard first",
+      "Meet your expectations first"
+     ],
+     "why": "Because raising your standard first helps to reduce friction caused by high expectations sitting on a low standard."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "https://edenrise-reels.pages.dev/standards-vs-expectations.mp4"
+   },
+   "deeper": "alignment-journey",
+   "source": {
+    "reel": "standards-vs-expectations",
+    "lang": "en",
+    "videoLang": "en",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "clean-the-site",
+   "seconds": 20,
+   "theme": "communication",
+   "title": {
+    "en": "Define Finished"
+   },
+   "hook": {
+    "en": "You can't assume everyone has the same understanding of what 'finished' means."
+   },
+   "line": {
+    "en": "You'll learn how to ensure everyone is on the same page when it comes to completing a task."
+   },
+   "lesson": {
+    "en": "When giving a task, define what 'finished' looks like to avoid confusion. This means explaining the expected outcome before starting the job. By doing so, you can ensure everyone has the same understanding of what needs to be done."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "en": {
+     "q": "What should you do before starting a task to avoid confusion?",
+     "opts": [
+      "Start working immediately",
+      "Explain what 'finished' looks like",
+      "Wait for someone else to define it"
+     ],
+     "why": "Defining what 'finished' looks like helps ensure everyone has the same understanding of the expected outcome."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "https://edenrise-reels.pages.dev/clean-the-site.mp4"
+   },
+   "deeper": "alignment-journey",
+   "source": {
+    "reel": "clean-the-site",
+    "lang": "en",
+    "videoLang": "en",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "who-did-it",
+   "seconds": 20,
+   "theme": "investigation",
+   "title": {
+    "en": "Start of Investigation"
+   },
+   "hook": {
+    "en": "Starting an investigation with people will always lead to finding a person at fault."
+   },
+   "line": {
+    "en": "You will learn how the starting point of an investigation can influence its outcome."
+   },
+   "lesson": {
+    "en": "Most teams start an investigation at the end, looking for who did it, which leads to finding someone to blame. Starting with people will always result in finding a person. The starting point of an investigation can influence its outcome."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "en": {
+     "q": "What happens when a team starts an investigation by looking for who did it?",
+     "opts": [
+      "They will never find a person to blame",
+      "They will always find a person to blame",
+      "They will find the root cause of the problem"
+     ],
+     "why": "The passage states that if you start with people, you will always find a person, because that is where you started looking."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "https://edenrise-reels.pages.dev/who-did-it.mp4"
+   },
+   "deeper": "alignment-journey",
+   "source": {
+    "reel": "who-did-it",
+    "lang": "en",
+    "videoLang": "en",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "great-teammates",
    "seconds": 20,
    "theme": "teamwork",
    "title": {
-    "en": "Safe to Speak"
+    "en": "Great Teammates"
    },
    "hook": {
-    "en": "The strongest team is not the one where everyone agrees, but where someone can speak up without fear of judgment."
+    "en": "Great teammates can actually create energy in other people just by being around them."
    },
    "line": {
-    "en": "You will learn how to create a safe and open team environment where everyone feels comfortable sharing their thoughts and ideas."
+    "en": "You will learn how to be a great teammate who gives energy to others."
    },
    "lesson": {
-    "en": "A strong team is one where members can express themselves freely, saying 'I think we are wrong' or 'I need help' without fear of being judged. The best idea should matter more than who came up with it. This allows for open communication and collaboration."
+    "en": "Great teammates create energy in other people by listening fully, noticing effort, bringing solutions, and sharing belief. They make others feel clearer, lighter, and more capable after interacting with them. By being a great teammate, you can be the person who gives energy to others."
    },
    "check": {
     "type": "application",
     "a": 1,
     "en": {
-     "q": "What makes a team strong according to this idea?",
+     "q": "What can great teammates do to create energy in others?",
      "opts": [
-      "Everyone agreeing on everything",
-      "Members feeling safe to speak up",
-      "Having a clear hierarchy"
+      "Listen partially",
+      "Notice effort",
+      "Avoid solutions"
      ],
-     "why": "The passage states that the strongest team is where someone can say 'I think we are wrong' or 'I need help' without fear of judgment, indicating that open and safe communication is key."
+     "why": "The passage states that great teammates create energy by noticing effort, among other things."
     },
     "audit": "verified",
     "model": "gateway",
@@ -208,12 +344,13 @@
    },
    "media": {
     "type": "mp4",
-    "src": "media/reels/safe-to-speak.mp4"
+    "src": "https://edenrise-reels.pages.dev/great-teammates.mp4"
    },
    "deeper": "land-team-journey",
    "source": {
-    "reel": "safe-to-speak",
+    "reel": "great-teammates",
     "lang": "en",
+    "videoLang": "en",
     "seconds": 20
    }
   }

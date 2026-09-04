@@ -1,5 +1,5 @@
 {
- "generatedAt": 1788516133391,
+ "generatedAt": 1788528250068,
  "nodes": [
   {
    "id": "course:alignment-journey",
@@ -759,6 +759,186 @@
    "title": "inside"
   },
   {
+   "id": "course:growth-journey",
+   "kind": "course",
+   "title": "Ultimate Purpose"
+  },
+  {
+   "id": "module:growth-journey:0",
+   "kind": "module",
+   "title": "Ultimate Purpose",
+   "course": "growth-journey",
+   "mod": 0,
+   "url": "https://academy.edenrise.com/#/play/growth-journey/0",
+   "seconds": 341
+  },
+  {
+   "id": "concept:bring",
+   "kind": "concept",
+   "title": "bring"
+  },
+  {
+   "id": "concept:someone",
+   "kind": "concept",
+   "title": "someone"
+  },
+  {
+   "id": "concept:purpose",
+   "kind": "concept",
+   "title": "purpose"
+  },
+  {
+   "id": "concept:energy",
+   "kind": "concept",
+   "title": "energy"
+  },
+  {
+   "id": "concept:become",
+   "kind": "concept",
+   "title": "become"
+  },
+  {
+   "id": "concept:brings",
+   "kind": "concept",
+   "title": "brings"
+  },
+  {
+   "id": "module:growth-journey:1",
+   "kind": "module",
+   "title": "Goal Setting",
+   "course": "growth-journey",
+   "mod": 1,
+   "url": "https://academy.edenrise.com/#/play/growth-journey/1",
+   "seconds": 376
+  },
+  {
+   "id": "concept:better",
+   "kind": "concept",
+   "title": "better"
+  },
+  {
+   "id": "concept:maybe",
+   "kind": "concept",
+   "title": "maybe"
+  },
+  {
+   "id": "concept:mean",
+   "kind": "concept",
+   "title": "mean"
+  },
+  {
+   "id": "module:growth-journey:2",
+   "kind": "module",
+   "title": "Kaizen",
+   "course": "growth-journey",
+   "mod": 2,
+   "url": "https://academy.edenrise.com/#/play/growth-journey/2",
+   "seconds": 393
+  },
+  {
+   "id": "concept:could",
+   "kind": "concept",
+   "title": "could"
+  },
+  {
+   "id": "concept:process",
+   "kind": "concept",
+   "title": "process"
+  },
+  {
+   "id": "concept:improvement",
+   "kind": "concept",
+   "title": "improvement"
+  },
+  {
+   "id": "concept:every",
+   "kind": "concept",
+   "title": "every"
+  },
+  {
+   "id": "concept:improve",
+   "kind": "concept",
+   "title": "improve"
+  },
+  {
+   "id": "concept:same",
+   "kind": "concept",
+   "title": "same"
+  },
+  {
+   "id": "module:growth-journey:3",
+   "kind": "module",
+   "title": "Winning Beliefs",
+   "course": "growth-journey",
+   "mod": 3,
+   "url": "https://academy.edenrise.com/#/play/growth-journey/3",
+   "seconds": 333
+  },
+  {
+   "id": "concept:belief",
+   "kind": "concept",
+   "title": "belief"
+  },
+  {
+   "id": "concept:action",
+   "kind": "concept",
+   "title": "action"
+  },
+  {
+   "id": "concept:self",
+   "kind": "concept",
+   "title": "self"
+  },
+  {
+   "id": "concept:talk",
+   "kind": "concept",
+   "title": "talk"
+  },
+  {
+   "id": "concept:evidence",
+   "kind": "concept",
+   "title": "evidence"
+  },
+  {
+   "id": "concept:useful",
+   "kind": "concept",
+   "title": "useful"
+  },
+  {
+   "id": "concept:beliefs",
+   "kind": "concept",
+   "title": "beliefs"
+  },
+  {
+   "id": "module:growth-journey:4",
+   "kind": "module",
+   "title": "Six Core Human Needs",
+   "course": "growth-journey",
+   "mod": 4,
+   "url": "https://academy.edenrise.com/#/play/growth-journey/4",
+   "seconds": 302
+  },
+  {
+   "id": "concept:yourself",
+   "kind": "concept",
+   "title": "yourself"
+  },
+  {
+   "id": "concept:change",
+   "kind": "concept",
+   "title": "change"
+  },
+  {
+   "id": "concept:think",
+   "kind": "concept",
+   "title": "think"
+  },
+  {
+   "id": "concept:sometimes",
+   "kind": "concept",
+   "title": "sometimes"
+  },
+  {
    "id": "course:land-team-journey",
    "kind": "course",
    "title": "Above the Line"
@@ -771,11 +951,6 @@
    "mod": 0,
    "url": "https://academy.edenrise.com/#/play/land-team-journey/0",
    "seconds": 249
-  },
-  {
-   "id": "concept:every",
-   "kind": "concept",
-   "title": "every"
   },
   {
    "id": "concept:person",
@@ -800,16 +975,6 @@
    "id": "concept:learn",
    "kind": "concept",
    "title": "learn"
-  },
-  {
-   "id": "concept:better",
-   "kind": "concept",
-   "title": "better"
-  },
-  {
-   "id": "concept:someone",
-   "kind": "concept",
-   "title": "someone"
   },
   {
    "id": "concept:learning",
@@ -899,11 +1064,6 @@
    "title": "before"
   },
   {
-   "id": "concept:improve",
-   "kind": "concept",
-   "title": "improve"
-  },
-  {
    "id": "module:land-team-journey:5",
    "kind": "module",
    "title": "Attention to Detail",
@@ -952,19 +1112,9 @@
    "seconds": 322
   },
   {
-   "id": "concept:same",
-   "kind": "concept",
-   "title": "same"
-  },
-  {
    "id": "concept:lesson",
    "kind": "concept",
    "title": "lesson"
-  },
-  {
-   "id": "concept:become",
-   "kind": "concept",
-   "title": "become"
   },
   {
    "id": "concept:questions",
@@ -1003,11 +1153,6 @@
    "url": "https://academy.edenrise.com/#/reels",
    "videoLang": "en",
    "published": true
-  },
-  {
-   "id": "concept:energy",
-   "kind": "concept",
-   "title": "energy"
   },
   {
    "id": "reel:culture",
@@ -2401,6 +2546,306 @@
    "w": 1
   },
   {
+   "from": "module:growth-journey:0",
+   "to": "course:growth-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:bring",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:someone",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:purpose",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:energy",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:feel",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:become",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:0",
+   "to": "concept:brings",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "course:growth-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:goal",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:better",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:become",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:maybe",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:might",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:next",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "concept:mean",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "course:growth-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:could",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:better",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:work",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:process",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:improvement",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:every",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:improve",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:same",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "course:growth-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:belief",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:action",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:self",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:talk",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:evidence",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:useful",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:choose",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:3",
+   "to": "concept:beliefs",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "course:growth-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:feel",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:yourself",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:change",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:pressure",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:think",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:about",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:work",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "concept:sometimes",
+   "rel": "about",
+   "w": 1
+  },
+  {
    "from": "module:land-team-journey:0",
    "to": "course:land-team-journey",
    "rel": "in",
@@ -3121,6 +3566,42 @@
    "w": 0.127
   },
   {
+   "from": "module:growth-journey:0",
+   "to": "module:land-team-journey:6",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "module:land-team-journey:1",
+   "rel": "related",
+   "w": 0.143
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "module:land-team-journey:6",
+   "rel": "related",
+   "w": 0.143
+  },
+  {
+   "from": "module:growth-journey:1",
+   "to": "module:growth-journey:2",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "module:land-team-journey:4",
+   "rel": "related",
+   "w": 0.143
+  },
+  {
+   "from": "module:growth-journey:4",
+   "to": "module:land-team-journey:4",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
    "from": "module:land-team-journey:0",
    "to": "module:land-team-journey:2",
    "rel": "related",
@@ -3139,12 +3620,6 @@
    "w": 0.194
   },
   {
-   "from": "module:land-team-journey:1",
-   "to": "module:land-team-journey:6",
-   "rel": "related",
-   "w": 0.127
-  },
-  {
    "from": "module:land-team-journey:2",
    "to": "module:land-team-journey:3",
    "rel": "related",
@@ -3159,17 +3634,17 @@
  ],
  "stats": {
   "nodes": {
-   "course": 3,
-   "module": 31,
+   "course": 4,
+   "module": 36,
    "reel": 5,
-   "concept": 144
+   "concept": 163
   },
   "edges": {
-   "in": 31,
-   "about": 288,
+   "in": 36,
+   "about": 333,
    "deeper": 5,
    "beside": 6,
-   "related": 19
+   "related": 24
   }
  },
  "orphans": []

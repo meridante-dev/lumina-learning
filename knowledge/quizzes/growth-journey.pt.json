@@ -1,0 +1,916 @@
+{
+ "course": "growth-journey",
+ "lang": "pt",
+ "modules": {
+  "0": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "The company",
+      "The manager",
+      "The worker themselves",
+      "The work itself"
+     ],
+     "q": "Who brings purpose to one's work?",
+     "why": "The worker brings purpose, significance, intention, and energy to their work."
+    },
+    "pt": {
+     "opts": [
+      "A empresa",
+      "O responsável",
+      "O trabalhador em si",
+      "O trabalho em si"
+     ],
+     "q": "Quem traz propósito ao seu trabalho?",
+     "why": "O trabalhador traz propósito, significado, intenção e energia para o seu trabalho."
+    },
+    "t0": 27,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527948546,
+    "corrected": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "Purpose",
+      "Intention",
+      "Goal",
+      "Intenção orientadora"
+     ],
+     "q": "What is the term for the deep intention behind how one approaches their day?",
+     "why": "The term is 'intenção orientadora', which influences one's choices and shapes their character."
+    },
+    "pt": {
+     "opts": [
+      "Propósito",
+      "Intenção",
+      "Objetivo",
+      "Intenção orientadora"
+     ],
+     "q": "Qual é o termo para a intenção mais profunda por detrás da forma como se encara o dia?",
+     "why": "O termo é 'intenção orientadora', que influencia as escolhas e molda o caráter."
+    },
+    "t0": 105,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527948546,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Wait for circumstances to determine the day's outcome",
+      "Bring energy and intention to their work",
+      "Focus solely on receiving their paycheck",
+      "Take a passive approach to their responsibilities"
+     ],
+     "q": "What should a worker do to make their day count?",
+     "why": "The worker should bring energy and intention to their work to make their day count."
+    },
+    "pt": {
+     "opts": [
+      "Esperar que as circunstâncias determinem o resultado do dia",
+      "Trazener energia e intenção para o trabalho",
+      "Focar-se apenas em receber o salário",
+      "Adotar uma abordagem passiva às responsabilidades"
+     ],
+     "q": "O que deve um trabalhador fazer para que o dia conte?",
+     "why": "O trabalhador deve trazer energia e intenção para o trabalho para que o dia conte."
+    },
+    "t0": 131,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527948546,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "By repeating bad habits",
+      "By making impulsive decisions",
+      "By repeating good choices and developing good habits",
+      "By ignoring their responsibilities"
+     ],
+     "q": "How can a worker transform their character over time?",
+     "why": "The worker can transform their character by repeating good choices and developing good habits."
+    },
+    "pt": {
+     "opts": [
+      "Repitindo maus hábitos",
+      "Tomando decisões impulsivas",
+      "Repitindo boas escolhas e desenvolvendo bons hábitos",
+      "Ignorando as responsabilidades"
+     ],
+     "q": "Como pode um trabalhador transformar o seu caráter ao longo do tempo?",
+     "why": "O trabalhador pode transformar o seu caráter repitindo boas escolhas e desenvolvendo bons hábitos."
+    },
+    "t0": 157,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527948546,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "They will create a negative atmosphere",
+      "They will have no effect on the atmosphere",
+      "They will contribute to a positive atmosphere",
+      "They will make others feel indifferent"
+     ],
+     "q": "If a worker enters a room with a positive attitude, what effect will they have on the atmosphere?",
+     "why": "The worker will contribute to a positive atmosphere with their energy and presence."
+    },
+    "pt": {
+     "opts": [
+      "Criará uma atmosfera negativa",
+      "Não terá efeito sobre a atmosfera",
+      "Contribuirá para uma atmosfera positiva",
+      "Fará com que os outros se sintam indiferentes"
+     ],
+     "q": "Se um trabalhador entra numa sala com uma atitude positiva, que efeito terá sobre a atmosfera?",
+     "why": "O trabalhador contribuirá para uma atmosfera positiva com a sua energia e presença."
+    },
+    "t0": 183,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527948546,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "They become less motivated",
+      "They create a negative atmosphere",
+      "They become more confident and competent",
+      "They have no impact on those around them"
+     ],
+     "q": "What happens when a worker brings purpose and energy to their work?",
+     "why": "The worker becomes more confident and competent, and their purpose creates energy."
+    },
+    "pt": {
+     "opts": [
+      "Torna-se menos motivado",
+      "Cria uma atmosfera negativa",
+      "Torna-se mais confiante e competente",
+      "Não tem impacto sobre os que o rodeiam"
+     ],
+     "q": "O que acontece quando um trabalhador traz propósito e energia para o trabalho?",
+     "why": "O trabalhador torna-se mais confiante e competente, e o seu propósito cria energia."
+    },
+    "t0": 209,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527948546,
+    "verified": true
+   }
+  ],
+  "1": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "They become more focused",
+      "They become more achievable",
+      "They are reduced to good intentions",
+      "They are ignored"
+     ],
+     "q": "What often happens to ambitions without a clear objective?",
+     "why": "Without a clear objective, ambitions often remain as good intentions and do not lead to concrete actions."
+    },
+    "pt": {
+     "opts": [
+      "Elas se tornam mais focadas",
+      "Elas se tornam mais alcançáveis",
+      "Elas são reduzidas a boas intenções",
+      "Elas são ignoradas"
+     ],
+     "q": "O que acontece frequentemente às ambições sem um objetivo claro?",
+     "why": "Sem um objetivo claro, as ambições frequentemente se reduzem a boas intenções e não levam a ações concretas."
+    },
+    "t0": 79,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527992751,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "A desire is more specific",
+      "An objective is more vague",
+      "A desire is a good intention, while an objective is a clear direction",
+      "An objective is a feeling"
+     ],
+     "q": "What is the difference between a desire and an objective?",
+     "why": "A desire is a good intention, while an objective is a clear direction that can be acted upon."
+    },
+    "pt": {
+     "opts": [
+      "Um desejo é mais específico",
+      "Um objetivo é mais vago",
+      "Um desejo é uma boa intenção, enquanto um objetivo é uma direção clara",
+      "Um objetivo é um sentimento"
+     ],
+     "q": "Qual é a diferença entre um desejo e um objetivo?",
+     "why": "Um desejo é uma boa intenção, enquanto um objetivo é uma direção clara que pode ser executada."
+    },
+    "t0": 106,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527992751,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Start working on it immediately",
+      "Work from the objective backwards to create a plan",
+      "Ignore the objective and focus on other tasks",
+      "Wait for someone else to create a plan"
+     ],
+     "q": "What should you do after defining a clear objective?",
+     "why": "After defining a clear objective, you should work from the objective backwards to create a plan, breaking it down into smaller, manageable tasks."
+    },
+    "pt": {
+     "opts": [
+      "Começar a trabalhar nele imediatamente",
+      "Trabalhar do objetivo para trás para criar um plano",
+      "Ignorar o objetivo e focar em outras tarefas",
+      "Esperar que alguém else crie um plano"
+     ],
+     "q": "O que deve fazer após definir um objetivo claro?",
+     "why": "Após definir um objetivo claro, você deve trabalhar do objetivo para trás para criar um plano, dividindo-o em tarefas menores e gerenciáveis."
+    },
+    "t0": 137,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527992751,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "By doing the same tasks over and over",
+      "By analyzing tasks and looking for better ways to do them",
+      "By ignoring tasks that are difficult",
+      "By waiting for someone else to show you how"
+     ],
+     "q": "How can you become more efficient in your work?",
+     "why": "To become more efficient, you should analyze tasks and look for better ways to do them, which can help you improve your skills and reduce waste."
+    },
+    "pt": {
+     "opts": [
+      "Fazendo as mesmas tarefas repetidamente",
+      "Analisando tarefas e procurando melhores formas de fazê-las",
+      "Ignorando tarefas difíceis",
+      "Esperando que alguém else lhe mostre como"
+     ],
+     "q": "Como pode tornar-se mais eficiente no seu trabalho?",
+     "why": "Para tornar-se mais eficiente, você deve analisar tarefas e procurar melhores formas de fazê-las, o que pode ajudá-lo a melhorar suas habilidades e reduzir desperdício."
+    },
+    "t0": 167,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527992751,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Wait for someone to give you feedback",
+      "Ask someone with more experience to show you how they communicate effectively",
+      "Practice communicating on your own without feedback",
+      "Ignore communication skills and focus on other areas"
+     ],
+     "q": "You want to improve your communication skills, what should you do?",
+     "why": "To improve your communication skills, you should ask someone with more experience to show you how they communicate effectively, which can provide you with valuable feedback and guidance."
+    },
+    "pt": {
+     "opts": [
+      "Esperar que alguém lhe dê feedback",
+      "Pedir a alguém com mais experiência que lhe mostre como se comunica eficazmente",
+      "Praticar a comunicação sozinho sem feedback",
+      "Ignorar habilidades de comunicação e focar em outras áreas"
+     ],
+     "q": "Você quer melhorar suas habilidades de comunicação, o que deve fazer?",
+     "why": "Para melhorar suas habilidades de comunicação, você deve pedir a alguém com mais experiência que lhe mostre como se comunica eficazmente, o que pode proporcionar-lhe feedback e orientação valiosos."
+    },
+    "t0": 196,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527992751,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Give up and focus on other skills",
+      "Break down the skill into smaller, manageable tasks",
+      "Try to learn the skill on your own without guidance",
+      "Wait for someone else to teach you the skill"
+     ],
+     "q": "You are struggling to develop a new skill, what should you do?",
+     "why": "To develop a new skill, you should break it down into smaller, manageable tasks, which can help you make progress and stay motivated."
+    },
+    "pt": {
+     "opts": [
+      "Desistir e focar em outras habilidades",
+      "Dividir a habilidade em tarefas menores e gerenciáveis",
+      "Tentar aprender a habilidade sozinho sem orientação",
+      "Esperar que alguém else lhe ensine a habilidade"
+     ],
+     "q": "Você está tendo dificuldade em desenvolver uma nova habilidade, o que deve fazer?",
+     "why": "Para desenvolver uma nova habilidade, você deve dividi-la em tarefas menores e gerenciáveis, o que pode ajudá-lo a fazer progressos e manter a motivação."
+    },
+    "t0": 224,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788527992751,
+    "corrected": true
+   }
+  ],
+  "2": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "The task takes longer to complete",
+      "The quality of the task decreases",
+      "The task is completed more efficiently with improved quality",
+      "The task remains unchanged"
+     ],
+     "q": "What is the result of applying the caizã approach to a task?",
+     "why": "The caizã approach leads to improved efficiency and quality."
+    },
+    "pt": {
+     "opts": [
+      "A tarefa demora mais tempo a ser concluída",
+      "A qualidade da tarefa diminui",
+      "A tarefa é concluída de forma mais eficiente com melhoria da qualidade",
+      "A tarefa permanece inalterada"
+     ],
+     "q": "Qual é o resultado da aplicação da abordagem caizã a uma tarefa?",
+     "why": "A abordagem caizã leva a uma maior eficiência e qualidade."
+    },
+    "t0": 25,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528014754,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Accepting the current problems",
+      "Asking why the process is done a certain way",
+      "Working faster to complete the task",
+      "Ignoring the issues and moving on"
+     ],
+     "q": "What is the first step in improving a process?",
+     "why": "Asking why the process is done a certain way is the first step in identifying areas for improvement."
+    },
+    "pt": {
+     "opts": [
+      "Aceitar os problemas atuais",
+      "Perguntar por que o processo é feito de uma certa maneira",
+      "Trabalhar mais rápido para concluir a tarefa",
+      "Ignorar os problemas e seguir em frente"
+     ],
+     "q": "Qual é o primeiro passo para melhorar um processo?",
+     "why": "Perguntar por que o processo é feito de uma certa maneira é o primeiro passo para identificar áreas de melhoria."
+    },
+    "t0": 83,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528014754,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Try to work around it",
+      "Ignore it and continue with the task",
+      "Ask why the process is done that way and look for improvements",
+      "Accept it as inevitable"
+     ],
+     "q": "What should you do when you notice a point of friction in a process?",
+     "why": "Identifying and addressing points of friction can lead to process improvements."
+    },
+    "pt": {
+     "opts": [
+      "Tentar contorná-lo",
+      "Ignorá-lo e continuar com a tarefa",
+      "Perguntar por que o processo é feito dessa maneira e procurar melhorias",
+      "Aceitá-lo como inevitável"
+     ],
+     "q": "O que deve fazer quando nota um ponto de fricção num processo?",
+     "why": "Identificar e abordar pontos de fricção pode levar a melhorias no processo."
+    },
+    "t0": 110,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528014754,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Implement a solution immediately",
+      "Gather more information before taking action",
+      "Ask the five questions to understand the process better",
+      "Do nothing and hope the problem resolves itself"
+     ],
+     "q": "When identifying an opportunity for improvement, what should you do next?",
+     "why": "Asking the five questions helps to understand the process and identify the best improvement opportunities."
+    },
+    "pt": {
+     "opts": [
+      "Implementar uma solução imediatamente",
+      "Recolher mais informações antes de tomar medidas",
+      "Fazer as cinco perguntas para entender melhor o processo",
+      "Não fazer nada e esperar que o problema se resolva sozinho"
+     ],
+     "q": "Quando identifica uma oportunidade de melhoria, o que deve fazer em seguida?",
+     "why": "Fazer as cinco perguntas ajuda a entender o processo e identificar as melhores oportunidades de melhoria."
+    },
+    "t0": 167,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528014754,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "The team member is not skilled enough",
+      "The information is not available",
+      "The process has too many steps",
+      "The information is difficult to find"
+     ],
+     "q": "A team member is spending a lot of time searching for information to complete a task. What might be the underlying issue?",
+     "why": "Difficult-to-find information is a common point of friction that can be addressed through process improvements."
+    },
+    "pt": {
+     "opts": [
+      "O membro da equipa não tem habilidades suficientes",
+      "As informações não estão disponíveis",
+      "O processo tem demasiados passos",
+      "As informações são difíceis de encontrar"
+     ],
+     "q": "Um membro da equipa está a gastar muito tempo à procura de informações para concluir uma tarefa. Qual pode ser o problema subjacente?",
+     "why": "Informações difíceis de encontrar são um ponto de fricção comum que pode ser abordado através de melhorias no processo."
+    },
+    "t0": 140,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528014754,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask why each step is necessary",
+      "Implement a new solution immediately",
+      "Eliminate the last step",
+      "Add more steps to make it more efficient"
+     ],
+     "q": "A process has five steps, but the team thinks it can be simplified. What should they do first?",
+     "why": "Understanding the purpose of each step is essential to simplifying a process effectively."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar por que cada passo é necessário",
+      "Implementar uma nova solução imediatamente",
+      "Eliminar o último passo",
+      "Adicionar mais passos para torná-lo mais eficiente"
+     ],
+     "q": "Um processo tem cinco passos, mas a equipa acha que pode ser simplificado. O que devem fazer em primeiro lugar?",
+     "why": "Entender o propósito de cada passo é essencial para simplificar um processo de forma eficaz."
+    },
+    "t0": 192,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528014754,
+    "verified": true
+   }
+  ],
+  "3": [
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Ação, resultado, interpretação, crença",
+      "Acontecimento, interpretação, crença, diálogo interior",
+      "Diálogo interior, ação, resultado, crença",
+      "Interpretação, crença, diálogo interior, ação"
+     ],
+     "q": "What is the sequence of events that leads to the formation of a belief?",
+     "why": "The correct sequence is: acontecimento, interpretação, crença, diálogo interior, ação, resultado."
+    },
+    "pt": {
+     "opts": [
+      "Ação, resultado, interpretação, crença",
+      "Acontecimento, interpretação, crença, diálogo interior",
+      "Diálogo interior, ação, resultado, crença",
+      "Interpretação, crença, diálogo interior, ação"
+     ],
+     "q": "Qual é a sequência de eventos que leva à formação de uma crença?",
+     "why": "A sequência correta é: acontecimento, interpretação, crença, diálogo interior, ação, resultado."
+    },
+    "t0": 54,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528047256,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "It influences what we notice and how we interpret it",
+      "It has no effect on our perception",
+      "It only affects our actions",
+      "It only affects our emotions"
+     ],
+     "q": "What happens when a belief becomes a filter?",
+     "why": "A belief can influence what we notice and how we interpret it, making it a filter."
+    },
+    "pt": {
+     "opts": [
+      "Influencia aquilo em que reparamos e a forma como o interpretamos",
+      "Não tem efeito na nossa percepção",
+      "Apenas afeta as nossas ações",
+      "Apenas afeta as nossas emoções"
+     ],
+     "q": "O que acontece quando uma crença se torna um filtro?",
+     "why": "Uma crença pode influenciar aquilo em que reparamos e a forma como o interpretamos, tornando-se um filtro."
+    },
+    "t0": 136,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528047256,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Choose one that is positive, regardless of its usefulness",
+      "Choose one that is negative, to be prepared for the worst",
+      "Choose one that produces useful thoughts and actions",
+      "Choose one that is based on emotions"
+     ],
+     "q": "What should you do when choosing a belief?",
+     "why": "You should choose a belief that produces useful thoughts and actions."
+    },
+    "pt": {
+     "opts": [
+      "Escolha uma que seja positiva, independentemente da sua utilidade",
+      "Escolha uma que seja negativa, para estar preparado para o pior",
+      "Escolha uma que produz pensamentos e ações úteis",
+      "Escolha uma que seja baseada em emoções"
+     ],
+     "q": "O que deve fazer ao escolher uma crença?",
+     "why": "Deve escolher uma crença que produz pensamentos e ações úteis."
+    },
+    "t0": 164,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528047256,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Diálogo interior",
+      "Ação",
+      "Crença",
+      "Emoção"
+     ],
+     "q": "What can be trained to support performance, learning, and motivation?",
+     "why": "Diálogo interior can be trained to support performance, learning, and motivation."
+    },
+    "pt": {
+     "opts": [
+      "Diálogo interior",
+      "Ação",
+      "Crença",
+      "Emoção"
+     ],
+     "q": "O que pode ser treinado para apoiar o desempenho, a aprendizagem e a motivação?",
+     "why": "O diálogo interior pode ser treinado para apoiar o desempenho, a aprendizagem e a motivação."
+    },
+    "t0": 193,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528047256,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Ignore the criticism and continue working",
+      "Take the criticism personally and get defensive",
+      "Use the criticism as an opportunity to learn and improve",
+      "Quit your job"
+     ],
+     "q": "Imagine you received criticism on your work. What should you do?",
+     "why": "You should use the criticism as an opportunity to learn and improve."
+    },
+    "pt": {
+     "opts": [
+      "Ignore as críticas e continue a trabalhar",
+      "Leve as críticas para o pessoal e se defenda",
+      "Use as críticas como uma oportunidade para aprender e melhorar",
+      "Deixe o emprego"
+     ],
+     "q": "Imagine que recebeu críticas ao seu trabalho. O que deve fazer?",
+     "why": "Deve usar as críticas como uma oportunidade para aprender e melhorar."
+    },
+    "t0": 83,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528047256,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "You are not capable of learning",
+      "You are not trying hard enough",
+      "You lack experience or need more practice",
+      "You are too old to learn"
+     ],
+     "q": "You are struggling to learn something new. What might this mean?",
+     "why": "Struggling to learn something new might mean you lack experience or need more practice."
+    },
+    "pt": {
+     "opts": [
+      "Não é capaz de aprender",
+      "Não está a tentar suficientemente",
+      "Falta de experiência ou precisa de mais prática",
+      "É demasiado velho para aprender"
+     ],
+     "q": "Está a ter dificuldades em aprender algo novo. O que isso pode significar?",
+     "why": "Ter dificuldades em aprender algo novo pode significar que falta experiência ou precisa de mais prática."
+    },
+    "t0": 110,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528047256,
+    "corrected": true
+   }
+  ],
+  "4": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Certeza, variedade, importância",
+      "Crescimento, contribuição, ligação",
+      "Certeza, variedade, importância, ligação, crescimento, contribuição",
+      "Variedade, importância, ligação, crescimento"
+     ],
+     "q": "What are the six fundamental human needs?",
+     "why": "The six fundamental human needs are certeza, variedade, importância, ligação, crescimento, and contribuição."
+    },
+    "pt": {
+     "opts": [
+      "Certeza, variedade, importância",
+      "Crescimento, contribuição, ligação",
+      "Certeza, variedade, importância, ligação, crescimento, contribuição",
+      "Variedade, importância, ligação, crescimento"
+     ],
+     "q": "Quais são as seis necessidades humanas fundamentais?",
+     "why": "As seis necessidades humanas fundamentais são certeza, variedade, importância, ligação, crescimento e contribuição."
+    },
+    "t0": 26,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528087329,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "Ask why the change is happening",
+      "Panic and try to stop the change",
+      "Try to adapt to the change",
+      "Stop and ask yourself what you know and don't know"
+     ],
+     "q": "What should be your first reaction when faced with a change?",
+     "why": "When faced with a change, you should stop and ask yourself what you know and don't know."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar por que a mudança está a acontecer",
+      "Panicar e tentar parar a mudança",
+      "Tentar adaptar-se à mudança",
+      "Parar e perguntar a si mesmo o que sabe e não sabe"
+     ],
+     "q": "Qual deve ser a sua primeira reação quando enfrenta uma mudança?",
+     "why": "Quando enfrenta uma mudança, deve parar e perguntar a si mesmo o que sabe e não sabe."
+    },
+    "t0": 53,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528087329,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Start something new immediately",
+      "Try to find ways to make the current task more engaging",
+      "Ask yourself if you really need a change or just need stimulation",
+      "Give up on the task altogether"
+     ],
+     "q": "What should you do when you feel the need for variety and are getting frustrated with routine?",
+     "why": "When you feel the need for variety and are getting frustrated with routine, you should ask yourself if you really need a change or just need stimulation."
+    },
+    "pt": {
+     "opts": [
+      "Começar algo novo imediatamente",
+      "Tentar encontrar formas de tornar a tarefa atual mais atraente",
+      "Perguntar a si mesmo se realmente precisa de uma mudança ou apenas precisa de estímulo",
+      "Desistir da tarefa completamente"
+     ],
+     "q": "O que deve fazer quando sente a necessidade de variedade e se está a frustrar com a rotina?",
+     "why": "Quando sente a necessidade de variedade e se está a frustrar com a rotina, deve perguntar a si mesmo se realmente precisa de uma mudança ou apenas precisa de estímulo."
+    },
+    "t0": 80,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528087329,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Defend yourself and try to prove your point",
+      "Take a step back and ask yourself if you are trying to solve the problem or prove your value",
+      "Ignore the feedback and move on",
+      "Get angry and confront the person giving the feedback"
+     ],
+     "q": "What should you do when you receive feedback that feels personal?",
+     "why": "When you receive feedback that feels personal, you should take a step back and ask yourself if you are trying to solve the problem or prove your value."
+    },
+    "pt": {
+     "opts": [
+      "Defender-se e tentar provar o seu ponto de vista",
+      "Dar um passo atrás e perguntar a si mesmo se está a tentar resolver o problema ou provar o seu valor",
+      "Ignorar o feedback e seguir em frente",
+      "Ficar zangado e confrontar a pessoa que deu o feedback"
+     ],
+     "q": "O que deve fazer quando recebe feedback que parece pessoal?",
+     "why": "Quando recebe feedback que parece pessoal, deve dar um passo atrás e perguntar a si mesmo se está a tentar resolver o problema ou provar o seu valor."
+    },
+    "t0": 130,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528087329,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "Avoid talking to the teammate and hope the problem resolves itself",
+      "Confront the teammate and tell them they are not doing their job",
+      "Try to find ways to make the task more engaging for the teammate",
+      "Have an open and honest conversation with the teammate about the issue"
+     ],
+     "q": "You are working on a team project and one of your teammates is not pulling their weight. You feel frustrated and want to avoid conflict. What should you do?",
+     "why": "You should have an open and honest conversation with the teammate about the issue."
+    },
+    "pt": {
+     "opts": [
+      "Evitar falar com o colega de equipa e esperar que o problema se resolva sozinho",
+      "Confrontar o colega de equipa e dizer-lhe que não está a fazer o seu trabalho",
+      "Tentar encontrar formas de tornar a tarefa mais atraente para o colega de equipa",
+      "Ter uma conversa aberta e honesta com o colega de equipa sobre a questão"
+     ],
+     "q": "Está a trabalhar num projeto de equipa e um dos seus colegas de equipa não está a fazer o seu trabalho. Sente-se frustrado e quer evitar conflitos. O que deve fazer?",
+     "why": "Deve ter uma conversa aberta e honesta com o colega de equipa sobre a questão."
+    },
+    "t0": 157,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528087329,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Start looking for a new job immediately",
+      "Try to find ways to improve your current role and make it more challenging",
+      "Talk to your supervisor about your feelings and see if there are any opportunities for growth",
+      "Give up on the idea of growth and stay in the current role"
+     ],
+     "q": "You feel like you are not growing in your current role and are considering looking for a new job. What should you do first?",
+     "why": "You should try to find ways to improve your current role and make it more challenging."
+    },
+    "pt": {
+     "opts": [
+      "Começar a procurar um novo emprego imediatamente",
+      "Tentar encontrar formas de melhorar o seu atual papel e torná-lo mais desafiador",
+      "Falar com o seu supervisor sobre os seus sentimentos e ver se há oportunidades para crescimento",
+      "Desistir da ideia de crescimento e ficar no atual papel"
+     ],
+     "q": "Sente que não está a crescer no seu atual papel e está a considerar procurar um novo emprego. O que deve fazer primeiro?",
+     "why": "Deve tentar encontrar formas de melhorar o seu atual papel e torná-lo mais desafiador."
+    },
+    "t0": 182,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788528087329,
+    "verified": true
+   }
+  ]
+ }
+}

@@ -1,0 +1,40 @@
+{
+ "reel": "standards-vs-expectations",
+ "language": "en",
+ "machineTranslated": false,
+ "native": true,
+ "source": "file",
+ "generatedAt": 1788527309118,
+ "segments": [
+  {
+   "t0": 0,
+   "t1": 3,
+   "text": "Two words that end most arguments at work."
+  },
+  {
+   "t0": 3,
+   "t1": 6,
+   "text": "Standards are what I demand of myself."
+  },
+  {
+   "t0": 6,
+   "t1": 9,
+   "text": "Expectations are what I demand of everyone else."
+  },
+  {
+   "t0": 9,
+   "t1": 13,
+   "text": "Nearly all friction is high expectations sitting on a low standard."
+  },
+  {
+   "t0": 13,
+   "t1": 17,
+   "text": "Raise the standard before you raise the expectation."
+  },
+  {
+   "t0": 17,
+   "t1": 20,
+   "text": "Right now, which one of yours is higher?"
+  }
+ ]
+}

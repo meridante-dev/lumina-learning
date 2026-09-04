@@ -144,7 +144,12 @@ const REELS = (() => {
     + ';return typeof REELS !== "undefined" ? REELS : []')(); } catch (e) { return []; }
 })();
 index.reels = [];
-for (const r of REELS) {
+/* PENDING REELS STAY OUT OF THE BRAIN. Curation defaults to pending so a new
+   reel reaches nobody until it is approved in Studio — and "nobody" includes
+   Recall, the graph and LandFlow: a pending reel surfacing as a moment under
+   the ask bar would be a door into footage the tenant has not chosen yet.
+   The integrity suite pins this (reel nodes === approved reels). */
+for (const r of REELS.filter(r => r.approved)) {
   const f = join(REEL_TR, `${r.id}.json`);
   if (!existsSync(f)) continue;
   const tr = JSON.parse(readFileSync(f, 'utf8'));

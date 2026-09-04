@@ -35,6 +35,18 @@ not a feed. The hybrid is deliberate.
 
 ---
 
+## 0b · Batch 2 (2026-09-04) — staged PENDING
+The 28 clips sitting in `reels-source/Vertical/` (outside `Approved/`) were transcoded,
+transcribed and grouped by script on the SSD (`Academy-OS/work/reels-batch/`). They
+collapse to **8 new scripts**, now in `content.js` with `approved: false` and on the CDN:
+`agreed-values · three-solutions · three-words · agreed-not-told · standards-vs-expectations ·
+clean-the-site · who-did-it · great-teammates`. Approve them in Studio → Quick wins.
+Not staged, on purpose: `own-the-outcome-5` and `standards.mp4` are new takes of the
+already-published *Own The Outcome* and *Defining Excellence* scripts; the ten
+`raise-the-energy-12…21` files and `own-the-outcome-6/7` are ten takes of ONE script
+(now `great-teammates`); `standards-1/2/3` and `the-invitation-1` carry no speech
+(music only — text-on-screen reels need a different path, the forge cannot read them).
+
 ## 1 · Add a batch of new clips
 
 **a. Optimise for delivery.** Masters stay in Drive/SSD; the web copy is a

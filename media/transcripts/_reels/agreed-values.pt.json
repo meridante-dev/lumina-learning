@@ -1,0 +1,35 @@
+{
+ "reel": "agreed-values",
+ "language": "en",
+ "machineTranslated": false,
+ "native": true,
+ "source": "file",
+ "generatedAt": 1788527149643,
+ "segments": [
+  {
+   "t0": 0,
+   "t1": 4,
+   "text": "Same question, two different answers, same week."
+  },
+  {
+   "t0": 4,
+   "t1": 8,
+   "text": "When a team has no agreed values, every decision runs on something else."
+  },
+  {
+   "t0": 8,
+   "t1": 13,
+   "text": "Whoever is loudest, whatever happened last, how tired everyone is."
+  },
+  {
+   "t0": 13,
+   "t1": 17,
+   "text": "Values or moods, there is no third option."
+  },
+  {
+   "t0": 17,
+   "t1": 20,
+   "text": "Name one value your team actually uses."
+  }
+ ]
+}

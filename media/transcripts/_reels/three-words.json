@@ -1,0 +1,40 @@
+{
+ "reel": "three-words",
+ "language": "en",
+ "machineTranslated": false,
+ "native": true,
+ "source": "file",
+ "generatedAt": 1788526977530,
+ "segments": [
+  {
+   "t0": 0.0,
+   "t1": 3.5,
+   "text": "Something goes wrong, and someone says three words."
+  },
+  {
+   "t0": 3.5,
+   "t1": 7.0,
+   "text": "It sounds like an answer. It has never once fixed anything."
+  },
+  {
+   "t0": 7.0,
+   "t1": 10.5,
+   "text": "Because you can remove the person and the problem stays."
+  },
+  {
+   "t0": 10.5,
+   "t1": 13.5,
+   "text": "A new person arrives, the same problem comes back."
+  },
+  {
+   "t0": 13.5,
+   "t1": 16.0,
+   "text": "The person is almost not the problem."
+  },
+  {
+   "t0": 16.0,
+   "t1": 19.5,
+   "text": "Next time something breaks, what do you say first?"
+  }
+ ]
+}

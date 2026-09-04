@@ -1,0 +1,624 @@
+{
+ "module": 3,
+ "title": "Winning Beliefs",
+ "vimeoId": "1222970261",
+ "vimeoName": "4. Winning Beliefs",
+ "language": "en",
+ "durationSec": 333,
+ "machineTranslated": false,
+ "native": true,
+ "source": "vimeo-api",
+ "generatedAt": 1788525213747,
+ "segments": [
+  {
+   "t0": 0,
+   "t1": 2.6,
+   "text": "Two people receive the same feedback."
+  },
+  {
+   "t0": 2.6,
+   "t1": 4.54,
+   "text": "This needs to improve."
+  },
+  {
+   "t0": 4.54,
+   "t1": 7.24,
+   "text": "One hears, I'm not good enough."
+  },
+  {
+   "t0": 7.24,
+   "t1": 10.1,
+   "text": "They lose confidence and avoid the task."
+  },
+  {
+   "t0": 10.1,
+   "t1": 13.58,
+   "text": "The other hears, now I know what to work on."
+  },
+  {
+   "t0": 13.58,
+   "t1": 17.52,
+   "text": "They ask a question, practice, and try again."
+  },
+  {
+   "t0": 17.52,
+   "t1": 21.96,
+   "text": "Same event, different interpretation, different belief,"
+  },
+  {
+   "t0": 21.96,
+   "t1": 25.04,
+   "text": "different action, different result."
+  },
+  {
+   "t0": 25.04,
+   "t1": 27.32,
+   "text": "That is why beliefs matter."
+  },
+  {
+   "t0": 27.32,
+   "t1": 29.76,
+   "text": "They shape the meaning you give an experience"
+  },
+  {
+   "t0": 29.76,
+   "t1": 31.8,
+   "text": "and what you do next."
+  },
+  {
+   "t0": 31.8,
+   "t1": 36.08,
+   "text": "Your self-talk is your beliefs speaking in sentences."
+  },
+  {
+   "t0": 36.08,
+   "t1": 39.72,
+   "text": "Beliefs do not usually begin as proven facts."
+  },
+  {
+   "t0": 39.72,
+   "t1": 41.28,
+   "text": "Something happens."
+  },
+  {
+   "t0": 41.28,
+   "t1": 43.32,
+   "text": "You interpret what it means."
+  },
+  {
+   "t0": 43.32,
+   "t1": 46.4,
+   "text": "That interpretation becomes a belief."
+  },
+  {
+   "t0": 46.4,
+   "t1": 48.96,
+   "text": "The belief shapes your self-talk."
+  },
+  {
+   "t0": 48.96,
+   "t1": 51.76,
+   "text": "Your self-talk influences your actions."
+  },
+  {
+   "t0": 51.76,
+   "t1": 54,
+   "text": "Your actions create results."
+  },
+  {
+   "t0": 54,
+   "t1": 56.72,
+   "text": "Those results become new evidence."
+  },
+  {
+   "t0": 56.72,
+   "t1": 61.2,
+   "text": "The pattern is event, interpretation, belief,"
+  },
+  {
+   "t0": 61.2,
+   "t1": 64.76,
+   "text": "self-talk, action, result."
+  },
+  {
+   "t0": 64.76,
+   "t1": 66.56,
+   "text": "If you want a different result,"
+  },
+  {
+   "t0": 66.56,
+   "t1": 69.48,
+   "text": "examine the pattern before the action."
+  },
+  {
+   "t0": 69.48,
+   "t1": 72.4,
+   "text": "Imagine a belief as the top of a table."
+  },
+  {
+   "t0": 72.4,
+   "t1": 75.8,
+   "text": "The tabletop might say, I'm not good at this."
+  },
+  {
+   "t0": 75.8,
+   "t1": 78.56,
+   "text": "The legs are the references that support it."
+  },
+  {
+   "t0": 78.56,
+   "t1": 80,
+   "text": "You made a mistake."
+  },
+  {
+   "t0": 80,
+   "t1": 81.96,
+   "text": "Someone criticized your work."
+  },
+  {
+   "t0": 81.96,
+   "t1": 84,
+   "text": "You struggled with something new."
+  },
+  {
+   "t0": 84,
+   "t1": 85.96,
+   "text": "The belief feels solid."
+  },
+  {
+   "t0": 85.96,
+   "t1": 88.16,
+   "text": "But inspect the legs."
+  },
+  {
+   "t0": 88.16,
+   "t1": 90.56,
+   "text": "A mistake may mean you are learning."
+  },
+  {
+   "t0": 90.56,
+   "t1": 93.92,
+   "text": "Criticism may contain useful information."
+  },
+  {
+   "t0": 93.92,
+   "t1": 97.24,
+   "text": "Early struggle may simply mean you are inexperienced."
+  },
+  {
+   "t0": 97.24,
+   "t1": 98.88,
+   "text": "The event may be real"
+  },
+  {
+   "t0": 98.88,
+   "t1": 103.88,
+   "text": "while the conclusion is incomplete, exaggerated, or wrong."
+  },
+  {
+   "t0": 104.08,
+   "t1": 105.88,
+   "text": "Once the table is standing,"
+  },
+  {
+   "t0": 105.88,
+   "t1": 109.28,
+   "text": "you naturally look for more evidence to support it."
+  },
+  {
+   "t0": 109.28,
+   "t1": 112.32,
+   "text": "If you believe, I can't handle change,"
+  },
+  {
+   "t0": 112.32,
+   "t1": 115.52,
+   "text": "every uncomfortable transition becomes proof"
+  },
+  {
+   "t0": 115.56,
+   "t1": 119.2,
+   "text": "while the times you adapted successfully are forgotten."
+  },
+  {
+   "t0": 119.2,
+   "t1": 121.32,
+   "text": "A belief becomes a filter."
+  },
+  {
+   "t0": 121.32,
+   "t1": 125.12,
+   "text": "It influences what you notice and how you interpret it."
+  },
+  {
+   "t0": 125.12,
+   "t1": 127.96,
+   "text": "A winning belief is not fantasy."
+  },
+  {
+   "t0": 127.96,
+   "t1": 129.24,
+   "text": "It is not."
+  },
+  {
+   "t0": 129.24,
+   "t1": 133.56,
+   "text": "I never make mistakes or everything will be easy."
+  },
+  {
+   "t0": 134.72,
+   "t1": 137,
+   "text": "A winning belief respects reality"
+  },
+  {
+   "t0": 137,
+   "t1": 140.4,
+   "text": "while putting you in the strongest position to respond."
+  },
+  {
+   "t0": 140.4,
+   "t1": 142.72,
+   "text": "I can learn from mistakes."
+  },
+  {
+   "t0": 142.72,
+   "t1": 145.96,
+   "text": "I may not know yet, but I can find the next step."
+  },
+  {
+   "t0": 146.92,
+   "t1": 150.8,
+   "text": "Do not choose a belief simply because it sounds positive."
+  },
+  {
+   "t0": 150.8,
+   "t1": 154.64,
+   "text": "Choose it because it creates useful thinking and action."
+  },
+  {
+   "t0": 154.64,
+   "t1": 158.08,
+   "text": "Ask, does this belief help me see clearly?"
+  },
+  {
+   "t0": 158.92,
+   "t1": 162.68,
+   "text": "Does it lead towards responsibility and useful action?"
+  },
+  {
+   "t0": 162.68,
+   "t1": 165.08,
+   "text": "Effective self-talk is a trainable skill"
+  },
+  {
+   "t0": 165.08,
+   "t1": 168.6,
+   "text": "that supports performance, learning, and motivation."
+  },
+  {
+   "t0": 168.6,
+   "t1": 170.36,
+   "text": "It directs attention."
+  },
+  {
+   "t0": 170.36,
+   "t1": 173.56,
+   "text": "Compare, I can't handle this."
+  },
+  {
+   "t0": 173.56,
+   "t1": 175.88,
+   "text": "With, slow down."
+  },
+  {
+   "t0": 175.88,
+   "t1": 178.4,
+   "text": "What is the next useful action?"
+  },
+  {
+   "t0": 178.4,
+   "t1": 181.28,
+   "text": "Self-talk is belief in sentence form."
+  },
+  {
+   "t0": 181.28,
+   "t1": 183.04,
+   "text": "So how do you change a belief?"
+  },
+  {
+   "t0": 183.04,
+   "t1": 184.68,
+   "text": "Use five steps."
+  },
+  {
+   "t0": 184.68,
+   "t1": 186.2,
+   "text": "First, catch it."
+  },
+  {
+   "t0": 186.2,
+   "t1": 188.24,
+   "text": "Listen for absolute self-talk."
+  },
+  {
+   "t0": 188.24,
+   "t1": 190.64,
+   "text": "Always, never, can't."
+  },
+  {
+   "t0": 190.64,
+   "t1": 193.12,
+   "text": "Or, that's just who I am."
+  },
+  {
+   "t0": 193.12,
+   "t1": 195.08,
+   "text": "Second, trace it."
+  },
+  {
+   "t0": 195.08,
+   "t1": 197.2,
+   "text": "What belief is beneath the sentence?"
+  },
+  {
+   "t0": 197.2,
+   "t1": 198.96,
+   "text": "Where did it come from?"
+  },
+  {
+   "t0": 198.96,
+   "t1": 200.84,
+   "text": "Third, test it."
+  },
+  {
+   "t0": 200.84,
+   "t1": 202.52,
+   "text": "Which parts are facts?"
+  },
+  {
+   "t0": 202.52,
+   "t1": 204.28,
+   "text": "Which are interpretations?"
+  },
+  {
+   "t0": 204.28,
+   "t1": 206.52,
+   "text": "What evidence are you overlooking?"
+  },
+  {
+   "t0": 206.52,
+   "t1": 208.68,
+   "text": "Fourth, choose it."
+  },
+  {
+   "t0": 208.68,
+   "t1": 211.48,
+   "text": "Choose a belief that is truthful, useful,"
+  },
+  {
+   "t0": 211.48,
+   "t1": 213.44,
+   "text": "and action-oriented."
+  },
+  {
+   "t0": 213.44,
+   "t1": 216.8,
+   "text": "Not, I'm already excellent at this."
+  },
+  {
+   "t0": 216.8,
+   "t1": 219.44,
+   "text": "But, I can improve through practice,"
+  },
+  {
+   "t0": 219.44,
+   "t1": 221.52,
+   "text": "preparation, and feedback."
+  },
+  {
+   "t0": 221.52,
+   "t1": 223.72,
+   "text": "Fifth, prove it."
+  },
+  {
+   "t0": 223.72,
+   "t1": 227.52,
+   "text": "Take one small action that gives the new belief evidence."
+  },
+  {
+   "t0": 227.52,
+   "t1": 228.96,
+   "text": "Ask the question."
+  },
+  {
+   "t0": 228.96,
+   "t1": 230.76,
+   "text": "Attempt the task."
+  },
+  {
+   "t0": 230.76,
+   "t1": 232.64,
+   "text": "Practice the skill."
+  },
+  {
+   "t0": 232.64,
+   "t1": 235.04,
+   "text": "Every useful action becomes another leg"
+  },
+  {
+   "t0": 235.04,
+   "t1": 237,
+   "text": "under the new table."
+  },
+  {
+   "t0": 237,
+   "t1": 238.64,
+   "text": "Suppose someone believes,"
+  },
+  {
+   "t0": 238.64,
+   "t1": 240.92,
+   "text": "I'm bad at solving problems."
+  },
+  {
+   "t0": 240.92,
+   "t1": 244.16,
+   "text": "Their self-talk says, I won't know what to do."
+  },
+  {
+   "t0": 244.16,
+   "t1": 246.32,
+   "text": "So they avoid the problem."
+  },
+  {
+   "t0": 246.32,
+   "t1": 250.04,
+   "text": "Now, replace it with, I can break problems into steps"
+  },
+  {
+   "t0": 250.04,
+   "t1": 251.96,
+   "text": "and ask for input when I need it."
+  },
+  {
+   "t0": 253.24,
+   "t1": 255.4,
+   "text": "Break the problem into steps."
+  },
+  {
+   "t0": 255.44,
+   "t1": 257.16,
+   "text": "Take the first action."
+  },
+  {
+   "t0": 257.16,
+   "t1": 258.88,
+   "text": "Learn from the result."
+  },
+  {
+   "t0": 258.88,
+   "t1": 261.52,
+   "text": "Each action creates new evidence."
+  },
+  {
+   "t0": 261.52,
+   "t1": 265.4,
+   "text": "You do not have to feel completely certain before acting."
+  },
+  {
+   "t0": 265.4,
+   "t1": 267.8,
+   "text": "Act in a way that gives the stronger belief"
+  },
+  {
+   "t0": 267.8,
+   "t1": 270.12,
+   "text": "a chance to become credible."
+  },
+  {
+   "t0": 270.12,
+   "t1": 272.16,
+   "text": "Here is your challenge."
+  },
+  {
+   "t0": 272.16,
+   "t1": 274.08,
+   "text": "Write down one limiting sentence"
+  },
+  {
+   "t0": 274.08,
+   "t1": 276.6,
+   "text": "you regularly say to yourself."
+  },
+  {
+   "t0": 276.6,
+   "t1": 279.28,
+   "text": "Identify the belief beneath it."
+  },
+  {
+   "t0": 279.28,
+   "t1": 281.88,
+   "text": "Imagine it as the top of a table."
+  },
+  {
+   "t0": 281.88,
+   "t1": 283.52,
+   "text": "What are the legs?"
+  },
+  {
+   "t0": 283.52,
+   "t1": 287.28,
+   "text": "Which are facts and which are interpretations."
+  },
+  {
+   "t0": 287.28,
+   "t1": 289.16,
+   "text": "Now choose a winning belief"
+  },
+  {
+   "t0": 289.16,
+   "t1": 291.84,
+   "text": "that would help you create a better outcome."
+  },
+  {
+   "t0": 291.84,
+   "t1": 295.4,
+   "text": "Then take one action within the next 24 hours"
+  },
+  {
+   "t0": 295.4,
+   "t1": 297.68,
+   "text": "to begin building evidence for it."
+  },
+  {
+   "t0": 297.68,
+   "t1": 302.48,
+   "text": "For example, old belief, I'm not confident."
+  },
+  {
+   "t0": 302.48,
+   "t1": 307.16,
+   "text": "Winning belief, confidence grows when I prepare and act."
+  },
+  {
+   "t0": 307.16,
+   "t1": 312.16,
+   "text": "New evidence, prepare one useful contribution and say it."
+  },
+  {
+   "t0": 312.36,
+   "t1": 315.2,
+   "text": "Beliefs are conclusions you can examine."
+  },
+  {
+   "t0": 315.2,
+   "t1": 317.88,
+   "text": "Your self-talk reveals your beliefs."
+  },
+  {
+   "t0": 317.88,
+   "t1": 320.48,
+   "text": "Your actions create new evidence."
+  },
+  {
+   "t0": 320.48,
+   "t1": 324,
+   "text": "So listen carefully, interpret wisely,"
+  },
+  {
+   "t0": 324,
+   "t1": 327.92,
+   "text": "choose deliberately, then act."
+  },
+  {
+   "t0": 327.92,
+   "t1": 330.6,
+   "text": "Choose beliefs that help you face reality,"
+  },
+  {
+   "t0": 330.6,
+   "t1": 333.04,
+   "text": "take responsibility and move forward."
+  }
+ ]
+}

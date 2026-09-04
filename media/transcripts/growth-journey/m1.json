@@ -1,0 +1,664 @@
+{
+ "module": 1,
+ "title": "Goal Setting",
+ "vimeoId": "1220781804",
+ "vimeoName": "2. Goal Setting",
+ "language": "en",
+ "durationSec": 377,
+ "machineTranslated": false,
+ "native": true,
+ "source": "vimeo-api",
+ "generatedAt": 1788525006520,
+ "segments": [
+  {
+   "t0": 0,
+   "t1": 3.96,
+   "text": "Imagine two people starting in similar roles."
+  },
+  {
+   "t0": 3.96,
+   "t1": 7.28,
+   "text": "They have similar abilities, similar opportunities,"
+  },
+  {
+   "t0": 7.28,
+   "t1": 9.44,
+   "text": "and similar support."
+  },
+  {
+   "t0": 9.44,
+   "t1": 12.64,
+   "text": "One comes to work, does what is required,"
+  },
+  {
+   "t0": 12.64,
+   "t1": 16.4,
+   "text": "finishes the day, and repeats the same pattern."
+  },
+  {
+   "t0": 16.4,
+   "t1": 20.16,
+   "text": "The other asks, what do I want to be better at"
+  },
+  {
+   "t0": 20.16,
+   "t1": 22.28,
+   "text": "six months from now?"
+  },
+  {
+   "t0": 22.28,
+   "t1": 24.72,
+   "text": "What skill do I want to develop?"
+  },
+  {
+   "t0": 24.72,
+   "t1": 28.38,
+   "text": "What would make me more capable, more effective,"
+  },
+  {
+   "t0": 28.38,
+   "t1": 30.98,
+   "text": "and more useful to the team?"
+  },
+  {
+   "t0": 30.98,
+   "t1": 33.66,
+   "text": "A year later, those two people may be"
+  },
+  {
+   "t0": 33.66,
+   "t1": 36.02,
+   "text": "in very different places."
+  },
+  {
+   "t0": 36.02,
+   "t1": 36.98,
+   "text": "Why?"
+  },
+  {
+   "t0": 36.98,
+   "t1": 39.18,
+   "text": "Because one simply worked."
+  },
+  {
+   "t0": 39.18,
+   "t1": 41.94,
+   "text": "The other worked with direction."
+  },
+  {
+   "t0": 41.94,
+   "t1": 45.02,
+   "text": "Goals help you take ownership of your growth."
+  },
+  {
+   "t0": 45.02,
+   "t1": 48.58,
+   "text": "Other people can give you training, feedback, support,"
+  },
+  {
+   "t0": 48.58,
+   "t1": 50.7,
+   "text": "and opportunities to learn,"
+  },
+  {
+   "t0": 50.7,
+   "t1": 53.4,
+   "text": "but no one can take responsibility"
+  },
+  {
+   "t0": 53.4,
+   "t1": 55.22,
+   "text": "for your development for you."
+  },
+  {
+   "t0": 55.22,
+   "t1": 57.62,
+   "text": "That part belongs to you."
+  },
+  {
+   "t0": 57.62,
+   "t1": 60.86,
+   "text": "Maybe you want to become more confident in your role."
+  },
+  {
+   "t0": 60.86,
+   "t1": 63.66,
+   "text": "Maybe you want to communicate more clearly."
+  },
+  {
+   "t0": 63.66,
+   "t1": 66.22,
+   "text": "Maybe you want to become more efficient."
+  },
+  {
+   "t0": 66.22,
+   "t1": 69.62,
+   "text": "Maybe you want to solve problems more independently."
+  },
+  {
+   "t0": 69.62,
+   "t1": 72.18,
+   "text": "Maybe you want to develop a new skill,"
+  },
+  {
+   "t0": 72.18,
+   "t1": 74.58,
+   "text": "improve how you organize your work,"
+  },
+  {
+   "t0": 74.58,
+   "t1": 77.56,
+   "text": "or understand another part of the organization."
+  },
+  {
+   "t0": 77.56,
+   "t1": 79.7,
+   "text": "Without a goal, these ambitions"
+  },
+  {
+   "t0": 79.7,
+   "t1": 81.98,
+   "text": "often remain good intentions."
+  },
+  {
+   "t0": 81.98,
+   "t1": 86.64,
+   "text": "A goal turns those intentions into a clear direction."
+  },
+  {
+   "t0": 86.64,
+   "t1": 88.8,
+   "text": "One of the biggest mistakes we make"
+  },
+  {
+   "t0": 88.8,
+   "t1": 91.96,
+   "text": "is confusing a wish with a goal."
+  },
+  {
+   "t0": 91.96,
+   "t1": 94.82,
+   "text": "I want to get better at my job."
+  },
+  {
+   "t0": 94.82,
+   "t1": 97.24,
+   "text": "I want to communicate better."
+  },
+  {
+   "t0": 97.24,
+   "t1": 99.52,
+   "text": "I want to be more organized."
+  },
+  {
+   "t0": 99.52,
+   "t1": 103.76,
+   "text": "Those are good intentions, but they are still too vague."
+  },
+  {
+   "t0": 103.76,
+   "t1": 107.36,
+   "text": "A goal creates clarity instead of saying,"
+  },
+  {
+   "t0": 107.36,
+   "t1": 109.88,
+   "text": "I want to get better at my job."
+  },
+  {
+   "t0": 109.88,
+   "t1": 112.8,
+   "text": "You might say, over the next 90 days,"
+  },
+  {
+   "t0": 112.8,
+   "t1": 115.14,
+   "text": "I want to develop one new skill"
+  },
+  {
+   "t0": 115.14,
+   "t1": 119.9,
+   "text": "that makes me more capable and independent in my role."
+  },
+  {
+   "t0": 119.9,
+   "t1": 124.06,
+   "text": "Instead of saying, I want to communicate better."
+  },
+  {
+   "t0": 124.06,
+   "t1": 126.86,
+   "text": "You might say, for the next three months,"
+  },
+  {
+   "t0": 126.86,
+   "t1": 129.94,
+   "text": "I will focus on giving clearer updates,"
+  },
+  {
+   "t0": 129.94,
+   "t1": 131.46,
+   "text": "asking better questions,"
+  },
+  {
+   "t0": 131.46,
+   "t1": 135.38,
+   "text": "and making sure people understand what they need from me."
+  },
+  {
+   "t0": 135.38,
+   "t1": 138.86,
+   "text": "When a goal is clear, you can act on it."
+  },
+  {
+   "t0": 138.86,
+   "t1": 142.18,
+   "text": "Once you know your goal, work backwards."
+  },
+  {
+   "t0": 142.18,
+   "t1": 146.5,
+   "text": "Ask yourself, where do I want to be six months from now?"
+  },
+  {
+   "t0": 146.5,
+   "t1": 150.82,
+   "text": "Then, what would I need to improve over the next 90 days?"
+  },
+  {
+   "t0": 150.82,
+   "t1": 154.06,
+   "text": "Then, what should I work on this week?"
+  },
+  {
+   "t0": 154.06,
+   "t1": 157.5,
+   "text": "And finally, what can I do today?"
+  },
+  {
+   "t0": 157.5,
+   "t1": 160.98,
+   "text": "If your goal is to become more confident in your role,"
+  },
+  {
+   "t0": 160.98,
+   "t1": 164.38,
+   "text": "today's action might be asking someone experience"
+  },
+  {
+   "t0": 164.38,
+   "t1": 167.74,
+   "text": "to show you how they approach a difficult task."
+  },
+  {
+   "t0": 167.74,
+   "t1": 170.62,
+   "text": "If your goal is to become more efficient,"
+  },
+  {
+   "t0": 170.62,
+   "t1": 174.14,
+   "text": "today's action might simply be looking at something"
+  },
+  {
+   "t0": 174.14,
+   "t1": 176.18,
+   "text": "you do repeatedly and asking,"
+  },
+  {
+   "t0": 176.18,
+   "t1": 178.62,
+   "text": "is there a better way to do this?"
+  },
+  {
+   "t0": 178.62,
+   "t1": 180.7,
+   "text": "Big goals become manageable."
+  },
+  {
+   "t0": 180.7,
+   "t1": 183.5,
+   "text": "When you turn them into small actions,"
+  },
+  {
+   "t0": 183.5,
+   "t1": 186.5,
+   "text": "you cannot control every outcome,"
+  },
+  {
+   "t0": 186.5,
+   "t1": 189.14,
+   "text": "but you can control how you grow."
+  },
+  {
+   "t0": 189.14,
+   "t1": 192.26,
+   "text": "You can become more skilled, more reliable,"
+  },
+  {
+   "t0": 192.26,
+   "t1": 194.66,
+   "text": "more efficient, more adaptable."
+  },
+  {
+   "t0": 194.66,
+   "t1": 196.5,
+   "text": "You can communicate better."
+  },
+  {
+   "t0": 196.5,
+   "t1": 197.98,
+   "text": "You can learn faster."
+  },
+  {
+   "t0": 197.98,
+   "t1": 200.7,
+   "text": "You can become better at solving problems."
+  },
+  {
+   "t0": 200.7,
+   "t1": 204.86,
+   "text": "You can become someone others trust and depend on."
+  },
+  {
+   "t0": 204.86,
+   "t1": 208.06,
+   "text": "This is where goal setting becomes powerful."
+  },
+  {
+   "t0": 208.06,
+   "t1": 211.58,
+   "text": "Do not focus only on what you hope will happen."
+  },
+  {
+   "t0": 211.58,
+   "t1": 215.7,
+   "text": "Set goals around the skills, habits and behaviors"
+  },
+  {
+   "t0": 215.7,
+   "t1": 217.38,
+   "text": "you can actually develop"
+  },
+  {
+   "t0": 217.38,
+   "t1": 221.18,
+   "text": "because those things are in your hands."
+  },
+  {
+   "t0": 221.18,
+   "t1": 224.58,
+   "text": "Growth does not have to mean changing roles."
+  },
+  {
+   "t0": 224.58,
+   "t1": 226.9,
+   "text": "Growth can mean becoming better"
+  },
+  {
+   "t0": 226.9,
+   "t1": 228.78,
+   "text": "at the role you already have."
+  },
+  {
+   "t0": 228.78,
+   "t1": 232.54,
+   "text": "More skilled, more efficient, more reliable,"
+  },
+  {
+   "t0": 232.54,
+   "t1": 235.18,
+   "text": "more knowledgeable, more adaptable,"
+  },
+  {
+   "t0": 235.18,
+   "t1": 238.3,
+   "text": "more capable of solving problems."
+  },
+  {
+   "t0": 238.3,
+   "t1": 242.9,
+   "text": "It might mean learning about another part of the organization."
+  },
+  {
+   "t0": 242.9,
+   "t1": 246.3,
+   "text": "It might mean improving how you communicate."
+  },
+  {
+   "t0": 246.3,
+   "t1": 249.5,
+   "text": "It might mean making fewer mistakes,"
+  },
+  {
+   "t0": 249.5,
+   "t1": 253.34,
+   "text": "finding a better way to complete a repeated task"
+  },
+  {
+   "t0": 253.34,
+   "t1": 256.1,
+   "text": "or becoming someone people can depend on"
+  },
+  {
+   "t0": 256.1,
+   "t1": 258.02,
+   "text": "when something needs to get done."
+  },
+  {
+   "t0": 258.02,
+   "t1": 260.62,
+   "text": "Wherever you are in the organization,"
+  },
+  {
+   "t0": 260.62,
+   "t1": 263.74,
+   "text": "there is always another level you can develop."
+  },
+  {
+   "t0": 263.74,
+   "t1": 268.78,
+   "text": "The question is, what do I want to become better at next?"
+  },
+  {
+   "t0": 268.78,
+   "t1": 272.3,
+   "text": "What happens if you do not reach your goal?"
+  },
+  {
+   "t0": 272.3,
+   "t1": 274.98,
+   "text": "It does not mean the goal was pointless."
+  },
+  {
+   "t0": 274.98,
+   "t1": 278.54,
+   "text": "It means you now have information to work with."
+  },
+  {
+   "t0": 278.54,
+   "t1": 280.42,
+   "text": "Maybe you were not consistent."
+  },
+  {
+   "t0": 280.42,
+   "t1": 282.7,
+   "text": "Maybe the goal was too ambitious."
+  },
+  {
+   "t0": 282.7,
+   "t1": 285.34,
+   "text": "Maybe the plan was not clear enough."
+  },
+  {
+   "t0": 285.34,
+   "t1": 287.74,
+   "text": "Maybe something changed along the way."
+  },
+  {
+   "t0": 287.74,
+   "t1": 291.14,
+   "text": "The important thing is to review what happened."
+  },
+  {
+   "t0": 291.14,
+   "t1": 293.34,
+   "text": "Ask, what worked?"
+  },
+  {
+   "t0": 293.34,
+   "t1": 294.98,
+   "text": "What did not?"
+  },
+  {
+   "t0": 294.98,
+   "t1": 296.46,
+   "text": "What did I learn?"
+  },
+  {
+   "t0": 296.46,
+   "t1": 298.18,
+   "text": "What will I change?"
+  },
+  {
+   "t0": 298.18,
+   "t1": 301.82,
+   "text": "Then adjust your plan and continue."
+  },
+  {
+   "t0": 301.82,
+   "t1": 305.26,
+   "text": "A goal is not a test of whether you are good enough."
+  },
+  {
+   "t0": 305.26,
+   "t1": 308.1,
+   "text": "It is a tool that helps you grow."
+  },
+  {
+   "t0": 308.1,
+   "t1": 310.5,
+   "text": "The goal is not perfection."
+  },
+  {
+   "t0": 310.5,
+   "t1": 312.54,
+   "text": "The goal is progress."
+  },
+  {
+   "t0": 312.54,
+   "t1": 315.02,
+   "text": "So here is your challenge."
+  },
+  {
+   "t0": 315.02,
+   "t1": 318.3,
+   "text": "Choose one area where you want to grow."
+  },
+  {
+   "t0": 318.3,
+   "t1": 322.62,
+   "text": "Maybe it is a skill, communication, efficiency,"
+  },
+  {
+   "t0": 322.62,
+   "t1": 326.02,
+   "text": "problem solving, organization, leadership,"
+  },
+  {
+   "t0": 326.02,
+   "t1": 330.06,
+   "text": "technical ability, or learning something completely new."
+  },
+  {
+   "t0": 330.06,
+   "t1": 332.3,
+   "text": "Write down one clear goal."
+  },
+  {
+   "t0": 332.3,
+   "t1": 335.1,
+   "text": "Then ask yourself, why does this matter?"
+  },
+  {
+   "t0": 335.1,
+   "t1": 338.34,
+   "text": "What would success look like 90 days from now?"
+  },
+  {
+   "t0": 338.34,
+   "t1": 340.3,
+   "text": "What can I do this week?"
+  },
+  {
+   "t0": 340.3,
+   "t1": 343.42,
+   "text": "And most importantly, what can I do today?"
+  },
+  {
+   "t0": 343.42,
+   "t1": 346.1,
+   "text": "Do not wait for someone else to decide"
+  },
+  {
+   "t0": 346.1,
+   "t1": 348.14,
+   "text": "what you should become better at."
+  },
+  {
+   "t0": 348.14,
+   "t1": 350.26,
+   "text": "Take ownership of your growth."
+  },
+  {
+   "t0": 350.26,
+   "t1": 352.82,
+   "text": "Wherever you are in the organization,"
+  },
+  {
+   "t0": 352.82,
+   "t1": 355.94,
+   "text": "keep asking, what can I learn?"
+  },
+  {
+   "t0": 355.94,
+   "t1": 357.94,
+   "text": "What can I improve?"
+  },
+  {
+   "t0": 357.94,
+   "t1": 361.22,
+   "text": "What can I become better at next?"
+  },
+  {
+   "t0": 361.22,
+   "t1": 364.06,
+   "text": "The people who grow the most are not always"
+  },
+  {
+   "t0": 364.06,
+   "t1": 367.14,
+   "text": "the people who started with the most experience."
+  },
+  {
+   "t0": 367.14,
+   "t1": 369.18,
+   "text": "They are often the people who decided"
+  },
+  {
+   "t0": 369.18,
+   "t1": 373.14,
+   "text": "where they wanted to improve and kept working towards it."
+  },
+  {
+   "t0": 373.18,
+   "t1": 374.58,
+   "text": "Set the direction."
+  },
+  {
+   "t0": 374.58,
+   "t1": 376.42,
+   "text": "Then take the next step."
+  }
+ ]
+}

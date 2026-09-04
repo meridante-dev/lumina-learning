@@ -51,6 +51,37 @@ const CATALOG = [
     ]
   },
   {
+    id: 'growth-journey', title: 'Ultimate Purpose', cat: 'Leadership', grad: 3, icon: 'compass',
+    /* The Land Team's SECOND journey. Vimeo folders "2nd Course" (EN 30238825,
+       PT 30238997), uploaded 13 Aug → 2 Sep 2026. Module numbering on Vimeo
+       runs 1,2,3,4,6 — there is no "5." in either folder, so this course ships
+       with five modules and the sixth Vimeo file is module 5 here. Add a module
+       here the day the missing recording lands. Kaizen EN is the 27 Aug
+       "with Music" re-render (same cut, 6:32); PT module 5 is the 2 Sep native
+       recording — the two "Part 1" variants uploaded on 4 Sep (dubbed / adapted)
+       are NOT wired; João chooses. Title is provisional until the transcripts
+       say what the trainer calls it. */
+    level: 'All levels', learners: 0, ai: true, isNew: true, updated: '2026-09',
+    desc: 'The Land Team\'s second journey — from purpose to daily practice. Why you get up, the goals that follow from it, the discipline of small improvements, the beliefs that carry you, and the six needs behind every reaction.',
+    modules: ['Ultimate Purpose', 'Goal Setting', 'Kaizen', 'Winning Beliefs', 'Six Core Human Needs'],
+    moduleDurations: [6, 6, 7, 6, 5],   /* real Vimeo lengths: 5:41 6:17 6:32 5:33 5:03 */
+    moduleMedia: [
+      { type: 'vimeo', id: '1217934850' },   /* 1. Ultimate purpose */
+      { type: 'vimeo', id: '1220781804' },   /* 2. Goal Setting */
+      { type: 'vimeo', id: '1221805602' },   /* 3. Kaizen (with music, 27 Aug) */
+      { type: 'vimeo', id: '1222970261' },   /* 4. Winning Beliefs */
+      { type: 'vimeo', id: '1223416806' }    /* 6. Six core human needs — master your reactions */
+    ],
+    moduleDurations_pt: [7, 7, 6, 6, 6],   /* real: 6:59 6:43 6:06 6:26 5:55 */
+    moduleMedia_pt: [
+      { type: 'vimeo', id: '1217931540' },   /* 1. Propósito último */
+      { type: 'vimeo', id: '1220784470' },   /* 2. Definição de objetivos */
+      { type: 'vimeo', id: '1221805932' },   /* 3. Kaizen */
+      { type: 'vimeo', id: '1222970612' },   /* 4. Crenças vencedoras */
+      { type: 'vimeo', id: '1223417488' }    /* As seis necessidades humanas básicas — domine a sua reação */
+    ]
+  },
+  {
     id: 'fire-truck-training', title: 'Fire Truck Training', cat: 'Stewardship', grad: 4, icon: 'fire', recertMonths: 12, featured: true, updated: '2026-07',
     level: 'All levels', rating: 5.0, learners: 0, isNew: true, poster: 'media/covers/fire-truck-training.webp',
     /* The poster is a title card — it carries its own giant lettering, so at
@@ -137,6 +168,7 @@ const COURSE_HOOKS = {
   'ai-literacy': ['AI is on the team now. Use it well.', 'The literacy every EU workplace must have — practical, honest, ours.'],
   'fire-truck-training': ['When fire comes, know the truck.', 'Start it, drive it, fill it, and put water where it’s needed — hands-on, step by step.'],
   'alignment-journey': ['One team, one way of showing up.', 'Six shifts that align how we think, set goals, meet fear, and work the land together.'],
+  'growth-journey': ['You bring the purpose. Not the job.', 'Make the day count — purpose, goals, kaizen, beliefs and the six needs behind every reaction. The second journey, from the inside out.'],
   'land-team-journey': ['One question changes how you show up.', 'Above the line or below it — the mindset the whole journey grows from.'],
   'land-literacy': ['Learn to read the land like a story.', 'Slope, soil, water, wind — see what the land has been telling you all along.'],
   'living-soil': ['There’s a universe under your feet.', 'Feed the soil, and everything above it thrives.'],
@@ -163,6 +195,7 @@ const COURSE_HOOKS_PT = {
   'ai-literacy': ['A IA já faz parte da equipa. Use-a bem.', 'A literacia que todos os locais de trabalho na UE devem ter — prática, honesta, nossa.'],
   'fire-truck-training': ['Quando o fogo vem, conheça o camião.', 'Arrancar, conduzir, encher e pôr água onde é preciso — na prática, passo a passo.'],
   'alignment-journey': ['Uma equipa, uma forma de estar.', 'Seis mudanças que alinham como pensamos, definimos objetivos, enfrentamos o medo e trabalhamos a terra juntos.'],
+  'growth-journey': ['És tu que trazes o propósito. Não o trabalho.', 'Fazer o dia valer — propósito, objetivos, kaizen, crenças e as seis necessidades por trás de cada reação. A segunda jornada, de dentro para fora.'],
   'land-team-journey': ['Uma pergunta muda como aparecemos.', 'Acima ou abaixo da linha — a mentalidade de onde cresce toda a jornada.'],
   'land-literacy': ['Aprenda a ler a terra como uma história.', 'Declive, solo, água, vento — veja o que a terra sempre lhe quis dizer.'],
   'living-soil': ['Há um universo debaixo dos seus pés.', 'Alimente o solo, e tudo acima dele floresce.'],
@@ -322,6 +355,42 @@ const TAKEAWAYS = {
        'Treine até ser memória muscular — num incêndio real não há tempo para ler o manual.']
     ]
   },
+  'growth-journey': {
+    en: [
+      ['The job does not give you purpose — you bring it. Meaning, intention and energy arrive with you.',
+       'Your governing intention is the sentence under your day: “get through it” or “make it count”. Same hours, very different people over time.',
+       'You will spend thousands of hours working — use them to become more skilled, more resilient, someone people trust.'],
+      ['Two people with the same role and support end up in different places: one worked, the other worked with direction.',
+       'No one can take responsibility for your development for you. Goals are how you own it.',
+       'Ask “what do I want to be better at six months from now?” — then pick the skill and make it visible.'],
+      ['Kaizen: “this is how we do it today — could it be better?” instead of “this is how we do it”.',
+       'Pay attention to how the work gets done: unnecessary steps, repeated mistakes, work that has to be redone.',
+       'Improve one small thing and test it. Leave every process better than you found it.'],
+      ['Event → interpretation → belief → self-talk → action → result. To change the result, examine the pattern before the action.',
+       'The same feedback can mean “I’m not good enough” or “now I know what to work on” — the belief decides.',
+       'Your self-talk is your beliefs speaking in sentences. Choose sentences that make you try again.'],
+      ['Six core needs drive every reaction under pressure: certainty, variety, significance, connection, growth, contribution.',
+       'None of them is wrong — the skill is noticing which one you are protecting before it controls your behaviour.',
+       'Pause, notice the need, choose the response. Awareness creates choice, and better choices create better results.']
+    ],
+    pt: [
+      ['O trabalho não te dá propósito — és tu que o trazes. O sentido, a intenção e a energia chegam contigo.',
+       'A tua intenção governante é a frase por baixo do dia: “aguentar até ao fim” ou “fazer o dia valer”. As mesmas horas, pessoas muito diferentes com o tempo.',
+       'Vais passar milhares de horas a trabalhar — usa-as para te tornares mais competente, mais resiliente, alguém em quem se confia.'],
+      ['Duas pessoas com a mesma função e o mesmo apoio acabam em lugares diferentes: uma trabalhou, a outra trabalhou com direção.',
+       'Ninguém pode assumir a responsabilidade pelo teu desenvolvimento por ti. Os objetivos são a forma de o assumires.',
+       'Pergunta “em que quero ser melhor daqui a seis meses?” — escolhe a competência e torna-a visível.'],
+      ['Kaizen: “é assim que fazemos hoje — podia ser melhor?” em vez de “é assim que se faz”.',
+       'Repara em como o trabalho é feito: passos desnecessários, erros repetidos, trabalho que tem de ser refeito.',
+       'Melhora uma coisa pequena e testa. Deixa cada processo melhor do que o encontraste.'],
+      ['Acontecimento → interpretação → crença → diálogo interior → ação → resultado. Para mudar o resultado, examina o padrão antes da ação.',
+       'O mesmo feedback pode significar “não sou bom o suficiente” ou “agora sei o que trabalhar” — a crença decide.',
+       'O teu diálogo interior são as tuas crenças a falar em frases. Escolhe frases que te façam tentar outra vez.'],
+      ['Seis necessidades essenciais movem cada reação sob pressão: certeza, variedade, significância, ligação, crescimento, contribuição.',
+       'Nenhuma está errada — a competência é reparar qual estás a proteger antes de ela controlar o teu comportamento.',
+       'Para, repara na necessidade, escolhe a resposta. A consciência cria escolha, e melhores escolhas criam melhores resultados.']
+    ]
+  },
   'land-team-journey': {
     en: [
       ['Above the line is openness, curiosity and commitment to learning; below it is defensiveness, blame and needing to be right.',
@@ -383,6 +452,7 @@ const COURSE_PT = {
     'Para Além do Medo · Introdução', 'Para Além do Medo · Animação', 'Para Além do Medo · Desmontar e Sintetizar',
     'Corpo, Alma e Espírito · Introdução', 'Corpo, Alma e Espírito · Análise Profunda'
   ] },
+  'growth-journey': { title:'Propósito Último', desc:'A segunda jornada da Equipa da Terra — do propósito à prática diária. Porque se levanta, os objetivos que daí decorrem, a disciplina das pequenas melhorias, as crenças que o sustentam e as seis necessidades por trás de cada reação.', modules:['Propósito Último', 'Definição de Objetivos', 'Kaizen', 'Crenças Vencedoras', 'As Seis Necessidades Humanas'] },
   'land-team-journey': { title:'Acima da Linha', desc:'A jornada de crescimento da Equipa da Terra — a mentalidade e os hábitos que moldam como trabalhamos a terra, e uns aos outros. Começa com uma pergunta que muda a forma como aparecemos.', modules:['Acima da Linha, Abaixo da Linha','Não Há Fracasso, Só Feedback','Responsabilidade Total','Comunicação — Esclareça','Benchmark de Excelência','Atenção ao Detalhe','Seja Aprendiz','A Ciência da Gratidão'] },
   'land-literacy': { title:'Ler a Terra', desc:'Antes de mudar uma paisagem, aprenda a lê-la. Declive, água, solo, sol e sucessão — a literacia com que começa todo o ato de zeladoria.', modules:['Ficar quieto: como observar','Ler o declive e a água','O solo ao toque e à vista','Sol, sombra e exposição','Sucessão e o que a terra quer','Mapear o seu terreno'] },
   'living-soil': { title:'Solo Vivo', desc:'O solo não é terra morta — é uma comunidade viva. Conheça o microbioma sob os seus pés e as práticas que o alimentam em vez de o esgotar.', modules:['A teia alimentar do solo','Porque deixámos de lavrar','Compostagem como inoculante','Culturas de cobertura e raízes vivas','Cobertura morta e solo nu','Ler uma análise de solo'] },
@@ -410,6 +480,7 @@ const COURSE_SKILLS = {
   'fire-truck-training': ['safety'],
   'alignment-journey': ['leadership', 'community'],
   'land-team-journey': ['leadership', 'community'],
+  'growth-journey': ['leadership'],
 };
 
 /* ===== REQ-L-021 · SPECIAL REGIMES =========================================
@@ -584,6 +655,142 @@ const REELS = [
       pt: { q: "O que é mais importante para uma equipe forte?", opts: ["Que todos concordem", "Que as pessoas sejam honestas", "Que o chefe esteja sempre certo"], why: "Porque a honestidade permite que as melhores ideias sejam compartilhadas e que os erros sejam corrigidos." } },
     media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/safe-to-speak.mp4' }, poster: 'https://edenrise-reels.pages.dev/safe-to-speak.jpg',
     approved: true,   /* published by the tenant — see qwPublished in core/app.js */
+    deeper: 'land-team-journey' },
+  /* NEW BATCH 2026-09-04 — from reels-source/Vertical (not the Approved folder):
+     staged PENDING so it reaches nobody until approved in Studio → Quick wins.
+     Written from this clip's own Whisper transcript and blind-verified against
+     it (en: verified · pt: verified). The recording is English;
+     the Portuguese is localised TEXT — videoLang says so. */
+  { id: "agreed-values", seconds: 20, theme: "values",
+    title: {"en": "Agreed Team Values", "pt": "Valores em equipa"},
+    hook:  {"en": "Without agreed values, team decisions are based on who is loudest or most tired.", "pt": "Sem valores acordados, as decisões são baseadas em quem é mais barulhento ou no que aconteceu por último."},
+    line:  {"en": "You will learn why agreed values are crucial for making consistent team decisions.", "pt": "Tu aprenderá como a falta de valores afeta as decisões da equipa."},
+    lesson: {"en": "When a team lacks agreed values, decisions are made based on factors like who is loudest or how tired everyone is. This can lead to inconsistent decisions. Agreed values provide a clear basis for decision-making.", "pt": "Quando uma equipa não tem valores acordados, as decisões são baseadas em fatores como quem é mais barulhento, o que aconteceu por último ou o nível de cansaço. Isso ocorre porque não há uma diretriz clara para tomar decisões. Os valores são essenciais para guiar as decisões da equipa."},
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: {"q": "What happens when a team has no agreed values?", "opts": ["Decisions are based on facts", "Decisions are based on values or moods", "Decisions are always consistent"], "why": "The passage states that without agreed values, decisions run on 'whoever is loudest, whatever happened last, how tired everyone is', which corresponds to 'values or moods'."},
+      pt: {"q": "O que acontece com as decisões da equipa quando não há valores acordados?", "opts": ["São baseadas em fatos", "São baseadas em quem é mais barulhento ou no que aconteceu por último", "São sempre unânimes"], "why": "Porque a falta de valores acordados leva a decisões baseadas em fatores como quem é mais barulhento ou o que aconteceu por último."} },
+    media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/agreed-values.mp4' }, poster: 'https://edenrise-reels.pages.dev/agreed-values.jpg',
+    approved: false,
+    deeper: 'land-team-journey' },
+  /* NEW BATCH 2026-09-04 — from reels-source/Vertical (not the Approved folder):
+     staged PENDING so it reaches nobody until approved in Studio → Quick wins.
+     Written from this clip's own Whisper transcript and blind-verified against
+     it (en: verified · pt: verified). The recording is English;
+     the Portuguese is localised TEXT — videoLang says so. */
+  { id: "three-solutions", seconds: 20, theme: "solutions",
+    title: {"en": "Bring Solutions", "pt": "Três Soluções"},
+    hook:  {"en": "One simple rule can turn complaining into thinking in your meetings.", "pt": "Uma regra pode transformar as reclamações em pensamento."},
+    line:  {"en": "You will learn how to approach problems with solutions in mind.", "pt": "Vai aprender a apresentar problemas com soluções."},
+    lesson: {"en": "When bringing a problem to a meeting, always come with three possible solutions. If you can't find three, discuss with a colleague first before taking it to your leader. This helps turn problems into thoughtful discussions.", "pt": "Nunca leve um problema sem três soluções possíveis. Se não encontrar três, leve ao colega antes de levar ao líder. Isso transforma reclamações em pensamento."},
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: {"q": "What should you do if you can't find three solutions to a problem?", "opts": ["Take it to your leader", "Discuss with a colleague first", "Drop the problem"], "why": "Because discussing with a colleague first can help you find more solutions before taking it to your leader."},
+      pt: {"q": "O que deve fazer se não encontrar três soluções?", "opts": ["Levar ao líder", "Levar ao colega", "Esquecer o problema"], "why": "Porque levar ao colega primeiro pode ajudar a encontrar soluções antes de levar ao líder."} },
+    media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/three-solutions.mp4' }, poster: 'https://edenrise-reels.pages.dev/three-solutions.jpg',
+    approved: false,
+    deeper: 'alignment-journey' },
+  /* NEW BATCH 2026-09-04 — from reels-source/Vertical (not the Approved folder):
+     staged PENDING so it reaches nobody until approved in Studio → Quick wins.
+     Written from this clip's own Whisper transcript and blind-verified against
+     it (en: verified · pt: verified). The recording is English;
+     the Portuguese is localised TEXT — videoLang says so. */
+  { id: "three-words", seconds: 20, theme: "problems",
+    title: {"en": "Fixing Issues", "pt": "Três Palavras"},
+    hook:  {"en": "Saying three words has never fixed anything, according to this approach.", "pt": "Três palavras nunca resolveram nada."},
+    line:  {"en": "You will learn a new way to think about solving problems.", "pt": "Vai aprender o que dizer quando algo corre mal."},
+    lesson: {"en": "When something goes wrong, saying three words can sound like an answer, but it doesn't fix the problem. The problem stays even if the person is removed and a new person arrives. This suggests that the person is not the main issue.", "pt": "Quando algo corre mal, alguém diz três palavras que soam como uma resposta, mas nunca resolveram nada. O problema permanece mesmo após a pessoa ser substituída. É importante considerar o problema em si, e não apenas a pessoa."},
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: {"q": "What happens to the problem when a new person arrives?", "opts": ["It gets worse", "It stays the same", "It gets fixed"], "why": "The passage states that the problem stays even if the person is removed and a new person arrives."},
+      pt: {"q": "O que acontece quando uma pessoa é substituída e o problema persiste?", "opts": ["O problema some", "O problema permanece", "O problema muda"], "why": "Porque o problema está relacionado à situação, e não apenas à pessoa."} },
+    media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/three-words.mp4' }, poster: 'https://edenrise-reels.pages.dev/three-words.jpg',
+    approved: false,
+    deeper: 'alignment-journey' },
+  /* NEW BATCH 2026-09-04 — from reels-source/Vertical (not the Approved folder):
+     staged PENDING so it reaches nobody until approved in Studio → Quick wins.
+     Written from this clip's own Whisper transcript and blind-verified against
+     it (en: verified · pt: verified). The recording is English;
+     the Portuguese is localised TEXT — videoLang says so. */
+  { id: "agreed-not-told", seconds: 21, theme: "communication",
+    title: {"en": "Agreed vs Told", "pt": "Data Acordada"},
+    hook:  {"en": "People are more likely to miss deadlines they were simply told about rather than agreed to.", "pt": "As pessoas protegem as datas que acordam."},
+    line:  {"en": "You will learn how to improve team commitment to deadlines by distinguishing between agreed and told dates.", "pt": "Vai aprender a diferença entre datas acordadas e impostas."},
+    lesson: {"en": "Before assuming your team doesn't care about a missed deadline, ask if the date was agreed upon or just told to them. People tend to miss dates they were told, but protect dates they agreed to. This distinction can help you improve team commitment.", "pt": "Antes de decidir que a equipa não se importa, pergunte se a data foi acordada ou apenas informada. As pessoas tendem a proteger as datas que acordam, mas podem perder as datas que lhes são impostas. Isso pode afetar o cumprimento de prazos."},
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: {"q": "What should you do before deciding your team doesn't care about a missed deadline?", "opts": ["Assume they are irresponsible", "Ask if the date was agreed or told", "Scold them for missing the deadline"], "why": "Asking if the date was agreed or told helps you understand if the team was truly committed to the deadline."},
+      pt: {"q": "O que deve ser feito antes de decidir que a equipa não se importa com uma data?", "opts": ["Ignorar a data e continuar em frente", "Perguntar se a data foi acordada ou apenas informada", "Aumentar a pressão sobre a equipa"], "why": "Porque é importante saber se a data foi acordada ou apenas informada para entender o comprometimento da equipa."} },
+    media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/agreed-not-told.mp4' }, poster: 'https://edenrise-reels.pages.dev/agreed-not-told.jpg',
+    approved: false,
+    deeper: 'alignment-journey' },
+  /* NEW BATCH 2026-09-04 — from reels-source/Vertical (not the Approved folder):
+     staged PENDING so it reaches nobody until approved in Studio → Quick wins.
+     Written from this clip's own Whisper transcript and blind-verified against
+     it (en: verified · pt: verified). The recording is English;
+     the Portuguese is localised TEXT — videoLang says so. */
+  { id: "standards-vs-expectations", seconds: 20, theme: "standards",
+    title: {"en": "Standards vs Expectations", "pt": "Padrões vs Expectativas"},
+    hook:  {"en": "Nearly all friction at work is caused by high expectations sitting on a low standard.", "pt": "Duas palavras podem acabar com a maioria dos conflitos no trabalho."},
+    line:  {"en": "You will learn how to identify and adjust your standards and expectations to reduce friction at work.", "pt": "Vai aprender a distinguir entre padrões e expectativas."},
+    lesson: {"en": "Standards are what you demand of yourself, while expectations are what you demand of others. To reduce friction, you should raise your standard before raising your expectation. This means focusing on your own performance and behavior before expecting others to meet certain standards.", "pt": "Os padrões são o que eu exijo de mim próprio, enquanto as expectativas são o que eu exijo dos outros. A maioria da fricção surge quando as expectativas são altas e os padrões são baixos. É importante elevar os padrões antes de elevar as expectativas."},
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: {"q": "What should you do before raising your expectations of others?", "opts": ["Raise your expectations of others first", "Raise your standard first", "Meet your expectations first"], "why": "Because raising your standard first helps to reduce friction caused by high expectations sitting on a low standard."},
+      pt: {"q": "O que deve ser elevado antes de elevar as expectativas?", "opts": ["A comunicação", "Os padrões", "As expectativas"], "why": "Porque elevar os padrões antes de elevar as expectativas ajuda a reduzir a fricção e a melhorar a relação com os outros."} },
+    media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/standards-vs-expectations.mp4' }, poster: 'https://edenrise-reels.pages.dev/standards-vs-expectations.jpg',
+    approved: false,
+    deeper: 'alignment-journey' },
+  /* NEW BATCH 2026-09-04 — from reels-source/Vertical (not the Approved folder):
+     staged PENDING so it reaches nobody until approved in Studio → Quick wins.
+     Written from this clip's own Whisper transcript and blind-verified against
+     it (en: verified · pt: verified). The recording is English;
+     the Portuguese is localised TEXT — videoLang says so. */
+  { id: "clean-the-site", seconds: 20, theme: "communication",
+    title: {"en": "Define Finished", "pt": "Definir o Trabalho"},
+    hook:  {"en": "You can't assume everyone has the same understanding of what 'finished' means.", "pt": "A falta de definição pode levar a mal-entendidos no local de trabalho."},
+    line:  {"en": "You'll learn how to ensure everyone is on the same page when it comes to completing a task.", "pt": "Vai aprender a importância de definir o que significa terminar um trabalho."},
+    lesson: {"en": "When giving a task, define what 'finished' looks like to avoid confusion. This means explaining the expected outcome before starting the job. By doing so, you can ensure everyone has the same understanding of what needs to be done.", "pt": "Quando se atribui uma tarefa a uma equipa, é importante definir o que significa terminar. Isso evita mal-entendidos e assegura que todos têm a mesma visão. Antes de começar, defina o que é considerado concluído."},
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: {"q": "What should you do before starting a task to avoid confusion?", "opts": ["Start working immediately", "Explain what 'finished' looks like", "Wait for someone else to define it"], "why": "Defining what 'finished' looks like helps ensure everyone has the same understanding of the expected outcome."},
+      pt: {"q": "O que deve ser feito antes de uma equipa começar a trabalhar?", "opts": ["Definir as ferramentas necessárias", "Definir o que significa terminar o trabalho", "Definir a hora do almoço"], "why": "Porque definir o que significa terminar o trabalho evita mal-entendidos e assegura que todos têm a mesma visão."} },
+    media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/clean-the-site.mp4' }, poster: 'https://edenrise-reels.pages.dev/clean-the-site.jpg',
+    approved: false,
+    deeper: 'alignment-journey' },
+  /* NEW BATCH 2026-09-04 — from reels-source/Vertical (not the Approved folder):
+     staged PENDING so it reaches nobody until approved in Studio → Quick wins.
+     Written from this clip's own Whisper transcript and blind-verified against
+     it (en: verified · pt: verified). The recording is English;
+     the Portuguese is localised TEXT — videoLang says so. */
+  { id: "who-did-it", seconds: 20, theme: "investigation",
+    title: {"en": "Start of Investigation", "pt": "Ordem Importa"},
+    hook:  {"en": "Starting an investigation with people will always lead to finding a person at fault.", "pt": "A equipa sempre encontra um culpado se começar pelo fim."},
+    line:  {"en": "You will learn how the starting point of an investigation can influence its outcome.", "pt": "Vai aprender por que a ordem de investigação é crucial."},
+    lesson: {"en": "Most teams start an investigation at the end, looking for who did it, which leads to finding someone to blame. Starting with people will always result in finding a person. The starting point of an investigation can influence its outcome.", "pt": "A ordem de investigação importa. Se começarmos pelo fim, sempre encontraremos um culpado. É importante começar do início para entender o que aconteceu."},
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: {"q": "What happens when a team starts an investigation by looking for who did it?", "opts": ["They will never find a person to blame", "They will always find a person to blame", "They will find the root cause of the problem"], "why": "The passage states that if you start with people, you will always find a person, because that is where you started looking."},
+      pt: {"q": "O que acontece se a equipa começar a investigação pelo fim?", "opts": ["Sempre encontram a causa raiz", "Sempre encontram um culpado", "Nunca encontram um culpado"], "why": "Porque a equipa está focada em encontrar um culpado, em vez de entender o que aconteceu."} },
+    media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/who-did-it.mp4' }, poster: 'https://edenrise-reels.pages.dev/who-did-it.jpg',
+    approved: false,
+    deeper: 'alignment-journey' },
+  /* NEW BATCH 2026-09-04 — from reels-source/Vertical (not the Approved folder):
+     staged PENDING so it reaches nobody until approved in Studio → Quick wins.
+     Written from this clip's own Whisper transcript and blind-verified against
+     it (en: verified · pt: verified). The recording is English;
+     the Portuguese is localised TEXT — videoLang says so. */
+  { id: "great-teammates", seconds: 20, theme: "teamwork",
+    title: {"en": "Great Teammates", "pt": "Seja um grande colega"},
+    hook:  {"en": "Great teammates can actually create energy in other people just by being around them.", "pt": "Pode ser o responsável por criar energia nos outros colegas de trabalho."},
+    line:  {"en": "You will learn how to be a great teammate who gives energy to others.", "pt": "Vai aprender a ser o tipo de colega que inspira e motiva os outros."},
+    lesson: {"en": "Great teammates create energy in other people by listening fully, noticing effort, bringing solutions, and sharing belief. They make others feel clearer, lighter, and more capable after interacting with them. By being a great teammate, you can be the person who gives energy to others.", "pt": "Os grandes colegas de trabalho criam energia nos outros. Para isso, é importante ouvir atentamente, notar o esforço, trazer soluções, partilhar crenças e ser uma pessoa que dá energia. Isso pode ser feito através de pequenas ações diárias."},
+    videoLang: 'en',
+    check: { type: "application", a: 1, audit: "verified",
+      en: {"q": "What can great teammates do to create energy in others?", "opts": ["Listen partially", "Notice effort", "Avoid solutions"], "why": "The passage states that great teammates create energy by noticing effort, among other things."},
+      pt: {"q": "O que é um sinal de um grande colega de trabalho?", "opts": ["Alguém que reclama constantemente", "Alguém que ouve atentamente e traz soluções", "Alguém que ignora os outros"], "why": "Porque ouvir atentamente e trazer soluções são comportamentos que criam energia nos outros, como mencionado no texto."} },
+    media: { type: 'mp4', src: 'https://edenrise-reels.pages.dev/great-teammates.mp4' }, poster: 'https://edenrise-reels.pages.dev/great-teammates.jpg',
+    approved: false,
     deeper: 'land-team-journey' }
 ];
 

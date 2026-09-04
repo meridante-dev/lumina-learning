@@ -1,34 +1,34 @@
 {
  "lang": "pt",
- "generatedAt": 1788341263770,
+ "generatedAt": 1788527662321,
  "reels": [
   {
-   "id": "bring-the-energy",
+   "id": "agreed-values",
    "seconds": 20,
-   "theme": "energia",
+   "theme": "valores",
    "title": {
-    "pt": "Dá Energia"
+    "pt": "Valores em equipe"
    },
    "hook": {
-    "pt": "Podes ser a pessoa que dá energia aos outros."
+    "pt": "Sem valores acordados, as decisões são baseadas em quem é mais barulhento ou no que aconteceu por último."
    },
    "line": {
-    "pt": "Vais aprender a criar energia nos outros."
+    "pt": "Você aprenderá como a falta de valores afeta as decisões da equipe."
    },
    "lesson": {
-    "pt": "Os grandes colegas de trabalho não só completam tarefas, mas também criam energia nos outros. Para isso, é preciso ouvir atentamente, notar o esforço, trazer soluções e partilhar crenças. Cada interação deixa algo para trás."
+    "pt": "Quando uma equipe não tem valores acordados, as decisões são baseadas em fatores como quem é mais barulhento, o que aconteceu por último ou o nível de cansaço. Isso ocorre porque não há uma diretriz clara para tomar decisões. Os valores são essenciais para guiar as decisões da equipe."
    },
    "check": {
     "type": "application",
     "a": 1,
     "pt": {
-     "q": "O que é que os grandes colegas de trabalho criam nos outros?",
+     "q": "O que acontece com as decisões da equipe quando não há valores acordados?",
      "opts": [
-      "Tensão",
-      "Energia",
-      "Desânimo"
+      "São baseadas em fatos",
+      "São baseadas em quem é mais barulhento ou no que aconteceu por último",
+      "São sempre unânimes"
      ],
-     "why": "Porque os grandes colegas de trabalho criam energia nos outros, como é referido no texto."
+     "why": "Porque a falta de valores acordados leva a decisões baseadas em fatores como quem é mais barulhento ou o que aconteceu por último."
     },
     "audit": "verified",
     "model": "gateway",
@@ -36,43 +36,43 @@
    },
    "media": {
     "type": "mp4",
-    "src": "media/reels/bring-the-energy.mp4"
+    "src": "https://edenrise-reels.pages.dev/agreed-values.mp4"
    },
    "deeper": "land-team-journey",
    "source": {
-    "reel": "bring-the-energy",
+    "reel": "agreed-values",
     "lang": "pt",
     "videoLang": "pt",
     "seconds": 20
    }
   },
   {
-   "id": "culture",
+   "id": "three-solutions",
    "seconds": 20,
-   "theme": "cultura",
+   "theme": "soluções",
    "title": {
-    "pt": "O que é cultura"
+    "pt": "Três Soluções"
    },
    "hook": {
-    "pt": "A cultura não é o que escrevemos na parede, mas o que acontece quando ninguém está a olhar."
+    "pt": "Uma regra pode transformar as reclamações em pensamento."
    },
    "line": {
-    "pt": "Vai aprender como a cultura se forma no local de trabalho."
+    "pt": "Vai aprender a apresentar problemas com soluções."
    },
    "lesson": {
-    "pt": "A cultura não é apenas o que dizemos, mas sim o que fazemos quando ninguém está a olhar. Quando aceitamos o 'bom o suficiente', estamos a redefinir o que é bom. A excelência não é perfeição, mas sim cuidar o suficiente para notar e ter coragem para agir."
+    "pt": "Nunca leve um problema sem três soluções possíveis. Se não encontrar três, leve ao colega antes de levar ao líder. Isso transforma reclamações em pensamento."
    },
    "check": {
     "type": "application",
     "a": 1,
     "pt": {
-     "q": "O que acontece quando aceitamos o 'bom o suficiente'?",
+     "q": "O que deve fazer se não encontrar três soluções?",
      "opts": [
-      "O padrão de qualidade aumenta",
-      "O padrão de qualidade diminui",
-      "Não há mudança no padrão de qualidade"
+      "Levar ao líder",
+      "Levar ao colega",
+      "Esquecer o problema"
      ],
-     "why": "Porque aceitar o 'bom o suficiente' redefine o que é bom e pode levar a uma diminuição do padrão de qualidade."
+     "why": "Porque levar ao colega primeiro pode ajudar a encontrar soluções antes de levar ao líder."
     },
     "audit": "verified",
     "model": "gateway",
@@ -80,43 +80,43 @@
    },
    "media": {
     "type": "mp4",
-    "src": "media/reels/culture.mp4"
+    "src": "https://edenrise-reels.pages.dev/three-solutions.mp4"
    },
-   "deeper": "land-team-journey",
+   "deeper": "alignment-journey",
    "source": {
-    "reel": "culture",
+    "reel": "three-solutions",
     "lang": "pt",
     "videoLang": "pt",
     "seconds": 20
    }
   },
   {
-   "id": "own-the-outcome",
+   "id": "three-words",
    "seconds": 20,
-   "theme": "responsabilidade",
+   "theme": "problema",
    "title": {
-    "pt": "Mudar o resultado"
+    "pt": "Three Words"
    },
    "hook": {
-    "pt": "As equipas de alto desempenho não procuram culpados, mas sim soluções."
+    "pt": "Três palavras nunca resolveram nada."
    },
    "line": {
-    "pt": "Vai aprender a mudar a forma como lida com problemas no trabalho."
+    "pt": "Vai aprender o que dizer quando algo dá errado."
    },
    "lesson": {
-    "pt": "Quando algo correr mal, em vez de perguntar quem é o culpado, pergunta o que podes fazer agora. A responsabilidade não é sobre culpa, é sobre poder. Ao assumires a tua parte, podes mudar o resultado. As equipas de alto desempenho veem o problema, assumem a sua parte e avançam."
+    "pt": "Quando algo dá errado, alguém diz três palavras que soam como uma resposta, mas nunca resolveram nada. O problema permanece mesmo após a pessoa ser substituída. É importante considerar o problema em si, e não apenas a pessoa."
    },
    "check": {
     "type": "application",
     "a": 1,
     "pt": {
-     "q": "O que fazem as equipas de alto desempenho quando algo correr mal?",
+     "q": "O que acontece quando uma pessoa é substituída e o problema persiste?",
      "opts": [
-      "Procuram culpados",
-      "Assumem a responsabilidade e avançam",
-      "Ignoram o problema"
+      "O problema some",
+      "O problema permanece",
+      "O problema muda"
      ],
-     "why": "Porque assumir a responsabilidade e avançar permite mudar o resultado, como referido na passagem."
+     "why": "Porque o problema está relacionado à situação, e não apenas à pessoa."
     },
     "audit": "verified",
     "model": "gateway",
@@ -124,87 +124,43 @@
    },
    "media": {
     "type": "mp4",
-    "src": "media/reels/own-the-outcome.mp4"
+    "src": "https://edenrise-reels.pages.dev/three-words.mp4"
    },
-   "deeper": "land-team-journey",
+   "deeper": "alignment-journey",
    "source": {
-    "reel": "own-the-outcome",
+    "reel": "three-words",
     "lang": "pt",
     "videoLang": "pt",
     "seconds": 20
    }
   },
   {
-   "id": "raise-the-energy",
-   "seconds": 20,
-   "theme": "energia",
-   "title": {
-    "pt": "Energia Positiva"
-   },
-   "hook": {
-    "pt": "A sua energia nunca é só sua."
-   },
-   "line": {
-    "pt": "Vai aprender a influenciar o espaço com a sua energia."
-   },
-   "lesson": {
-    "pt": "Quando entra num espaço, traz consigo energia, possibilidade ou momentum. Pode optar por trazer curiosidade, coragem e generosidade. Isso pode deixar as pessoas mais fortes."
-   },
-   "check": {
-    "type": "application",
-    "a": 1,
-    "pt": {
-     "q": "O que pode acontecer quando você traz energia positiva para um espaço?",
-     "opts": [
-      "As pessoas se tornam mais fracas",
-      "As pessoas se tornam mais fortes",
-      "Nada muda"
-     ],
-     "why": "Porque a energia positiva pode inspirar e motivar os outros."
-    },
-    "audit": "verified",
-    "model": "gateway",
-    "src": "transcript"
-   },
-   "media": {
-    "type": "mp4",
-    "src": "media/reels/raise-the-energy.mp4"
-   },
-   "deeper": "land-team-journey",
-   "source": {
-    "reel": "raise-the-energy",
-    "lang": "pt",
-    "videoLang": "pt",
-    "seconds": 20
-   }
-  },
-  {
-   "id": "safe-to-speak",
-   "seconds": 20,
+   "id": "agreed-not-told",
+   "seconds": 21,
    "theme": "comunicação",
    "title": {
-    "pt": "Falar Sem Medo"
+    "pt": "Data Acordada"
    },
    "hook": {
-    "pt": "A equipe mais forte é aquela onde alguém pode dizer que está errada."
+    "pt": "As pessoas protegem as datas que acordam."
    },
    "line": {
-    "pt": "Vai aprender a importância de criar um ambiente seguro para expressar opiniões."
+    "pt": "Vai aprender a diferença entre datas acordadas e impostas."
    },
    "lesson": {
-    "pt": "A equipe mais forte não é aquela onde todos concordam, mas sim onde alguém pode dizer que está errada ou precisa de ajuda. Isso permite que as melhores ideias sejam compartilhadas. O importante é criar um ambiente seguro para falar."
+    "pt": "Antes de decidir que a equipe não se importa, pergunte se a data foi acordada ou apenas informada. As pessoas tendem a proteger as datas que acordam, mas podem perder as datas que lhes são impostas. Isso pode afetar o cumprimento de prazos."
    },
    "check": {
     "type": "application",
-    "a": 1,
+    "a": 0,
     "pt": {
-     "q": "O que é mais importante para uma equipe forte?",
+     "q": "O que deve ser feito antes de decidir que a equipe não se importa com uma data?",
      "opts": [
-      "Que todos concordem",
-      "Que as pessoas sejam honestas",
-      "Que o chefe esteja sempre certo"
+      "Perguntar se a data foi acordada ou apenas informada",
+      "Aumentar a pressão sobre a equipe",
+      "Ignorar a data e continuar em frente"
      ],
-     "why": "Porque a honestidade permite que as melhores ideias sejam compartilhadas e que os erros sejam corrigidos."
+     "why": "Porque é importante saber se a data foi acordada ou apenas informada para entender o comprometimento da equipe."
     },
     "audit": "verified",
     "model": "gateway",
@@ -212,11 +168,187 @@
    },
    "media": {
     "type": "mp4",
-    "src": "media/reels/safe-to-speak.mp4"
+    "src": "https://edenrise-reels.pages.dev/agreed-not-told.mp4"
+   },
+   "deeper": "alignment-journey",
+   "source": {
+    "reel": "agreed-not-told",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 21
+   }
+  },
+  {
+   "id": "standards-vs-expectations",
+   "seconds": 20,
+   "theme": "padrões",
+   "title": {
+    "pt": "Padrões vs Expectativas"
+   },
+   "hook": {
+    "pt": "Duas palavras podem acabar com a maioria dos conflitos no trabalho."
+   },
+   "line": {
+    "pt": "Vai aprender a distinguir entre padrões e expectativas."
+   },
+   "lesson": {
+    "pt": "Os padrões são o que eu exijo de mim mesmo, enquanto as expectativas são o que eu exijo dos outros. A maioria da fricção surge quando as expectativas são altas e os padrões são baixos. É importante elevar os padrões antes de elevar as expectativas."
+   },
+   "check": {
+    "type": "application",
+    "a": 0,
+    "pt": {
+     "q": "O que deve ser elevado antes de elevar as expectativas?",
+     "opts": [
+      "Os padrões",
+      "As expectativas",
+      "A comunicação"
+     ],
+     "why": "Porque elevar os padrões antes de elevar as expectativas ajuda a reduzir a fricção e a melhorar a relação com os outros."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "https://edenrise-reels.pages.dev/standards-vs-expectations.mp4"
+   },
+   "deeper": "alignment-journey",
+   "source": {
+    "reel": "standards-vs-expectations",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "clean-the-site",
+   "seconds": 20,
+   "theme": "limpeza",
+   "title": {
+    "pt": "Definir o Trabalho"
+   },
+   "hook": {
+    "pt": "A falta de definição pode levar a mal-entendidos no local de trabalho."
+   },
+   "line": {
+    "pt": "Vai aprender a importância de definir o que significa terminar um trabalho."
+   },
+   "lesson": {
+    "pt": "Quando se atribui uma tarefa a uma equipa, é importante definir o que significa terminar. Isso evita mal-entendidos e assegura que todos têm a mesma visão. Antes de começar, defina o que é considerado concluído."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "pt": {
+     "q": "O que deve ser feito antes de uma equipa começar a trabalhar?",
+     "opts": [
+      "Definir as ferramentas necessárias",
+      "Definir o que significa terminar o trabalho",
+      "Definir a hora do almoço"
+     ],
+     "why": "Porque definir o que significa terminar o trabalho evita mal-entendidos e assegura que todos têm a mesma visão."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "https://edenrise-reels.pages.dev/clean-the-site.mp4"
+   },
+   "deeper": "alignment-journey",
+   "source": {
+    "reel": "clean-the-site",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "who-did-it",
+   "seconds": 20,
+   "theme": "ordem",
+   "title": {
+    "pt": "Ordem Importa"
+   },
+   "hook": {
+    "pt": "A equipe sempre encontra um culpado se começar pelo fim."
+   },
+   "line": {
+    "pt": "Vai aprender por que a ordem de investigação é crucial."
+   },
+   "lesson": {
+    "pt": "A ordem de investigação importa. Se começarmos pelo fim, sempre encontraremos um culpado. É importante começar do início para entender o que aconteceu."
+   },
+   "check": {
+    "type": "application",
+    "a": 2,
+    "pt": {
+     "q": "O que acontece se a equipe começar a investigação pelo fim?",
+     "opts": [
+      "Nunca encontram um culpado",
+      "Sempre encontram a causa raiz",
+      "Sempre encontram um culpado"
+     ],
+     "why": "Porque a equipe está focada em encontrar um culpado, em vez de entender o que aconteceu."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "https://edenrise-reels.pages.dev/who-did-it.mp4"
+   },
+   "deeper": "alignment-journey",
+   "source": {
+    "reel": "who-did-it",
+    "lang": "pt",
+    "videoLang": "pt",
+    "seconds": 20
+   }
+  },
+  {
+   "id": "great-teammates",
+   "seconds": 20,
+   "theme": "energia",
+   "title": {
+    "pt": "Seja um grande colega"
+   },
+   "hook": {
+    "pt": "Pode ser o responsável por criar energia nos outros colegas de trabalho."
+   },
+   "line": {
+    "pt": "Vai aprender a ser o tipo de colega que inspira e motiva os outros."
+   },
+   "lesson": {
+    "pt": "Os grandes colegas de trabalho criam energia nos outros. Para isso, é importante ouvir atentamente, notar o esforço, trazer soluções, partilhar crenças e ser uma pessoa que dá energia. Isso pode ser feito através de pequenas ações diárias."
+   },
+   "check": {
+    "type": "application",
+    "a": 1,
+    "pt": {
+     "q": "O que é um sinal de um grande colega de trabalho?",
+     "opts": [
+      "Alguém que reclama constantemente",
+      "Alguém que ouve atentamente e traz soluções",
+      "Alguém que ignora os outros"
+     ],
+     "why": "Porque ouvir atentamente e trazer soluções são comportamentos que criam energia nos outros, como mencionado no texto."
+    },
+    "audit": "verified",
+    "model": "gateway",
+    "src": "transcript"
+   },
+   "media": {
+    "type": "mp4",
+    "src": "https://edenrise-reels.pages.dev/great-teammates.mp4"
    },
    "deeper": "land-team-journey",
    "source": {
-    "reel": "safe-to-speak",
+    "reel": "great-teammates",
     "lang": "pt",
     "videoLang": "pt",
     "seconds": 20

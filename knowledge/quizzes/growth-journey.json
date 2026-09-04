@@ -1,0 +1,734 @@
+{
+ "course": "growth-journey",
+ "lang": "default",
+ "modules": {
+  "0": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "From the job itself",
+      "From your manager or company",
+      "You bring the purpose",
+      "From your circumstances"
+     ],
+     "q": "Where does the purpose in your work come from?",
+     "why": "You bring the purpose to your work, rather than waiting for it to be given to you."
+    },
+    "pt": {
+     "opts": [
+      "Do próprio trabalho",
+      "Do teu gestor ou empresa",
+      "Tu trazes o propósito",
+      "Das tuas circunstâncias"
+     ],
+     "q": "De onde vem o propósito no teu trabalho?",
+     "why": "Tu trazes o propósito para o teu trabalho, em vez de esperar que te seja dado."
+    },
+    "t0": 45,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526261070,
+    "verified": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "A goal set by your manager",
+      "A deeper intention underneath the way you approach your day",
+      "A set of rules to follow",
+      "A reward system"
+     ],
+     "q": "What is the 'governing intention'?",
+     "why": "The governing intention is the deeper intention underneath the way you approach your day."
+    },
+    "pt": {
+     "opts": [
+      "Um objetivo definido pelo teu gestor",
+      "Uma intenção mais profunda por baixo da forma como abordas o teu dia",
+      "Um conjunto de regras a seguir",
+      "Um sistema de recompensas"
+     ],
+     "q": "O que é a 'intenção governante'?",
+     "why": "A intenção governante é a intenção mais profunda por baixo da forma como abordas o teu dia."
+    },
+    "t0": 104,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526261070,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Just get through the day",
+      "Wait for your manager to motivate you",
+      "Bring great energy to your team and serve people well",
+      "Focus only on getting paid"
+     ],
+     "q": "What should you do to make your work hours count?",
+     "why": "You should bring great energy to your team and serve people well to make your work hours count."
+    },
+    "pt": {
+     "opts": [
+      "Apenas passar o dia",
+      "Esperar que o teu gestor te motive",
+      "Trazer grande energia para a tua equipa e servir as pessoas bem",
+      "Focar-te apenas em receber o salário"
+     ],
+     "q": "O que deves fazer para que as tuas horas de trabalho contem?",
+     "why": "Deves trazer grande energia para a tua equipa e servir as pessoas bem para que as tuas horas de trabalho contem."
+    },
+    "t0": 78,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526261070,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Arrive ready and engaged",
+      "Bring apathy and indifference",
+      "Focus only on your own tasks",
+      "Wait for others to create the atmosphere"
+     ],
+     "q": "How can you contribute to a positive atmosphere at work?",
+     "why": "You can contribute to a positive atmosphere at work by arriving ready and engaged."
+    },
+    "pt": {
+     "opts": [
+      "Chegar preparado e envolvido",
+      "Trazer apatia e indiferença",
+      "Focar-te apenas nas tuas próprias tarefas",
+      "Esperar que os outros criem a atmosfera"
+     ],
+     "q": "Como podes contribuir para uma atmosfera positiva no trabalho?",
+     "why": "Podes contribuir para uma atmosfera positiva no trabalho chegando preparado e envolvido."
+    },
+    "t0": 160,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526261070,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Tell them to just get through the day",
+      "Encourage them to bring their own purpose and intention to their work",
+      "Suggest they wait for their manager to give them a new task",
+      "Recommend they focus only on their salary"
+     ],
+     "q": "A new employee is struggling to find meaning in their work. What advice would you give them?",
+     "why": "You would encourage them to bring their own purpose and intention to their work."
+    },
+    "pt": {
+     "opts": [
+      "Dizer-lhe para apenas passar o dia",
+      "Encorajá-lo a trazer o seu próprio propósito e intenção para o seu trabalho",
+      "Sugerir que espere que o seu gestor lhe dê uma nova tarefa",
+      "Recomendar que se foque apenas no salário"
+     ],
+     "q": "Um novo colaborador está a lutar para encontrar significado no seu trabalho. Que conselho lhe darias?",
+     "why": "Encorajá-lo-ias a trazer o seu próprio propósito e intenção para o seu trabalho."
+    },
+    "t0": 131,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526261070,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Arrive ready and greet them properly to help shift their mood",
+      "Ignore them and focus on your own work",
+      "Tell them to just get over it",
+      "Wait for someone else to intervene"
+     ],
+     "q": "You notice that a colleague is having a bad day and is bringing a negative atmosphere to the team. What can you do to help?",
+     "why": "You can help by arriving ready and greeting them properly to help shift their mood."
+    },
+    "pt": {
+     "opts": [
+      "Chegar preparado e saudá-los correctamente para ajudar a mudar o seu humor",
+      "Ignorá-los e focar-te no teu próprio trabalho",
+      "Dizer-lhes para simplesmente ultrapassar isso",
+      "Esperar que alguém else intervenha"
+     ],
+     "q": "Notas que um colega está a ter um mau dia e está a trazer uma atmosfera negativa para a equipa. O que podes fazer para ajudar?",
+     "why": "Podes ajudar chegando preparado e saudando-os correctamente para ajudar a mudar o seu humor."
+    },
+    "t0": 187,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526261070,
+    "corrected": true
+   }
+  ],
+  "1": [
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "One worked harder than the other",
+      "One had more opportunities than the other",
+      "One worked with direction, while the other simply worked",
+      "One had more support from their team"
+     ],
+     "q": "What is the main difference between the two people in the example?",
+     "why": "The person who worked with direction had a clear goal in mind, which helped them take ownership of their growth."
+    },
+    "pt": {
+     "opts": [
+      "Um trabalhou mais duro do que o outro",
+      "Um teve mais oportunidades do que o outro",
+      "Um trabalhou com direção, enquanto o outro simplesmente trabalhou",
+      "Um teve mais apoio da sua equipa"
+     ],
+     "q": "Qual é a principal diferença entre as duas pessoas no exemplo?",
+     "why": "A pessoa que trabalhou com direção tinha um objetivo claro em mente, o que a ajudou a assumir a responsabilidade pelo seu crescimento."
+    },
+    "t0": 28,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526290704,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "The team leader",
+      "The organization",
+      "The individual themselves",
+      "The training department"
+     ],
+     "q": "Who is responsible for taking ownership of one's growth?",
+     "why": "The individual themselves is responsible for taking ownership of their growth, as no one can take responsibility for their development for them."
+    },
+    "pt": {
+     "opts": [
+      "O líder da equipa",
+      "A organização",
+      "O indivíduo em si",
+      "O departamento de formação"
+     ],
+     "q": "Quem é responsável por assumir a responsabilidade pelo seu crescimento?",
+     "why": "O indivíduo em si é responsável por assumir a responsabilidade pelo seu crescimento, pois ninguém pode assumir a responsabilidade pelo seu desenvolvimento em seu lugar."
+    },
+    "t0": 53,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526290704,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Write it down and forget about it",
+      "Share it with your team and ask for feedback",
+      "Make it specific and measurable, with a clear deadline",
+      "Just keep it in mind and hope for the best"
+     ],
+     "q": "What should you do to turn a good intention into a clear goal?",
+     "why": "To turn a good intention into a clear goal, you should make it specific and measurable, with a clear deadline, so you can act on it and track your progress."
+    },
+    "pt": {
+     "opts": [
+      "Escrevê-lo e esquecê-lo",
+      "Partilhá-lo com a tua equipa e pedir feedback",
+      "Torná-lo específico e mensurável, com um prazo claro",
+      "Apenas guardá-lo na mente e esperar pelo melhor"
+     ],
+     "q": "O que devias fazer para transformar uma boa intenção num objetivo claro?",
+     "why": "Para transformar uma boa intenção num objetivo claro, devias torná-lo específico e mensurável, com um prazo claro, para que possas agir sobre ele e acompanhar o teu progresso."
+    },
+    "t0": 107,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526290704,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Try to achieve it all at once",
+      "Work backwards to break it down into smaller actions",
+      "Give up if it seems too difficult",
+      "Just focus on the end result"
+     ],
+     "q": "What should you do once you have a clear goal?",
+     "why": "Once you have a clear goal, you should work backwards to break it down into smaller actions, so you can make progress and stay focused on what you need to do today."
+    },
+    "pt": {
+     "opts": [
+      "Tentar alcançá-lo tudo de uma vez",
+      "Trabalhar para trás para o dividir em ações mais pequenas",
+      "Desistir se parecer demasiado difícil",
+      "Apenas focar no resultado final"
+     ],
+     "q": "O que devias fazer uma vez que tens um objetivo claro?",
+     "why": "Uma vez que tens um objetivo claro, devias trabalhar para trás para o dividir em ações mais pequenas, para que possas fazer progressos e manter-te focado no que precisas fazer hoje."
+    },
+    "t0": 135,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526290704,
+    "corrected": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask someone experienced to show you how they approach a difficult task",
+      "Try to tackle a difficult task on your own",
+      "Read a book about confidence building",
+      "Take a break and come back to it later"
+     ],
+     "q": "If your goal is to become more confident in your role, what might be a good action to take today?",
+     "why": "If your goal is to become more confident in your role, asking someone experienced to show you how they approach a difficult task could be a good action to take today, as it can help you learn from others and gain new insights."
+    },
+    "pt": {
+     "opts": [
+      "Perguntar a alguém experiente para mostrar-te como abordam uma tarefa difícil",
+      "Tentar abordar uma tarefa difícil sozinho",
+      "Ler um livro sobre construção de confiança",
+      "Fazer uma pausa e voltar a ela mais tarde"
+     ],
+     "q": "Se o teu objetivo é tornar-te mais confiante no teu papel, o que poderia ser uma boa ação para tomar hoje?",
+     "why": "Se o teu objetivo é tornar-te mais confiante no teu papel, perguntar a alguém experiente para mostrar-te como abordam uma tarefa difícil poderia ser uma boa ação para tomar hoje, pois pode ajudar-te a aprender com os outros e ganhar novas perspetivas."
+    },
+    "t0": 161,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526290704,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "What can I do to avoid working hard?",
+      "Is there a better way to do this task?",
+      "How can I get more support from my team?",
+      "What can I do to get a promotion?"
+     ],
+     "q": "If you want to become more efficient in your work, what might be a good question to ask yourself today?",
+     "why": "If you want to become more efficient in your work, asking yourself if there is a better way to do a task could be a good question to ask today, as it can help you identify areas for improvement and find more effective ways of working."
+    },
+    "pt": {
+     "opts": [
+      "O que posso fazer para evitar trabalhar arduamente?",
+      "Há uma melhor maneira de fazer esta tarefa?",
+      "Como posso obter mais apoio da minha equipa?",
+      "O que posso fazer para obter uma promoção?"
+     ],
+     "q": "Se queres tornar-te mais eficiente no teu trabalho, que pergunta poderias fazer-te hoje?",
+     "why": "Se queres tornar-te mais eficiente no teu trabalho, perguntar-te se há uma melhor maneira de fazer uma tarefa poderia ser uma boa pergunta para fazer hoje, pois pode ajudar-te a identificar áreas para melhoria e encontrar maneiras mais eficazes de trabalhar."
+    },
+    "t0": 187,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526290704,
+    "corrected": true
+   }
+  ],
+  "2": [
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Kaizen",
+      "Efficiency",
+      "Productivity",
+      "Quality Control"
+     ],
+     "q": "What is the term often used to describe the approach of always looking for a better way?",
+     "why": "Kaizen is a Japanese term that means continuous improvement."
+    },
+    "pt": {
+     "opts": [
+      "Kaizen",
+      "Eficiência",
+      "Produtividade",
+      "Controlo de Qualidade"
+     ],
+     "q": "Qual é o termo frequentemente usado para descrever a abordagem de sempre procurar uma forma melhor?",
+     "why": "Kaizen é um termo japonês que significa melhoria contínua."
+    },
+    "t0": 26,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526326506,
+    "corrected": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Rushing to complete tasks",
+      "Cutting corners to finish faster",
+      "Removing unnecessary effort while maintaining quality",
+      "Sacrificing quality for speed"
+     ],
+     "q": "What does efficiency mean in the context of continuous improvement?",
+     "why": "Efficiency means removing unnecessary effort while maintaining or improving the result."
+    },
+    "pt": {
+     "opts": [
+      "Apressar-se a completar tarefas",
+      "Cortar cantos para terminar mais rápido",
+      "Remover esforço desnecessário mantendo a qualidade",
+      "Sacrificar a qualidade pela velocidade"
+     ],
+     "q": "O que significa eficiência no contexto de melhoria contínua?",
+     "why": "Eficiência significa remover esforço desnecessário mantendo ou melhorando o resultado."
+    },
+    "t0": 80,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526326506,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Become faster at walking back and forth",
+      "Ask why the tools are not stored together",
+      "Ignore the issue and continue with the task",
+      "Look for a way to eliminate the need for the tools"
+     ],
+     "q": "What should you do when you notice that a task requires walking back and forth to different locations to retrieve necessary tools?",
+     "why": "You should ask why the tools are not stored together to identify an opportunity for improvement."
+    },
+    "pt": {
+     "opts": [
+      "Tornar-se mais rápido a caminhar para trás e para a frente",
+      "Perguntar por que as ferramentas não estão armazenadas juntas",
+      "Ignorar a questão e continuar com a tarefa",
+      "Procurar uma forma de eliminar a necessidade das ferramentas"
+     ],
+     "q": "O que devias fazer quando notares que uma tarefa requer caminhar para trás e para a frente para diferentes locais para recuperar ferramentas necessárias?",
+     "why": "Deves perguntar por que as ferramentas não estão armazenadas juntas para identificar uma oportunidade de melhoria."
+    },
+    "t0": 106,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526326506,
+    "verified": true
+   },
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Ask the five simple questions to identify opportunities for improvement",
+      "Ignore the issue and continue with the process",
+      "Look for a way to work harder to compensate for the inefficiency",
+      "Try to find a way to eliminate the entire process"
+     ],
+     "q": "What should you do when you notice something that could be improved in a process?",
+     "why": "You should ask the five simple questions to identify opportunities for improvement."
+    },
+    "pt": {
+     "opts": [
+      "Fazer as cinco perguntas simples para identificar oportunidades de melhoria",
+      "Ignorar a questão e continuar com o processo",
+      "Procurar uma forma de trabalhar mais duro para compensar a ineficiência",
+      "Tentar encontrar uma forma de eliminar todo o processo"
+     ],
+     "q": "O que devias fazer quando notares algo que possa ser melhorado num processo?",
+     "why": "Deves fazer as cinco perguntas simples para identificar oportunidades de melhoria."
+    },
+    "t0": 184,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526326506,
+    "verified": true
+   },
+   {
+    "a": 3,
+    "en": {
+     "opts": [
+      "Entering the information more quickly",
+      "Hiring more staff to help with the task",
+      "Finding a way to automate the entry of the information",
+      "Eliminating the need to enter the information twice"
+     ],
+     "q": "A team is struggling with a task that requires entering the same information twice. What could be an opportunity for improvement?",
+     "why": "Eliminating the need to enter the information twice could be an opportunity for improvement by reducing friction and increasing efficiency."
+    },
+    "pt": {
+     "opts": [
+      "Entrar a informação mais rapidamente",
+      "Contratar mais pessoal para ajudar com a tarefa",
+      "Encontrar uma forma de automatizar a entrada da informação",
+      "Eliminar a necessidade de entrar a informação duas vezes"
+     ],
+     "q": "Uma equipa está a lutar com uma tarefa que requer entrar a mesma informação duas vezes. Qual poderia ser uma oportunidade de melhoria?",
+     "why": "Eliminar a necessidade de entrar a informação duas vezes poderia ser uma oportunidade de melhoria ao reduzir a fricção e aumentar a eficiência."
+    },
+    "t0": 131,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526326506,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Providing more training to the worker",
+      "Creating a simple checklist to prevent the question from being asked",
+      "Increasing the complexity of the task to make it more challenging",
+      "Ignoring the issue and continuing with the task"
+     ],
+     "q": "A worker is regularly having to ask the same question to complete a task. What could be an opportunity for improvement?",
+     "why": "Creating a simple checklist could be an opportunity for improvement by reducing friction and increasing efficiency."
+    },
+    "pt": {
+     "opts": [
+      "Fornecer mais formação ao trabalhador",
+      "Criar uma lista de verificação simples para prevenir a pergunta de ser feita",
+      "Aumentar a complexidade da tarefa para torná-la mais desafiadora",
+      "Ignorar a questão e continuar com a tarefa"
+     ],
+     "q": "Um trabalhador está regularmente a ter de fazer a mesma pergunta para completar uma tarefa. Qual poderia ser uma oportunidade de melhoria?",
+     "why": "Criar uma lista de verificação simples poderia ser uma oportunidade de melhoria ao reduzir a fricção e aumentar a eficiência."
+    },
+    "t0": 158,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526326506,
+    "verified": true
+   }
+  ],
+  "4": [
+   {
+    "a": 0,
+    "en": {
+     "opts": [
+      "Certainty, variety, significance, connection, growth, and contribution",
+      "Happiness, sadness, anger, fear, surprise, and disgust",
+      "Faith, hope, love, joy, peace, and patience",
+      "Courage, honesty, kindness, respect, responsibility, and self-discipline"
+     ],
+     "q": "What are the six core human needs that every person has?",
+     "why": "The six core human needs are certainty, variety, significance, connection, growth, and contribution, which are essential to understanding human behavior."
+    },
+    "pt": {
+     "opts": [
+      "Certezas, variedade, significado, conexão, crescimento e contribuição",
+      "Felicidade, tristeza, raiva, medo, surpresa e desgosto",
+      "Fé, esperança, amor, alegria, paz e paciência",
+      "Coragem, honestidade, bondade, respeito, responsabilidade e auto-disciplina"
+     ],
+     "q": "Quais são as seis necessidades humanas fundamentais que cada pessoa tem?",
+     "why": "As seis necessidades humanas fundamentais são certezas, variedade, significado, conexão, crescimento e contribuição, que são essenciais para entender o comportamento humano."
+    },
+    "t0": 25,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526403469,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "By resisting change and trying to maintain the status quo",
+      "By knowing that you can adapt to new situations",
+      "By trying to control everything around you",
+      "By avoiding uncertainty at all costs"
+     ],
+     "q": "How can certainty be achieved in a changing environment?",
+     "why": "Certainty can be achieved by knowing that you can adapt to new situations, rather than trying to maintain the status quo or control everything."
+    },
+    "pt": {
+     "opts": [
+      "Resistindo à mudança e tentando manter o status quo",
+      "Sabendo que se pode adaptar a novas situações",
+      "Tentando controlar tudo ao seu redor",
+      "Evitando a incerteza a todo o custo"
+     ],
+     "q": "Como pode ser alcançada a certeza num ambiente em mudança?",
+     "why": "A certeza pode ser alcançada sabendo que se pode adaptar a novas situações, em vez de tentar manter o status quo ou controlar tudo."
+    },
+    "t0": 52,
+    "type": "recall",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526403469,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Immediately start a new project to stimulate yourself",
+      "Ask yourself if you really need a change or just need stimulation",
+      "Try to finish what you started before moving on to something new",
+      "Avoid taking on new tasks to maintain consistency"
+     ],
+     "q": "What should you do when you feel the need for variety in your work?",
+     "why": "When feeling the need for variety, you should ask yourself if you really need a change or just need stimulation, to determine the best course of action."
+    },
+    "pt": {
+     "opts": [
+      "Imediatamente começar um novo projeto para se estimular",
+      "Perguntar a si mesmo se realmente precisa de uma mudança ou apenas precisa de estímulo",
+      "Tentar terminar o que começou antes de passar para algo novo",
+      "Evitar assumir novas tarefas para manter a consistência"
+     ],
+     "q": "O que deve fazer quando sente a necessidade de variedade no seu trabalho?",
+     "why": "Quando sentir a necessidade de variedade, deve perguntar a si mesmo se realmente precisa de uma mudança ou apenas precisa de estímulo, para determinar o melhor curso de ação."
+    },
+    "t0": 79,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526403469,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "By seeking feedback and using it to improve",
+      "By defending yourself and proving your value",
+      "By being reliable, consistent, and contributing every day",
+      "By comparing yourself to others and trying to outdo them"
+     ],
+     "q": "How can you build real significance in your work?",
+     "why": "Real significance can be built by being reliable, consistent, and contributing every day, rather than seeking to prove oneself or compare to others."
+    },
+    "pt": {
+     "opts": [
+      "Procurando feedback e usando-o para melhorar",
+      "Defendendo-se e provando o seu valor",
+      "Sendo fiável, consistente e contribuindo todos os dias",
+      "Comparando-se com os outros e tentando superá-los"
+     ],
+     "q": "Como pode construir um significado real no seu trabalho?",
+     "why": "Um significado real pode ser construído sendo fiável, consistente e contribuindo todos os dias, em vez de procurar provar a si mesmo ou comparar-se com os outros."
+    },
+    "t0": 104,
+    "type": "application",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526403469,
+    "verified": true
+   },
+   {
+    "a": 2,
+    "en": {
+     "opts": [
+      "Defend your idea and try to prove it's the best",
+      "Avoid conflict and agree with your colleague",
+      "Ask yourself if you're solving the problem or proving your value",
+      "Try to find a compromise and listen to your colleague's perspective"
+     ],
+     "q": "A colleague is disagreeing with your idea in a meeting. What should you do?",
+     "why": "In this scenario, you should ask yourself if you're solving the problem or proving your value, to ensure you're focusing on the issue at hand rather than your own ego."
+    },
+    "pt": {
+     "opts": [
+      "Defender a sua ideia e tentar provar que é a melhor",
+      "Evitar o conflito e concordar com o seu colega",
+      "Perguntar a si mesmo se está a resolver o problema ou a provar o seu valor",
+      "Tentar encontrar um compromisso e ouvir a perspectiva do seu colega"
+     ],
+     "q": "Um colega de trabalho discorda da sua ideia numa reunião. O que deve fazer?",
+     "why": "Neste cenário, deve perguntar a si mesmo se está a resolver o problema ou a provar o seu valor, para garantir que está a focar-se no problema em questão e não no seu próprio ego."
+    },
+    "t0": 130,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526403469,
+    "corrected": true
+   },
+   {
+    "a": 1,
+    "en": {
+     "opts": [
+      "Avoid confronting the team member and hope the problem resolves itself",
+      "Talk to the team member and try to understand their perspective",
+      "Take over the task and do it yourself to ensure it gets done",
+      "Report the team member to your supervisor and ask them to handle it"
+     ],
+     "q": "You're working on a team project and a team member is not pulling their weight. What should you do?",
+     "why": "In this scenario, you should talk to the team member and try to understand their perspective, rather than avoiding the issue or taking over the task yourself."
+    },
+    "pt": {
+     "opts": [
+      "Evitar confrontar o membro da equipa e esperar que o problema se resolva sozinho",
+      "Falar com o membro da equipa e tentar entender a sua perspectiva",
+      "Assumir a tarefa e fazê-la você mesmo para garantir que fica feita",
+      "Relatar o membro da equipa ao seu supervisor e pedir-lhe que resolva o problema"
+     ],
+     "q": "Está a trabalhar num projeto de equipa e um membro da equipa não está a fazer a sua parte. O que deve fazer?",
+     "why": "Neste cenário, deve falar com o membro da equipa e tentar entender a sua perspectiva, em vez de evitar o problema ou assumir a tarefa você mesmo."
+    },
+    "t0": 156,
+    "type": "scenario",
+    "gen": true,
+    "model": "llama-3.3-70b@workers-ai",
+    "src": "whisper-small",
+    "generatedAt": 1788526403469,
+    "corrected": true
+   }
+  ]
+ }
+}
