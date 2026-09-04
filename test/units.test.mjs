@@ -11,6 +11,7 @@ const app = src('core/app.js');
 
 export function run(t) {
   runRecall(t);
+  runLinks(t);
   /* ---------- the extractor is itself under test ---------- */
   t.group('harness');
   selfTest(t);
@@ -209,4 +210,32 @@ function runRecall(t) {
   t.ok('stopwords-only asks nothing', R.recall('the and of', 4).length === 0);
   t.ok('a tank question does not drag in responsibility', R.recall('water tank', 4).every(m => m.mod === 5));
   t.ok('text carries the next segment for context', r1[0] && r1[0].text.includes('fault'));
+}
+
+/* ---------- links into the library ------------------------------------------
+   Shipped 2026-09-04. An answer that names a lesson must become a link to it,
+   and ONLY to lessons that exist — the model cannot invent a destination. */
+function runLinks(t) {
+  const CATALOG = [{ id: 'land', title: 'Above the Line', modules: ['Above the Line, Below the Line', 'Total Responsibility'], moduleMedia: [{ type: 'vimeo', id: '1' }, { type: 'vimeo', id: '2' }] },
+                   { id: 'fire', title: 'Fire Truck Training', modules: ['Filling the Water Tank'], moduleMedia: [{ type: 'vimeo', id: '3' }] }];
+  const REELS = [{ id: 'own-the-outcome', title: { en: 'Own The Outcome' }, approved: true }, { id: 'secret', title: { en: 'Secret Reel' }, approved: false }];
+  const R = sandbox(app, ['deepLink', 'absLink', '_reEsc', 'linkTargets', 'linkifyAnswer'], {
+    CATALOG, REELS, esc: s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'),
+    ctitle: c => c.title, cmods: c => c.modules, reelField: v => v.en, location: { origin: 'https://a.test', pathname: '/' }, t: k => k, toast: () => {},
+  });
+  const moments = [{ kind: 'module', course: 'land', mod: 1, t0: 272, title: 'Total Responsibility', courseTitle: 'Above the Line' }];
+  t.group('links · deep links');
+  t.ok('lesson moment → #/play with a 4s lead-in', R.deepLink(moments[0]) === '#/play/land/1/268');
+  t.ok('reel → #/reels/<id>', R.deepLink({ kind: 'reel', mod: 'own-the-outcome' }) === '#/reels/own-the-outcome');
+  t.group('links · linkified answers');
+  const a = R.linkifyAnswer('See Total Responsibility · 4:32 and then Filling the Water Tank.', moments);
+  t.ok('title + timecode links to that second', a.includes('href="#/play/land/1/268"'));
+  t.ok('module title without timecode links to the module start', a.includes('href="#/play/fire/0"'));
+  const b = R.linkifyAnswer('The Fire Truck Training course covers it; watch Own The Outcome.', []);
+  t.ok('course title links to the course', b.includes('href="#/course/fire"'));
+  t.ok('approved reel links to the feed at the reel', b.includes('href="#/reels/own-the-outcome"'));
+  t.ok('a pending reel is never linked', !R.linkifyAnswer('watch Secret Reel', []).includes('href'));
+  t.ok('a lesson that does not exist stays text', !R.linkifyAnswer('see Advanced Composting · 2:10', []).includes('<a'));
+  t.ok('html in the answer is escaped, not rendered', !R.linkifyAnswer('<img src=x onerror=alert(1)>', []).includes('<img'));
+  t.ok('longer title wins over its prefix', R.linkifyAnswer('Above the Line, Below the Line', moments).match(/<a /g).length === 1);
 }

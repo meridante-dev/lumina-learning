@@ -1570,6 +1570,7 @@ function momentsHTML(moments, opts) {
         <span class="am-tc">${fmtTc(m.t0)}</span>
         <div class="am-body"><b>${esc(m.title)}</b><span class="am-course">${esc(m.courseTitle)}</span>
           <p>“${esc(m.text.length > 150 ? m.text.slice(0, 150) + '…' : m.text)}”</p></div>
+        <button class="am-link" data-action="copy-link" data-href="${deepLink(m)}" aria-label="${t('link_copy')}" title="${t('link_copy')}">🔗</button>
         <span class="ask-go">▶</span>
       </div>`).join('')}</div>`;
 }
@@ -1600,7 +1601,7 @@ async function openAsk(q, via) {
     try {
       const g = await gatewayComplete({ messages: [{ role: 'user', content: q }], grounding: groundingText(moments), maxTokens: 350 });
       if (g && g.reply && $('#askQ') && $('#askQ').textContent === q) {
-        $('#askBody').insertAdjacentHTML('beforeend', `<p class="ask-answer">${esc(g.reply)}</p><div class="ask-model">✦ ${t('ask_by')} ${esc(modelLabelOf(g.model))}</div>`);
+        $('#askBody').insertAdjacentHTML('beforeend', `<p class="ask-answer">${linkifyAnswer(g.reply, moments)}</p><div class="ask-model">✦ ${t('ask_by')} ${esc(modelLabelOf(g.model))}</div>`);
         if (via === 'voice') speakBack(g.reply);
       }
     } catch (e) { if (via === 'voice' && moments.length) speakBack(`${moments[0].title}. ${moments[0].text}`); }
@@ -1612,7 +1613,7 @@ async function openAsk(q, via) {
       messages: [{ role: 'user', content: q }] });
     const j = JSON.parse(raw.replace(/^[^{]*/, '').replace(/[^}]*$/, ''));
     const refs = (j.refs || []).map(r => ({ r, c: courseById(r.courseId) })).filter(x => x.c);
-    $('#askBody').innerHTML = `${momentsHTML(moments)}<p class="ask-answer">${esc(j.answer || '')}</p>
+    $('#askBody').innerHTML = `${momentsHTML(moments)}<p class="ask-answer">${linkifyAnswer(j.answer || '', moments)}</p>
       ${refs.length ? `<div class="ob-eyebrow" style="margin-top:16px;">${t('ask_refs')}</div>
       <div class="ask-refs">${refs.map(({ r, c }) => `
         <div class="ask-ref" data-action="ask-ref" data-id="${c.id}" role="button" tabindex="0">
@@ -4765,12 +4766,71 @@ function lazyBackgrounds() {
    Consumed once and normalised to the course page underneath the player, so a
    reload doesn't restart the video mid-air. */
 function handlePlayLink() {
-  const m = (location.hash || '').match(/^#\/play\/([a-z0-9-]+)\/(\d+)(?:\/(\d+))?/);
+  const h = location.hash || '';
+  /* a link followed from inside an answer must land ON the video, not under a modal */
+  const closeOverlays = () => { const am = $('#askModal'); if (am) am.classList.remove('open'); try { setTutorOpen(false); } catch (e) {} try { speechSynthesis.cancel(); } catch (e) {} };
+  /* #/reels/<id> — one short, by id. The feed renders and scrolls to it. */
+  const r = h.match(/^#\/reels\/([a-z0-9-]+)/);
+  if (r) {
+    closeOverlays();
+    location.hash = '#/reels';
+    setTimeout(() => { const sl = document.querySelector(`.reel[data-id="${CSS.escape(r[1])}"]`); if (sl) sl.scrollIntoView({ block: 'start' }); }, 400);
+    return true;
+  }
+  const m = h.match(/^#\/play\/([a-z0-9-]+)\/(\d+)(?:\/(\d+))?/);
   if (!m) return false;
   const [, cid, mod, sec] = m;
+  closeOverlays();
+  ledgerAppend('moment_open', { courseId: cid, mod: +mod, t: sec ? +sec : 0, via: 'link' });
   location.hash = '#/course/' + cid;
   setTimeout(() => openPlayer(cid, +mod, sec ? +sec : undefined), 350);
   return true;
+}
+/* ===== LINKS INTO THE LIBRARY ==============================================
+   Every video has an address: #/play/<course>/<module>/<second> for a lesson,
+   #/reels/<id> for a short. An AI answer that names a lesson becomes a link to
+   it — DETERMINISTICALLY: only titles that exist in the catalogue (or in the
+   moments the answer was grounded on) become links, so the model cannot invent
+   a destination. Anything it names that does not exist stays plain text. */
+function deepLink(m) {
+  return m.kind === 'reel' ? `#/reels/${m.mod}` : `#/play/${m.course}/${m.mod}/${Math.max(0, Math.floor(m.t0 - 4))}`;
+}
+function absLink(hash) { return location.origin + location.pathname + hash; }
+const _reEsc = x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function linkTargets(moments) {
+  const out = [];
+  /* grounded moments first — they carry the exact second */
+  for (const m of moments || []) out.push({ label: m.title, href: deepLink(m), kind: m.kind, course: m.course, mod: m.mod });
+  for (const c of CATALOG) {
+    out.push({ label: ctitle(c), href: '#/course/' + c.id, kind: 'course' });
+    cmods(c).forEach((title, i) => { if (title && !(c.moduleMedia && c.moduleMedia[i] && c.moduleMedia[i].type === 'soon')) out.push({ label: title, href: `#/play/${c.id}/${i}`, kind: 'module', course: c.id, mod: i }); });
+  }
+  for (const r of (typeof REELS !== 'undefined' ? REELS : []).filter(r => r.approved)) out.push({ label: reelField(r.title), href: '#/reels/' + r.id, kind: 'reel' });
+  /* longest label first so "Above the Line · Deep Dive" wins over "Above the Line" */
+  const seen = new Set();
+  return out.filter(t => t.label && t.label.length >= 4 && !seen.has(t.label.toLowerCase() + t.href) && seen.add(t.label.toLowerCase() + t.href))
+            .sort((a, b) => b.label.length - a.label.length);
+}
+function linkifyAnswer(text, moments) {
+  let html = esc(text).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+  const holds = [];
+  for (const tgt of linkTargets(moments)) {
+    const label = esc(tgt.label);
+    /* an optional timecode right after the title ("Total Responsibility · 4:32") becomes the seek second */
+    const re = new RegExp(`(?<![\\w>])${_reEsc(label)}(?:\\s*(?:·|-|–|—|at|às?)\\s*(\\d{1,2}):(\\d{2}))?(?![\\w<])`, 'gi');
+    html = html.replace(re, (whole, mm, ss) => {
+      let href = tgt.href;
+      if (mm != null && tgt.kind !== 'course' && tgt.kind !== 'reel') href = `#/play/${tgt.course}/${tgt.mod}/${Math.max(0, +mm * 60 + +ss - 4)}`;
+      holds.push(`<a class="ai-link" href="${href}" title="${absLink(href)}">${whole}</a>`);
+      return `\u0000${holds.length - 1}\u0000`;
+    });
+  }
+  return html.replace(/\u0000(\d+)\u0000/g, (_, i) => holds[+i]);
+}
+async function copyLink(hash) {
+  const url = absLink(hash);
+  try { await navigator.clipboard.writeText(url); toast(t('link_copied'), '🔗'); }
+  catch (e) { prompt(t('link_copy'), url); }
 }
 addEventListener('hashchange', () => { if (!handlePlayLink()) render(); });
 if (handlePlayLink()) {} 
@@ -7316,6 +7376,8 @@ function addMsg(html, who) {
 }
 function botSay(html, delay = 700) {
   tutorEngaged();
+  /* titles named in plain text become links; already-linked HTML is left alone */
+  if (!/<a\s/i.test(html)) { try { html = html.replace(/(^|>)([^<]+)(?=<|$)/g, (w, pre, txt) => pre + linkifyAnswer(txt, []).replace(/&amp;/g, '&')); } catch (e) {} }
   const t = document.createElement('div');
   t.className = 'msg bot typing'; t.innerHTML = '<span></span><span></span><span></span>';
   $('#aiMsgs').appendChild(t); $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
@@ -7453,9 +7515,9 @@ async function llmComplete({ system, messages, maxTokens, model }) {
   return (((data.choices || [])[0] || {}).message || {}).content || '…';
 }
 function tutorGrounding(moments) {
-  return moments && moments.length ? `\n\nFROM THE LESSONS — transcript excerpts with timecodes, found for this message. When relevant, ground your answer in them and name the lesson and timecode (e.g. "Total Responsibility · 4:32"). Never claim a lesson says something these excerpts do not:\n${groundingText(moments)}` : '';
+  return moments && moments.length ? `\n\nFROM THE LESSONS — transcript excerpts with timecodes, found for this message. When relevant, ground your answer in them and point the learner to the video by writing the lesson's EXACT title as given here followed by the timecode (e.g. "Total Responsibility · 4:32") — those become links they can tap. Never claim a lesson says something these excerpts do not:\n${groundingText(moments)}` : '';
 }
-const tutorFmt = r => esc(r).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+const tutorFmt = (r, moments) => linkifyAnswer(r, moments || []);
 async function askGateway(text, moments) {
   tutorHistory.push({ role: 'user', content: text });
   const typing = document.createElement('div');
@@ -7466,7 +7528,7 @@ async function askGateway(text, moments) {
     if (!g || !g.reply) throw new Error('empty');
     tutorHistory.push({ role: 'assistant', content: g.reply });
     typing.classList.remove('typing');
-    typing.innerHTML = tutorFmt(g.reply) + momentsHTML(moments, { compact: true });
+    typing.innerHTML = tutorFmt(g.reply, moments) + momentsHTML(moments, { compact: true });
     $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   } catch (e) {
     typing.remove(); tutorHistory.pop();
@@ -7484,7 +7546,7 @@ async function askClaude(text, moments) {
     const reply = await llmComplete({ system: buildTutorSystem() + tutorGrounding(moments), messages: tutorHistory.slice(-12), maxTokens: 700 });
     tutorHistory.push({ role: 'assistant', content: reply });
     typing.classList.remove('typing');
-    typing.innerHTML = tutorFmt(reply) + momentsHTML(moments || [], { compact: true });
+    typing.innerHTML = tutorFmt(reply, moments) + momentsHTML(moments || [], { compact: true });
     $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   } catch (e) {
     typing.remove();
@@ -7750,6 +7812,7 @@ document.addEventListener('click', e => {
     case 'ask-go': openAsk($('#askInput') && $('#askInput').value); break;
     case 'ask-close': $('#askModal').classList.remove('open'); try { speechSynthesis.cancel(); } catch (e) {} break;
     case 'ask-again': openAsk(el.dataset.q, 'again'); break;
+    case 'copy-link': copyLink(el.dataset.href); break;
     case 'ask-speak': { S.speak = S.speak === false; save(); if (S.speak === false) { try { speechSynthesis.cancel(); } catch (e) {} } el.textContent = S.speak === false ? '🔇' : '🔊'; break; }
     case 'ask-reel': {
       const am = $('#askModal'); if (am) am.classList.remove('open'); setTutorOpen(false);

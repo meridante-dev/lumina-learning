@@ -4527,3 +4527,9 @@ body.reels-open { overflow: hidden; }
 .ask-moments.compact .ask-moment { padding: 6px 0; }
 .ask-speak { background: none; border: none; cursor: pointer; font-size: 14px; margin-left: 8px; vertical-align: middle; }
 @media (max-width: 480px) { .mod-tags { gap: 5px; } .mod-tag { font-size: 11px; padding: 2px 8px; } }
+
+/* ===== links into the library — an answer that names a lesson is a way in ===== */
+.ai-link { color: var(--accent); text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.ai-link:hover, .ai-link:focus-visible { text-decoration-style: solid; }
+.am-link { background: none; border: none; cursor: pointer; font-size: 13px; opacity: .55; padding: 4px; align-self: center; }
+.am-link:hover, .am-link:focus-visible { opacity: 1; }
