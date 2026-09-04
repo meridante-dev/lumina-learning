@@ -4765,6 +4765,17 @@ function lazyBackgrounds() {
    #/play/fire-truck-training/1/183 = module 2 of the fire-truck course at 3:03.
    Consumed once and normalised to the course page underneath the player, so a
    reload doesn't restart the video mid-air. */
+/* The feed is a scroll-snap column inside its own container; one early
+   scrollIntoView landed before the slides existed. Try until the slide is
+   there, scroll the CONTAINER, then let snap settle it. */
+function scrollToReel(id, tries) {
+  tries = tries == null ? 8 : tries;
+  const sl = document.querySelector(`.reel[data-id="${CSS.escape(id)}"]`);
+  if (!sl) { if (tries > 0) setTimeout(() => scrollToReel(id, tries - 1), 250); return; }
+  const box = sl.closest('.reel-feed, .reel-wrap') || sl.parentElement;
+  try { box.scrollTo({ top: sl.offsetTop, behavior: 'instant' }); } catch (e) {}
+  sl.scrollIntoView({ block: 'start', behavior: 'instant' });
+}
 function handlePlayLink() {
   const h = location.hash || '';
   /* a link followed from inside an answer must land ON the video, not under a modal */
@@ -4774,7 +4785,7 @@ function handlePlayLink() {
   if (r) {
     closeOverlays();
     location.hash = '#/reels';
-    setTimeout(() => { const sl = document.querySelector(`.reel[data-id="${CSS.escape(r[1])}"]`); if (sl) sl.scrollIntoView({ block: 'start' }); }, 400);
+    scrollToReel(r[1]);
     return true;
   }
   const m = h.match(/^#\/play\/([a-z0-9-]+)\/(\d+)(?:\/(\d+))?/);
@@ -7819,7 +7830,7 @@ document.addEventListener('click', e => {
       const rid = el.dataset.id;
       ledgerAppend('moment_open', { reel: rid, t: +el.dataset.t, via: 'ask' });
       location.hash = '#/reels';
-      setTimeout(() => { const sl = document.querySelector(`.reel[data-id="${CSS.escape(rid)}"]`); if (sl) sl.scrollIntoView({ block: 'start' }); }, 400);
+      scrollToReel(rid);
       break;
     }
     case 'tag-seek': {
