@@ -1415,10 +1415,13 @@ function logAsk(q, via) {
 /* client-side moment search over knowledge/search.json — the same scoring
    shape as LandFlow's search_lessons, so the app and the walkie-talkie find
    the same moments for the same words */
+/* knowledge files ride the same ?v= marker as the bundle: a deploy that changes
+   tags.json or search.json must not be served from the previous version's cache */
+function knowledgeV() { const v = ((document.querySelector('script[src*="core/app.js"]') || {}).src || '').match(/v=(edr\d+)/); return v ? v[1] : ''; }
 let _searchIdx = null;
 function loadSearchIdx() {
   if (_searchIdx !== undefined && _searchIdx !== null) return Promise.resolve(_searchIdx);
-  return fetch('knowledge/search.json').then(r => r.ok ? r.json() : [])
+  return fetch('knowledge/search.json?v=' + knowledgeV()).then(r => r.ok ? r.json() : [])
     .then(j => (_searchIdx = j)).catch(() => (_searchIdx = []));
 }
 /* the knowledge manifest — tags, capabilities, per-module metadata. One fetch,
@@ -1426,7 +1429,7 @@ function loadSearchIdx() {
 let KNOW = null;
 function loadKnowledgeIdx() {
   if (KNOW) return Promise.resolve(KNOW);
-  return fetch('knowledge/index.json').then(r => r.ok ? r.json() : null)
+  return fetch('knowledge/index.json?v=' + knowledgeV()).then(r => r.ok ? r.json() : null)
     .then(j => (KNOW = j)).catch(() => null);
 }
 function allLessons() {
@@ -6816,7 +6819,7 @@ let GRAPH = null;
 let TAGS = null;
 function loadTags() {
   if (TAGS !== null) return Promise.resolve(TAGS);
-  return fetch('knowledge/tags.json').then(r => (r.ok ? r.json() : null)).then(j => (TAGS = j && j.lessons ? j : false)).catch(() => (TAGS = false));
+  return fetch('knowledge/tags.json?v=' + knowledgeV()).then(r => (r.ok ? r.json() : null)).then(j => (TAGS = j && j.lessons ? j : false)).catch(() => (TAGS = false));
 }
 const tagsAt = (key, n) => ((TAGS && TAGS.lessons[key]) || []).slice(0, n || 4);
 function loadGraph() {
