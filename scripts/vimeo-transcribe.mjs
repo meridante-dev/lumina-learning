@@ -23,6 +23,11 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, rmSync } from 'fs';
 import { execFileSync } from 'child_process';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+// Heavy files never touch the Mac disk — the SSD is the workdir. Refuse loudly
+// rather than falling back silently: a fallback is how the Mac hit 119 MB free.
+const SSD_WORK = '/Volumes/Ultra Touch/Academy-OS/work';
+if (!existsSync('/Volumes/Ultra Touch')) { console.error('✗ Ultra Touch SSD not mounted — plug it in; heavy work does not run from the Mac disk.'); process.exit(2); }
+
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const courseId = process.argv[2];
@@ -30,7 +35,7 @@ const LANG = (process.argv.includes('--lang') ? process.argv[process.argv.indexO
 if (!courseId) { console.error('usage: vimeo-transcribe.mjs <courseId> [--lang pt]'); process.exit(1); }
 const TOKEN = readFileSync(process.env.HOME + '/.vimeo-token', 'utf8').trim();
 const OUT = join(ROOT, 'media', 'transcripts', courseId);
-const TMP = join(ROOT, '.tmp-audio');
+const TMP = join(SSD_WORK, 'vimeo-transcribe');
 mkdirSync(OUT, { recursive: true }); mkdirSync(TMP, { recursive: true });
 
 /* module ids straight from the catalogue — the app's own truth, so the

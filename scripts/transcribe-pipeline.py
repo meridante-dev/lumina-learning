@@ -34,8 +34,10 @@ SSD_DIRS = [pathlib.Path('/Volumes/Ultra Touch/_offload-to-SSD/video-source'),
 # Temp audio: SSD when mounted (Mac disk is chronically tight), local scratch
 # otherwise — the SSD EJECTED mid-run on 07-31 and took the last six modules'
 # fetches with it; the pipeline must survive that disk vanishing.
-_SSD_WORK = pathlib.Path('/Volumes/Ultra Touch/Academy-OS/transcribe-work')
-WORK = _SSD_WORK if _SSD_WORK.parent.exists() else pathlib.Path.home() / '.cache' / 'academy-transcribe'
+# Heavy files never touch the Mac disk. No silent fallback: that is how the Mac hit 119 MB free.
+WORK = pathlib.Path('/Volumes/Ultra Touch/Academy-OS/work/transcribe')
+if not pathlib.Path('/Volumes/Ultra Touch').exists():
+    sys.exit('✗ Ultra Touch SSD not mounted — plug it in; heavy work does not run from the Mac disk.')
 TOL = 2.0
 VIDEO_EXT = {'.mp4', '.mov', '.m4v', '.mkv', '.webm', '.m4a', '.wav'}
 

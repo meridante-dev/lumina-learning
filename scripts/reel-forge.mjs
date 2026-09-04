@@ -45,6 +45,11 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync
 import { execFileSync } from 'child_process';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+// Heavy files never touch the Mac disk — the SSD is the workdir. Refuse loudly
+// rather than falling back silently: a fallback is how the Mac hit 119 MB free.
+const SSD_WORK = '/Volumes/Ultra Touch/Academy-OS/work';
+if (!existsSync('/Volumes/Ultra Touch')) { console.error('✗ Ultra Touch SSD not mounted — plug it in; heavy work does not run from the Mac disk.'); process.exit(2); }
+
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const TR = join(ROOT, 'media', 'transcripts');
@@ -211,7 +216,7 @@ async function transcribeReel(reel, lang) {
     src = rend.link;
   } else throw new Error(`media type "${m.type}" cannot be transcribed`);
 
-  const tmp = join(ROOT, '.tmp-audio'); mkdirSync(tmp, { recursive: true });
+  const tmp = join(SSD_WORK, 'reel-forge'); mkdirSync(tmp, { recursive: true });
   const wav = join(tmp, `${reel.id}${lang}.wav`);
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', src, '-vn', '-ac', '1', '-ar', '16000', wav],
     { stdio: ['ignore', 'pipe', 'pipe'] });
