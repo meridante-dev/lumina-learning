@@ -26,6 +26,7 @@ jobs:
   # place, so it tests the source that is actually committed.
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -37,22 +38,29 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    timeout-minutes: 10        # a hung deploy fails fast instead of holding the concurrency slot for hours
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      # esbuild is installed ONCE. This step used to call `npx --yes esbuild@0.24.2`
+      # nine times, each resolving the package fresh on a clean runner; a slow or
+      # flaky registry stalled it — six minutes and counting on a step that takes
+      # thirty seconds, with GitHub reporting all systems operational.
+      - name: Install esbuild
+        run: npm i -g esbuild@0.24.2
       - name: Minify JS + CSS (deploy artifact only; source stays readable)
         run: |
-          npx --yes esbuild@0.24.2 brands/edenrise/brand.js --minify --charset=utf8 --outfile=brands/edenrise/brand.js --allow-overwrite
-          npx --yes esbuild@0.24.2 brands/_example/brand.js --minify --charset=utf8 --outfile=brands/_example/brand.js --allow-overwrite
-          npx --yes esbuild@0.24.2 core/brandkit.js --minify --charset=utf8 --outfile=core/brandkit.js --allow-overwrite
-          npx --yes esbuild@0.24.2 core/app.js  --minify --charset=utf8 --outfile=core/app.js  --allow-overwrite
-          npx --yes esbuild@0.24.2 brands/edenrise/content.js --minify --charset=utf8 --outfile=brands/edenrise/content.js --allow-overwrite
-          npx --yes esbuild@0.24.2 data.js --minify --charset=utf8 --outfile=data.js --allow-overwrite
-          npx --yes esbuild@0.24.2 core/auth.js --minify --charset=utf8 --format=esm --outfile=core/auth.js --allow-overwrite
-          npx --yes esbuild@0.24.2 sw.js   --minify --charset=utf8 --outfile=sw.js   --allow-overwrite
-          npx --yes esbuild@0.24.2 core/styles.css --minify --outfile=core/styles.css --allow-overwrite
+          esbuild brands/edenrise/brand.js --minify --charset=utf8 --outfile=brands/edenrise/brand.js --allow-overwrite
+          esbuild brands/_example/brand.js --minify --charset=utf8 --outfile=brands/_example/brand.js --allow-overwrite
+          esbuild core/brandkit.js --minify --charset=utf8 --outfile=core/brandkit.js --allow-overwrite
+          esbuild core/app.js  --minify --charset=utf8 --outfile=core/app.js  --allow-overwrite
+          esbuild brands/edenrise/content.js --minify --charset=utf8 --outfile=brands/edenrise/content.js --allow-overwrite
+          esbuild data.js --minify --charset=utf8 --outfile=data.js --allow-overwrite
+          esbuild core/auth.js --minify --charset=utf8 --format=esm --outfile=core/auth.js --allow-overwrite
+          esbuild sw.js   --minify --charset=utf8 --outfile=sw.js   --allow-overwrite
+          esbuild core/styles.css --minify --outfile=core/styles.css --allow-overwrite
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
