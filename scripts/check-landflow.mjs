@@ -69,6 +69,15 @@ for (const [course, c] of Object.entries(index.courses)) {
     local.set(`${course}/${m.mod}`, { course, mod: m.mod, title: m.title, segs, newest, sample });
   }
 }
+/* reels are pushed as course '_reels' at their index — mirror that here, or the
+   checker reports every reel in D1 as an orphan the moment they are pushed */
+(index.reels || []).forEach((r, i) => {
+  const p = join(TR, '_reels', `${r.id}.json`);
+  if (!existsSync(p)) return;
+  const tr = JSON.parse(readFileSync(p, 'utf8'));
+  local.set(`_reels/${i}`, { course: '_reels', mod: i, title: r.title, segs: tr.segments.length,
+    newest: statSync(p).mtimeMs, sample: null, reel: r.id });
+});
 
 /* ---- remote side --------------------------------------------------------- */
 let rows;
@@ -113,7 +122,10 @@ const sigs = new Map(d1(`SELECT l.course_id || '/' || l.mod AS k, SUM(LENGTH(s.t
 for (const [key, L] of local) {
   if (!remote.has(key)) continue;
   let localChars = 0;
-  for (const f of [`m${L.mod}.json`, `m${L.mod}.en.json`, `m${L.mod}.pt.json`]) {
+  const files = L.reel ? [] : [`m${L.mod}.json`, `m${L.mod}.en.json`, `m${L.mod}.pt.json`];
+  if (L.reel) { const p = join(TR, '_reels', `${L.reel}.json`);
+    for (const s of JSON.parse(readFileSync(p, 'utf8')).segments) localChars += (s.text || '').length; }
+  for (const f of files) {
     const p = join(TR, L.course, f);
     if (!existsSync(p)) continue;
     for (const s of JSON.parse(readFileSync(p, 'utf8')).segments) localChars += (s.text || '').length;

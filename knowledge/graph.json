@@ -1,0 +1,3176 @@
+{
+ "generatedAt": 1788516133391,
+ "nodes": [
+  {
+   "id": "course:alignment-journey",
+   "kind": "course",
+   "title": "The EdenRise Alignment Journey"
+  },
+  {
+   "id": "module:alignment-journey:0",
+   "kind": "module",
+   "title": "Warm Welcome",
+   "course": "alignment-journey",
+   "mod": 0,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/0",
+   "seconds": 325
+  },
+  {
+   "id": "concept:leadership",
+   "kind": "concept",
+   "title": "leadership"
+  },
+  {
+   "id": "concept:community",
+   "kind": "concept",
+   "title": "community"
+  },
+  {
+   "id": "concept:people",
+   "kind": "concept",
+   "title": "people"
+  },
+  {
+   "id": "concept:life",
+   "kind": "concept",
+   "title": "life"
+  },
+  {
+   "id": "concept:grow",
+   "kind": "concept",
+   "title": "grow"
+  },
+  {
+   "id": "concept:training",
+   "kind": "concept",
+   "title": "training"
+  },
+  {
+   "id": "concept:through",
+   "kind": "concept",
+   "title": "through"
+  },
+  {
+   "id": "concept:help",
+   "kind": "concept",
+   "title": "help"
+  },
+  {
+   "id": "concept:part",
+   "kind": "concept",
+   "title": "part"
+  },
+  {
+   "id": "concept:around",
+   "kind": "concept",
+   "title": "around"
+  },
+  {
+   "id": "module:alignment-journey:1",
+   "kind": "module",
+   "title": "Above the Line · Intro",
+   "course": "alignment-journey",
+   "mod": 1,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/1",
+   "seconds": 169
+  },
+  {
+   "id": "concept:model",
+   "kind": "concept",
+   "title": "model"
+  },
+  {
+   "id": "concept:village",
+   "kind": "concept",
+   "title": "village"
+  },
+  {
+   "id": "concept:jabaraaj",
+   "kind": "concept",
+   "title": "jabaraaj"
+  },
+  {
+   "id": "concept:line",
+   "kind": "concept",
+   "title": "line"
+  },
+  {
+   "id": "concept:about",
+   "kind": "concept",
+   "title": "about"
+  },
+  {
+   "id": "concept:time",
+   "kind": "concept",
+   "title": "time"
+  },
+  {
+   "id": "concept:simple",
+   "kind": "concept",
+   "title": "simple"
+  },
+  {
+   "id": "concept:school",
+   "kind": "concept",
+   "title": "school"
+  },
+  {
+   "id": "module:alignment-journey:2",
+   "kind": "module",
+   "title": "Above the Line · Simple & Powerful Thinking",
+   "course": "alignment-journey",
+   "mod": 2,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/2",
+   "seconds": 177
+  },
+  {
+   "id": "concept:choose",
+   "kind": "concept",
+   "title": "choose"
+  },
+  {
+   "id": "concept:above",
+   "kind": "concept",
+   "title": "above"
+  },
+  {
+   "id": "concept:move",
+   "kind": "concept",
+   "title": "move"
+  },
+  {
+   "id": "concept:over",
+   "kind": "concept",
+   "title": "over"
+  },
+  {
+   "id": "concept:champions",
+   "kind": "concept",
+   "title": "champions"
+  },
+  {
+   "id": "concept:roll",
+   "kind": "concept",
+   "title": "roll"
+  },
+  {
+   "id": "module:alignment-journey:3",
+   "kind": "module",
+   "title": "Above the Line · Deep Dive",
+   "course": "alignment-journey",
+   "mod": 3,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/3",
+   "seconds": 609
+  },
+  {
+   "id": "concept:below",
+   "kind": "concept",
+   "title": "below"
+  },
+  {
+   "id": "concept:pressure",
+   "kind": "concept",
+   "title": "pressure"
+  },
+  {
+   "id": "concept:feel",
+   "kind": "concept",
+   "title": "feel"
+  },
+  {
+   "id": "module:alignment-journey:4",
+   "kind": "module",
+   "title": "Above the Line · Summary",
+   "course": "alignment-journey",
+   "mod": 4,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/4",
+   "seconds": 51
+  },
+  {
+   "id": "module:alignment-journey:5",
+   "kind": "module",
+   "title": "No Failure, Only Feedback · Intro",
+   "course": "alignment-journey",
+   "mod": 5,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/5",
+   "seconds": 68
+  },
+  {
+   "id": "concept:failure",
+   "kind": "concept",
+   "title": "failure"
+  },
+  {
+   "id": "module:alignment-journey:6",
+   "kind": "module",
+   "title": "No Failure, Only Feedback · Animation",
+   "course": "alignment-journey",
+   "mod": 6,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/6",
+   "seconds": 246
+  },
+  {
+   "id": "concept:failures",
+   "kind": "concept",
+   "title": "failures"
+  },
+  {
+   "id": "concept:meaning",
+   "kind": "concept",
+   "title": "meaning"
+  },
+  {
+   "id": "concept:experience",
+   "kind": "concept",
+   "title": "experience"
+  },
+  {
+   "id": "concept:pain",
+   "kind": "concept",
+   "title": "pain"
+  },
+  {
+   "id": "concept:feedback",
+   "kind": "concept",
+   "title": "feedback"
+  },
+  {
+   "id": "concept:place",
+   "kind": "concept",
+   "title": "place"
+  },
+  {
+   "id": "concept:three",
+   "kind": "concept",
+   "title": "three"
+  },
+  {
+   "id": "module:alignment-journey:7",
+   "kind": "module",
+   "title": "No Failure, Only Feedback · Summary",
+   "course": "alignment-journey",
+   "mod": 7,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/7",
+   "seconds": 579
+  },
+  {
+   "id": "concept:setbacks",
+   "kind": "concept",
+   "title": "setbacks"
+  },
+  {
+   "id": "concept:challenges",
+   "kind": "concept",
+   "title": "challenges"
+  },
+  {
+   "id": "concept:relationship",
+   "kind": "concept",
+   "title": "relationship"
+  },
+  {
+   "id": "concept:setback",
+   "kind": "concept",
+   "title": "setback"
+  },
+  {
+   "id": "concept:those",
+   "kind": "concept",
+   "title": "those"
+  },
+  {
+   "id": "module:alignment-journey:8",
+   "kind": "module",
+   "title": "ESIP · Introduction",
+   "course": "alignment-journey",
+   "mod": 8,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/8",
+   "seconds": 948
+  },
+  {
+   "id": "concept:systems",
+   "kind": "concept",
+   "title": "systems"
+  },
+  {
+   "id": "concept:rise",
+   "kind": "concept",
+   "title": "rise"
+  },
+  {
+   "id": "concept:environment",
+   "kind": "concept",
+   "title": "environment"
+  },
+  {
+   "id": "concept:culture",
+   "kind": "concept",
+   "title": "culture"
+  },
+  {
+   "id": "concept:vision",
+   "kind": "concept",
+   "title": "vision"
+  },
+  {
+   "id": "module:alignment-journey:9",
+   "kind": "module",
+   "title": "Goal Setting · Intro",
+   "course": "alignment-journey",
+   "mod": 9,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/9",
+   "seconds": 62
+  },
+  {
+   "id": "concept:goals",
+   "kind": "concept",
+   "title": "goals"
+  },
+  {
+   "id": "concept:setting",
+   "kind": "concept",
+   "title": "setting"
+  },
+  {
+   "id": "concept:focus",
+   "kind": "concept",
+   "title": "focus"
+  },
+  {
+   "id": "concept:animation",
+   "kind": "concept",
+   "title": "animation"
+  },
+  {
+   "id": "module:alignment-journey:10",
+   "kind": "module",
+   "title": "Goal Setting · Animation",
+   "course": "alignment-journey",
+   "mod": 10,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/10",
+   "seconds": 200
+  },
+  {
+   "id": "concept:term",
+   "kind": "concept",
+   "title": "term"
+  },
+  {
+   "id": "concept:long",
+   "kind": "concept",
+   "title": "long"
+  },
+  {
+   "id": "concept:goal",
+   "kind": "concept",
+   "title": "goal"
+  },
+  {
+   "id": "concept:towards",
+   "kind": "concept",
+   "title": "towards"
+  },
+  {
+   "id": "concept:medium",
+   "kind": "concept",
+   "title": "medium"
+  },
+  {
+   "id": "concept:short",
+   "kind": "concept",
+   "title": "short"
+  },
+  {
+   "id": "module:alignment-journey:11",
+   "kind": "module",
+   "title": "Goal Setting · 90-Day Goals",
+   "course": "alignment-journey",
+   "mod": 11,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/11",
+   "seconds": 575
+  },
+  {
+   "id": "concept:department",
+   "kind": "concept",
+   "title": "department"
+  },
+  {
+   "id": "concept:team",
+   "kind": "concept",
+   "title": "team"
+  },
+  {
+   "id": "concept:again",
+   "kind": "concept",
+   "title": "again"
+  },
+  {
+   "id": "concept:doing",
+   "kind": "concept",
+   "title": "doing"
+  },
+  {
+   "id": "concept:done",
+   "kind": "concept",
+   "title": "done"
+  },
+  {
+   "id": "module:alignment-journey:12",
+   "kind": "module",
+   "title": "Goal Setting · Top 5 Goals",
+   "course": "alignment-journey",
+   "mod": 12,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/12",
+   "seconds": 570
+  },
+  {
+   "id": "concept:week",
+   "kind": "concept",
+   "title": "week"
+  },
+  {
+   "id": "concept:working",
+   "kind": "concept",
+   "title": "working"
+  },
+  {
+   "id": "concept:work",
+   "kind": "concept",
+   "title": "work"
+  },
+  {
+   "id": "concept:together",
+   "kind": "concept",
+   "title": "together"
+  },
+  {
+   "id": "concept:some",
+   "kind": "concept",
+   "title": "some"
+  },
+  {
+   "id": "concept:track",
+   "kind": "concept",
+   "title": "track"
+  },
+  {
+   "id": "module:alignment-journey:13",
+   "kind": "module",
+   "title": "Goal Setting · Summary",
+   "course": "alignment-journey",
+   "mod": 13,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/13",
+   "seconds": 94
+  },
+  {
+   "id": "concept:days",
+   "kind": "concept",
+   "title": "days"
+  },
+  {
+   "id": "concept:review",
+   "kind": "concept",
+   "title": "review"
+  },
+  {
+   "id": "module:alignment-journey:14",
+   "kind": "module",
+   "title": "Beyond Fear · Intro",
+   "course": "alignment-journey",
+   "mod": 14,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/14",
+   "seconds": 95
+  },
+  {
+   "id": "concept:fear",
+   "kind": "concept",
+   "title": "fear"
+  },
+  {
+   "id": "concept:might",
+   "kind": "concept",
+   "title": "might"
+  },
+  {
+   "id": "concept:anxiety",
+   "kind": "concept",
+   "title": "anxiety"
+  },
+  {
+   "id": "module:alignment-journey:15",
+   "kind": "module",
+   "title": "Beyond Fear · Animation",
+   "course": "alignment-journey",
+   "mod": 15,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/15",
+   "seconds": 353
+  },
+  {
+   "id": "concept:level",
+   "kind": "concept",
+   "title": "level"
+  },
+  {
+   "id": "concept:feeling",
+   "kind": "concept",
+   "title": "feeling"
+  },
+  {
+   "id": "concept:athletes",
+   "kind": "concept",
+   "title": "athletes"
+  },
+  {
+   "id": "concept:ultimately",
+   "kind": "concept",
+   "title": "ultimately"
+  },
+  {
+   "id": "module:alignment-journey:16",
+   "kind": "module",
+   "title": "Beyond Fear · Unpack & Summary",
+   "course": "alignment-journey",
+   "mod": 16,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/16",
+   "seconds": 730
+  },
+  {
+   "id": "concept:good",
+   "kind": "concept",
+   "title": "good"
+  },
+  {
+   "id": "concept:confident",
+   "kind": "concept",
+   "title": "confident"
+  },
+  {
+   "id": "concept:something",
+   "kind": "concept",
+   "title": "something"
+  },
+  {
+   "id": "concept:which",
+   "kind": "concept",
+   "title": "which"
+  },
+  {
+   "id": "module:alignment-journey:17",
+   "kind": "module",
+   "title": "Body, Soul & Spirit · Intro",
+   "course": "alignment-journey",
+   "mod": 17,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/17",
+   "seconds": 86
+  },
+  {
+   "id": "concept:spirit",
+   "kind": "concept",
+   "title": "spirit"
+  },
+  {
+   "id": "concept:body",
+   "kind": "concept",
+   "title": "body"
+  },
+  {
+   "id": "concept:soul",
+   "kind": "concept",
+   "title": "soul"
+  },
+  {
+   "id": "concept:module",
+   "kind": "concept",
+   "title": "module"
+  },
+  {
+   "id": "module:alignment-journey:18",
+   "kind": "module",
+   "title": "Body, Soul & Spirit · Deep Dive",
+   "course": "alignment-journey",
+   "mod": 18,
+   "url": "https://academy.edenrise.com/#/play/alignment-journey/18",
+   "seconds": 757
+  },
+  {
+   "id": "concept:physical",
+   "kind": "concept",
+   "title": "physical"
+  },
+  {
+   "id": "concept:emotions",
+   "kind": "concept",
+   "title": "emotions"
+  },
+  {
+   "id": "course:fire-truck-training",
+   "kind": "course",
+   "title": "Fire Truck Training"
+  },
+  {
+   "id": "module:fire-truck-training:0",
+   "kind": "module",
+   "title": "Starting & Driving the Truck",
+   "course": "fire-truck-training",
+   "mod": 0,
+   "url": "https://academy.edenrise.com/#/play/fire-truck-training/0",
+   "seconds": 355
+  },
+  {
+   "id": "concept:safety",
+   "kind": "concept",
+   "title": "safety"
+  },
+  {
+   "id": "concept:start",
+   "kind": "concept",
+   "title": "start"
+  },
+  {
+   "id": "concept:these",
+   "kind": "concept",
+   "title": "these"
+  },
+  {
+   "id": "concept:drive",
+   "kind": "concept",
+   "title": "drive"
+  },
+  {
+   "id": "concept:must",
+   "kind": "concept",
+   "title": "must"
+  },
+  {
+   "id": "concept:throttle",
+   "kind": "concept",
+   "title": "throttle"
+  },
+  {
+   "id": "concept:wait",
+   "kind": "concept",
+   "title": "wait"
+  },
+  {
+   "id": "concept:lights",
+   "kind": "concept",
+   "title": "lights"
+  },
+  {
+   "id": "module:fire-truck-training:1",
+   "kind": "module",
+   "title": "Filling the Water Tank",
+   "course": "fire-truck-training",
+   "mod": 1,
+   "url": "https://academy.edenrise.com/#/play/fire-truck-training/1",
+   "seconds": 611
+  },
+  {
+   "id": "concept:water",
+   "kind": "concept",
+   "title": "water"
+  },
+  {
+   "id": "concept:fill",
+   "kind": "concept",
+   "title": "fill"
+  },
+  {
+   "id": "concept:tank",
+   "kind": "concept",
+   "title": "tank"
+  },
+  {
+   "id": "concept:full",
+   "kind": "concept",
+   "title": "full"
+  },
+  {
+   "id": "concept:truck",
+   "kind": "concept",
+   "title": "truck"
+  },
+  {
+   "id": "concept:always",
+   "kind": "concept",
+   "title": "always"
+  },
+  {
+   "id": "concept:only",
+   "kind": "concept",
+   "title": "only"
+  },
+  {
+   "id": "module:fire-truck-training:2",
+   "kind": "module",
+   "title": "Off-Road, Pump & Spray",
+   "course": "fire-truck-training",
+   "mod": 2,
+   "url": "https://academy.edenrise.com/#/play/fire-truck-training/2",
+   "seconds": 582
+  },
+  {
+   "id": "concept:power",
+   "kind": "concept",
+   "title": "power"
+  },
+  {
+   "id": "concept:fire",
+   "kind": "concept",
+   "title": "fire"
+  },
+  {
+   "id": "concept:next",
+   "kind": "concept",
+   "title": "next"
+  },
+  {
+   "id": "concept:show",
+   "kind": "concept",
+   "title": "show"
+  },
+  {
+   "id": "concept:open",
+   "kind": "concept",
+   "title": "open"
+  },
+  {
+   "id": "module:fire-truck-training:3",
+   "kind": "module",
+   "title": "Power, Safety & the Drill",
+   "course": "fire-truck-training",
+   "mod": 3,
+   "url": "https://academy.edenrise.com/#/play/fire-truck-training/3",
+   "seconds": 568
+  },
+  {
+   "id": "concept:everything",
+   "kind": "concept",
+   "title": "everything"
+  },
+  {
+   "id": "concept:hose",
+   "kind": "concept",
+   "title": "hose"
+  },
+  {
+   "id": "concept:inside",
+   "kind": "concept",
+   "title": "inside"
+  },
+  {
+   "id": "course:land-team-journey",
+   "kind": "course",
+   "title": "Above the Line"
+  },
+  {
+   "id": "module:land-team-journey:0",
+   "kind": "module",
+   "title": "Above the Line, Below the Line",
+   "course": "land-team-journey",
+   "mod": 0,
+   "url": "https://academy.edenrise.com/#/play/land-team-journey/0",
+   "seconds": 249
+  },
+  {
+   "id": "concept:every",
+   "kind": "concept",
+   "title": "every"
+  },
+  {
+   "id": "concept:person",
+   "kind": "concept",
+   "title": "person"
+  },
+  {
+   "id": "concept:everyone",
+   "kind": "concept",
+   "title": "everyone"
+  },
+  {
+   "id": "module:land-team-journey:1",
+   "kind": "module",
+   "title": "No Failure, Only Feedback",
+   "course": "land-team-journey",
+   "mod": 1,
+   "url": "https://academy.edenrise.com/#/play/land-team-journey/1",
+   "seconds": 242
+  },
+  {
+   "id": "concept:learn",
+   "kind": "concept",
+   "title": "learn"
+  },
+  {
+   "id": "concept:better",
+   "kind": "concept",
+   "title": "better"
+  },
+  {
+   "id": "concept:someone",
+   "kind": "concept",
+   "title": "someone"
+  },
+  {
+   "id": "concept:learning",
+   "kind": "concept",
+   "title": "learning"
+  },
+  {
+   "id": "module:land-team-journey:2",
+   "kind": "module",
+   "title": "Total Responsibility",
+   "course": "land-team-journey",
+   "mod": 2,
+   "url": "https://academy.edenrise.com/#/play/land-team-journey/2",
+   "seconds": 339
+  },
+  {
+   "id": "concept:ownership",
+   "kind": "concept",
+   "title": "ownership"
+  },
+  {
+   "id": "concept:problem",
+   "kind": "concept",
+   "title": "problem"
+  },
+  {
+   "id": "concept:instead",
+   "kind": "concept",
+   "title": "instead"
+  },
+  {
+   "id": "concept:fault",
+   "kind": "concept",
+   "title": "fault"
+  },
+  {
+   "id": "concept:responsibility",
+   "kind": "concept",
+   "title": "responsibility"
+  },
+  {
+   "id": "module:land-team-journey:3",
+   "kind": "module",
+   "title": "Don't Assume, Clarify",
+   "course": "land-team-journey",
+   "mod": 3,
+   "url": "https://academy.edenrise.com/#/play/land-team-journey/3",
+   "seconds": 341
+  },
+  {
+   "id": "concept:communication",
+   "kind": "concept",
+   "title": "communication"
+  },
+  {
+   "id": "concept:great",
+   "kind": "concept",
+   "title": "great"
+  },
+  {
+   "id": "concept:another",
+   "kind": "concept",
+   "title": "another"
+  },
+  {
+   "id": "concept:teams",
+   "kind": "concept",
+   "title": "teams"
+  },
+  {
+   "id": "concept:understood",
+   "kind": "concept",
+   "title": "understood"
+  },
+  {
+   "id": "module:land-team-journey:4",
+   "kind": "module",
+   "title": "Benchmarking Excellence",
+   "course": "land-team-journey",
+   "mod": 4,
+   "url": "https://academy.edenrise.com/#/play/land-team-journey/4",
+   "seconds": 334
+  },
+  {
+   "id": "concept:before",
+   "kind": "concept",
+   "title": "before"
+  },
+  {
+   "id": "concept:improve",
+   "kind": "concept",
+   "title": "improve"
+  },
+  {
+   "id": "module:land-team-journey:5",
+   "kind": "module",
+   "title": "Attention to Detail",
+   "course": "land-team-journey",
+   "mod": 5,
+   "url": "https://academy.edenrise.com/#/play/land-team-journey/5",
+   "seconds": 328
+  },
+  {
+   "id": "concept:small",
+   "kind": "concept",
+   "title": "small"
+  },
+  {
+   "id": "concept:clean",
+   "kind": "concept",
+   "title": "clean"
+  },
+  {
+   "id": "concept:tools",
+   "kind": "concept",
+   "title": "tools"
+  },
+  {
+   "id": "concept:attention",
+   "kind": "concept",
+   "title": "attention"
+  },
+  {
+   "id": "concept:detail",
+   "kind": "concept",
+   "title": "detail"
+  },
+  {
+   "id": "concept:means",
+   "kind": "concept",
+   "title": "means"
+  },
+  {
+   "id": "module:land-team-journey:6",
+   "kind": "module",
+   "title": "Lifelong Learner",
+   "course": "land-team-journey",
+   "mod": 6,
+   "url": "https://academy.edenrise.com/#/play/land-team-journey/6",
+   "seconds": 322
+  },
+  {
+   "id": "concept:same",
+   "kind": "concept",
+   "title": "same"
+  },
+  {
+   "id": "concept:lesson",
+   "kind": "concept",
+   "title": "lesson"
+  },
+  {
+   "id": "concept:become",
+   "kind": "concept",
+   "title": "become"
+  },
+  {
+   "id": "concept:questions",
+   "kind": "concept",
+   "title": "questions"
+  },
+  {
+   "id": "module:land-team-journey:7",
+   "kind": "module",
+   "title": "The Science of Gratitude",
+   "course": "land-team-journey",
+   "mod": 7,
+   "url": "https://academy.edenrise.com/#/play/land-team-journey/7",
+   "seconds": 327
+  },
+  {
+   "id": "concept:gratitude",
+   "kind": "concept",
+   "title": "gratitude"
+  },
+  {
+   "id": "concept:appreciate",
+   "kind": "concept",
+   "title": "appreciate"
+  },
+  {
+   "id": "concept:already",
+   "kind": "concept",
+   "title": "already"
+  },
+  {
+   "id": "reel:bring-the-energy",
+   "kind": "reel",
+   "title": "Give Energy",
+   "seconds": 20,
+   "url": "https://academy.edenrise.com/#/reels",
+   "videoLang": "en",
+   "published": true
+  },
+  {
+   "id": "concept:energy",
+   "kind": "concept",
+   "title": "energy"
+  },
+  {
+   "id": "reel:culture",
+   "kind": "reel",
+   "title": "Defining Excellence",
+   "seconds": 20,
+   "url": "https://academy.edenrise.com/#/reels",
+   "videoLang": "en",
+   "published": true
+  },
+  {
+   "id": "concept:enough",
+   "kind": "concept",
+   "title": "enough"
+  },
+  {
+   "id": "reel:own-the-outcome",
+   "kind": "reel",
+   "title": "Own The Outcome",
+   "seconds": 20,
+   "url": "https://academy.edenrise.com/#/reels",
+   "videoLang": "en",
+   "published": true
+  },
+  {
+   "id": "reel:raise-the-energy",
+   "kind": "reel",
+   "title": "Raise The Space",
+   "seconds": 20,
+   "url": "https://academy.edenrise.com/#/reels",
+   "videoLang": "en",
+   "published": true
+  },
+  {
+   "id": "concept:space",
+   "kind": "concept",
+   "title": "space"
+  },
+  {
+   "id": "reel:safe-to-speak",
+   "kind": "reel",
+   "title": "Safe to Speak",
+   "seconds": 20,
+   "url": "https://academy.edenrise.com/#/reels",
+   "videoLang": "en",
+   "published": true
+  },
+  {
+   "id": "concept:teamwork",
+   "kind": "concept",
+   "title": "teamwork"
+  }
+ ],
+ "edges": [
+  {
+   "from": "module:alignment-journey:0",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:life",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:grow",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:training",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:through",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:help",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:part",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:0",
+   "to": "concept:around",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:model",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:village",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:jabaraaj",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:line",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:about",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:time",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:simple",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "concept:school",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:line",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:choose",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:above",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:move",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:over",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:champions",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:roll",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:2",
+   "to": "concept:time",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:line",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:above",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:below",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:pressure",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:life",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:model",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:feel",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:4",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:4",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:4",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:4",
+   "to": "concept:line",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:4",
+   "to": "concept:above",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:4",
+   "to": "concept:life",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:5",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:5",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:5",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:5",
+   "to": "concept:failure",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:failure",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:failures",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:meaning",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:experience",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:pain",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:feedback",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:place",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:three",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:failure",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:setbacks",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:challenges",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:relationship",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:setback",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:grow",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:those",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:7",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:systems",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:model",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:grow",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:rise",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:environment",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:culture",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:8",
+   "to": "concept:vision",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:9",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:9",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:9",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:9",
+   "to": "concept:goals",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:9",
+   "to": "concept:setting",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:9",
+   "to": "concept:focus",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:9",
+   "to": "concept:animation",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:goals",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:term",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:long",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:goal",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:towards",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:setting",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:medium",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:10",
+   "to": "concept:short",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:department",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:team",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:goals",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:again",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:doing",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:done",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:goal",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "concept:vision",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:goals",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:team",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:week",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:working",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:work",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:together",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:some",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "concept:track",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:13",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:13",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:13",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:13",
+   "to": "concept:doing",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:13",
+   "to": "concept:goals",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:13",
+   "to": "concept:goal",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:13",
+   "to": "concept:days",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:13",
+   "to": "concept:review",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:14",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:14",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:14",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:14",
+   "to": "concept:fear",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:14",
+   "to": "concept:animation",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:14",
+   "to": "concept:might",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:14",
+   "to": "concept:anxiety",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:fear",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:level",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:experience",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:feeling",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:some",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:athletes",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:feel",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:ultimately",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:fear",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:feeling",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:feel",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:good",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:confident",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:about",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:something",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:which",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:17",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:17",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:17",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:17",
+   "to": "concept:spirit",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:17",
+   "to": "concept:body",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:17",
+   "to": "concept:soul",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:17",
+   "to": "concept:module",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:17",
+   "to": "concept:something",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "course:alignment-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:soul",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:spirit",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:body",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:physical",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:emotions",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:some",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:18",
+   "to": "concept:feel",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "course:fire-truck-training",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:safety",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:pressure",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:start",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:these",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:drive",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:must",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:throttle",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:wait",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "concept:lights",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "course:fire-truck-training",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:safety",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:water",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:fill",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:tank",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:these",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:full",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:truck",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:always",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "concept:only",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "course:fire-truck-training",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:safety",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:power",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:only",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:fire",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:next",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:show",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:open",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:start",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "concept:full",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "course:fire-truck-training",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:safety",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:fire",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:everything",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:hose",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:inside",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:again",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:start",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:water",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "concept:must",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "course:land-team-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:line",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:above",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:below",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:every",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:person",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:everyone",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:feedback",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "course:land-team-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:feedback",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:learn",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:every",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:better",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:someone",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:person",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:learning",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "concept:failure",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "course:land-team-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:ownership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:person",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:next",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:problem",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:instead",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:fault",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:responsibility",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "course:land-team-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:communication",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:about",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:great",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:another",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:person",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:teams",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:work",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:understood",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "course:land-team-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:work",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:help",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:someone",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:person",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:better",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:before",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:improve",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:learning",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "course:land-team-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:small",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:about",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:clean",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:tools",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:attention",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:detail",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:5",
+   "to": "concept:means",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "course:land-team-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:learn",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:every",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:same",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:learning",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:lesson",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:become",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:questions",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "course:land-team-journey",
+   "rel": "in",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:leadership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:community",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:gratitude",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:work",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:someone",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:appreciate",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:already",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:something",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:7",
+   "to": "concept:everything",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:bring-the-energy",
+   "to": "course:land-team-journey",
+   "rel": "deeper",
+   "w": 1
+  },
+  {
+   "from": "reel:bring-the-energy",
+   "to": "concept:energy",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:bring-the-energy",
+   "to": "concept:people",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:culture",
+   "to": "course:land-team-journey",
+   "rel": "deeper",
+   "w": 1
+  },
+  {
+   "from": "reel:culture",
+   "to": "concept:culture",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:culture",
+   "to": "concept:enough",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:own-the-outcome",
+   "to": "course:land-team-journey",
+   "rel": "deeper",
+   "w": 1
+  },
+  {
+   "from": "reel:own-the-outcome",
+   "to": "concept:ownership",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:raise-the-energy",
+   "to": "course:land-team-journey",
+   "rel": "deeper",
+   "w": 1
+  },
+  {
+   "from": "reel:raise-the-energy",
+   "to": "concept:energy",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:raise-the-energy",
+   "to": "concept:space",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:safe-to-speak",
+   "to": "course:land-team-journey",
+   "rel": "deeper",
+   "w": 1
+  },
+  {
+   "from": "reel:safe-to-speak",
+   "to": "concept:teamwork",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "reel:culture",
+   "to": "module:land-team-journey:4",
+   "rel": "beside",
+   "w": 0.364
+  },
+  {
+   "from": "reel:culture",
+   "to": "module:land-team-journey:5",
+   "rel": "beside",
+   "w": 0.318
+  },
+  {
+   "from": "reel:own-the-outcome",
+   "to": "module:land-team-journey:2",
+   "rel": "beside",
+   "w": 0.529
+  },
+  {
+   "from": "reel:own-the-outcome",
+   "to": "module:land-team-journey:0",
+   "rel": "beside",
+   "w": 0.471
+  },
+  {
+   "from": "reel:safe-to-speak",
+   "to": "module:land-team-journey:7",
+   "rel": "beside",
+   "w": 0.444
+  },
+  {
+   "from": "reel:safe-to-speak",
+   "to": "module:land-team-journey:2",
+   "rel": "beside",
+   "w": 0.389
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "module:alignment-journey:4",
+   "rel": "related",
+   "w": 0.143
+  },
+  {
+   "from": "module:alignment-journey:1",
+   "to": "module:alignment-journey:2",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "module:alignment-journey:4",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:alignment-journey:5",
+   "to": "module:alignment-journey:12",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "module:alignment-journey:12",
+   "rel": "related",
+   "w": 0.212
+  },
+  {
+   "from": "module:alignment-journey:11",
+   "to": "module:alignment-journey:13",
+   "rel": "related",
+   "w": 0.143
+  },
+  {
+   "from": "module:alignment-journey:12",
+   "to": "module:alignment-journey:13",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "module:fire-truck-training:1",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:fire-truck-training:0",
+   "to": "module:fire-truck-training:2",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "module:fire-truck-training:3",
+   "rel": "related",
+   "w": 0.212
+  },
+  {
+   "from": "module:fire-truck-training:1",
+   "to": "module:fire-truck-training:2",
+   "rel": "related",
+   "w": 0.143
+  },
+  {
+   "from": "module:fire-truck-training:2",
+   "to": "module:fire-truck-training:3",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:fire-truck-training:3",
+   "to": "module:alignment-journey:12",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "module:land-team-journey:2",
+   "rel": "related",
+   "w": 0.159
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "module:land-team-journey:1",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "module:land-team-journey:4",
+   "rel": "related",
+   "w": 0.194
+  },
+  {
+   "from": "module:land-team-journey:1",
+   "to": "module:land-team-journey:6",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "module:land-team-journey:3",
+   "rel": "related",
+   "w": 0.127
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "module:land-team-journey:6",
+   "rel": "related",
+   "w": 0.159
+  }
+ ],
+ "stats": {
+  "nodes": {
+   "course": 3,
+   "module": 31,
+   "reel": 5,
+   "concept": 144
+  },
+  "edges": {
+   "in": 31,
+   "about": 288,
+   "deeper": 5,
+   "beside": 6,
+   "related": 19
+  }
+ },
+ "orphans": []
+}

@@ -878,12 +878,16 @@ function renderCourse(id) {
         <span class="m-dur">${t('coming_soon')}</span>
       </div>`;
     }
+    const beside = graphReelsBeside(id, i), rel = graphRelated(id, i);
+    const links = (beside.length || rel.length) ? `<div class="mod-links">${
+      beside.length ? `<span class="ml"><span class="ml-k">${t('graph_shorts')}</span> ${beside.map(x => esc(reelField(x.title))).join(' · ')}</span>` : ''}${
+      rel.length ? `<span class="ml"><span class="ml-k">${t('graph_related')}</span> ${rel.map(x => esc(x.title)).join(' · ')}</span>` : ''}</div>` : '';
     return `<div class="module-row ${done ? 'done' : ''} ${isCur ? 'current' : ''}" data-action="play" data-id="${id}" data-mod="${i}">
       <div class="m-num">${done ? '✓' : isCur ? '▶' : i + 1}</div>
       <div class="m-title">${cmods(c)[i] || m}${review ? ' &nbsp;<span class="review-flag">↺ AI re-queued for review</span>' : ''}</div>
       <span class="m-dur">${moduleDur(c, i)}</span>
       <button class="m-play">▶</button>
-    </div>`;
+    ${links}</div>`;
   }).join('');
   return `<div class="page">
     <div class="course-hero">
@@ -6157,10 +6161,20 @@ function reelSlideHTML(r, i) {
              the QUIET point: one line, the course named, an arrow. Type and
              space, not a slab (law 3, law 8). The stop-slide keeps a real
              button because there it IS the action, not an aside. */''}
-      ${d ? `<button class="reel-deeper" data-action="reel-goto" data-id="${d.course.id}">
+      ${(() => {
+        /* the graph knows which LESSON this clip sits beside; the course is the
+           fallback, not the answer. "Go deeper → Total Responsibility" is a
+           handoff; "Go deeper → Above the Line" is a shrug. */
+        const b = graphBeside(r.id);
+        if (b) return `<button class="reel-deeper" data-action="reel-goto" data-id="${esc(b.course)}" data-mod="${b.mod}">
+        <span class="rd-verb">${t('reel_beside')}</span>
+        <span class="rd-name">${esc(b.title)}</span>
+        <span class="rd-arrow" aria-hidden="true">&#8250;</span></button>`;
+        return d ? `<button class="reel-deeper" data-action="reel-goto" data-id="${d.course.id}">
         <span class="rd-verb">${d.done ? t('qw_deeper_done') : d.started ? t('qw_deeper_resume') : t('qw_deeper')}</span>
         <span class="rd-name">${esc(ctitle(d.course))}</span>
-        <span class="rd-arrow" aria-hidden="true">&#8250;</span></button>` : ''}
+        <span class="rd-arrow" aria-hidden="true">&#8250;</span></button>` : '';
+      })()}
     </div>
   </article>`;
 }
@@ -6668,6 +6682,43 @@ const QUIZ_V2 = {};
    coverage is never reading a half-loaded cache. `banksLoaded` is what lets the
    view distinguish "nothing verified" from "nothing fetched yet" — the two
    readings differ by everything and looked identical. */
+/* ===== THE KNOWLEDGE GRAPH ================================================
+   knowledge/graph.json — nodes for every course, module, reel and concept, and
+   edges between them: the catalogue verbatim (in, deeper, about) plus two
+   COMPUTED relations from what the trainer actually said — a reel's `beside`
+   (the lesson it sits next to) and module `related` (cross-course). Built by
+   scripts/build-graph.mjs, deterministic, no model calls, so a link is never
+   invented. The app reads it for three things: a reel's handoff names the
+   precise lesson rather than the whole course; a lesson page lists the shorts
+   that sit beside it; and "also covers this" across courses. */
+let GRAPH = null;
+function loadGraph() {
+  if (GRAPH !== null) return Promise.resolve(GRAPH);
+  const v = ((document.querySelector('script[src*="core/app.js"]') || {}).src || '').match(/v=(edr\d+)/);
+  return fetch('knowledge/graph.json?v=' + (v ? v[1] : ''))
+    .then(r => (r.ok ? r.json() : null)).then(g => (GRAPH = g && g.edges ? g : false)).catch(() => (GRAPH = false));
+}
+const graphNode = id => (GRAPH && GRAPH.nodes.find(n => n.id === id)) || null;
+/* the module a reel sits beside, strongest first */
+function graphBeside(reelId) {
+  if (!GRAPH) return null;
+  const e = GRAPH.edges.filter(x => x.from === 'reel:' + reelId && x.rel === 'beside').sort((a, b) => b.w - a.w)[0];
+  return e ? graphNode(e.to) : null;
+}
+/* the reels that sit beside a module (published only — the gate still applies) */
+function graphReelsBeside(courseId, mod) {
+  if (!GRAPH) return [];
+  const to = `module:${courseId}:${mod}`;
+  return GRAPH.edges.filter(x => x.to === to && x.rel === 'beside')
+    .map(x => qwById(x.from.replace(/^reel:/, ''))).filter(r => r && reelsAll().some(a => a.id === r.id));
+}
+/* modules that cover the same ground, across courses */
+function graphRelated(courseId, mod) {
+  if (!GRAPH) return [];
+  const me = `module:${courseId}:${mod}`;
+  return GRAPH.edges.filter(x => x.rel === 'related' && (x.from === me || x.to === me))
+    .sort((a, b) => b.w - a.w).map(x => graphNode(x.from === me ? x.to : x.from)).filter(Boolean).slice(0, 3);
+}
 let banksLoaded = false;
 function loadAllBanks() {
   /* one bank per course, keyed exactly as the rest of the app keys it
@@ -7590,6 +7641,7 @@ document.addEventListener('click', e => {
       const ic = $('#reelMuteIcon'); if (ic) ic.textContent = on ? '\u266b' : '\u266a';
       break; }
     case 'reel-goto': { ledgerAppend('reel_to_course', { course: el.dataset.id, from: 'feed' });
+      if (el.dataset.mod != null && el.dataset.mod !== '') { document.body.classList.remove('reels-open'); stopReelCheck(); location.hash = `#/play/${el.dataset.id}/${el.dataset.mod}`; break; }
       location.hash = '#/course/' + el.dataset.id; break; }
     case 'reel-more': { ledgerAppend('reel_continue', { after: FEED_PAUSE_AFTER });
       const p = el.closest('.reel'); const nx = p && p.nextElementSibling;
@@ -8229,6 +8281,7 @@ function applyPendingJoin() {
     toast((_lang() === 'pt' ? 'Bem-vindo à ' : 'Welcome to ') + companyName() + ' 🏢', '✦'); render();
   }).catch(() => { localStorage.removeItem('eden-join'); toast(_lang() === 'pt' ? 'Código de convite inválido' : 'Invalid invite code', '⚠️'); });
 }
+loadGraph().then(() => { if (GRAPH) render(); });
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   /* AUTO-UPDATE: when a newer version is deployed, the new service worker
      activates (sw.js does skipWaiting + clients.claim) and takes control →

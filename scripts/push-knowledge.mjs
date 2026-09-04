@@ -49,6 +49,24 @@ for (const [course, c] of Object.entries(index.courses)) {
   }
 }
 
+/* REELS RIDE THE SAME PIPE. The lessons table keys on (course_id, mod), so a
+   reel is course '_reels' at an index, its text lesson as the summary, and its
+   own transcript as segments. No schema change, and the agent's search_lessons
+   finds them exactly as it finds a module — which is the whole point: ask the
+   agent about raising the energy in a room and a twenty-second clip is as
+   findable as a ten-minute lesson. */
+(index.reels || []).forEach((r, i) => {
+  const f = join(TR, '_reels', `${r.id}.json`);
+  if (!existsSync(f)) return;
+  const tr = JSON.parse(readFileSync(f, 'utf8'));
+  lessons.push({
+    course: '_reels', mod: i, title: r.title, courseTitle: 'Shorts',
+    lang: r.videoLang || tr.language || 'en', tags: r.tags, capability: null, regime: null,
+    summary: r.lesson || '', url: r.url, durationMin: Math.round((r.seconds || 20) / 6) / 10,
+    segments: tr.segments.map(s => ({ t0: s.t0, t1: s.t1, lang: tr.language || 'en', text: s.text })),
+  });
+});
+
 /* one lesson per request — segment payloads are chunky and D1 writes are row-by-row */
 let ok = 0, fail = 0;
 for (const L of lessons) {

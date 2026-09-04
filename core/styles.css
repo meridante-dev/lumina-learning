@@ -4507,3 +4507,9 @@ body.reels-open { overflow: hidden; }
   font-size: 14.5px; line-height: 1.62; color: rgba(247,246,241,.94); max-width: 34em; }
 .reel-vlang { display: block; margin-top: 10px; font-size: 11px; letter-spacing: .06em;
   color: rgba(247,246,241,.5); }
+
+/* ---- PREMIUM LAYER 24 · graph links on a lesson row ----------------------
+   One quiet line under the title. Key in the faint tone, values in the dim
+   one; no chips, no icons (law 7, law 9). */
+.mod-links { margin-top: 5px; font-size: 12px; color: var(--text-dim); line-height: 1.5; display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.mod-links .ml-k { color: var(--text-faint); letter-spacing: .04em; margin-right: 4px; }

@@ -377,6 +377,29 @@ export function run(t) {
       `${stale.slice(0, 3).join(' | ')} — re-run build-knowledge.mjs, or LandFlow keeps serving the older cut`);
   }
 
+  /* ---------- 6e. the knowledge graph ----------
+     graph.json is what turns the library from a list into something that links.
+     It is derived, so the checks are about derivation: every edge names real
+     nodes, nothing that should be linked is stranded, and it was built from the
+     CURRENT index (generatedAt on both — timestamps in the files, CI-safe). */
+  t.group('knowledge graph');
+  const gPath = join(ROOT, 'knowledge', 'graph.json');
+  if (!existsSync(gPath)) t.ok('knowledge/graph.json exists', false, 'run scripts/build-graph.mjs');
+  else {
+    const G = JSON.parse(readFileSync(gPath, 'utf8'));
+    const ids = new Set(G.nodes.map(n => n.id));
+    const dangling = G.edges.filter(e => !ids.has(e.from) || !ids.has(e.to));
+    t.ok(`every edge names real nodes (${G.edges.length} edges)`, !dangling.length,
+      dangling.slice(0, 3).map(e => `${e.from}→${e.to}`).join(', '));
+    t.ok('no course, module or reel is unlinked', !(G.orphans || []).length, (G.orphans || []).join(', '));
+    const Kg = JSON.parse(readFileSync(kPath, 'utf8')).generatedAt || 0;
+    t.ok('graph is not older than the index it derives from', (G.generatedAt || 0) >= Kg,
+      'index.json was rebuilt after graph.json — run scripts/build-graph.mjs');
+    const reelNodes = G.nodes.filter(n => n.kind === 'reel').length;
+    t.ok(`every published reel is a node (${reelNodes})`, reelNodes === (C.REELS || []).filter(r => r.approved).length,
+      `${reelNodes} nodes vs ${(C.REELS || []).filter(r => r.approved).length} published reels`);
+  }
+
   /* ---------- 7. transcript provenance ----------
      TWO DIFFERENT CLAIMS, kept apart because conflating them cost me a run of
      39 alarming failures that were not what the message said.

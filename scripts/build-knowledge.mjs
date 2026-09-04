@@ -85,7 +85,7 @@ function tagsFrom(segments, n = 8) {
 }
 
 const index = { generatedAt: Date.now(), courses: {} };
-for (const course of readdirSync(TR).filter(d => !d.includes('.'))) {
+for (const course of readdirSync(TR).filter(d => !d.includes('.') && !d.startsWith('_'))) {   /* _reels is not a course */
   const quiz = existsSync(join(QZ, `${course}.json`)) ? JSON.parse(readFileSync(join(QZ, `${course}.json`), 'utf8')) : null;
   const mods = [];
   for (const f of readdirSync(join(TR, course)).filter(x => /^m\d+\.json$/.test(x))) {
@@ -127,6 +127,48 @@ for (const course of readdirSync(TR).filter(d => !d.includes('.'))) {
   index.courses[course] = { title: COURSE_TITLES[course] || course, modules: mods.sort((a, b) => a.mod - b.mod) };
 }
 
+/* ---- REELS ARE NODES TOO ----------------------------------------------------
+   Until this, the brain only knew about course modules. The five reels had
+   transcripts, text lessons and verified checks, and were invisible to every AI
+   surface — not in index.json, not in search.json, not pushed to LandFlow. Ask
+   the agent "what did the reel say about energy" and it had nothing.
+
+   A reel is a lesson with a shorter runtime, so it gets the same shape here as
+   a module: tags from its own transcript, its verified check as a moment, and
+   a deep link. `kind: 'reel'` and `videoLang` are kept so a consumer can tell
+   a twenty-second clip from a ten-minute lesson, and an English recording with
+   Portuguese text from a Portuguese one. */
+const REEL_TR = join(TR, '_reels');
+const REELS = (() => {
+  try { return new Function(readFileSync(join(ROOT, BRAND_DIR + 'content.js'), 'utf8')
+    + ';return typeof REELS !== "undefined" ? REELS : []')(); } catch (e) { return []; }
+})();
+index.reels = [];
+for (const r of REELS) {
+  const f = join(REEL_TR, `${r.id}.json`);
+  if (!existsSync(f)) continue;
+  const tr = JSON.parse(readFileSync(f, 'utf8'));
+  const q = r.check || {};
+  index.reels.push({
+    id: r.id, kind: 'reel',
+    title: (r.title && (r.title.en || r.title.pt)) || r.id,
+    title_pt: r.title && r.title.pt || null,
+    lesson: r.lesson && r.lesson.en || null,
+    lesson_pt: r.lesson && r.lesson.pt || null,
+    language: tr.language || 'en',
+    videoLang: r.videoLang || tr.language || 'en',
+    seconds: r.seconds || Math.round(tr.segments.at(-1)?.t1 || 0),
+    segments: tr.segments.length,
+    theme: r.theme || null,
+    tags: [...new Set([r.theme, ...tagsFrom(tr.segments, 6)].filter(Boolean))],
+    deeper: r.deeper || null,
+    published: r.approved === true,
+    url: `https://academy.edenrise.com/#/reels`,
+    moments: q.en ? [{ t0: 0, teaches: (q.en.q || '').slice(0, 120),
+      audit: q.audit || (q.verified ? 'verified' : q.corrected ? 'corrected' : 'unaudited') }] : [],
+  });
+}
+
 mkdirSync(join(ROOT, 'knowledge'), { recursive: true });
 writeFileSync(join(ROOT, 'knowledge', 'index.json'), JSON.stringify(index, null, 1));
 
@@ -147,7 +189,14 @@ for (const [course, c] of Object.entries(index.courses)) {
     search.push({ c: course, ct: c.title, m: m.mod, t: m.title, s: segs });
   }
 }
+/* reels in the same search index, flagged, so "how do I raise the energy in a
+   room" can answer with a twenty-second clip as readily as a ten-minute lesson */
+for (const r of index.reels || []) {
+  const f = join(REEL_TR, `${r.id}.json`);
+  const segs = JSON.parse(readFileSync(f, 'utf8')).segments.map(sg => [Math.round(sg.t0), sg.text]);
+  search.push({ c: '_reels', ct: 'Shorts', m: r.id, t: r.title, kind: 'reel', s: segs });
+}
 writeFileSync(join(ROOT, 'knowledge', 'search.json'), JSON.stringify(search));
 console.log(`knowledge/search.json: ${search.length} modules, ${search.reduce((a, x) => a + x.s.length, 0)} segments`);
 const total = Object.values(index.courses).reduce((a, c) => a + c.modules.length, 0);
-console.log(`knowledge/index.json: ${Object.keys(index.courses).length} courses, ${total} modules`);
+console.log(`knowledge/index.json: ${Object.keys(index.courses).length} courses, ${total} modules, ${(index.reels||[]).length} reels`);

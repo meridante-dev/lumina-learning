@@ -1,5 +1,5 @@
 {
- "generatedAt": 1787062828293,
+ "generatedAt": 1788515834250,
  "courses": {
   "alignment-journey": {
    "title": "The EdenRise Alignment Journey",
@@ -1784,5 +1784,140 @@
     }
    ]
   }
- }
+ },
+ "reels": [
+  {
+   "id": "bring-the-energy",
+   "kind": "reel",
+   "title": "Give Energy",
+   "title_pt": "Dá Energia",
+   "lesson": "Great teammates create energy in other people by listening fully, noticing effort, bringing solutions, and sharing belief. Every interaction leaves something behind, so it's essential to consider the impact you have on others. Ask yourself if people are stronger after interacting with you.",
+   "lesson_pt": "Os grandes colegas de trabalho não só completam tarefas, mas também criam energia nos outros. Para isso, é preciso ouvir atentamente, notar o esforço, trazer soluções e partilhar crenças. Cada interação deixa algo para trás.",
+   "language": "en",
+   "videoLang": "en",
+   "seconds": 20,
+   "segments": 8,
+   "theme": "energy",
+   "tags": [
+    "energy",
+    "people"
+   ],
+   "deeper": "land-team-journey",
+   "published": true,
+   "url": "https://academy.edenrise.com/#/reels",
+   "moments": [
+    {
+     "t0": 0,
+     "teaches": "What can you do to create energy in others?",
+     "audit": "verified"
+    }
+   ]
+  },
+  {
+   "id": "culture",
+   "kind": "reel",
+   "title": "Defining Excellence",
+   "title_pt": "O que é cultura",
+   "lesson": "Culture is not just what we say, but what we do when no one is watching. Accepting 'good enough' can quietly redefine what we consider good. Excellence is about caring enough to notice and act, not about being perfect.",
+   "lesson_pt": "A cultura não é apenas o que dizemos, mas sim o que fazemos quando ninguém está a olhar. Quando aceitamos o 'bom o suficiente', estamos a redefinir o que é bom. A excelência não é perfeição, mas sim cuidar o suficiente para notar e ter coragem para agir.",
+   "language": "en",
+   "videoLang": "en",
+   "seconds": 20,
+   "segments": 5,
+   "theme": "culture",
+   "tags": [
+    "culture",
+    "enough"
+   ],
+   "deeper": "land-team-journey",
+   "published": true,
+   "url": "https://academy.edenrise.com/#/reels",
+   "moments": [
+    {
+     "t0": 0,
+     "teaches": "What happens when we accept 'good enough'?",
+     "audit": "verified"
+    }
+   ]
+  },
+  {
+   "id": "own-the-outcome",
+   "kind": "reel",
+   "title": "Own The Outcome",
+   "title_pt": "Mudar o resultado",
+   "lesson": "When something goes wrong, you can either ask who's at fault or what you can do now. High performing teams choose the second option, seeing the problem, owning their part, and moving it forward. Ownership is about power, not blame.",
+   "lesson_pt": "Quando algo correr mal, em vez de perguntar quem é o culpado, pergunta o que podes fazer agora. A responsabilidade não é sobre culpa, é sobre poder. Ao assumires a tua parte, podes mudar o resultado. As equipas de alto desempenho veem o problema, assumem a sua parte e avançam.",
+   "language": "en",
+   "videoLang": "en",
+   "seconds": 20,
+   "segments": 3,
+   "theme": "ownership",
+   "tags": [
+    "ownership"
+   ],
+   "deeper": "land-team-journey",
+   "published": true,
+   "url": "https://academy.edenrise.com/#/reels",
+   "moments": [
+    {
+     "t0": 0,
+     "teaches": "What do high performing teams do when something goes wrong?",
+     "audit": "verified"
+    }
+   ]
+  },
+  {
+   "id": "raise-the-energy",
+   "kind": "reel",
+   "title": "Raise The Space",
+   "title_pt": "Energia Positiva",
+   "lesson": "When you enter a space, you bring energy with you. This energy can be positive or negative. Bring curiosity, courage, and generosity to raise the space and leave people stronger.",
+   "lesson_pt": "Quando entra num espaço, traz consigo energia, possibilidade ou momentum. Pode optar por trazer curiosidade, coragem e generosidade. Isso pode deixar as pessoas mais fortes.",
+   "language": "en",
+   "videoLang": "en",
+   "seconds": 20,
+   "segments": 7,
+   "theme": "energy",
+   "tags": [
+    "energy",
+    "space"
+   ],
+   "deeper": "land-team-journey",
+   "published": true,
+   "url": "https://academy.edenrise.com/#/reels",
+   "moments": [
+    {
+     "t0": 0,
+     "teaches": "What can you bring into a space to raise its energy?",
+     "audit": "verified"
+    }
+   ]
+  },
+  {
+   "id": "safe-to-speak",
+   "kind": "reel",
+   "title": "Safe to Speak",
+   "title_pt": "Falar Sem Medo",
+   "lesson": "A strong team is one where members can express themselves freely, saying 'I think we are wrong' or 'I need help' without fear of being judged. The best idea should matter more than who came up with it. This allows for open communication and collaboration.",
+   "lesson_pt": "A equipe mais forte não é aquela onde todos concordam, mas sim onde alguém pode dizer que está errada ou precisa de ajuda. Isso permite que as melhores ideias sejam compartilhadas. O importante é criar um ambiente seguro para falar.",
+   "language": "en",
+   "videoLang": "en",
+   "seconds": 20,
+   "segments": 9,
+   "theme": "teamwork",
+   "tags": [
+    "teamwork"
+   ],
+   "deeper": "land-team-journey",
+   "published": true,
+   "url": "https://academy.edenrise.com/#/reels",
+   "moments": [
+    {
+     "t0": 0,
+     "teaches": "What makes a team strong according to this idea?",
+     "audit": "verified"
+    }
+   ]
+  }
+ ]
 }
