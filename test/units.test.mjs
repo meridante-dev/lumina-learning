@@ -10,6 +10,7 @@ import { sandbox, selfTest, src } from './harness.mjs';
 const app = src('core/app.js');
 
 export function run(t) {
+  runRecall(t);
   /* ---------- the extractor is itself under test ---------- */
   t.group('harness');
   selfTest(t);
@@ -162,4 +163,50 @@ export function run(t) {
   const e2 = mkEl(), vv2 = mkVid(20); a.armReelCheck(e2, { id: 'G', check: 1 }, vv2);
   v1.tick(19.9); t.ok('the swiped-away reel can no longer fire', raised.length === 0);
   vv2.tick(19.9); t.eq('the new reel fires', raised, ['G']);
+}
+
+/* ---------- Recall: the engine under the ask bar, the mic and the chat ----
+   Shipped 2026-09-04. The previous searchMoments scored by substring length,
+   so "responsibilities" never met "responsibility", and a reel never came
+   back at all. These pin the behaviour every door depends on. */
+function runRecall(t) {
+  const names = ['_fold', '_STOP', '_stem', '_tok', '_recallIdx', '_conceptTable', 'recallIndex', '_tokMatch', 'recall'];
+  const idx = [
+    { c: 'land', ct: 'Land Team Journey', m: 2, t: 'Total Responsibility', s: [
+      [0, 'Welcome back. Today is about the way we hold problems.'],
+      [29, 'Total responsibility means ownership of the outcome, whatever the cause.'],
+      [80, 'When it is not your fault it can still be your responsibility.'] ] },
+    { c: 'land', ct: 'Land Team Journey', m: 5, t: 'Tools and Care', s: [
+      [10, 'Clean tools at the end of the day and put them back where they live.'],
+      [60, 'A water tank that is checked weekly never surprises you.'] ] },
+    { c: '_reels', ct: 'Shorts', m: 'own-the-outcome', t: 'Own The Outcome', kind: 'reel', s: [
+      [3, 'Own the outcome. Not the excuse, the outcome.'] ] },
+  ];
+  const GRAPH = { nodes: [{ id: 'concept:ownership', kind: 'concept', title: 'ownership' }],
+                  edges: [{ from: 'module:land:2', to: 'concept:ownership', rel: 'about', w: 1 }] };
+  const R = sandbox(app, names, { _searchIdx: idx, GRAPH });
+
+  t.group('recall · stemming');
+  t.ok('responsibilities → responsibility', R._stem('responsibilities') === 'responsibility');
+  t.ok('water stays water', R._stem('water') === 'water');
+  t.ok('plantas → planta', R._stem('plantas') === 'planta');
+  t.ok('checking → check', R._stem('checking') === 'check');
+  t.ok('stopwords drop, stems stay', JSON.stringify(R._tok('The water tanks and the pumps')) === '["water","tank","pump"]');
+  t.ok('accents fold (pt)', R._tok('responsabilidade é ação')[0] === 'responsabilidade');
+
+  t.group('recall · moments');
+  const r1 = R.recall('total responsibility', 4);
+  t.ok('finds the lesson', r1.length > 0 && r1[0].title === 'Total Responsibility');
+  t.ok('at the second it is said, not the start', r1[0] && r1[0].t0 === 29);
+  t.ok('says why', r1[0] && r1[0].why.includes('responsibility'));
+  const r2 = R.recall('what are my responsibilities', 4);
+  t.ok('inflection meets the transcript', r2.length > 0 && r2[0].t0 === 29);
+  const r3 = R.recall('outcome', 4);
+  t.ok('shorts come back as reels', r3.some(m => m.kind === 'reel' && m.mod === 'own-the-outcome'));
+  t.ok('one moment per lesson', new Set(r3.map(m => m.course + ':' + m.mod)).size === r3.length);
+  const r4 = R.recall('ownership', 4);
+  t.ok('graph concept lifts the linked lesson', r4[0] && r4[0].concepts.includes('ownership') && r4[0].mod === 2);
+  t.ok('stopwords-only asks nothing', R.recall('the and of', 4).length === 0);
+  t.ok('a tank question does not drag in responsibility', R.recall('water tank', 4).every(m => m.mod === 5));
+  t.ok('text carries the next segment for context', r1[0] && r1[0].text.includes('fault'));
 }

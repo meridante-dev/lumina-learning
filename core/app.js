@@ -676,6 +676,7 @@ function renderHome() {
        one job — carry on — and everything here either serves that or teases
        what is next. -->
   ${askBarHTML()}
+  ${recallStripHTML()}
   ${loopStripHTML()}
   ${railHTML(t('continue_learning'), t('synced_devices'), continuing.map(c => cardHTML(c)), null, 'featured-row')}
   ${pathRowHTML()}
@@ -879,6 +880,8 @@ function renderCourse(id) {
       </div>`;
     }
     const beside = graphReelsBeside(id, i), rel = graphRelated(id, i);
+    const tg = tagsAt(id + ':' + i);
+    const tags = tg.length ? `<div class="mod-tags">${tg.map(x => `<button class="mod-tag" data-action="tag-seek" data-id="${id}" data-mod="${i}" data-t="${Math.max(0, x.at[0] - 4)}" data-tag="${esc(x.c)}" title="${t('tag_at')} ${x.at.slice(0, 6).map(fmtTc).join(' · ')}">${esc(x.c)}<span>${fmtTc(x.at[0])}</span></button>`).join('')}</div>` : '';
     const links = (beside.length || rel.length) ? `<div class="mod-links">${
       beside.length ? `<span class="ml"><span class="ml-k">${t('graph_shorts')}</span> ${beside.map(x => esc(reelField(x.title))).join(' · ')}</span>` : ''}${
       rel.length ? `<span class="ml"><span class="ml-k">${t('graph_related')}</span> ${rel.map(x => esc(x.title)).join(' · ')}</span>` : ''}</div>` : '';
@@ -887,7 +890,7 @@ function renderCourse(id) {
       <div class="m-title">${cmods(c)[i] || m}${review ? ' &nbsp;<span class="review-flag">↺ AI re-queued for review</span>' : ''}</div>
       <span class="m-dur">${moduleDur(c, i)}</span>
       <button class="m-play">▶</button>
-    ${links}</div>`;
+    ${tags}${links}</div>`;
   }).join('');
   return `<div class="page">
     <div class="course-hero">
@@ -1439,61 +1442,165 @@ function tagCloud(n) {
   return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, n || 18);
 }
 const _fold = x => String(x || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-function searchMoments(q, topN) {
-  const terms = _fold(q).split(/[^a-z0-9]+/).filter(w => w.length >= 3);
-  if (!terms.length || !_searchIdx) return [];
-  const hits = [];
+/* ===== RECALL — one engine, three doors ===================================
+   The ask bar, the voice mic and the tutor chat all land here. It searches the
+   real transcripts (knowledge/search.json — every spoken segment with its
+   timecode, lessons and shorts alike), widens the question through the
+   knowledge graph's concepts, and returns MOMENTS: the second in a video where
+   the trainer said the thing. Deterministic and local — it works offline and
+   cannot hallucinate a quote. An AI answer is commentary layered on top of the
+   moments, never the source of them. */
+const _STOP = new Set(('the a an and or of to in on for with is are was were be been it its this that these those you your we our they their he she his her i my me at by from as but not no so if then than do does did have has had will would can could should about into over under what which who how when where why just very really also there here all any some one two get got go going want need like make made thing things'
+  + ' o a os as um uma uns umas e ou de do da dos das em no na nos nas para com por que se nao e sao foi era ser estar esta estao isto isso aquilo eu tu ele ela nos eles elas meu minha seu sua nosso nossa este esta esse essa aquele aquela como quando onde porque mas tambem ja muito mais menos tem ha ao aos pelo pela pelos pelas').split(' '));
+/* Light stemming, EN + PT: enough that "responsibilities" meets "responsibility"
+   and "plantas" meets "planta", conservative enough that "water" stays "water".
+   Everything past this is prefix matching at query time. */
+function _stem(w) {
+  if (w.length <= 3) return w;
+  let x = w;
+  if (/ies$/.test(x)) x = x.slice(0, -3) + 'y';
+  else if (/coes$/.test(x)) x = x.slice(0, -4) + 'cao';
+  else if (/(sses|shes|ches|xes)$/.test(x)) x = x.slice(0, -2);
+  else if (/[^s]s$/.test(x)) x = x.slice(0, -1);
+  if (x.length > 5 && /ing$/.test(x)) x = x.slice(0, -3);
+  else if (x.length > 5 && /ed$/.test(x)) x = x.slice(0, -2);
+  else if (x.length > 7 && /mente$/.test(x)) x = x.slice(0, -5);
+  return x;
+}
+function _tok(text) {
+  return _fold(text).split(/[^a-z0-9]+/).filter(w => w.length >= 3 && !_STOP.has(w)).map(_stem);
+}
+let _recallIdx = null;
+function _conceptTable() {
+  if (!GRAPH || !GRAPH.edges) return [];
+  return GRAPH.nodes.filter(n => n.kind === 'concept').map(n => {
+    const stems = _tok(n.title); if (!stems.length) return null;
+    const keys = new Set(GRAPH.edges.filter(e => e.to === n.id && e.rel === 'about').map(e => e.from.replace(/^module:/, '')));
+    return { title: n.title, stems, keys };
+  }).filter(Boolean);
+}
+function recallIndex() {
+  if (!_searchIdx || !_searchIdx.length) return null;
+  if (_recallIdx) { if (!_recallIdx.concepts.length) _recallIdx.concepts = _conceptTable(); return _recallIdx; }
+  const segs = [], df = {};
   for (const mod of _searchIdx) {
-    const metaHay = _fold(mod.t + ' ' + mod.ct);
+    const key = (mod.kind === 'reel' ? 'reel:' : mod.c + ':') + mod.m;
+    const meta = _tok(mod.t + ' ' + mod.ct);
     for (const [t0, text] of mod.s) {
-      const hay = _fold(text);
-      let score = 0;
-      for (const w of terms) { if (hay.includes(w)) score += w.length; if (metaHay.includes(w)) score += 1; }
-      if (score > 3) hits.push({ score, course: mod.c, courseTitle: mod.ct, mod: mod.m, title: mod.t, t0, text });
+      const toks = _tok(text);
+      segs.push({ mod, key, t0, text, toks, meta });
+      for (const w of new Set(toks)) df[w] = (df[w] || 0) + 1;
     }
   }
-  hits.sort((a, b) => b.score - a.score);
-  /* one moment per lesson — three quotes from the same minute is noise */
-  const seen = new Set(), out = [];
-  for (const h of hits) {
-    const k = h.course + ':' + h.mod;
-    if (seen.has(k)) continue;
-    seen.add(k); out.push(h);
-    if (out.length >= (topN || 4)) break;
-  }
-  return out;
+  const N = segs.length;
+  return (_recallIdx = { segs, idf: w => Math.log(1 + N / (1 + (df[w] || 0))), concepts: _conceptTable() });
 }
-function momentsHTML(moments) {
+const _tokMatch = (toks, w) => toks.includes(w) ? 1 : (w.length >= 4 && toks.some(x => x.startsWith(w) || (x.length >= 4 && w.startsWith(x)))) ? 0.6 : 0;
+function recall(q, topN) {
+  const idx = recallIndex(); if (!idx) return [];
+  const qs = [...new Set(_tok(q))]; if (!qs.length) return [];
+  const phrase = _fold(q).trim();
+  /* the graph widens the net: a question that names a concept lifts every
+     lesson the graph says is about it — a tie-breaker, never a fabricated hit */
+  const hitConcepts = idx.concepts.filter(c => c.stems.every(cs => qs.some(w => w === cs || (cs.length >= 4 && w.startsWith(cs)) || (w.length >= 4 && cs.startsWith(w)))));
+  const conceptKeys = new Set(); hitConcepts.forEach(c => c.keys.forEach(k => conceptKeys.add(k)));
+  const segs = idx.segs, best = {};
+  for (let i = 0; i < segs.length; i++) {
+    const sg = segs[i];
+    let score = 0; const why = [];
+    for (const w of qs) {
+      let m = _tokMatch(sg.toks, w);
+      if (!m) { /* spoken sentences straddle segment cuts */
+        const pv = segs[i - 1], nx = segs[i + 1];
+        if ((pv && pv.key === sg.key && _tokMatch(pv.toks, w)) || (nx && nx.key === sg.key && _tokMatch(nx.toks, w))) m = 0.5;
+      }
+      if (m) { score += m * idx.idf(w); why.push(w); }
+      if (sg.meta.includes(w)) score += 0.4;
+    }
+    if (!score) continue;
+    if (phrase.length >= 6 && _fold(sg.text).includes(phrase)) score += 2.5;
+    if (why.length === qs.length && qs.length > 1) score *= 1.3;   /* every word present beats one word often */
+    if (conceptKeys.has(sg.key)) score += 0.8;
+    const b = best[sg.key];
+    if (!b || score > b.score) best[sg.key] = { score, i, why };
+  }
+  const out = Object.values(best).sort((a, b) => b.score - a.score);
+  const top = out.length ? out[0].score : 0;
+  return out.filter(x => x.score >= 1 && x.score >= top * 0.45).slice(0, topN || 4).map(({ score, i, why }) => {
+    const sg = segs[i], nx = segs[i + 1];
+    const text = (sg.text + ((nx && nx.key === sg.key) ? ' ' + nx.text : '')).replace(/\s+/g, ' ').trim();
+    return { score: +score.toFixed(2), course: sg.mod.c, courseTitle: sg.mod.ct, mod: sg.mod.m, title: sg.mod.t,
+             kind: sg.mod.kind === 'reel' ? 'reel' : 'module', t0: sg.t0, text, why: [...new Set(why)], concepts: hitConcepts.map(c => c.title) };
+  });
+}
+/* the old name stays: LandFlow's search_lessons mirrors this shape */
+function searchMoments(q, topN) { return recall(q, topN); }
+function groundingText(moments) {
+  return moments.slice(0, 5).map(m => `${m.title} (${m.kind === 'reel' ? 'short' : m.courseTitle}) · ${fmtTc(m.t0)}: "${m.text.slice(0, 320)}"`).join('\n');
+}
+/* ---- the free gateway: no key in the browser, grounded in Recall's moments ---- */
+const AI_GATEWAY = (typeof window !== 'undefined' && window.ACADEMY_AI_GATEWAY) || 'https://academy-ai.edenrise.workers.dev/';
+async function gatewayComplete({ messages, grounding, maxTokens }) {
+  const id = currentCourseId(); const c = id && courseById(id);
+  const res = await fetch(AI_GATEWAY, { method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ messages, maxTokens: maxTokens || 400, context: {
+      brand: brandAcademy(), ethos: brandEthos(), course: c ? ctitle(c) : '',
+      topics: [...new Set(CATALOG.map(x => x.cat))].join(', '), grounding: grounding || '' } }) });
+  if (!res.ok) throw new Error('gateway ' + res.status);
+  return res.json();
+}
+function modelLabelOf(m) { return /llama-3\.3/.test(m || '') ? 'Llama 3.3 70B' : /llama-3\.1/.test(m || '') ? 'Llama 3.1 8B' : /gemini/.test(m || '') ? 'Gemini Flash' : /guard/.test(m || '') ? 'the guard' : (m || 'AI'); }
+/* A question asked out loud is answered out loud — the first two sentences,
+   in the learner's language, and it can be silenced from the modal. */
+function speakBack(text) {
+  if (S.speak === false || typeof speechSynthesis === 'undefined') return;
+  const sentences = String(text).replace(/\*\*/g, '').match(/[^.!?]+[.!?]?/g) || [];
+  const short = sentences.slice(0, 2).join(' ').trim().slice(0, 280); if (!short) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(short); u.lang = _lang() === 'pt' ? 'pt-PT' : 'en-GB'; speechSynthesis.speak(u); } catch (e) {}
+}
+function momentsHTML(moments, opts) {
   if (!moments.length) return '';
-  return `<div class="ob-eyebrow" style="margin-top:4px;">⏱ ${t('ask_moments')}</div>
-    <div class="ask-moments">${moments.map(m => `
-      <div class="ask-moment" data-action="ask-moment" data-id="${m.course}" data-mod="${m.mod}" data-t="${Math.max(0, m.t0 - 4)}" role="button" tabindex="0">
+  const compact = opts && opts.compact;
+  return `${compact ? '' : `<div class="ob-eyebrow" style="margin-top:4px;">⏱ ${t('ask_moments')}</div>`}
+    <div class="ask-moments${compact ? ' compact' : ''}">${moments.map(m => `
+      <div class="ask-moment" data-action="${m.kind === 'reel' ? 'ask-reel' : 'ask-moment'}" data-id="${esc(String(m.kind === 'reel' ? m.mod : m.course))}" data-mod="${m.mod}" data-t="${Math.max(0, m.t0 - (m.kind === 'reel' ? 2 : 4))}" role="button" tabindex="0">
         <span class="am-tc">${fmtTc(m.t0)}</span>
         <div class="am-body"><b>${esc(m.title)}</b><span class="am-course">${esc(m.courseTitle)}</span>
           <p>“${esc(m.text.length > 150 ? m.text.slice(0, 150) + '…' : m.text)}”</p></div>
         <span class="ask-go">▶</span>
       </div>`).join('')}</div>`;
 }
-async function openAsk(q) {
+async function openAsk(q, via) {
   q = (q || '').trim(); if (!q) return;
-  logAsk(q, 'ask');
+  via = via || 'typed';
+  logAsk(q, via);
   ensureAskModal();
   $('#askQ').textContent = q;
-  const eb = $('#askModal .ob-eyebrow'); if (eb) eb.innerHTML = `✦ ${t('ask_h')} <span class="grounded-inline">· 🔒 ${t('grounded_note')}</span>`;
+  const eb = $('#askModal .ob-eyebrow'); if (eb) eb.innerHTML = `✦ ${t('ask_h')} <span class="grounded-inline">· 🔒 ${t('grounded_note')}</span>${via === 'voice' ? `<button class="ask-speak" data-action="ask-speak" aria-label="${t('ask_speak')}" title="${t('ask_speak')}">${S.speak === false ? '🔇' : '🔊'}</button>` : ''}`;
   $('#askBody').innerHTML = `<div class="studio-status"><span class="orb-spin" style="width:20px;height:20px;"></span> ${t('ask_thinking')}</div>`;
   $('#askModal').classList.add('open');
   /* MOMENTS FIRST — found locally in the real transcripts, rendered before any
      model answers, and still there when no model can. The lesson itself is the
      primary source; the AI is commentary on top of it. */
-  await loadSearchIdx();
-  const moments = searchMoments(q);
+  await Promise.all([loadSearchIdx(), loadGraph()]);
+  const moments = recall(q, via === 'voice' ? 5 : 4);
   /* the search itself is evidence: what people ask and DON'T find is the
      course-creation radar — found:0 events are content gaps, in the ledger */
-  ledgerAppend('knowledge_search', { q: q.slice(0, 120), found: moments.length });
+  ledgerAppend('knowledge_search', { q: q.slice(0, 120), found: moments.length, via, top: moments[0] ? `${moments[0].kind === 'reel' ? 'reel:' : moments[0].course + ':'}${moments[0].mod}@${moments[0].t0}` : null });
   if (!aiKey()) {
     $('#askBody').innerHTML = moments.length
       ? momentsHTML(moments)
       : `<p class="ask-answer">${t('ask_no_moments')}</p>`;
+    /* No tenant key: the free gateway answers, grounded in the moments above.
+       The quotes are already on screen — the answer is commentary that arrives
+       when it can, and the modal is complete without it. */
+    try {
+      const g = await gatewayComplete({ messages: [{ role: 'user', content: q }], grounding: groundingText(moments), maxTokens: 350 });
+      if (g && g.reply && $('#askQ') && $('#askQ').textContent === q) {
+        $('#askBody').insertAdjacentHTML('beforeend', `<p class="ask-answer">${esc(g.reply)}</p><div class="ask-model">✦ ${t('ask_by')} ${esc(modelLabelOf(g.model))}</div>`);
+        if (via === 'voice') speakBack(g.reply);
+      }
+    } catch (e) { if (via === 'voice' && moments.length) speakBack(`${moments[0].title}. ${moments[0].text}`); }
     return;
   }
   try {
@@ -1511,10 +1618,22 @@ async function openAsk(q) {
           <span class="ask-go">→</span>
         </div>`).join('')}</div>` : ''}
       ${aiModelLabel() ? `<div class="ask-model">✦ ${t('ask_by')} ${esc(aiModelLabel())}</div>` : ''}`;
+    if (via === 'voice') speakBack(j.answer || '');
   } catch (e) {
     /* the model failed; the lesson quotes still answer */
     $('#askBody').innerHTML = momentsHTML(moments) || `<div class="auth-err on">${t('ask_fail')}</div>`;
   }
+}
+/* what you asked before is a door back in — the last four, distinct, one tap */
+function recallStripHTML() {
+  const seen = new Set(), recent = [];
+  for (const a of (S.askLog || []).slice().reverse()) {
+    const k = _fold(a.q); if (!a.q || seen.has(k)) continue;
+    seen.add(k); recent.push(a); if (recent.length >= 4) break;
+  }
+  if (!recent.length) return '';
+  return `<section class="page-pad ask-recent"><span class="ask-recent-k">${t('recall_recent')}</span>${recent.map(a =>
+    `<button class="chip ask-again" data-action="ask-again" data-q="${esc(a.q)}">${a.via === 'voice' ? '🎙 ' : ''}${esc(a.q.length > 44 ? a.q.slice(0, 44) + '…' : a.q)}</button>`).join('')}</section>`;
 }
 function askBarHTML() {
   return `<section class="page-pad ask-line-wrap"><div class="ask-line">
@@ -6692,7 +6811,16 @@ const QUIZ_V2 = {};
    precise lesson rather than the whole course; a lesson page lists the shorts
    that sit beside it; and "also covers this" across courses. */
 let GRAPH = null;
+/* concept tags AT TIMESTAMPS (knowledge/tags.json, built by scripts/build-tags.mjs):
+   the graph says a lesson is about ownership; this says it is said at 0:29 */
+let TAGS = null;
+function loadTags() {
+  if (TAGS !== null) return Promise.resolve(TAGS);
+  return fetch('knowledge/tags.json').then(r => (r.ok ? r.json() : null)).then(j => (TAGS = j && j.lessons ? j : false)).catch(() => (TAGS = false));
+}
+const tagsAt = (key, n) => ((TAGS && TAGS.lessons[key]) || []).slice(0, n || 4);
 function loadGraph() {
+  loadTags();
   if (GRAPH !== null) return Promise.resolve(GRAPH);
   const v = ((document.querySelector('script[src*="core/app.js"]') || {}).src || '').match(/v=(edr\d+)/);
   return fetch('knowledge/graph.json?v=' + (v ? v[1] : ''))
@@ -7039,12 +7167,21 @@ function startVoiceSearch() {
   openPalette();
   setVoiceUI(true);
   $('#palInput').placeholder = t('voice_hint');
+  let finalTxt = '';
   r.onresult = e => {
     const txt = [...e.results].map(x => x[0].transcript).join(' ').trim();
+    if ([...e.results].some(x => x.isFinal)) finalTxt = txt;
     $('#palInput').value = txt;
     drawPalette(txt);
   };
-  r.onend = () => { voiceRec = null; setVoiceUI(false); };
+  r.onend = () => {
+    voiceRec = null; setVoiceUI(false);
+    /* A spoken sentence is a question for the lessons, not a title lookup —
+       it goes to Recall and comes back as moments and a spoken answer. A
+       single word stays in the palette, where a course title is one tap away. */
+    const said = (finalTxt || ($('#palInput') || {}).value || '').trim();
+    if (said.split(/\s+/).length >= 2) { closePalette(); openAsk(said, 'voice'); }
+  };
   r.onerror = () => { voiceRec = null; setVoiceUI(false); };
   try { r.start(); } catch (e) { voiceRec = null; setVoiceUI(false); }
 }
@@ -7312,17 +7449,39 @@ async function llmComplete({ system, messages, maxTokens, model }) {
   const data = await res.json();
   return (((data.choices || [])[0] || {}).message || {}).content || '…';
 }
-async function askClaude(text) {
-  logAsk(text, 'tutor');
+function tutorGrounding(moments) {
+  return moments && moments.length ? `\n\nFROM THE LESSONS — transcript excerpts with timecodes, found for this message. When relevant, ground your answer in them and name the lesson and timecode (e.g. "Total Responsibility · 4:32"). Never claim a lesson says something these excerpts do not:\n${groundingText(moments)}` : '';
+}
+const tutorFmt = r => esc(r).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+async function askGateway(text, moments) {
   tutorHistory.push({ role: 'user', content: text });
   const typing = document.createElement('div');
   typing.className = 'msg bot typing'; typing.innerHTML = '<span></span><span></span><span></span>';
   $('#aiMsgs').appendChild(typing); $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   try {
-    const reply = await llmComplete({ system: buildTutorSystem(), messages: tutorHistory.slice(-12), maxTokens: 700 });
+    const g = await gatewayComplete({ messages: tutorHistory.slice(-12), grounding: groundingText(moments), maxTokens: 500 });
+    if (!g || !g.reply) throw new Error('empty');
+    tutorHistory.push({ role: 'assistant', content: g.reply });
+    typing.classList.remove('typing');
+    typing.innerHTML = tutorFmt(g.reply) + momentsHTML(moments, { compact: true });
+    $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
+  } catch (e) {
+    typing.remove(); tutorHistory.pop();
+    /* the gateway is out (quota, offline): the scripted tutor still answers, and the moments still show */
+    if (moments.length) botSay(momentsHTML(moments, { compact: true }), 300);
+    scriptedRespond(text);
+  }
+}
+async function askClaude(text, moments) {
+  tutorHistory.push({ role: 'user', content: text });
+  const typing = document.createElement('div');
+  typing.className = 'msg bot typing'; typing.innerHTML = '<span></span><span></span><span></span>';
+  $('#aiMsgs').appendChild(typing); $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
+  try {
+    const reply = await llmComplete({ system: buildTutorSystem() + tutorGrounding(moments), messages: tutorHistory.slice(-12), maxTokens: 700 });
     tutorHistory.push({ role: 'assistant', content: reply });
     typing.classList.remove('typing');
-    typing.innerHTML = esc(reply).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+    typing.innerHTML = tutorFmt(reply) + momentsHTML(moments || [], { compact: true });
     $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   } catch (e) {
     typing.remove();
@@ -7340,8 +7499,15 @@ function tutorRespond(text) {
     setTimeout(() => openQuiz(id || 'leading-data'), 900);
     return;
   }
-  if (aiKey()) { askClaude(text); return; }
-  scriptedRespond(text);
+  /* every door opens on Recall first: the chat answers from the lessons, with
+     the moments it drew on under the reply — tap one and the video opens there */
+  Promise.all([loadSearchIdx(), loadGraph()]).then(() => {
+    const moments = recall(text, 3);
+    logAsk(text, 'chat');
+    ledgerAppend('knowledge_search', { q: text.slice(0, 120), found: moments.length, via: 'chat' });
+    if (aiKey()) askClaude(text, moments);
+    else askGateway(text, moments);
+  });
 }
 
 /* ---- the concierge -------------------------------------------------------
@@ -7579,7 +7745,22 @@ document.addEventListener('click', e => {
       break;
     }
     case 'ask-go': openAsk($('#askInput') && $('#askInput').value); break;
-    case 'ask-close': $('#askModal').classList.remove('open'); break;
+    case 'ask-close': $('#askModal').classList.remove('open'); try { speechSynthesis.cancel(); } catch (e) {} break;
+    case 'ask-again': openAsk(el.dataset.q, 'again'); break;
+    case 'ask-speak': { S.speak = S.speak === false; save(); if (S.speak === false) { try { speechSynthesis.cancel(); } catch (e) {} } el.textContent = S.speak === false ? '🔇' : '🔊'; break; }
+    case 'ask-reel': {
+      const am = $('#askModal'); if (am) am.classList.remove('open'); setTutorOpen(false);
+      const rid = el.dataset.id;
+      ledgerAppend('moment_open', { reel: rid, t: +el.dataset.t, via: 'ask' });
+      location.hash = '#/reels';
+      setTimeout(() => { const sl = document.querySelector(`.reel[data-id="${CSS.escape(rid)}"]`); if (sl) sl.scrollIntoView({ block: 'start' }); }, 400);
+      break;
+    }
+    case 'tag-seek': {
+      ledgerAppend('tag_open', { tag: el.dataset.tag, courseId: el.dataset.id, mod: +el.dataset.mod, t: +el.dataset.t, via: 'lesson' });
+      openPlayer(el.dataset.id, +el.dataset.mod, +el.dataset.t);
+      break;
+    }
     case 'ask-ref': $('#askModal').classList.remove('open'); location.hash = '#/course/' + id; break;
     case 'board-scope': boardScope = el.dataset.v; render(); break;
     case 'flash-open': openFlash(); break;
@@ -7728,7 +7909,7 @@ document.addEventListener('click', e => {
     }
     case 'open-reviews': openReviewSession(); break;
     case 'ask-moment': {
-      const am = $('#askModal'); if (am) am.classList.remove('open');
+      const am = $('#askModal'); if (am) am.classList.remove('open'); setTutorOpen(false);
       ledgerAppend('moment_open', { courseId: el.dataset.id, mod: +el.dataset.mod, t: +el.dataset.t, via: 'ask' });
       openPlayer(el.dataset.id, +el.dataset.mod, +el.dataset.t);
       break;
