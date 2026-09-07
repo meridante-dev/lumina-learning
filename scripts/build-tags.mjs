@@ -48,6 +48,9 @@ for (const mod of S) {
     found.push({ c: c.title, at: at.slice(0, 12), n: at.length, linked: isLinked });
   }
   found.sort((a, b) => (b.linked - a.linked) || (b.n - a.n));
+  /* one chip per idea: "mistake" and "mistakes" are the same concept */
+  const seenStem = new Set();
+  for (let i = found.length - 1; i >= 0; i--) { const st = fold(found[i].c).replace(/ies$/, 'y').replace(/s$/, ''); if (seenStem.has(st)) found.splice(i, 1); else seenStem.add(st); }
   if (found.length) { lessons[key] = found.slice(0, 8); tagged++; mentions += found.reduce((a, x) => a + x.n, 0); }
 }
 writeFileSync('knowledge/tags.json', JSON.stringify({ generatedAt: new Date().toISOString(), lessons }));

@@ -4634,3 +4634,13 @@ body.reels-open { overflow: hidden; }
   .ask-moment .ask-go { grid-column: 4; grid-row: 1; }
   .ask-moment .am-tc { grid-row: 1; }
 }
+
+/* ===== pass 5 leftovers ===== */
+.page .page { padding-top: 0; animation: none; }            /* a page inside a page (My learning) opened with 250px of nothing */
+#playerComplete .lbl-short { display: none; }
+@media (max-width: 640px) {
+  #playerComplete .lbl-long { display: none; }
+  #playerComplete .lbl-short { display: inline; }
+  .player-bottom .mod-pill.current { max-width: 46vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mod-links .ml + .ml::before { content: ' · '; color: var(--text-faint); }
+}

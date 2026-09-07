@@ -171,3 +171,20 @@ purple** — an unreadable primary button on every screen. `core/brandkit.js` no
 picks the on-colour from the accent's own luminance and warns at load when a
 tenant's pair cannot reach AA. Any future token pairing brand colour with text
 gets the same treatment: derive it, and make the console say so when it fails.
+
+## Pass 5 — the cinema player and the phone (2026-09-04)
+Found from a phone screenshot, not a desktop preview. Laws added:
+**20 · In the player, the video is the screen and the chrome is a visitor.** Opaque black stage.
+One-line title, one-line module, icons for tutor and notes. While the video plays the title bar,
+toolbar and educator strip fade out; a tap on the stage, a mouse move, a pause or the drawer
+brings them back. Nothing from the page underneath shows through — the old 97% overlay ghosted the
+course page behind the video.
+**21 · A row that grows a second line must wrap.** The concept chips and graph links were flex
+items in a `nowrap` row: on 390px the lesson title became a two-word column. Chips and links are a
+full-width second and third line, three chips at most on phones, links ellipsised to one line.
+**22 · Moments are lines, not boxes.** Outlined cards with a quote in a 40%-wide column were
+taller than the screen. A hairline between moments, a grid on phones: timecode · title · actions,
+then the quote at full width.
+**23 · Frequency is not meaning.** "#feel #about #someone" are not topics. One generic-word list
+(`knowledge/generic-words.json`, owned by scripts/build-tags.mjs) gates chips AND the Library cloud.
+Verify on a phone width every time: five of these were invisible at 1440px.

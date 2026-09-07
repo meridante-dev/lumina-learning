@@ -4875,7 +4875,7 @@ function syncChrome() {
   const cl = $('#apiKeyClear'); if (cl) cl.textContent = t('use_demo');
   const askBtn = document.querySelector('.player-top .btn[data-action="ai-open"]'); if (askBtn) askBtn.textContent = t('ask_tutor');
   const nt = $('#notesToggle'); if (nt) { nt.title = t('notes_transcript'); nt.setAttribute('aria-label', t('notes_transcript')); }
-  const pc = $('#playerComplete'); if (pc) pc.textContent = t('mark_complete');
+  const pc = $('#playerComplete'); if (pc) pc.innerHTML = `<span class="lbl-long">${esc(t('mark_complete'))}</span><span class="lbl-short">${esc(t('mark_complete_short'))}</span>`;
   $$('.lang-btn').forEach(b => { const on = b.dataset.lang === _lang(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   document.documentElement.classList.toggle('is-admin', isAdmin());
   updateBell();
