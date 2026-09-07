@@ -73,6 +73,10 @@ vou vais aqui acolá realmente atenção verdade situação exemplo maneira form
 temos posso podes pode podem foram estas estes essa esse essas esses minha meu tua teu sua seu`.split(/\s+/));
 
 function tagsFrom(segments, n = 8) {
+  /* frequency tags include words that are frequent because they are English —
+     "learn", "people", "about" made the Library's topic cloud. The same generic
+     list scripts/build-tags.mjs uses for chips keeps them out here. */
+  const GENERIC = (() => { try { return new Set(JSON.parse(readFileSync('knowledge/generic-words.json', 'utf8'))); } catch (e) { return new Set(); } })();
   const freq = {};
   for (const s of segments) {
     for (const w of s.text.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').split(/[^a-z0-9]+/)) {
@@ -80,7 +84,7 @@ function tagsFrom(segments, n = 8) {
       freq[w] = (freq[w] || 0) + 1;
     }
   }
-  return Object.entries(freq).filter(([, c]) => c >= 3)
+  return Object.entries(freq).filter(([w]) => !GENERIC.has(w)).filter(([, c]) => c >= 3)
     .sort((a, b) => b[1] - a[1]).slice(0, n).map(([w]) => w);
 }
 
