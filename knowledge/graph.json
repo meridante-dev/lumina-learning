@@ -1,5 +1,5 @@
 {
- "generatedAt": 1788771276789,
+ "generatedAt": 1788771679265,
  "nodes": [
   {
    "id": "course:alignment-journey",
@@ -178,11 +178,6 @@
    "title": "pressure"
   },
   {
-   "id": "concept:feeling",
-   "kind": "concept",
-   "title": "feeling"
-  },
-  {
    "id": "concept:responsibility",
    "kind": "concept",
    "title": "responsibility"
@@ -193,14 +188,19 @@
    "title": "action"
   },
   {
-   "id": "concept:could",
-   "kind": "concept",
-   "title": "could"
-  },
-  {
    "id": "concept:feedback",
    "kind": "concept",
    "title": "feedback"
+  },
+  {
+   "id": "concept:meaning",
+   "kind": "concept",
+   "title": "meaning"
+  },
+  {
+   "id": "concept:yourself",
+   "kind": "concept",
+   "title": "yourself"
   },
   {
    "id": "module:alignment-journey:4",
@@ -240,16 +240,6 @@
    "title": "failures"
   },
   {
-   "id": "concept:meaning",
-   "kind": "concept",
-   "title": "meaning"
-  },
-  {
-   "id": "concept:experience",
-   "kind": "concept",
-   "title": "experience"
-  },
-  {
    "id": "concept:place",
    "kind": "concept",
    "title": "place"
@@ -258,6 +248,11 @@
    "id": "concept:three",
    "kind": "concept",
    "title": "three"
+  },
+  {
+   "id": "concept:outcome",
+   "kind": "concept",
+   "title": "outcome"
   },
   {
    "id": "module:alignment-journey:7",
@@ -487,11 +482,6 @@
    "title": "fear"
   },
   {
-   "id": "concept:might",
-   "kind": "concept",
-   "title": "might"
-  },
-  {
    "id": "concept:anxiety",
    "kind": "concept",
    "title": "anxiety"
@@ -526,6 +516,16 @@
    "title": "sporting"
   },
   {
+   "id": "concept:letting",
+   "kind": "concept",
+   "title": "letting"
+  },
+  {
+   "id": "concept:believe",
+   "kind": "concept",
+   "title": "believe"
+  },
+  {
    "id": "module:alignment-journey:16",
    "kind": "module",
    "title": "Beyond Fear · Unpack & Summary",
@@ -558,6 +558,11 @@
    "id": "concept:event",
    "kind": "concept",
    "title": "event"
+  },
+  {
+   "id": "concept:attention",
+   "kind": "concept",
+   "title": "attention"
   },
   {
    "id": "module:alignment-journey:17",
@@ -616,6 +621,11 @@
    "id": "concept:care",
    "kind": "concept",
    "title": "care"
+  },
+  {
+   "id": "concept:focused",
+   "kind": "concept",
+   "title": "focused"
   },
   {
    "id": "course:fire-truck-training",
@@ -842,6 +852,11 @@
    "title": "growth"
   },
   {
+   "id": "concept:role",
+   "kind": "concept",
+   "title": "role"
+  },
+  {
    "id": "module:growth-journey:2",
    "kind": "module",
    "title": "Kaizen",
@@ -884,6 +899,11 @@
    "id": "concept:kaizen",
    "kind": "concept",
    "title": "kaizen"
+  },
+  {
+   "id": "concept:five",
+   "kind": "concept",
+   "title": "five"
   },
   {
    "id": "module:growth-journey:3",
@@ -934,11 +954,6 @@
    "seconds": 302
   },
   {
-   "id": "concept:yourself",
-   "kind": "concept",
-   "title": "yourself"
-  },
-  {
    "id": "concept:change",
    "kind": "concept",
    "title": "change"
@@ -978,11 +993,6 @@
    "seconds": 249
   },
   {
-   "id": "concept:remember",
-   "kind": "concept",
-   "title": "remember"
-  },
-  {
    "id": "concept:blame",
    "kind": "concept",
    "title": "blame"
@@ -1006,6 +1016,11 @@
    "id": "concept:repeat",
    "kind": "concept",
    "title": "repeat"
+  },
+  {
+   "id": "concept:defensiveness",
+   "kind": "concept",
+   "title": "defensiveness"
   },
   {
    "id": "module:land-team-journey:1",
@@ -1066,6 +1081,11 @@
    "title": "extreme"
   },
   {
+   "id": "concept:early",
+   "kind": "concept",
+   "title": "early"
+  },
+  {
    "id": "module:land-team-journey:3",
    "kind": "module",
    "title": "Don't Assume, Clarify",
@@ -1083,16 +1103,6 @@
    "id": "concept:teams",
    "kind": "concept",
    "title": "teams"
-  },
-  {
-   "id": "concept:understood",
-   "kind": "concept",
-   "title": "understood"
-  },
-  {
-   "id": "concept:early",
-   "kind": "concept",
-   "title": "early"
   },
   {
    "id": "concept:respect",
@@ -1124,11 +1134,6 @@
    "title": "benchmarking"
   },
   {
-   "id": "concept:excellent",
-   "kind": "concept",
-   "title": "excellent"
-  },
-  {
    "id": "concept:habit",
    "kind": "concept",
    "title": "habit"
@@ -1137,6 +1142,16 @@
    "id": "concept:hard",
    "kind": "concept",
    "title": "hard"
+  },
+  {
+   "id": "concept:excellence",
+   "kind": "concept",
+   "title": "excellence"
+  },
+  {
+   "id": "concept:humility",
+   "kind": "concept",
+   "title": "humility"
   },
   {
    "id": "module:land-team-journey:5",
@@ -1158,11 +1173,6 @@
    "title": "tools"
   },
   {
-   "id": "concept:attention",
-   "kind": "concept",
-   "title": "attention"
-  },
-  {
    "id": "concept:detail",
    "kind": "concept",
    "title": "detail"
@@ -1178,9 +1188,9 @@
    "title": "floor"
   },
   {
-   "id": "concept:would",
+   "id": "concept:room",
    "kind": "concept",
-   "title": "would"
+   "title": "room"
   },
   {
    "id": "module:land-team-journey:6",
@@ -1197,16 +1207,6 @@
    "title": "lesson"
   },
   {
-   "id": "concept:stop",
-   "kind": "concept",
-   "title": "stop"
-  },
-  {
-   "id": "concept:stay",
-   "kind": "concept",
-   "title": "stay"
-  },
-  {
    "id": "concept:curious",
    "kind": "concept",
    "title": "curious"
@@ -1215,6 +1215,16 @@
    "id": "concept:practice",
    "kind": "concept",
    "title": "practice"
+  },
+  {
+   "id": "concept:lifelong",
+   "kind": "concept",
+   "title": "lifelong"
+  },
+  {
+   "id": "concept:opportunity",
+   "kind": "concept",
+   "title": "opportunity"
   },
   {
    "id": "module:land-team-journey:7",
@@ -1552,12 +1562,6 @@
   },
   {
    "from": "module:alignment-journey:3",
-   "to": "concept:feeling",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:alignment-journey:3",
    "to": "concept:personal",
    "rel": "about",
    "w": 1
@@ -1576,13 +1580,19 @@
   },
   {
    "from": "module:alignment-journey:3",
-   "to": "concept:could",
+   "to": "concept:feedback",
    "rel": "about",
    "w": 1
   },
   {
    "from": "module:alignment-journey:3",
-   "to": "concept:feedback",
+   "to": "concept:meaning",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:3",
+   "to": "concept:yourself",
    "rel": "about",
    "w": 1
   },
@@ -1666,12 +1676,6 @@
   },
   {
    "from": "module:alignment-journey:6",
-   "to": "concept:experience",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:alignment-journey:6",
    "to": "concept:pain",
    "rel": "about",
    "w": 1
@@ -1691,6 +1695,12 @@
   {
    "from": "module:alignment-journey:6",
    "to": "concept:three",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:6",
+   "to": "concept:outcome",
    "rel": "about",
    "w": 1
   },
@@ -2128,12 +2138,6 @@
   },
   {
    "from": "module:alignment-journey:14",
-   "to": "concept:might",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:alignment-journey:14",
    "to": "concept:anxiety",
    "rel": "about",
    "w": 1
@@ -2170,18 +2174,6 @@
   },
   {
    "from": "module:alignment-journey:15",
-   "to": "concept:experience",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:alignment-journey:15",
-   "to": "concept:feeling",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:alignment-journey:15",
    "to": "concept:athletes",
    "rel": "about",
    "w": 1
@@ -2201,6 +2193,18 @@
   {
    "from": "module:alignment-journey:15",
    "to": "concept:challenge",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:letting",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:15",
+   "to": "concept:believe",
    "rel": "about",
    "w": 1
   },
@@ -2225,12 +2229,6 @@
   {
    "from": "module:alignment-journey:16",
    "to": "concept:fear",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:alignment-journey:16",
-   "to": "concept:feeling",
    "rel": "about",
    "w": 1
   },
@@ -2267,6 +2265,12 @@
   {
    "from": "module:alignment-journey:16",
    "to": "concept:event",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:alignment-journey:16",
+   "to": "concept:attention",
    "rel": "about",
    "w": 1
   },
@@ -2368,13 +2372,13 @@
   },
   {
    "from": "module:alignment-journey:18",
-   "to": "concept:experience",
+   "to": "concept:care",
    "rel": "about",
    "w": 1
   },
   {
    "from": "module:alignment-journey:18",
-   "to": "concept:care",
+   "to": "concept:focused",
    "rel": "about",
    "w": 1
   },
@@ -2698,12 +2702,6 @@
   },
   {
    "from": "module:growth-journey:1",
-   "to": "concept:might",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:growth-journey:1",
    "to": "concept:develop",
    "rel": "about",
    "w": 1
@@ -2739,6 +2737,12 @@
    "w": 1
   },
   {
+   "from": "module:growth-journey:1",
+   "to": "concept:role",
+   "rel": "about",
+   "w": 1
+  },
+  {
    "from": "module:growth-journey:2",
    "to": "course:growth-journey",
    "rel": "in",
@@ -2747,12 +2751,6 @@
   {
    "from": "module:growth-journey:2",
    "to": "concept:leadership",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:growth-journey:2",
-   "to": "concept:could",
    "rel": "about",
    "w": 1
   },
@@ -2795,6 +2793,12 @@
   {
    "from": "module:growth-journey:2",
    "to": "concept:kaizen",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:growth-journey:2",
+   "to": "concept:five",
    "rel": "about",
    "w": 1
   },
@@ -2944,12 +2948,6 @@
   },
   {
    "from": "module:land-team-journey:0",
-   "to": "concept:remember",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:land-team-journey:0",
    "to": "concept:blame",
    "rel": "about",
    "w": 1
@@ -2981,6 +2979,12 @@
   {
    "from": "module:land-team-journey:0",
    "to": "concept:repeat",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:0",
+   "to": "concept:defensiveness",
    "rel": "about",
    "w": 1
   },
@@ -3100,12 +3104,6 @@
   },
   {
    "from": "module:land-team-journey:2",
-   "to": "concept:could",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:land-team-journey:2",
    "to": "concept:control",
    "rel": "about",
    "w": 1
@@ -3113,6 +3111,12 @@
   {
    "from": "module:land-team-journey:2",
    "to": "concept:extreme",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:2",
+   "to": "concept:early",
    "rel": "about",
    "w": 1
   },
@@ -3148,12 +3152,6 @@
   },
   {
    "from": "module:land-team-journey:3",
-   "to": "concept:understood",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:land-team-journey:3",
    "to": "concept:early",
    "rel": "about",
    "w": 1
@@ -3179,6 +3177,12 @@
   {
    "from": "module:land-team-journey:3",
    "to": "concept:listen",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:3",
+   "to": "concept:communicate",
    "rel": "about",
    "w": 1
   },
@@ -3220,18 +3224,6 @@
   },
   {
    "from": "module:land-team-journey:4",
-   "to": "concept:could",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:land-team-journey:4",
-   "to": "concept:excellent",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:land-team-journey:4",
    "to": "concept:habit",
    "rel": "about",
    "w": 1
@@ -3245,6 +3237,18 @@
   {
    "from": "module:land-team-journey:4",
    "to": "concept:mistakes",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:excellence",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:4",
+   "to": "concept:humility",
    "rel": "about",
    "w": 1
   },
@@ -3310,7 +3314,7 @@
   },
   {
    "from": "module:land-team-journey:5",
-   "to": "concept:would",
+   "to": "concept:room",
    "rel": "about",
    "w": 1
   },
@@ -3346,18 +3350,6 @@
   },
   {
    "from": "module:land-team-journey:6",
-   "to": "concept:stop",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:land-team-journey:6",
-   "to": "concept:stay",
-   "rel": "about",
-   "w": 1
-  },
-  {
-   "from": "module:land-team-journey:6",
    "to": "concept:curious",
    "rel": "about",
    "w": 1
@@ -3377,6 +3369,18 @@
   {
    "from": "module:land-team-journey:6",
    "to": "concept:practice",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:lifelong",
+   "rel": "about",
+   "w": 1
+  },
+  {
+   "from": "module:land-team-journey:6",
+   "to": "concept:opportunity",
    "rel": "about",
    "w": 1
   },
@@ -3698,11 +3702,11 @@
    "course": 4,
    "module": 36,
    "reel": 5,
-   "concept": 186
+   "concept": 188
   },
   "edges": {
    "in": 36,
-   "about": 324,
+   "about": 323,
    "deeper": 5,
    "beside": 6,
    "related": 24

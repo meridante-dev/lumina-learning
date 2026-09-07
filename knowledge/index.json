@@ -1,5 +1,5 @@
 {
- "generatedAt": 1788771276657,
+ "generatedAt": 1788771679129,
  "courses": {
   "alignment-journey": {
    "title": "The EdenRise Alignment Journey",
@@ -192,12 +192,12 @@
       "community",
       "pressure",
       "model",
-      "feeling",
       "personal",
       "responsibility",
       "action",
-      "could",
-      "feedback"
+      "feedback",
+      "meaning",
+      "yourself"
      ],
      "regime": null,
      "summary": "Welcome back, trust you enjoyed the animation and it gave you an overview of this model. Now we're going to take a deep dive, look into it and unpack it together and explore how this can apply in our personal lives and in our working lives.",
@@ -352,11 +352,11 @@
       "failure",
       "failures",
       "meaning",
-      "experience",
       "pain",
       "feedback",
       "place",
-      "three"
+      "three",
+      "outcome"
      ],
      "regime": null,
      "summary": "The level of emotional pain we feel is directly related to the meaning we give an experience. This video explores the meaning we place on failure. What does failure mean to you?",
@@ -805,7 +805,6 @@
       "community",
       "fear",
       "animation",
-      "might",
       "anxiety"
      ],
      "regime": null,
@@ -859,12 +858,12 @@
       "community",
       "fear",
       "level",
-      "experience",
-      "feeling",
       "athletes",
       "gain",
       "sporting",
-      "challenge"
+      "challenge",
+      "letting",
+      "believe"
      ],
      "regime": null,
      "summary": "Fear. We all experience it in various forms and degrees of intensity. What is it for you? Not living up to your expectations? Letting your family or coach down? Looking bad in front of others? Or the feeling that you are a failure? Is it some of the above? All",
@@ -916,13 +915,13 @@
       "leadership",
       "community",
       "fear",
-      "feeling",
       "confident",
       "which",
       "human",
       "moment",
       "meaning",
-      "event"
+      "event",
+      "attention"
      ],
      "regime": null,
      "summary": "Welcome back, I trust you enjoyed the animation so let's unpack fear a bit more. So in this animation we saw the invitation to change the relationship that you have to fear. Now this is something that first begins with awareness.",
@@ -1033,8 +1032,8 @@
       "physical",
       "emotions",
       "mind",
-      "experience",
-      "care"
+      "care",
+      "focused"
      ],
      "regime": null,
      "summary": "Welcome to the deep dive on body, soul and spirit. Let's begin with the physical body. The physical body is often referred to in ancient Biblical scriptures as the Earthly Vessel.",
@@ -1380,13 +1379,13 @@
      "tags": [
       "leadership",
       "goal",
-      "might",
       "develop",
       "communicate",
       "organization",
       "similar",
       "skill",
-      "growth"
+      "growth",
+      "role"
      ],
      "regime": null,
      "summary": "Imagine two people starting in similar roles. They have similar abilities, similar opportunities, and similar support.",
@@ -1436,14 +1435,14 @@
      "capability": "leadership",
      "tags": [
       "leadership",
-      "could",
       "process",
       "improvement",
       "improve",
       "task",
       "unnecessary",
       "quality",
-      "kaizen"
+      "kaizen",
+      "five"
      ],
      "regime": null,
      "summary": "Imagine someone on your team performing the same task every day. It takes 20 minutes. They have done it that way for a year.",
@@ -1583,13 +1582,13 @@
       "leadership",
       "community",
       "feedback",
-      "remember",
       "blame",
       "excuses",
       "solutions",
       "responsibility",
       "mistake",
-      "repeat"
+      "repeat",
+      "defensiveness"
      ],
      "regime": null,
      "summary": "Hello everyone. Today we're going to learn one of the most important ideas in this training. It is called above the line and below the line. It is very simple but it can change the way you work, the way you communicate and the way you grow. Over the next few m",
@@ -1703,9 +1702,9 @@
       "responsibility",
       "excuses",
       "second",
-      "could",
       "control",
-      "extreme"
+      "extreme",
+      "early"
      ],
      "regime": null,
      "summary": "Imagine two people who make the same mistake. The first person sees it wasn't my fault. The tools were bad. No one told me. The instructions weren't clear. The second person says, I could have asked more questions. I should have checked my",
@@ -1758,12 +1757,12 @@
       "community",
       "communication",
       "teams",
-      "understood",
       "early",
       "respect",
       "task",
       "assume",
-      "listen"
+      "listen",
+      "communicate"
      ],
      "regime": null,
      "summary": "Imagine this your manager says please move the chairs one person moves five chairs another moves every chair in the room another moves nothing because they thought the task was for tomorrow who made the mistake maybe nobody maybe the",
@@ -1817,11 +1816,11 @@
       "improve",
       "learning",
       "benchmarking",
-      "could",
-      "excellent",
       "habit",
       "hard",
-      "mistakes"
+      "mistakes",
+      "excellence",
+      "humility"
      ],
      "regime": null,
      "summary": "Have you ever spent an hour doing something, only to discover that someone else could do it in 10 minutes? That happens to all of us.",
@@ -1879,7 +1878,7 @@
       "second",
       "leave",
       "floor",
-      "would"
+      "room"
      ],
      "regime": null,
      "summary": "Imagine walking into two workplaces. The first is untidy. Tools are left on the ground, rubbish is everywhere, equipment is dirty and people say it's good enough. Now imagine a second workplace. The tools are clean, everything is organized,",
@@ -1932,12 +1931,12 @@
       "community",
       "learning",
       "lesson",
-      "stop",
-      "stay",
       "curious",
       "change",
       "feedback",
-      "practice"
+      "practice",
+      "lifelong",
+      "opportunity"
      ],
      "regime": null,
      "summary": "Imagine two people starting the same job on the same day. They receive the same training, they have the same opportunities and they begin at the same level. Five years later, one has become a leader. The other is still doing the same",
