@@ -5223,6 +5223,7 @@ function openPlayer(courseId, mod, startAt) {
   }, 260);
   $('#playerComplete').style.display = (media && media.type === 'soon') ? 'none' : '';
   playerEl.classList.add('open');
+  playerChrome.show(true);
   if ($('#notesDrawer').classList.contains('open')) refreshNotesDrawer();
   ledgerAppend('module_start', { courseId, mod });
   maybePretest(c, mod);
@@ -5272,6 +5273,22 @@ function maybePretest(c, mod) {
   };
   drawOne();
 }
+/* ===== CINEMA CHROME =========================================================
+   While the video plays, the title bar and the toolbar are not there. They come
+   back on a tap on the stage, a mouse move, a pause, or the drawer opening —
+   and go again a few seconds after the video resumes. The video is the screen;
+   everything else is a visitor. */
+const playerChrome = (() => {
+  let timer = null, playingNow = false;
+  const el = () => playerEl;
+  const hide = () => { if (!playingNow) return; if ($('#notesDrawer').classList.contains('open')) return; el().classList.add('chrome-hidden'); };
+  const arm = () => { clearTimeout(timer); timer = setTimeout(hide, 3200); };
+  const show = (sticky) => { el().classList.remove('chrome-hidden'); clearTimeout(timer); if (!sticky) arm(); else if (playingNow) arm(); };
+  const toggle = () => { if (el().classList.contains('chrome-hidden')) show(); else hide(); };
+  const onPlay = () => { playingNow = true; arm(); };
+  const onPause = () => { playingNow = false; show(true); };
+  return { show, hide, toggle, arm, onPlay, onPause, get playing() { return playingNow; } };
+})();
 function closePlayer(fromPop) {
   /* if WE pushed the sentinel and the close came from ✕/ESC, consume it so the
      next BACK doesn't mysteriously do nothing */
@@ -5334,6 +5351,8 @@ function armVimeo(c, mod) {
     if (_seekTo) { const t = _seekTo; _seekTo = null; vimeoPlayer.setCurrentTime(t).catch(() => {}); }
     let done = false;
     if (watchEv && watchEv.key === c.id + ':' + mod) watchEv.method = 'vimeo-timeupdate';
+    vimeoPlayer.on('play', playerChrome.onPlay);
+    vimeoPlayer.on('pause', playerChrome.onPause);
     vimeoPlayer.on('timeupdate', d => {
       if (!d || !playing || playing.courseId !== c.id || playing.mod !== mod) return;
       if (document.visibilityState === 'visible') watchMark(d.seconds, d.duration);
@@ -5406,7 +5425,7 @@ function refreshNotesDrawer() {
   $('#ndNotes').value = saved;
   $('#ndSaved').textContent = saved ? '· saved' : '';
 }
-$('#notesToggle').addEventListener('click', () => { refreshNotesDrawer(); $('#notesDrawer').classList.toggle('open'); });
+$('#notesToggle').addEventListener('click', () => { refreshNotesDrawer(); $('#notesDrawer').classList.toggle('open'); playerChrome.show(true); });
 $('#notesClose').addEventListener('click', () => $('#notesDrawer').classList.remove('open'));
 $('#ndNotes').addEventListener('input', e => {
   if (!playing) return;
@@ -5429,6 +5448,16 @@ videoEl.addEventListener('timeupdate', () => {
     clearTimeout(saveTimer); saveTimer = setTimeout(save, 800);
   }
 });
+videoEl.addEventListener('play', playerChrome.onPlay);
+videoEl.addEventListener('pause', playerChrome.onPause);
+/* the stage around the video (the letterbox) is the tap target; the iframe
+   swallows its own taps, which is fine — pausing there brings the chrome back */
+playerEl.addEventListener('pointerdown', e => {
+  if (e.target.closest('.player-top, .player-bottom, .notes-drawer, .player-edu-strip, button, a')) { playerChrome.show(); return; }
+  if (e.target.closest('.player-stage')) playerChrome.toggle();
+});
+playerEl.addEventListener('mousemove', () => { if (matchMedia('(hover: hover)').matches) playerChrome.show(); }, { passive: true });
+playerEl.addEventListener('keydown', () => playerChrome.show());
 videoEl.addEventListener('ended', () => {
   if (!playing) return;
   /* a lesson counts when it was watched, not when the playhead reached the end:

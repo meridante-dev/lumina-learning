@@ -4533,3 +4533,61 @@ body.reels-open { overflow: hidden; }
 .ai-link:hover, .ai-link:focus-visible { text-decoration-style: solid; }
 .am-link { background: none; border: none; cursor: pointer; font-size: 13px; opacity: .55; padding: 4px; align-self: center; }
 .am-link:hover, .am-link:focus-visible { opacity: 1; }
+
+/* ===== CINEMA PLAYER =========================================================
+   The video is the screen. The stage is black and opaque — nothing from the
+   page underneath shows through — and the chrome (title bar, toolbar, educator
+   strip) fades away while the video plays, returning on a tap, a mouse move or
+   a pause. On phones the video runs edge to edge. Law 3: darkness, not outlines. */
+.player-overlay { background: #000; }
+.player-stage, .stage { background-color: #000; }
+.player-top {
+  position: absolute; left: 0; right: 0; top: 0; z-index: 3;
+  padding: 14px 16px; gap: 12px; align-items: center;
+  background: linear-gradient(rgba(0,0,0,.72), rgba(0,0,0,0));
+  padding-top: max(14px, env(safe-area-inset-top));
+}
+.player-top > div { min-width: 0; }
+.player-top .pt { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -.01em; }
+.player-top .ps { font-size: 13px; color: var(--text-dim); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-goal { display: none; }
+.player-top .back { width: 38px; height: 38px; flex-shrink: 0; background: rgba(255,255,255,.08); border-color: transparent; }
+.pl-ic {
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.08); border: 1px solid transparent; color: var(--text); font-size: 16px; cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.pl-ic svg { width: 18px; height: 18px; }
+.pl-ic:hover, .pl-ic:focus-visible { background: rgba(255,255,255,.16); }
+.player-stage { padding: 0; }
+.player-stage video, .vimeo-wrap { box-shadow: none; outline: none; }
+.player-bottom {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+  padding: 18px 16px; padding-bottom: max(18px, env(safe-area-inset-bottom));
+  gap: 10px; flex-wrap: nowrap;
+  background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.78));
+}
+.player-bottom .mod-pills { flex: 1; min-width: 0; }
+.player-bottom .mod-pill { font-size: 13px; padding: 7px 12px; background: rgba(255,255,255,.06); border-color: transparent; }
+.player-bottom .mod-pill.current { box-shadow: none; background: rgba(255,255,255,.14); color: var(--text); }
+.player-bottom .mod-pill.done { box-shadow: none; }
+.player-bottom #playerComplete { flex-shrink: 0; white-space: nowrap; }
+.player-edu-strip { position: absolute; left: 16px; right: 16px; bottom: 84px; z-index: 2; }
+/* the chrome leaves */
+.player-top, .player-bottom, .player-edu-strip { transition: opacity .38s ease, transform .38s ease; }
+.player-overlay.chrome-hidden .player-top { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+.player-overlay.chrome-hidden .player-bottom { opacity: 0; transform: translateY(10px); pointer-events: none; }
+.player-overlay.chrome-hidden .player-edu-strip { opacity: 0; pointer-events: none; }
+@media (hover: hover) { .player-overlay.chrome-hidden .player-stage { cursor: none; } }
+/* desktop: the video is framed on black with room to breathe; phones: edge to edge */
+@media (min-width: 641px) {
+  .player-stage { padding: 0 48px; }
+  .player-stage video, .vimeo-wrap { border-radius: 10px; overflow: hidden; }
+  .player-top { padding: 16px 24px; }
+  .player-bottom { padding: 22px 24px; }
+}
+@media (max-width: 640px) {
+  .player-stage video, .vimeo-wrap { border-radius: 0; }
+  .player-bottom #playerComplete { padding: 9px 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .player-top, .player-bottom, .player-edu-strip { transition: none; } }
