@@ -237,5 +237,6 @@ function runLinks(t) {
   t.ok('a pending reel is never linked', !R.linkifyAnswer('watch Secret Reel', []).includes('href'));
   t.ok('a lesson that does not exist stays text', !R.linkifyAnswer('see Advanced Composting · 2:10', []).includes('<a'));
   t.ok('html in the answer is escaped, not rendered', !R.linkifyAnswer('<img src=x onerror=alert(1)>', []).includes('<img'));
+  t.ok('a parenthetical between title and timecode still seeks', R.linkifyAnswer('see Total Responsibility (Above the Line) · 4:32', moments).includes('href="#/play/land/1/268"'));
   t.ok('longer title wins over its prefix', R.linkifyAnswer('Above the Line, Below the Line', moments).match(/<a /g).length === 1);
 }

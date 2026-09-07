@@ -4828,7 +4828,8 @@ function linkifyAnswer(text, moments) {
   for (const tgt of linkTargets(moments)) {
     const label = esc(tgt.label);
     /* an optional timecode right after the title ("Total Responsibility · 4:32") becomes the seek second */
-    const re = new RegExp(`(?<![\\w>])${_reEsc(label)}(?:\\s*(?:·|-|–|—|at|às?)\\s*(\\d{1,2}):(\\d{2}))?(?![\\w<])`, 'gi');
+    /* an optional parenthetical (the course name) may sit between the title and its timecode */
+    const re = new RegExp(`(?<![\\w>])${_reEsc(label)}(?:\\s*\\([^)]{0,60}\\))?(?:\\s*(?:·|-|–|—|at|às?)\\s*(\\d{1,2}):(\\d{2}))?(?![\\w<])`, 'gi');
     html = html.replace(re, (whole, mm, ss) => {
       let href = tgt.href;
       if (mm != null && tgt.kind !== 'course' && tgt.kind !== 'reel') href = `#/play/${tgt.course}/${tgt.mod}/${Math.max(0, +mm * 60 + +ss - 4)}`;
@@ -8271,7 +8272,8 @@ function syncTutorModesUI() {
    learner must never mistake that for a real model answering. */
 function syncTutorFoot() {
   const f = $('#tutorFoot');
-  if (f) f.textContent = t(aiKey() ? 'tutor_foot_live' : 'tutor_foot_demo');
+  /* no tenant key no longer means scripted replies: the free gateway answers. Art. 50 line must say what is true. */
+  if (f) f.textContent = t(aiKey() ? 'tutor_foot_live' : 'tutor_foot_gateway');
 }
 function syncTutorStatus() {
   syncTutorModesUI();
