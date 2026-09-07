@@ -4591,3 +4591,30 @@ body.reels-open { overflow: hidden; }
   .player-bottom #playerComplete { padding: 9px 14px; }
 }
 @media (prefers-reduced-motion: reduce) { .player-top, .player-bottom, .player-edu-strip { transition: none; } }
+
+/* ===== lesson rows wrap; chips are a quiet second line, not a fifth column ===== */
+.module-row { flex-wrap: wrap; row-gap: 0; }
+.module-row .m-title { min-width: 0; }
+.mod-tags, .mod-links { flex-basis: 100%; width: 100%; padding-left: 52px; }
+.mod-tags { margin-top: 8px; }
+.mod-links { margin-top: 6px; }
+@media (max-width: 640px) {
+  .module-row { gap: 12px; padding: 14px 12px; }
+  .mod-tags, .mod-links { padding-left: 48px; }
+  .mod-tags { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-top: 6px; }
+  .mod-tags::-webkit-scrollbar { display: none; }
+  .mod-tag { flex-shrink: 0; }
+  .mod-tag:nth-child(n+4) { display: none; }
+  .mod-links { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
+  .mod-links .ml { display: inline; }
+}
+/* player toolbar on phones: numbers, with the current lesson's name */
+.mp-n { display: inline-block; }
+.mp-t { margin-left: 5px; }
+@media (max-width: 640px) {
+  .player-bottom .mod-pill { padding: 7px 10px; min-width: 34px; justify-content: center; display: inline-flex; }
+  .player-bottom .mod-pill:not(.current) .mp-t { display: none; }
+  .player-bottom .mod-pill:not(.current) .mp-n { margin: 0; }
+  .player-bottom #playerComplete { font-size: 13px; padding: 8px 12px; }
+}
+.nd-head .back { background: rgba(255,255,255,.08) !important; border: 1px solid transparent; color: var(--text); border-radius: 50%; }

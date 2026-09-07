@@ -4873,7 +4873,7 @@ function syncChrome() {
   const sv = $('#apiKeySave'); if (sv) sv.textContent = t('save');
   const cl = $('#apiKeyClear'); if (cl) cl.textContent = t('use_demo');
   const askBtn = document.querySelector('.player-top .btn[data-action="ai-open"]'); if (askBtn) askBtn.textContent = t('ask_tutor');
-  const nt = $('#notesToggle'); if (nt) nt.textContent = t('notes_transcript');
+  const nt = $('#notesToggle'); if (nt) { nt.title = t('notes_transcript'); nt.setAttribute('aria-label', t('notes_transcript')); }
   const pc = $('#playerComplete'); if (pc) pc.textContent = t('mark_complete');
   $$('.lang-btn').forEach(b => { const on = b.dataset.lang === _lang(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
   document.documentElement.classList.toggle('is-admin', isAdmin());
@@ -5203,7 +5203,7 @@ function openPlayer(courseId, mod, startAt) {
     const mm = modMedia(c, i);
     const soon = mm && mm.type === 'soon';
     const done = isDone(courseId) || (p && !p.done && i < (p.mod || 0));
-    return `<button class="mod-pill ${i === mod ? 'current' : done ? 'done' : ''} ${soon ? 'soon' : ''}" data-action="play" data-id="${courseId}" data-mod="${i}">${done ? '✓ ' : soon ? '🔒 ' : ''}${i + 1}. ${soon ? t('coming_soon') : cmods(c)[i]}</button>`;
+    return `<button class="mod-pill ${i === mod ? 'current' : done ? 'done' : ''} ${soon ? 'soon' : ''}" data-action="play" data-id="${courseId}" data-mod="${i}"><span class="mp-n">${done ? '✓ ' : soon ? '🔒 ' : ''}${i + 1}</span><span class="mp-t">${soon ? t('coming_soon') : cmods(c)[i]}</span></button>`;
   }).join('');
   /* hide "mark complete" for coming-soon lessons */
   /* keep the lesson you are on inside the strip — the fix that matters more
