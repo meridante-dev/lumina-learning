@@ -4618,3 +4618,19 @@ body.reels-open { overflow: hidden; }
   .player-bottom #playerComplete { font-size: 13px; padding: 8px 12px; }
 }
 .nd-head .back { background: rgba(255,255,255,.08) !important; border: 1px solid transparent; color: var(--text); border-radius: 50%; }
+
+/* ===== moments: a line, not a box (Law 3); on phones a grid so the quote gets the width ===== */
+.ask-moment { border: 0; background: transparent; padding: 12px 4px; border-radius: 10px; transition: background .2s; }
+.ask-moment + .ask-moment { border-top: 1px solid var(--line); border-radius: 0; }
+.ask-moment:hover, .ask-moment:focus-visible { background: var(--surface); }
+.ask-moment .am-body p { margin: 6px 0 0; font-style: italic; color: var(--text-dim); font-size: 13px; line-height: 1.5; }
+@media (max-width: 640px) {
+  .ask-moment { display: grid; grid-template-columns: auto 1fr auto auto; column-gap: 10px; align-items: center; }
+  .ask-moment .am-body { display: contents; }
+  .ask-moment .am-body b { grid-column: 2; }
+  .ask-moment .am-body .am-course { grid-column: 2; display: block; }
+  .ask-moment .am-body p { grid-column: 1 / -1; margin-top: 8px; }
+  .ask-moment .am-link { grid-column: 3; grid-row: 1; }
+  .ask-moment .ask-go { grid-column: 4; grid-row: 1; }
+  .ask-moment .am-tc { grid-row: 1; }
+}
