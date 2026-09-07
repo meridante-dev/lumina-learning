@@ -4644,3 +4644,5 @@ body.reels-open { overflow: hidden; }
   .player-bottom .mod-pill.current { max-width: 46vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .mod-links .ml + .ml::before { content: ' · '; color: var(--text-faint); }
 }
+/* My learning: the tabs are the header — the inner page must not open with a header's 96px of air */
+.me-tabs + .page > .page-pad:first-child, .page .page > .page-pad:first-child { padding-top: 22px; }
