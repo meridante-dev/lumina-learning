@@ -1508,6 +1508,7 @@ function recall(q, topN) {
   const hitConcepts = idx.concepts.filter(c => c.stems.every(cs => qs.some(w => w === cs || (cs.length >= 4 && w.startsWith(cs)) || (w.length >= 4 && cs.startsWith(w)))));
   const conceptKeys = new Set(); hitConcepts.forEach(c => c.keys.forEach(k => conceptKeys.add(k)));
   const segs = idx.segs, best = {};
+  const _weakKeys = new Set((typeof weakSpots === 'function' ? weakSpots(6) : []).map(w => w.course + ':' + w.mod));
   for (let i = 0; i < segs.length; i++) {
     const sg = segs[i];
     let score = 0; const why = [];
@@ -1524,6 +1525,7 @@ function recall(q, topN) {
     if (phrase.length >= 6 && _fold(sg.text).includes(phrase)) score += 2.5;
     if (why.length === qs.length && qs.length > 1) score *= 1.3;   /* every word present beats one word often */
     if (conceptKeys.has(sg.key)) score += 0.8;
+    if (_weakKeys && _weakKeys.has(sg.key)) score += 0.5;   /* a lesson this learner is weak on outranks a tie */
     const b = best[sg.key];
     if (!b || score > b.score) best[sg.key] = { score, i, why };
   }
@@ -1538,6 +1540,83 @@ function recall(q, topN) {
 }
 /* the old name stays: LandFlow's search_lessons mirrors this shape */
 function searchMoments(q, topN) { return recall(q, topN); }
+/* ===== MEANING ================================================================
+   The lexical engine finds words. This finds ideas: every ~40-word window of
+   every transcript was embedded with a multilingual model (bge-m3, 1024-d) at
+   build time and quantised to int8 — 1.25 MB for the whole library, fetched
+   once on the first question. The learner's question is embedded through the
+   gateway (one call), and the cosine runs HERE, in the page: 1,216 dot
+   products, under a millisecond. A Portuguese question finds an English
+   window, and "why do people blame each other" finds "whose fault is this"
+   with no word in common. No vector database, nothing to host.
+   Lexical and semantic are FUSED (reciprocal rank), and if the gateway or the
+   network is gone, the lexical engine answers alone — Recall never goes dark. */
+let _vec = null, _vecP = null;
+function loadVectors() {
+  if (_vec) return Promise.resolve(_vec);
+  if (_vecP) return _vecP;
+  return (_vecP = Promise.all([
+    fetch('knowledge/windows.json?v=' + knowledgeV()).then(r => (r.ok ? r.json() : null)),
+    fetch('knowledge/vectors.bin?v=' + knowledgeV()).then(r => (r.ok ? r.arrayBuffer() : null)),
+  ]).then(([meta, buf]) => {
+    if (!meta || !buf || buf.byteLength !== meta.n * meta.dims) return (_vec = false);
+    return (_vec = { n: meta.n, d: meta.dims, q: new Int8Array(buf), s: Float32Array.from(meta.scale), win: meta.win });
+  }).catch(() => (_vec = false)));
+}
+async function embedQuery(text) {
+  const res = await fetch(AI_GATEWAY.replace(/\/$/, '') + '/embed', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ texts: [String(text).slice(0, 500)] }) });
+  if (!res.ok) throw new Error('embed ' + res.status);
+  const d = await res.json(); const v = d.vectors && d.vectors[0]; if (!v) throw new Error('no vector');
+  const f = Float32Array.from(v); let n = 0; for (const x of f) n += x * x; n = Math.sqrt(n) || 1;
+  for (let i = 0; i < f.length; i++) f[i] /= n;
+  return f;
+}
+/* dot of one float query against int8 rows, per-row scale — cosine, since both sides are unit length */
+function dotInt8(V, qv, k) {
+  const { n, d, q, s } = V; const out = [];
+  for (let i = 0; i < n; i++) {
+    let acc = 0; const base = i * d;
+    for (let j = 0; j < d; j++) acc += q[base + j] * qv[j];
+    out.push([acc * s[i], i]);
+  }
+  out.sort((a, b) => b[0] - a[0]);
+  return out.slice(0, k || 12);
+}
+/* reciprocal-rank fusion: two ranked lists of lesson keys → one; a key high in either list wins */
+function rrfFuse(lists, k) {
+  const score = {};
+  for (const list of lists) list.forEach((key, r) => { score[key] = (score[key] || 0) + 1 / (60 + r); });
+  return Object.entries(score).sort((a, b) => b[1] - a[1]).slice(0, k || 6).map(([key, sc]) => ({ key, sc }));
+}
+function _lessonByKey(key) { return _searchIdx.find(m => ((m.kind === 'reel' ? 'reel:' : m.c + ':') + m.m) === key); }
+async function recallHybrid(q, topN) {
+  const lex = recall(q, 8);
+  let sem = [];
+  try {
+    const [V, qv] = await Promise.all([loadVectors(), embedQuery(q)]);
+    if (V && V.d === qv.length) {
+      const seen = new Set();
+      for (const [cos, i] of dotInt8(V, qv, 24)) {
+        const [key, t0, i0, i1] = V.win[i];
+        if (cos < 0.45 || seen.has(key)) continue; seen.add(key);
+        const mod = _lessonByKey(key); if (!mod) continue;
+        const text = mod.s.slice(i0, i1 + 1).map(x => x[1]).join(' ').replace(/\s+/g, ' ').trim();
+        sem.push({ score: +cos.toFixed(3), course: mod.c, courseTitle: mod.ct, mod: mod.m, title: mod.t, kind: mod.kind === 'reel' ? 'reel' : 'module', t0, text, why: ['≈'], concepts: [], key });
+        if (sem.length >= 8) break;
+      }
+    }
+  } catch (e) { sem = []; }
+  if (!sem.length) return lex.slice(0, topN || 4);
+  const keyOf = m => (m.kind === 'reel' ? 'reel:' : m.course + ':') + m.mod;
+  const fused = rrfFuse([lex.map(keyOf), sem.map(keyOf)], topN || 4);
+  return fused.map(({ key }) => {
+    const a = lex.find(m => keyOf(m) === key), b = sem.find(m => keyOf(m) === key);
+    /* the lexical hit knows the exact second a word was said; the semantic one knows the passage. Prefer the second, keep the meaning tag. */
+    const m = a ? Object.assign({}, a) : Object.assign({}, b);
+    if (a && b) m.why = [...new Set([...a.why, '≈'])];
+    return m;
+  });
+}
 function groundingText(moments) {
   return moments.slice(0, 5).map(m => `${m.title} (${m.kind === 'reel' ? 'short' : m.courseTitle}) · ${fmtTc(m.t0)}: "${m.text.slice(0, 320)}"`).join('\n');
 }
@@ -1551,6 +1630,32 @@ async function gatewayComplete({ messages, grounding, maxTokens }) {
       topics: [...new Set(CATALOG.map(x => x.cat))].join(', '), grounding: grounding || '' } }) });
   if (!res.ok) throw new Error('gateway ' + res.status);
   return res.json();
+}
+/* Streams the gateway's answer into `el` as it is written; resolves with the full text and the model.
+   Falls back to the JSON reply if the gateway did not stream. `onDone` receives the final text. */
+async function gatewayStream({ messages, grounding, maxTokens }, el) {
+  const id = currentCourseId(); const c = id && courseById(id);
+  const res = await fetch(AI_GATEWAY, { method: 'POST', headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ stream: true, messages, maxTokens: maxTokens || 400, context: {
+      brand: brandAcademy(), ethos: brandEthos(), course: c ? ctitle(c) : '',
+      topics: [...new Set(CATALOG.map(x => x.cat))].join(', '), grounding: grounding || '' } }) });
+  if (!res.ok) throw new Error('gateway ' + res.status);
+  const model = res.headers.get('X-Model') || '';
+  if (!/text\/event-stream/.test(res.headers.get('content-type') || '')) {
+    const g = await res.json(); if (el) el.textContent = g.reply || ''; return { reply: g.reply || '', model: g.model || model, refused: !!g.refused };
+  }
+  const reader = res.body.getReader(), dec = new TextDecoder(); let buf = '', text = '';
+  for (;;) {
+    const { value, done } = await reader.read(); if (done) break;
+    buf += dec.decode(value, { stream: true });
+    const lines = buf.split('\n'); buf = lines.pop();
+    for (const line of lines) {
+      if (!line.startsWith('data:')) continue;
+      const payload = line.slice(5).trim(); if (!payload || payload === '[DONE]') continue;
+      try { const j = JSON.parse(payload); if (j.response) { text += j.response; if (el) { el.textContent = text; } } } catch (e) {}
+    }
+  }
+  return { reply: text.trim(), model };
 }
 function modelLabelOf(m) { return /llama-3\.3/.test(m || '') ? 'Llama 3.3 70B' : /llama-3\.1/.test(m || '') ? 'Llama 3.1 8B' : /gemini/.test(m || '') ? 'Gemini Flash' : /guard/.test(m || '') ? 'the guard' : (m || 'AI'); }
 /* A question asked out loud is answered out loud — the first two sentences,
@@ -1587,7 +1692,7 @@ async function openAsk(q, via) {
      model answers, and still there when no model can. The lesson itself is the
      primary source; the AI is commentary on top of it. */
   await Promise.all([loadSearchIdx(), loadGraph()]);
-  const moments = recall(q, via === 'voice' ? 5 : 4);
+  const moments = await recallHybrid(q, via === 'voice' ? 5 : 4);
   /* the search itself is evidence: what people ask and DON'T find is the
      course-creation radar — found:0 events are content gaps, in the ledger */
   ledgerAppend('knowledge_search', { q: q.slice(0, 120), found: moments.length, via, top: moments[0] ? `${moments[0].kind === 'reel' ? 'reel:' : moments[0].course + ':'}${moments[0].mod}@${moments[0].t0}` : null });
@@ -1599,12 +1704,17 @@ async function openAsk(q, via) {
        The quotes are already on screen — the answer is commentary that arrives
        when it can, and the modal is complete without it. */
     try {
-      const g = await gatewayComplete({ messages: [{ role: 'user', content: q }], grounding: groundingText(moments), maxTokens: 350 });
+      /* the answer streams into place under the moments; links are resolved once it is complete */
+      $('#askBody').insertAdjacentHTML('beforeend', `<p class="ask-answer streaming" id="askLive"></p>`);
+      const live = $('#askLive');
+      const g = await gatewayStream({ messages: [{ role: 'user', content: q }], grounding: groundingText(moments) + learnerContext(), maxTokens: 350 }, live);
       if (g && g.reply && $('#askQ') && $('#askQ').textContent === q) {
-        $('#askBody').insertAdjacentHTML('beforeend', `<p class="ask-answer">${linkifyAnswer(g.reply, moments)}</p><div class="ask-model">✦ ${t('ask_by')} ${esc(modelLabelOf(g.model))}</div>`);
+        live.classList.remove('streaming'); live.removeAttribute('id');
+        live.innerHTML = linkifyAnswer(g.reply, moments);
+        live.insertAdjacentHTML('afterend', `<div class="ask-model">✦ ${t('ask_by')} ${esc(modelLabelOf(g.model))}</div>`);
         if (via === 'voice') speakBack(g.reply);
-      }
-    } catch (e) { if (via === 'voice' && moments.length) speakBack(`${moments[0].title}. ${moments[0].text}`); }
+      } else if (live) live.remove();
+    } catch (e) { const live = $('#askLive'); if (live) live.remove(); if (via === 'voice' && moments.length) speakBack(`${moments[0].title}. ${moments[0].text}`); }
     return;
   }
   try {
@@ -6948,8 +7058,8 @@ function graphReelsBeside(courseId, mod) {
 function graphRelated(courseId, mod) {
   if (!GRAPH) return [];
   const me = `module:${courseId}:${mod}`;
-  return GRAPH.edges.filter(x => x.rel === 'related' && (x.from === me || x.to === me))
-    .sort((a, b) => b.w - a.w).map(x => graphNode(x.from === me ? x.to : x.from)).filter(Boolean).slice(0, 3);
+  return GRAPH.edges.filter(x => (x.rel === 'related' || x.rel === 'similar') && (x.from === me || x.to === me))
+    .sort((a, b) => b.w - a.w).map(x => graphNode(x.from === me ? x.to : x.from)).filter((n, i, a) => n && a.findIndex(m => m && m.id === n.id) === i).slice(0, 3);
 }
 let banksLoaded = false;
 function loadAllBanks() {
@@ -7021,7 +7131,7 @@ function scheduleReview(courseId, mod, view) {
   S.reviewQueue = S.reviewQueue || [];
   const k = reviewKey(courseId, view);
   let e = S.reviewQueue.find(x => x.k === k);
-  if (!e) { e = { k, courseId, mod, step: 0 }; S.reviewQueue.push(e); }
+  if (!e) { e = { k, courseId, mod, step: 0, misses: 1 }; S.reviewQueue.push(e); }
   e.step = 0;
   /* the WHOLE view is stored — the session re-asks this exact question with
      these exact options months later, no bank lookup, no language drift */
@@ -7037,9 +7147,32 @@ function reviewOutcome(entry, correct) {
     }
     if (entry.step === REVIEW_STEPS.length - 1) entry.graduated = true;
     awardXp(3, t('rev_h'));
-  } else entry.step = 0;
+  } else { entry.step = 0; entry.misses = (entry.misses || 1) + 1; }
   entry.due = Date.now() + REVIEW_STEPS[entry.step] * 864e5;
   save();
+}
+/* ===== THE LEARNER MODEL ======================================================
+   The review queue already stores every question this learner missed, with the
+   lesson and the second in the video it came from. That IS a model of the
+   learner: the concepts they have not yet got. It reaches the tutor as
+   context (so "what did I get wrong?" has a real answer, with links), and
+   Recall as a lift (a lesson they are weak on outranks a tie). */
+function weakSpots(n) {
+  const out = [];
+  for (const e of (S.reviewQueue || [])) {
+    if (e.graduated || !e.view) continue;
+    const c = courseById(e.courseId); if (!c) continue;
+    const tags = tagsAt(e.courseId + ':' + e.mod, 8);
+    const near = tags.map(x => ({ c: x.c, dt: Math.min(...x.at.map(a => Math.abs(a - (e.view.t0 || 0)))) })).sort((a, b) => a.dt - b.dt).slice(0, 2).map(x => x.c);
+    out.push({ course: e.courseId, mod: e.mod, title: cmods(c)[e.mod] || '', q: e.view.q, t0: e.view.t0 || 0, misses: e.misses || 1, concepts: near, due: e.due });
+  }
+  return out.sort((a, b) => b.misses - a.misses || a.due - b.due).slice(0, n || 6);
+}
+function learnerContext() {
+  const w = weakSpots(5); if (!w.length) return '';
+  return `\n\nWHAT THIS LEARNER HAS MISSED (their review queue — questions they got wrong, with the lesson and second):\n` +
+    w.map(x => `- ${x.title} · ${fmtTc(x.t0)}: "${x.q}"${x.concepts.length ? ' (' + x.concepts.join(', ') + ')' : ''}`).join('\n') +
+    `\nIf they ask what to work on, or what they got wrong, answer from this and name the lesson and second so it becomes a link. Do not mention this list unprompted.`;
 }
 function reviewsDue() { return (S.reviewQueue || []).filter(e => e.due <= Date.now()); }
 
@@ -7565,10 +7698,9 @@ async function askGateway(text, moments) {
   typing.className = 'msg bot typing'; typing.innerHTML = '<span></span><span></span><span></span>';
   $('#aiMsgs').appendChild(typing); $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   try {
-    const g = await gatewayComplete({ messages: tutorHistory.slice(-12), grounding: groundingText(moments), maxTokens: 500 });
+    const g = await gatewayStream({ messages: tutorHistory.slice(-12), grounding: groundingText(moments) + learnerContext(), maxTokens: 500 }, (typing.classList.remove('typing'), typing));
     if (!g || !g.reply) throw new Error('empty');
     tutorHistory.push({ role: 'assistant', content: g.reply });
-    typing.classList.remove('typing');
     typing.innerHTML = tutorFmt(g.reply, moments) + momentsHTML(moments, { compact: true });
     $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   } catch (e) {
@@ -7584,7 +7716,7 @@ async function askClaude(text, moments) {
   typing.className = 'msg bot typing'; typing.innerHTML = '<span></span><span></span><span></span>';
   $('#aiMsgs').appendChild(typing); $('#aiMsgs').scrollTop = $('#aiMsgs').scrollHeight;
   try {
-    const reply = await llmComplete({ system: buildTutorSystem() + tutorGrounding(moments), messages: tutorHistory.slice(-12), maxTokens: 700 });
+    const reply = await llmComplete({ system: buildTutorSystem() + tutorGrounding(moments) + learnerContext(), messages: tutorHistory.slice(-12), maxTokens: 700 });
     tutorHistory.push({ role: 'assistant', content: reply });
     typing.classList.remove('typing');
     typing.innerHTML = tutorFmt(reply, moments) + momentsHTML(moments || [], { compact: true });
@@ -7607,8 +7739,8 @@ function tutorRespond(text) {
   }
   /* every door opens on Recall first: the chat answers from the lessons, with
      the moments it drew on under the reply — tap one and the video opens there */
-  Promise.all([loadSearchIdx(), loadGraph()]).then(() => {
-    const moments = recall(text, 3);
+  Promise.all([loadSearchIdx(), loadGraph()]).then(async () => {
+    const moments = await recallHybrid(text, 3);
     logAsk(text, 'chat');
     ledgerAppend('knowledge_search', { q: text.slice(0, 120), found: moments.length, via: 'chat' });
     if (aiKey()) askClaude(text, moments);

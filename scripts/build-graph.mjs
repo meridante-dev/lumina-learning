@@ -122,6 +122,36 @@ for (const n of nodes) stats.nodes[n.kind]++;
 for (const e of edges) stats.edges[e.rel] = (stats.edges[e.rel] || 0) + 1;
 const orphans = nodes.filter(n => n.kind !== 'concept' && !edges.some(e => e.from === n.id || e.to === n.id)).map(n => n.id);
 
+
+/* ===== SEMANTIC EDGES ==========================================================
+   If the vector index exists, every lesson gets a centroid (mean of its
+   windows' unit vectors) and the three most similar OTHER lessons become
+   'similar' edges with the cosine as weight — computed from what the trainer
+   said, not from shared tags. The lexical 'related' edges stay; the UI reads
+   both. */
+try {
+  const meta = JSON.parse(readFileSync('knowledge/windows.json', 'utf8'));
+  const raw = new Int8Array(readFileSync('knowledge/vectors.bin').buffer.slice(0));
+  const cent = {};
+  meta.win.forEach(([key], i) => {
+    const c = cent[key] || (cent[key] = new Float64Array(meta.dims));
+    for (let j = 0; j < meta.dims; j++) c[j] += raw[i * meta.dims + j] * meta.scale[i];
+  });
+  const keys = Object.keys(cent).map(k => { const v = cent[k]; let n = 0; for (const x of v) n += x * x; n = Math.sqrt(n) || 1; for (let j = 0; j < v.length; j++) v[j] /= n; return k; });
+  const nodeId = k => (k.startsWith('reel:') ? k : 'module:' + k);
+  let added = 0;
+  for (const a of keys) {
+    const sims = keys.filter(b => b !== a && !b.startsWith('reel:') && !a.startsWith('reel:')).map(b => { let d = 0; const va = cent[a], vb = cent[b]; for (let j = 0; j < va.length; j++) d += va[j] * vb[j]; return [d, b]; })
+      .sort((x, y) => y[0] - x[0]).slice(0, 3).filter(([d]) => d >= 0.62);
+    for (const [d, b] of sims) {
+      if (edges.some(e => e.rel === 'similar' && ((e.from === nodeId(a) && e.to === nodeId(b)) || (e.from === nodeId(b) && e.to === nodeId(a))))) continue;
+      edges.push({ from: nodeId(a), to: nodeId(b), rel: 'similar', w: +d.toFixed(3) }); added++;
+    }
+  }
+  stats.edges.similar = added;
+  console.log(`  semantic: ${added} module↔module (similar) edges from ${keys.length} lesson centroids`);
+} catch (e) { console.log('  semantic edges skipped:', String(e.message).slice(0, 60)); }
+
 writeFileSync(join(ROOT, 'knowledge', 'graph.json'), JSON.stringify({ generatedAt: Date.now(), nodes, edges, stats, orphans }, null, 1));
 console.log(`knowledge/graph.json: ${nodes.length} nodes, ${edges.length} edges`);
 console.log(`  nodes  ${Object.entries(stats.nodes).map(([k, v]) => `${k} ${v}`).join(' · ')}`);

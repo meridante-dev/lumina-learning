@@ -12,6 +12,7 @@ const app = src('core/app.js');
 export function run(t) {
   runRecall(t);
   runLinks(t);
+  runMeaning(t);
   /* ---------- the extractor is itself under test ---------- */
   t.group('harness');
   selfTest(t);
@@ -239,4 +240,25 @@ function runLinks(t) {
   t.ok('html in the answer is escaped, not rendered', !R.linkifyAnswer('<img src=x onerror=alert(1)>', []).includes('<img'));
   t.ok('a parenthetical between title and timecode still seeks', R.linkifyAnswer('see Total Responsibility (Above the Line) · 4:32', moments).includes('href="#/play/land/1/268"'));
   t.ok('longer title wins over its prefix', R.linkifyAnswer('Above the Line, Below the Line', moments).match(/<a /g).length === 1);
+}
+
+/* ---------- the meaning layer -----------------------------------------------
+   Shipped 2026-09-08. int8 cosine and rank fusion are the two places a silent
+   arithmetic slip would make every semantic answer subtly wrong. */
+function runMeaning(t) {
+  const R = sandbox(app, ['dotInt8', 'rrfFuse']);
+  t.group('meaning · int8 cosine');
+  const d = 4, rows = [[1, 0, 0, 0], [0, 1, 0, 0], [0.7071, 0.7071, 0, 0]];
+  const s = new Float32Array(rows.map(r => Math.max(...r.map(Math.abs)) / 127));
+  const q = new Int8Array(rows.length * d); rows.forEach((r, i) => r.forEach((x, j) => { q[i * d + j] = Math.round(x / s[i]); }));
+  const V = { n: 3, d, q, s };
+  const top = R.dotInt8(V, Float32Array.from([1, 0, 0, 0]), 3);
+  t.ok('identical vector scores ~1', Math.abs(top[0][0] - 1) < 0.02 && top[0][1] === 0);
+  t.ok('45° vector scores ~0.707', Math.abs(top[1][0] - 0.707) < 0.02 && top[1][1] === 2);
+  t.ok('orthogonal scores ~0', Math.abs(top[2][0]) < 0.02);
+  t.group('meaning · fusion');
+  const f = R.rrfFuse([['a', 'b', 'c'], ['c', 'a', 'd']], 4).map(x => x.key);
+  t.ok('a key high in both lists wins', f[0] === 'a' || f[0] === 'c');
+  t.ok('a key in only one list still appears', f.includes('b') && f.includes('d'));
+  t.ok('top-k respected', R.rrfFuse([['a', 'b', 'c']], 2).length === 2);
 }
