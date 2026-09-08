@@ -261,4 +261,5 @@ function runMeaning(t) {
   t.ok('a key high in both lists wins', f[0] === 'a' || f[0] === 'c');
   t.ok('a key in only one list still appears', f.includes('b') && f.includes('d'));
   t.ok('top-k respected', R.rrfFuse([['a', 'b', 'c']], 2).length === 2);
+  t.ok('a weighted list leads', R.rrfFuse([['a', 'b'], ['b', 'a']], 2, [0.4, 1])[0].key === 'b');
 }

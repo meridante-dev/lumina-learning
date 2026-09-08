@@ -1583,9 +1583,9 @@ function dotInt8(V, qv, k) {
   return out.slice(0, k || 12);
 }
 /* reciprocal-rank fusion: two ranked lists of lesson keys → one; a key high in either list wins */
-function rrfFuse(lists, k) {
+function rrfFuse(lists, k, weights) {
   const score = {};
-  for (const list of lists) list.forEach((key, r) => { score[key] = (score[key] || 0) + 1 / (60 + r); });
+  lists.forEach((list, li) => { const w = (weights && weights[li] != null) ? weights[li] : 1; list.forEach((key, r) => { score[key] = (score[key] || 0) + w / (60 + r); }); });
   return Object.entries(score).sort((a, b) => b[1] - a[1]).slice(0, k || 6).map(([key, sc]) => ({ key, sc }));
 }
 function _lessonByKey(key) { return _searchIdx.find(m => ((m.kind === 'reel' ? 'reel:' : m.c + ':') + m.m) === key); }
@@ -1608,7 +1608,11 @@ async function recallHybrid(q, topN) {
   } catch (e) { sem = []; }
   if (!sem.length) return lex.slice(0, topN || 4);
   const keyOf = m => (m.kind === 'reel' ? 'reel:' : m.course + ':') + m.mod;
-  const fused = rrfFuse([lex.map(keyOf), sem.map(keyOf)], topN || 4);
+  /* Measured on the live index: meaning ranks better than words in three of
+     four questions, and the lexical score says how much to trust the words —
+     a phrase match scores ~17, a couple of shared common words ~9. */
+  const lexW = Math.max(0.4, Math.min(1, (lex[0] ? lex[0].score : 0) / 16));
+  const fused = rrfFuse([lex.map(keyOf), sem.map(keyOf)], topN || 4, [lexW, 1]);
   return fused.map(({ key }) => {
     const a = lex.find(m => keyOf(m) === key), b = sem.find(m => keyOf(m) === key);
     /* the lexical hit knows the exact second a word was said; the semantic one knows the passage. Prefer the second, keep the meaning tag. */
@@ -1692,7 +1696,20 @@ async function openAsk(q, via) {
      model answers, and still there when no model can. The lesson itself is the
      primary source; the AI is commentary on top of it. */
   await Promise.all([loadSearchIdx(), loadGraph()]);
-  const moments = await recallHybrid(q, via === 'voice' ? 5 : 4);
+  const want = via === 'voice' ? 5 : 4;
+  /* words first (instant), meaning next (one gateway call): the modal never waits on the network to show something real */
+  let moments = recall(q, want);
+  const keyOf = m => (m.kind === 'reel' ? 'reel:' : m.course + ':') + m.mod;
+  const refine = recallHybrid(q, want).then(h => {
+    if ($('#askQ') && $('#askQ').textContent !== q) return moments;
+    if (h.map(keyOf).join() !== moments.map(keyOf).join()) {
+      moments = h; const old = $('#askBody .ask-moments'); const fresh = document.createElement('div'); fresh.innerHTML = momentsHTML(h, { compact: false });
+      const list = fresh.querySelector('.ask-moments');
+      if (old && list) old.replaceWith(list);
+      else if (!old && h.length) $('#askBody').insertAdjacentHTML('afterbegin', momentsHTML(h));
+    }
+    return moments;
+  }).catch(() => moments);
   /* the search itself is evidence: what people ask and DON'T find is the
      course-creation radar — found:0 events are content gaps, in the ledger */
   ledgerAppend('knowledge_search', { q: q.slice(0, 120), found: moments.length, via, top: moments[0] ? `${moments[0].kind === 'reel' ? 'reel:' : moments[0].course + ':'}${moments[0].mod}@${moments[0].t0}` : null });
@@ -1704,6 +1721,7 @@ async function openAsk(q, via) {
        The quotes are already on screen — the answer is commentary that arrives
        when it can, and the modal is complete without it. */
     try {
+      moments = await refine;
       /* the answer streams into place under the moments; links are resolved once it is complete */
       $('#askBody').insertAdjacentHTML('beforeend', `<p class="ask-answer streaming" id="askLive"></p>`);
       const live = $('#askLive');
